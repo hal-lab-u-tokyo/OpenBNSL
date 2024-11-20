@@ -10,6 +10,7 @@ RUN apt update && apt install -y \
     python3.10 \
     python3.10-dev \
     python3-pip \
+    libomp-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Set Python3.10 as default
