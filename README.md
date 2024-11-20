@@ -85,6 +85,9 @@ backend tests (Google Test) and frontend tests (pytest) will be run.
 <!-- TDB -->
 
 ## Contributing
+[Contributing](CONTRIBUTING.md)
+
+## Documentation
 <!-- TDB -->
 
 ## License
