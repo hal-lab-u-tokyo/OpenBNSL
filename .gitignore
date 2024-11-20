@@ -1,1 +1,6 @@
 build/
+Testing/
+
+*/__pycache__/*
+*/.pytest_cache/*
+

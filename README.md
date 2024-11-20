@@ -71,11 +71,15 @@ Please make sure you have the following dependencies installed on your system:
 
 ## Build the project
 ```bash
-./build.sh
+./do_build.sh
 ```
+compile shared library, python bindings, and backend tests.
 
 ## Run Tests
-<!-- TDB -->
+```bash
+./do_test.sh
+```
+backend tests (Google Test) and frontend tests (pytest) will be run.
 
 ## Examples
 <!-- TDB -->
