@@ -35,7 +35,6 @@
 - [ ] Export and Import of Bayesian Networks
 - [ ] Integration with other libraries
 
-
 ## Set Up Docker Environment (Recommended)
 
 ### Optional: Gurobi License
@@ -81,17 +80,21 @@ compile shared library, python bindings, and backend tests.
 ```
 backend tests (Google Test) and frontend tests (pytest) will be run.
 
-## Examples
-<!-- TDB -->
+## Tutorial and Examples
+TBD
 
 ## Contributing
-[Contributing](CONTRIBUTING.md)
+Please feel free to create a new issue for any bugs, questions etc. 
+It is very helpful if you gives us enough information to reproduce the problem. 
+Github's guide on [about issues](https://guides.github.com/features/issues/) is also useful.
+
+If you want to contribute code, please follow the instructions in [Contributing](CONTRIBUTING.md)
 
 ## Documentation
-<!-- TDB -->
+TDB
 
 ## License
-<!-- TDB -->
+TBD
 
 ## Acknowledgments
 This work was supported by
