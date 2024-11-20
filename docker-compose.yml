@@ -13,6 +13,7 @@ services:
       resources:
         limits:
           memory: "8g"   # memory limit
+          cpus: "16.0"   # cpu limit
         reservations:
           devices:
             - driver: "nvidia"
