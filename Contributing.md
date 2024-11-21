@@ -28,5 +28,26 @@ Branch naming examples:
 - `docs/*` - Documentation branches. These branches are created from `develop` and are used to update documentation.
 - `chore/*` - Chore branches. These branches are created from `develop` and are used for miscellaneous tasks.
 
+## Folder Structure
+
+.
+├── benchmarks/         # Benchmarking code
+├── bindings/           # Python binding code (Pybind11) for the backend code
+├── examples/           # Jupyter notebook examples
+├── external/           # External libraries (only pybind11 for now)
+├── include/            # Header files for the backend code
+├── src/                # Source code for the backend code
+├── tests/              # Backend code tests (Google Test)
+├── .gitignore          # Git ignore file
+├── .gitmodules         # Git submodules file
+├── CMakeLists.txt      # CMake build file (Compile backend code, bindings, and tests)
+├── CONTRIBUTING.md     # Contributing guidelines
+├── do_build.sh         # run CMake, make, and publish the Python package
+├── do_test.sh          # run the backend tests (Google Test) and the Python tests (Pytest)
+├── docker-compose.yml  # Docker compose file
+├── Dockerfile          # Docker file
+├── pytest.ini          # Pytest configuration file
+└── README.md           # Project README
+
 ## Discussion
 <!-- TBD -->
