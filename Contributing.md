@@ -28,8 +28,9 @@ Branch naming examples:
 - `docs/*` - Documentation branches. These branches are created from `develop` and are used to update documentation.
 - `chore/*` - Chore branches. These branches are created from `develop` and are used for miscellaneous tasks.
 
-## Folder Structure
+## Directory Structure
 
+```plaintext
 .
 ├── benchmarks/         # Benchmarking code
 ├── bindings/           # Python binding code (Pybind11) for the backend code
@@ -48,6 +49,7 @@ Branch naming examples:
 ├── Dockerfile          # Docker file
 ├── pytest.ini          # Pytest configuration file
 └── README.md           # Project README
+```
 
 ## Discussion
 <!-- TBD -->
