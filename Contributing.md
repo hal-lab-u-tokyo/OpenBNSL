@@ -36,9 +36,10 @@ Branch naming examples:
 ├── bindings/           # Python binding code (Pybind11) for the backend code
 ├── examples/           # Jupyter notebook examples
 ├── external/           # External libraries (only pybind11 for now)
+├── gtest/              # gtest test code for the backend code
 ├── include/            # Header files for the backend code
+├── pytest/             # Pytest test code for the frontend code (test_*.py)
 ├── src/                # Source code for the backend code
-├── tests/              # Backend code tests (Google Test)
 ├── .gitignore          # Git ignore file
 ├── .gitmodules         # Git submodules file
 ├── CMakeLists.txt      # CMake build file (Compile backend code, bindings, and tests)

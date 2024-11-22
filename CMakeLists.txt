@@ -39,7 +39,7 @@ target_link_libraries(openbn
 set_target_properties(openbn PROPERTIES PREFIX "")
 
 # compile test executable, which depends on openbn_lib, OpenMP, GTest and GTest::Main
-file(GLOB TEST_SOURCES tests/*.cpp)
+file(GLOB TEST_SOURCES gtest/*.cpp)
 message(STATUS "TEST_SOURCES: ${TEST_SOURCES}")
 add_executable(openbn_test ${TEST_SOURCES})
 target_link_libraries(openbn_test 
