@@ -5,6 +5,9 @@ project(openbn_project LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# https://pybind11.readthedocs.io/en/stable/faq.html#someclass-declared-with-greater-visibility-than-the-type-of-its-field-someclass-member-wattributes
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden") 
+
 # find required packages: Python3, OpenMP and pybind11
 find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
 find_package(OpenMP REQUIRED)
@@ -39,7 +42,7 @@ target_link_libraries(openbn
 set_target_properties(openbn PROPERTIES PREFIX "")
 
 # compile test executable, which depends on openbn_lib, OpenMP, GTest and GTest::Main
-file(GLOB TEST_SOURCES tests/*.cpp)
+file(GLOB TEST_SOURCES gtest/*.cpp)
 message(STATUS "TEST_SOURCES: ${TEST_SOURCES}")
 add_executable(openbn_test ${TEST_SOURCES})
 target_link_libraries(openbn_test 

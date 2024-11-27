@@ -26,6 +26,7 @@ RUN cd /usr/src/googletest && \
 RUN pip3 install --upgrade pip
 RUN pip3 install \
     pandas==2.2.3 \
+    pgmpy==0.1.26 \
     networkx==3.4.2 \
     matplotlib==3.9.2 \
     notebook==7.2.2 \

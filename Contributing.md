@@ -17,5 +17,40 @@ Github's guide on [about issues](https://guides.github.com/features/issues/) is 
 4. Push your changes to your fork
 5. Create a pull request
 
+## Branches
+
+Branch naming examples:
+- `master` - The main branch. This branch is always stable and contains the latest release.
+- `develop` - The development branch. This branch contains the latest changes and is where new features are developed.
+- `feature/*` - Feature branches. These branches are created from `develop` and are used to develop new features.
+- `bugfix/*` - Bugfix branches. These branches are created from `develop` and are used to fix bugs.
+- `hotfix/*` - Hotfix branches. These branches are created from `master` and are used to fix critical bugs.
+- `docs/*` - Documentation branches. These branches are created from `develop` and are used to update documentation.
+- `chore/*` - Chore branches. These branches are created from `develop` and are used for miscellaneous tasks.
+
+## Directory Structure
+
+```plaintext
+.
+├── benchmarks/         # Benchmarking code
+├── bindings/           # Python binding code (Pybind11) for the backend code
+├── examples/           # Jupyter notebook examples
+├── external/           # External libraries (only pybind11 for now)
+├── gtest/              # gtest test code for the backend code
+├── include/            # Header files for the backend code
+├── pytest/             # Pytest test code for the frontend code (test_*.py)
+├── src/                # Source code for the backend code
+├── .gitignore          # Git ignore file
+├── .gitmodules         # Git submodules file
+├── CMakeLists.txt      # CMake build file (Compile backend code, bindings, and tests)
+├── CONTRIBUTING.md     # Contributing guidelines
+├── do_build.sh         # run CMake, make, and publish the Python package
+├── do_test.sh          # run the backend tests (Google Test) and the Python tests (Pytest)
+├── docker-compose.yml  # Docker compose file
+├── Dockerfile          # Docker file
+├── pytest.ini          # Pytest configuration file
+└── README.md           # Project README
+```
+
 ## Discussion
 <!-- TBD -->

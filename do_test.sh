@@ -14,11 +14,7 @@ else
 fi
 
 # Frontend test (Pytest)
-if [ -d "$PROJECT_ROOT/tests" ]; then
-    echo "Running Pytest..."
-    pytest --rootdir="$PROJECT_ROOT/tests"
-else
-    echo "No tests directory found for Pytest. Skipping..."
-fi
+echo "Running Pytest..."
+pytest
 
 echo "All tests completed."
