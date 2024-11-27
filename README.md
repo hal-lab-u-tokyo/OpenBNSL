@@ -27,6 +27,8 @@ This framework is offered as an open-source project, and we actively welcome con
 
 Note: When cloning this repository, please make sure to clone the repository with `--recurse-submodules` to include the pybind11 submodule.
 
+![Overview](images/overview.png)
+
 ## Features
 - Structure Learning from data
     - Score-based Learning
