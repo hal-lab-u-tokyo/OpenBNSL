@@ -1,14 +1,12 @@
 *Note: This repository is a mock-up, and the content within is currently under active development. Please be aware that functionalities and features are still being finalized.*
 
 # OpenBNSL: Open BNSL Framework
-OpenBNSL is a framework designed for Bayesian Network Structure Learning (BNSL).
- 
-BNSL is the task of learning the graph structure of a Bayesian Network from data. 
-It is widely recognized as a challenging problem, primarily due to its computational complexity. 
-Despite the development of numerous structure learning methods to tackle this challenge, there is currently no unified, open environment where these methods can be consistently compared and evaluated.
-Furthermore, evaluating the learned structures involves various metrics and parameters (e.g., structural likelihood, structural Hamming distance, inference accuracy using the learned Bayesian Network), adding to the complexity of the task.
-To address these issues, this repository provides a unified, open-source, and comprehensive BNSL evaluation framework.
-Researchers proposing new algorithms can use this framework to showcase their strengths, while general users can apply BNSL techniques without requiring specialized knowledge.
+Bayesian Network Structure Learning (BNSL) is the task of learning the graph structure of a Bayesian Network from data.
+It is widely recognized as a challenging problem due to its computational complexity, and the difficulties associated with handling high-dimensional data.
+To address these challenges, various methods have been proposed.
+
+OpenBNSL is a unified, open-source, and comprehensive framework for evaluating BNSL methods.
+Researchers can leverage this framework to demonstrate the advantages of their algorithms, while general users can utilize BNSL techniques without requiring specialized expertise.
 
 To fulfill its purpose, the framework is designed with the following requirements in mind:
 1. Performance: The provided algorithms should be fast enough for effective benchmarking.
