@@ -1,13 +1,53 @@
 *Note: This repository is a mock-up, and the content within is currently under active development. Please be aware that functionalities and features are still being finalized.*
 
-# OpenBN: Open Bayesian Networks Library
-- OpenBN is a Python library for structure learning of Bayesian Networks.
-- The backend is written in C/C++, OpenMP, CUDA, (and HLS for FPGA in the future) to provide high performance and scalability.
-- The frontend is written in Python, user-friendly, and easy to use, making use of ample libraries for data processing and visualization.
-- the joint is done with [pybind11](https://github.com/pybind/pybind11), which allows for seamless integration between backend and frontend.
-   - So, clone the repository with `-recurse-submodules` to include the submodules.
-- The library is still under development and many features are still missing. 
-- The goal is to provide a unified evaluation framework for structure learning of Bayesian Networks.
+# OpenBNSL: Open BNSL Framework
+OpenBNSL is a framework designed for Bayesian Network Structure Learning (BNSL).
+ 
+BNSL is the task of learning the graph structure of a Bayesian Network from data. 
+It is widely recognized as a challenging problem, primarily due to its computational complexity. 
+Despite the development of numerous structure learning methods to tackle this challenge, there is currently no unified, open environment where these methods can be consistently compared and evaluated.
+Furthermore, evaluating the learned structures involves various metrics and parameters (e.g., structural likelihood, structural Hamming distance, inference accuracy using the learned Bayesian Network), adding to the complexity of the task.
+To address these issues, this repository provides a unified, open-source, and comprehensive BNSL evaluation framework.
+Researchers proposing new algorithms can use this framework to showcase their strengths, while general users can apply BNSL techniques without requiring specialized knowledge.
+
+To fulfill its purpose, the framework is designed with the following requirements in mind:
+1. Performance: The provided algorithms should be fast enough for effective benchmarking.
+2. Scalability: The framework should handle large datasets and a significant number of random variables (e.g., over 1,000 variables), except where limited by algorithmic constraints.
+3. Reproducibility: The framework should facilitate the easy reproduction of experiments.
+
+To meet these requirements, OpenBNSL is designed as follows:
+1. Backend: Written in C/C++ with OpenMP for high performance and scalability, with plans for further acceleration in the future.
+2. Frontend: Implemented in Python to provide a user-friendly interface and leverage powerful libraries for:
+    - Data manipulation (`Pandas`)
+    - Visualization (`Matplotlib`, `NetworkX`)
+    - Interactive prototyping (`Jupyter Notebook`)
+    - Utilizing learned models (`pgmpy`)
+3. Integration: The backend and frontend are connected using pybind11, enabling seamless and high-performance communication between Python and C++.
+4. Containerization: The project is containerized using Docker, ensuring a reproducible environment, objective benchmarking, and ease of contribution from the community.
+
+This framework is offered as an open-source project, and we actively welcome contributions from the community. We hope OpenBNSL becomes a valuable tool for researchers and practitioners working in the field of Bayesian Networks.
+
+Note: When cloning this repository, please make sure to clone the repository with `--recurse-submodules` to include the pybind11 submodule.
+
+## Features
+- Structure Learning from data
+    - Score-based Learning
+        - [ ] Hill Climbing
+        - [ ] Tabu Search
+        - [ ] Simulated Annealing
+        - [ ] Integer Programming
+    - Constraint-based Learning
+        - [ ] PC algorithm
+        - [ ] RAI algorithm
+- Evaluation Metrics
+    - Structural Likelihood
+        - [ ] Akaike Information Criterion (AIC)
+        - [ ] Bayesian Information Criterion (BIC)
+        - [ ] Minimum Description Length (MDL)
+        - [ ] Bayesian Dirichlet equivalent uniform (BDeu) 
+    - [ ] Structural Hamming Distance
+    - [ ] Inference Accuracy
+- Benchmarking 
 
 ## Table of Contents
 - [Installation](#installation)
@@ -20,21 +60,7 @@
 - [Contributing](#contributing)
 - [License](#license)
 
-## Planed Features
-- [ ] Create Bayesian Networks manually
-- [ ] Structure Learning from data
-    - [ ] RAI algorithm
-    - [ ] PC algorithm
-    - [ ] Greedy Hill Climbing
-    - [ ] Tabu Search
-    - [ ] Simulated Annealing
-    - [ ] Integer Programming
-- [ ] Parameter Learning from data
-- [ ] Inference with Bayesian Networks
-- [ ] Visualization of Bayesian Networks
-- [ ] Export and Import of Bayesian Networks
-- [ ] Integration with other libraries
-
+    
 ## Set Up Docker Environment (Recommended)
 
 ### Optional: Gurobi License
