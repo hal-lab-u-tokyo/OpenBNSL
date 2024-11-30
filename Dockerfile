@@ -6,6 +6,8 @@ RUN apt update && apt install -y \
     build-essential \
     cmake \
     git \
+    doxygen \
+    graphviz \
     python3.10 \
     python3.10-dev \
     python3-pip \
