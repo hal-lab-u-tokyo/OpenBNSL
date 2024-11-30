@@ -21,8 +21,9 @@ jobs:
             python3-pip \
             libomp-dev \
             libgmp-dev \
-            libgtest-dev \
-          sudo apt clean && sudo rm -rf /var/lib/apt/lists/*
+            libgtest-dev
+          sudo apt clean
+          sudo rm -rf /var/lib/apt/lists/*
 
       - name: Build Google Test
         run: |
