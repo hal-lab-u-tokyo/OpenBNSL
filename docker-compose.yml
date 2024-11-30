@@ -1,11 +1,11 @@
 services:
-  openbn:
+  openbnsl:
     build:
       context: .
       args:
         INSTALL_GUROBI: "false"  # skip gurobi installation
-    image: openbn-image
-    container_name: openbn-container
+    image: openbnsl-image
+    container_name: openbnsl-container
     ports:
       - "8888:8888" # expose jupyter notebook port host:container
     shm_size: "4g" # shared memory size
