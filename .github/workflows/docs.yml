@@ -1,0 +1,32 @@
+name: Build and Deploy Documentation
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Python and Install Dependencies
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.10
+      - run: |
+          sudo apt update
+          sudo apt install -y doxygen graphviz
+          pip install sphinx breathe
+
+      - name: Build Documentation
+        run: ./gen_docs
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v1
+        with:
+          path: sphinx/build/html

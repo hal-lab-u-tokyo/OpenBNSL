@@ -8,7 +8,6 @@ services:
     container_name: openbn-container
     ports:
       - "8888:8888" # expose jupyter notebook port host:container
-      - "8000:8000" # expose local server for Doxygen docs
     shm_size: "4g" # shared memory size
     deploy:
       resources:
@@ -23,8 +22,8 @@ services:
                 "device": "0"
     volumes:
       - .:/workspace # mount current directory to /workspace
+    environment:
+      LANG: en_US.UTF-8
+      LC_ALL: en_US.UTF-8
     command: > 
-      bash -c "
-        doxygen Doxyfile && python3 -m http.server 8000 --directory /workspace/docs/html
-      & jupyter notebook --ip=0.0.0.0 --port=8888 --allow-root --no-browser --NotebookApp.token=''
-      "
+      jupyter notebook --ip=0.0.0.0 --port=8888 --allow-root --no-browser --NotebookApp.token=''

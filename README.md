@@ -19,6 +19,7 @@ To meet these requirements, OpenBNSL is designed as follows:
     - Data manipulation (`Pandas`)
     - Visualization (`Matplotlib`, `NetworkX`)
     - Interactive prototyping (`Jupyter Notebook`)
+    - Documentation (`Sphinx`, `breathe`)
     - Utilizing learned models (`pgmpy`). (including exporting the learned model to `pgmpy`).
 3. Integration: The backend and frontend are connected using pybind11, enabling seamless and high-performance communication between Python and C++.
 4. Containerization: The project is containerized using Docker, ensuring a reproducible environment, objective benchmarking, and ease of contribution from the community.
@@ -62,7 +63,7 @@ Note: When cloning this repository, please make sure to clone the repository wit
 - [License](#license)
 
     
-## Set Up Docker Environment (Recommended)
+## Set Up
 
 ```bash
 docker-compose build
@@ -78,33 +79,28 @@ docker-compose build --build-arg INSTALL_GUROBI=true
 docker-compose up
 ```
 
-## Set Up Bare Metal Environment (Not Recommended)
-
-Please make sure you have the following dependencies installed on your system:
-- C++17
-- CMake 3.22
-- Python 3.10
-- Pandas 2.2.3
-- NetworkX 3.4.2 
-- Matplotlib 3.9.2
-- Jupyter Notebook 7.2.2
-- pyLPsolve 2.9.0
-- (optional) Gurobi 11.0.0
-
 ## Build the project
 ```bash
-./do_build.sh
+./build.sh
 ```
 compile shared library, python bindings, and backend tests.
 
 ## Run Tests
 ```bash
-./do_test.sh
+./test.sh
 ```
 backend tests (Google Test) and frontend tests (pytest) will be run.
 
+## Gen Docs
+```bash
+./gen_docs.sh
+```
+The documentation is generated using Doxygen for the backend and Sphinx for the frontend.
+
 ## Tutorial and Examples
 TBD
+
+
 
 ## Contributing
 Please feel free to create a new issue for any bugs, questions etc. 
@@ -112,19 +108,6 @@ It is very helpful if you gives us enough information to reproduce the problem.
 Github's guide on [about issues](https://guides.github.com/features/issues/) is also useful.
 
 If you want to contribute code, please follow the instructions in [Contributing](CONTRIBUTING.md)
-
-## Documentation
-
-### Backend (Doxygen)
-The documentation for the backend code is generated using Doxygen.
-In Docker container, the documentation is hosted at http://localhost:8000/.
-To update the documentation, run the following command:
-```bash
-doxygen Doxyfile
-```
-
-### Frontend (TBD)
-
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
