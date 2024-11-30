@@ -114,7 +114,18 @@ Github's guide on [about issues](https://guides.github.com/features/issues/) is 
 If you want to contribute code, please follow the instructions in [Contributing](CONTRIBUTING.md)
 
 ## Documentation
-TDB
+
+### Backend (Doxygen)
+The documentation for the backend code is generated using Doxygen.
+When changes are pushed to the main branch, GitHub Actions automatically generates and publishes the documentation.
+Locally, the documentation is hosted at http://localhost:8000/.
+To update the documentation, run the following command:
+```bash
+doxygen Doxyfile
+```
+
+### Frontend (TBD)
+
 
 ## License
 TBD
