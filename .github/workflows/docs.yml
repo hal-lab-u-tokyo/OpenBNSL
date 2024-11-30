@@ -22,12 +22,7 @@ jobs:
             python3.10-dev \
             python3-pip \
             && rm -rf /var/lib/apt/lists/*
-
-      -name: Set Python 3.10 as Default
-      run: |
-        sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
-        sudo update-alternatives --set python3 /usr/bin/python3.10
-
+            
       - name: Install Python Packages
         run: |
           pip3 install --upgrade pip
@@ -36,7 +31,7 @@ jobs:
             breathe==4.35.0
 
       - name: Generate Documentation
-        run: docker run --rm -v $PWD:/workspace openbnsl-image bash -c "chmod +x gen_docs.sh && ./gen_docs.sh"
+        run: chmod +x gen_docs.sh && ./gen_docs.sh
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v1
