@@ -92,10 +92,12 @@ compile shared library, python bindings, and backend tests.
 backend tests (Google Test) and frontend tests (pytest) will be run.
 
 ## Gen Docs
+The documentation is generated using Doxygen for the backend and Sphinx for the frontend.
+To generate the documentation, run the following command:
 ```bash
 ./gen_docs.sh
 ```
-The documentation is generated using Doxygen for the backend and Sphinx for the frontend.
+The generated documentation will be available in the `sphinx/build/html` directory.
 
 ## Tutorial and Examples
 TBD
