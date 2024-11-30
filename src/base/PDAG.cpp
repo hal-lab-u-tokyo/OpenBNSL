@@ -1,8 +1,5 @@
-#include <pybind11/pybind11.h>
-#include <pybind11/numpy.h>
 #include <vector>
-#include "base/DAG.h"
-namespace py = pybind11;
+#include "base/PDAG.h"
 
 // 制約ベース構造学習アルゴリズムのためのCPDAGクラス
 // DAGはCPDAGの特別な例であり，DAGの一般化といえるので，CPDAGのみでよいものと思われる
@@ -22,29 +19,29 @@ namespace py = pybind11;
 // なので，隣接リストを返す関数get_adj_list()が必要
 // こんな感じで使えるはず: nx.DiGraph(dag.get_adj_list())
 
-CPDAGwithAdjMat::CPDAGwithAdjMat(size_t n){
+PDAGwithAdjMat::PDAGwithAdjMat(size_t n){
     this->n = n;
     this->adj_mat.resize((n*n + 63) / 64, 1);
 }
 
-bool CPDAGwithAdjMat::has_edge(int from, int to) {
+bool PDAGwithAdjMat::has_edge(int from, int to) {
     int idx = from * this->n + to;
     return (this->adj_mat[idx / 64] >> (idx % 64)) & 1;
 }
 
-void CPDAGwithAdjMat::add_edge(int from, int to) {
+void PDAGwithAdjMat::add_edge(int from, int to) {
     int idx = from * this->n + to;
     if (this->adj_mat[idx / 64] >> (idx % 64) & 1) throw std::runtime_error("Edge already exists");
     this->adj_mat[idx / 64] |= 1 << (idx % 64);
 }
 
-void CPDAGwithAdjMat::remove_edge(int from, int to) {
+void PDAGwithAdjMat::remove_edge(int from, int to) {
     int idx = from * this->n + to;
     if (!(this->adj_mat[idx / 64] >> (idx % 64) & 1)) throw std::runtime_error("Edge does not exist");
     this->adj_mat[idx / 64] &= ~(1 << (idx % 64));
 }
 
-std::unordered_map<int, std::vector<int>> CPDAGwithAdjMat::get_adj_list() {
+std::unordered_map<int, std::vector<int>> PDAGwithAdjMat::get_adj_list() {
     std::unordered_map<int, std::vector<int>> _adj_list;
     for (int i = 0; i < this->n; i++) {
         std::vector<int> adj;
@@ -55,4 +52,5 @@ std::unordered_map<int, std::vector<int>> CPDAGwithAdjMat::get_adj_list() {
         }
         _adj_list[i] = adj;
     }
+    return _adj_list;
 }

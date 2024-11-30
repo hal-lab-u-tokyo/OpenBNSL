@@ -6,11 +6,12 @@ RUN apt update && apt install -y \
     build-essential \
     cmake \
     git \
-    libgtest-dev \
     python3.10 \
     python3.10-dev \
     python3-pip \
     libomp-dev \
+    libgmp-dev \
+    libgtest-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Set Python3.10 as default
