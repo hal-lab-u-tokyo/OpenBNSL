@@ -57,9 +57,11 @@ jobs:
       - name: Upload gtest Report
         uses: actions/upload-artifact@v4
         with:
+          name: gtest-results
           path: gtest_results.xml
 
       - name: Upload pytest Report
         uses: actions/upload-artifact@v4
         with:
+          name: pytest-results
           path: pytest_results.xml
