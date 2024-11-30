@@ -54,11 +54,11 @@ jobs:
         run: pytest --junitxml=pytest_results.xml
 
       - name: Upload gtest Report
-        uses: actions/upload-test-results@v3
+        uses: actions/upload-artifact@v4
         with:
-          files: gtest_results.xml
-      
+          path: gtest_results.xml
+
       - name: Upload pytest Report
-        uses: actions/upload-test-results@v3
+        uses: actions/upload-artifact@v4
         with:
-          files: pytest_results.xml
+          path: pytest_results.xml
