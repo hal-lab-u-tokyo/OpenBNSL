@@ -47,5 +47,18 @@ jobs:
       - name: Build the Project
         run: chmod +x build.sh && ./build.sh
 
-      - name: Run Tests
-        run: chmod +x test.sh && ./test.sh
+      - name: Run gtests
+        run: build/openbnsl_test --gtest_output=xml:gtest_results.xml
+
+      - name: Run pytest
+        run: pytest --junitxml=pytest_results.xml
+
+      - name: Upload gtest Report
+        uses: actions/upload-test-results@v3
+        with:
+          files: gtest_results.xml
+      
+      - name: Upload pytest Report
+        uses: actions/upload-test-results@v3
+        with:
+          files: pytest_results.xml
