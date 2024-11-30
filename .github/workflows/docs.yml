@@ -21,7 +21,7 @@ jobs:
             python3.10 \
             python3.10-dev \
             python3-pip \
-            && rm -rf /var/lib/apt/lists/*
+          sudo apt clean && sudo rm -rf /var/lib/apt/lists/*
             
       - name: Install Python Packages
         run: |

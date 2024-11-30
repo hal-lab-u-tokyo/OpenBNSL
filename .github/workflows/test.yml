@@ -22,7 +22,7 @@ jobs:
             libomp-dev \
             libgmp-dev \
             libgtest-dev \
-            && rm -rf /var/lib/apt/lists/*
+          sudo apt clean && sudo rm -rf /var/lib/apt/lists/*
 
       - name: Build Google Test
         run: |
