@@ -19,6 +19,7 @@ To meet these requirements, OpenBNSL is designed as follows:
     - Data manipulation (`Pandas`)
     - Visualization (`Matplotlib`, `NetworkX`)
     - Interactive prototyping (`Jupyter Notebook`)
+    - Documentation (`Sphinx`, `breathe`)
     - Utilizing learned models (`pgmpy`). (including exporting the learned model to `pgmpy`).
 3. Integration: The backend and frontend are connected using pybind11, enabling seamless and high-performance communication between Python and C++.
 4. Containerization: The project is containerized using Docker, ensuring a reproducible environment, objective benchmarking, and ease of contribution from the community.
@@ -62,7 +63,7 @@ Note: When cloning this repository, please make sure to clone the repository wit
 - [License](#license)
 
     
-## Set Up Docker Environment (Recommended)
+## Set Up
 
 ```bash
 docker-compose build
@@ -78,33 +79,30 @@ docker-compose build --build-arg INSTALL_GUROBI=true
 docker-compose up
 ```
 
-## Set Up Bare Metal Environment (Not Recommended)
-
-Please make sure you have the following dependencies installed on your system:
-- C++17
-- CMake 3.22
-- Python 3.10
-- Pandas 2.2.3
-- NetworkX 3.4.2 
-- Matplotlib 3.9.2
-- Jupyter Notebook 7.2.2
-- pyLPsolve 2.9.0
-- (optional) Gurobi 11.0.0
-
 ## Build the project
 ```bash
-./do_build.sh
+./build.sh
 ```
 compile shared library, python bindings, and backend tests.
 
 ## Run Tests
 ```bash
-./do_test.sh
+./test.sh
 ```
 backend tests (Google Test) and frontend tests (pytest) will be run.
 
+## Gen Docs
+The documentation is generated using Doxygen for the backend and Sphinx for the frontend.
+To generate the documentation, run the following command:
+```bash
+./gen_docs.sh
+```
+The generated documentation will be available in the `sphinx/build/html` directory.
+
 ## Tutorial and Examples
 TBD
+
+
 
 ## Contributing
 Please feel free to create a new issue for any bugs, questions etc. 
@@ -113,11 +111,8 @@ Github's guide on [about issues](https://guides.github.com/features/issues/) is 
 
 If you want to contribute code, please follow the instructions in [Contributing](CONTRIBUTING.md)
 
-## Documentation
-TDB
-
 ## License
-TBD
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 This work was supported by
