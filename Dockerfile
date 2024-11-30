@@ -34,7 +34,9 @@ RUN pip3 install \
     matplotlib==3.9.2 \
     notebook==7.2.2 \
     pulp==2.9.0 \
-    pytest==8.3.3
+    pytest==8.3.3 \
+    sphinx==8.1.3 \
+    breathe==4.35.0
 
 # Install Gurobi if needed
 RUN if [ "$INSTALL_GUROBI" = "true" ] ; then \
