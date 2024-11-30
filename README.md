@@ -117,8 +117,7 @@ If you want to contribute code, please follow the instructions in [Contributing]
 
 ### Backend (Doxygen)
 The documentation for the backend code is generated using Doxygen.
-When changes are pushed to the main branch, GitHub Actions automatically generates and publishes the documentation.
-Locally, the documentation is hosted at http://localhost:8000/.
+In Docker container, the documentation is hosted at http://localhost:8000/.
 To update the documentation, run the following command:
 ```bash
 doxygen Doxyfile
@@ -128,7 +127,7 @@ doxygen Doxyfile
 
 
 ## License
-TBD
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 This work was supported by
