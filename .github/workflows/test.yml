@@ -1,0 +1,21 @@
+name: Build and Test
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Build Docker Image
+        run: docker build -t openbnsl-image .
+
+      - name: Build the Project
+        run: docker run --rm -v $PWD:/workspace openbnsl-image bash -c "chmod +x build.sh && ./build.sh"
+
+      - name: Run Tests
+        run: docker run --rm -v $PWD:/workspace openbnsl-image bash -c "chmod +x test.sh && ./test.sh"

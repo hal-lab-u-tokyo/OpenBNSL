@@ -1,4 +1,4 @@
-name: Build and Deploy Documentation
+name: Generate and Deploy Documentation
 
 on:
   push:
@@ -7,24 +7,18 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy:
-    runs-on: ubuntu-22.04
-
+  generate_and_deploy_docs:
+    if : github.event_name == 'push' && github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup Python and Install Dependencies
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-      - run: |
-          sudo apt update
-          sudo apt install -y doxygen graphviz
-          pip install sphinx==8.1.3 breathe==4.35.0
+      - name: Build Docker Image
+        run: docker build -t openbnsl-image .
 
-      - name: Build Documentation
-        run: ./gen_docs.sh
+      - name: Generate Documentation
+        run: docker run --rm -v $PWD:/workspace openbnsl-image bash -c "chmod +x gen_docs.sh && ./gen_docs.sh"
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v1
