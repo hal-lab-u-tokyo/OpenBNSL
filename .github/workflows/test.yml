@@ -42,7 +42,7 @@ jobs:
             pytest==8.3.3
 
       - name: Build the Project
-        run: ./build.sh
+        run: chmod +x build.sh && ./build.sh
 
       - name: Run Tests
-        run: ./test.sh
+        run: chmod +x test.sh && ./test.sh
