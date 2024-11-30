@@ -49,8 +49,7 @@ jobs:
 
       - name: Run gtests
         run: |
-          PROJECT_ROOT=$(dirname "$(realpath "$0")")
-          $PROJECT_ROOT/build/openbnsl_test --gtest_output=xml:gtest_results.xml
+          build/openbnsl_test --gtest_output=xml:gtest_results.xml
 
       - name: Run pytest
         run: pytest --junitxml=pytest_results.xml
