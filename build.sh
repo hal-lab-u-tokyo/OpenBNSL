@@ -21,9 +21,9 @@ echo "Exporting PYTHONPATH..."
 export PYTHONPATH="$BUILD_DIR:$PYTHONPATH"
 
 echo "Build completed. PYTHONPATH has been set to: $BUILD_DIR"
-echo "You can now run Python scripts that use the 'openbn' module."
+echo "You can now run Python scripts that use the 'openbnsl' module."
 
 echo "Testing Python import..."
-python3 -c "import openbn; print('openbn module loaded successfully.')"
+python3 -c "import openbnsl; print('openbnsl module loaded successfully.')"
 
 echo "Done."

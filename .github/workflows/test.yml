@@ -1,0 +1,67 @@
+name: Build and Test
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Install Dependencies
+        run: |
+          sudo apt update && sudo apt install -y \
+            build-essential \
+            cmake \
+            git \
+            python3.10 \
+            python3.10-dev \
+            python3-pip \
+            libomp-dev \
+            libgmp-dev \
+            libgtest-dev
+          sudo apt clean
+          sudo rm -rf /var/lib/apt/lists/*
+
+      - name: Build Google Test
+        run: |
+          cd /usr/src/googletest && \
+          sudo cmake CMakeLists.txt && \
+          sudo make && \
+          sudo cp lib/*.a /usr/lib
+
+      - name: Install Python Packages
+        run: |
+          pip3 install --upgrade pip
+          pip3 install \
+            pandas==2.2.3 \
+            pgmpy==0.1.26 \
+            pulp==2.9.0 \
+            pytest==8.3.3
+
+      - name: Build the Project
+        run: chmod +x build.sh && ./build.sh
+
+      - name: Run gtests
+        run: |
+          build/openbnsl_test --gtest_output=xml:gtest_results.xml
+
+      - name: Run pytest
+        run: pytest --junitxml=pytest_results.xml
+
+      - name: Upload gtest Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: gtest-results
+          path: gtest_results.xml
+
+      - name: Upload pytest Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-results
+          path: pytest_results.xml

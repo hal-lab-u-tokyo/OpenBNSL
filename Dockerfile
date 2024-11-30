@@ -1,6 +1,6 @@
-FROM nvidia/cuda:12.6.2-devel-ubuntu22.04
-
+ARG BASE_IMAGE=ubuntu:22.04
 ARG INSTALL_GUROBI=false
+FROM ${BASE_IMAGE}
 
 RUN apt update && apt install -y \
     build-essential \
@@ -18,6 +18,7 @@ RUN apt update && apt install -y \
 
 # Set Python3.10 as default
 RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
+RUN update-alternatives --set python3 /usr/bin/python3.10
 
 # Build Google Test
 RUN cd /usr/src/googletest && \
@@ -51,6 +52,3 @@ RUN if [ "$INSTALL_GUROBI" = "true" ] ; then \
     fi
 
 WORKDIR /workspace
-
-# docker build --build-arg INSTALL_GUROBI=true -t openbn-image .
-# docker run -it --rm --memory=8g --shm-size=4g --cpus=16 --gpus='device=0' -v ${PWD}:/workspace --name openbn-container openbn-image
