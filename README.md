@@ -19,7 +19,7 @@ To meet these requirements, OpenBNSL is designed as follows:
     - Data manipulation (`Pandas`)
     - Visualization (`Matplotlib`, `NetworkX`)
     - Interactive prototyping (`Jupyter Notebook`)
-    - Utilizing learned models (`pgmpy`)
+    - Utilizing learned models (`pgmpy`). (including exporting the learned model to `pgmpy`).
 3. Integration: The backend and frontend are connected using pybind11, enabling seamless and high-performance communication between Python and C++.
 4. Containerization: The project is containerized using Docker, ensuring a reproducible environment, objective benchmarking, and ease of contribution from the community.
 
@@ -27,18 +27,19 @@ This framework is offered as an open-source project, and we actively welcome con
 
 Note: When cloning this repository, please make sure to clone the repository with `--recurse-submodules` to include the pybind11 submodule.
 
-![Overview](images/overview.png)
+<img src="images/overview.png" alt="overview" width="300">
+
 
 ## Features
 - Structure Learning from data
-    - Score-based Learning
-        - [ ] Hill Climbing
-        - [ ] Tabu Search
-        - [ ] Simulated Annealing
-        - [ ] Integer Programming
-    - Constraint-based Learning
-        - [ ] PC algorithm
-        - [ ] RAI algorithm
+    - [ ] Hill Climbing
+    - [ ] Tabu Search
+    - [ ] Simulated Annealing 
+    - [ ] Integer Programming (IP)
+    - [ ] Greedy Equivalent Search (GES)
+    - [ ] Peter-Clark algorithm (PC)
+    - [ ] Min-Max Hill Climbing (MMHC)
+    - [ ] Recursive Autonomy Identification (RAI)
 - Evaluation Metrics
     - Structural Likelihood
         - [ ] Akaike Information Criterion (AIC)
@@ -63,21 +64,17 @@ Note: When cloning this repository, please make sure to clone the repository wit
     
 ## Set Up Docker Environment (Recommended)
 
+```bash
+docker-compose build
+docker-compose up
+```
+
 ### Optional: Gurobi License
 If you want to use gurobi, you need to get a license file (gurobi.lic) and put it in the same directory as the Dockerfile.
 Gurobi provides free licenses for academic use.
 
-### Build Docker Image
-```bash
-docker-compose build
-```
-or with gurobi
 ```bash
 docker-compose build --build-arg INSTALL_GUROBI=true
-```
-
-### Run Docker Container
-```bash
 docker-compose up
 ```
 
