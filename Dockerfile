@@ -6,6 +6,7 @@ RUN apt update && apt install -y \
     build-essential \
     cmake \
     git \
+    clang-format \
     doxygen \
     graphviz \
     python3.10 \
@@ -36,6 +37,7 @@ RUN pip3 install \
     notebook==7.2.2 \
     pulp==2.9.0 \
     pytest==8.3.3 \
+    black==24.10.0 \
     sphinx==8.1.3 \
     breathe==4.35.0
 
