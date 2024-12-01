@@ -5,6 +5,7 @@ from benchmark_utils import benchmark_functions_variants
 sys.path.append("/workspace/build")
 import openbn
 
+
 def python_matmul(a, b):
     n, m = len(a), len(b[0])
     p = len(b)
@@ -14,6 +15,7 @@ def python_matmul(a, b):
             for k in range(p):
                 result[i][j] += a[i][k] * b[k][j]
     return result
+
 
 matrix_size = 256
 np.random.seed(0)
@@ -30,11 +32,9 @@ func_variants = [
 ]
 
 benchmark_functions_variants(
-    func_variants, 
-    input_args, 
+    func_variants,
+    input_args,
     trials=10,
-    unit="ms", 
-    benchmark_name="Benchmark Matrix Multiplication ({}x{})".format(a.shape, b.shape)
+    unit="ms",
+    benchmark_name="Benchmark Matrix Multiplication ({}x{})".format(a.shape, b.shape),
 )
-
-

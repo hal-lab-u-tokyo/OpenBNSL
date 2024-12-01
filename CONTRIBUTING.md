@@ -52,5 +52,23 @@ Branch naming examples:
 └── README.md           # Project README
 ```
 
+## Coding Style
+
+For C++ code, we use clang-format with Google's C++ style guide [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html).
+Before submitting a pull request, please run the following command to format your code:
+```bash
+./format.sh
+```
+
+| **Element** | **Naming Rule** | **Example** |
+| --- | --- | --- |
+| **File Name** | snake_case | `my_file.h`, `my_file.cpp` |
+| **Directory Name** | snake_case | `src/`, `include/`, `test_utils/` |
+| **Class** | PascalCase | `MyClass`, `MyStruct` |
+| **Function** | snake_case | `my_function()` |
+| **Variable** | snake_case | `my_variable` |
+| **Constant** | UPPERCASE_SNAKE_CASE | `MY_CONSTANT` |
+| **Namespace** | snake_case | `my_namespace` | `my_namespace::my_function()` |
+
 ## Discussion
-<!-- TBD -->
+<!-- TBD --> 
