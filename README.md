@@ -28,8 +28,10 @@ This framework is offered as an open-source project, and we actively welcome con
 
 Note: When cloning this repository, please make sure to clone the repository with `--recurse-submodules` to include the pybind11 submodule.
 
-<img src="images/overview.png" alt="overview" width="300">
-
+<div style="display: flex; align-items: center; gap: 10px;">
+  <img src="images/software_stack.png" alt="Software Stack" style="width: 60%;" />
+  <img src="images/workflow.png" alt="Workflow" style="width: 40%;" />
+</div>
 
 ## Features
 - Structure Learning from data
