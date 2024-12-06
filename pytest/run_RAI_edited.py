@@ -89,11 +89,11 @@ def save_benchmark(estimate_type, data_type, size, structure_score, ave_score, c
 def arg_parser():
     parser = argparse.ArgumentParser(description="Benchmarking for Bayesian Network Structure Learning")
     parser.add_argument("--estimate_type", type=str, default="RAI_t", help="Estimator type")
-    parser.add_argument("--data_type", type=str, default="alarm", help="Data type")
+    parser.add_argument("--data_type", type=str, default="cancer", help="Data type")
     parser.add_argument("--sample_size", type=int, default=10000, help="Sample size")
     parser.add_argument("--structure_score", type=str, default="BIC", help="Structure score")
     parser.add_argument("--ess", type=float, default=5, help="ESS")
-    parser.add_argument("--max_iter", type=int, default=3, help="Number of iterations")
+    parser.add_argument("--max_iter", type=int, default=50, help="Number of iterations")
     return parser.parse_args()
 
 def main():
