@@ -334,7 +334,7 @@ void  order_grouping(PDAG &Gall, vector<int> &Gs, vector<int> &Gd, vector<vector
     for (int i = 0; i < comp.size(); i++){
       if (comp.at(i) == order){ // node Gs.at(i) is in the order-th group
         g_subs.push_back(vector<int>());
-        g_subs.at(i).push_back(Gs.at(i));
+        g_subs.at(order).push_back(Gs.at(i)); // node Gs.at(i) is in the order-th group(g_subs.at(order))
         flag = true;
       }
     }
@@ -345,6 +345,22 @@ void  order_grouping(PDAG &Gall, vector<int> &Gs, vector<int> &Gd, vector<vector
   return;
 }
 
+vector<vector<string>> stringdata2intdata(const vector<vector<string>> &data) {
+  vector<vector<string>> intdata = data;
+  set<string> unique_values;
+  for (int i = 0; i < data.size(); i++) {
+    for (int j = 0; j < data.at(i).size(); j++) {
+      unique_values.insert(data.at(i).at(j));
+    }
+  }
+  vector<string> unique_values_vec(unique_values.begin(), unique_values.end());
+  for (int i = 0; i < data.size(); i++) {
+    for (int j = 0; j < data.at(i).size(); j++) {
+      intdata.at(i).at(j) = to_string(distance(unique_values_vec.begin(), find(unique_values_vec.begin(), unique_values_vec.end(), data.at(i).at(j))));
+    }
+  }
+  return intdata;
+}
 
 PDAG recursive_search(const vector<vector<string>> &data, PDAG &Gall, vector<int> Gs, vector<int> Gex, int N, float ESS) {
   int n_node = data.at(0).size();
@@ -376,7 +392,7 @@ PDAG recursive_search(const vector<vector<string>> &data, PDAG &Gall, vector<int
             do {
                   //cout << indexes[0] << ',' << indexes[1] << endl;
                   vector<int> selected_z;
-                  for (int j = 0; j < 2; j++) {
+                  for (int j = 0; j < N; j++) {
                     selected_z.push_back(Z.at(j));
                   }
                   if (ci_test(data, node_x, node_y, selected_z, ESS)) {
@@ -385,7 +401,7 @@ PDAG recursive_search(const vector<vector<string>> &data, PDAG &Gall, vector<int
                     deletededges.at(node_y).at(node_x) = true;
                     //transive_cut();
                   }
-              } while(next_combination(Z.begin(), Z.end(), 2));
+              } while(next_combination(Z.begin(), Z.end(), N));
           }
         }
       }
@@ -447,7 +463,6 @@ PDAG recursive_search(const vector<vector<string>> &data, PDAG &Gall, vector<int
   return recursive_search(data, Gall, Gd, Gexd, N + 1, ESS);
 }
 
-
 PDAG RAI(const vector<vector<string>> &data, float ESS) {
   int n_node = data.at(0).size(); // number of nodes
   // initialize Gall, Gs, Gex
@@ -457,7 +472,10 @@ PDAG RAI(const vector<vector<string>> &data, float ESS) {
           gall.at(i).at(i) = false;
       }
   Gall.g = gall; //Gall is complete graph
-  vector<int> Gs(n_node, 1);// Gs contains all nodes 0 ~ n_node - 1
+  vector<int> Gs(n_node, -1);
+  for (int i = 0; i < n_node; i++) {
+    Gs.at(i) = i;
+  }// Gs contains all nodes 0 ~ n_node - 1
   vector<int> Gex;// Gex is empty
 
   PDAG Gend;
@@ -466,9 +484,10 @@ PDAG RAI(const vector<vector<string>> &data, float ESS) {
 }
 
 
+
 int main() {
   // dummy data,ESS
-  vector<vector<string>> data = {{"a", "b", "c"}, {"a", "b", "c"}, {"a", "b", "c"}};
+  vector<vector<string>> data = {{"a", "b", "c"}, {"a", "b", "c"}, {"a", "b", "c"}, {"a", "b", "c"}};
   float ESS = 1.0;
   
   PDAG Gend;
