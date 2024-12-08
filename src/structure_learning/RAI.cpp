@@ -2,7 +2,9 @@ using namespace std;
 
 #include <string>
 #include <set>
-#include <vector>
+#include<vector>
+#include<stack>
+#include<cassert>
 //the following includes are for permutation and combination algorithms
 #include <algorithm>
 #include <functional>
@@ -19,28 +21,124 @@ using namespace std;
 // Gall.at(i).at(j)==1 means there is an edge i -> j
 // c++ 17 を仮定]
 
-void recursive_comb(int *indexes, int s, int rest, function<void(int *)> f) {
-  if (rest == 0) {
-    f(indexes);
-  } else {
-    if (s < 0) return;
-    recursive_comb(indexes, s - 1, rest, f);
-    indexes[rest - 1] = s;
-    recursive_comb(indexes, s - 1, rest - 1, f);
-  }
+
+
+
+
+
+
+void dfs(int now, vector<vector<int>> &G, vector<bool> &visited, vector<int> &order) {
+    //cout<<now<<endl;
+    visited[now] = true;
+    for (int i = 0; i < (int)G.at(now).size(); i++) {
+        if (!visited[G.at(now).at(i)]) {
+            dfs(G.at(now).at(i), G, visited, order);
+        }
+    }
+    order.push_back(now);
 }
 
-void foreach_comb(int n, int k, function<void(int *)> f) {
-  int indexes[k];
-  recursive_comb(indexes, n - 1, k, f);
-} // foreach_comb(n, k, [](int *indexes) {indexes holds the combination nCk})
+void rdfs(int now, vector<vector<int>> &rG, vector<bool> &visited, int k, vector<int> &comp) {
+    //cout<<now<<endl;
+    visited[now] = true;
+    comp[now] = k;
+    for (int i = 0; i < (int)rG.at(now).size(); i++) {
+        if (!visited[rG.at(now).at(i)]) {
+            rdfs(rG.at(now).at(i), rG, visited, k, comp);
+        }
+    }
+}
 
+vector<int> SCC(vector<vector<int>> &G, vector<vector<int>> &rG){
+    int n_node = G.size();
+    vector<bool> visited(n_node, false);
+    vector<int> comp(n_node, 0);
+    vector<int> order;
+    order.clear();
+    //dfs
+    for (int i = 0; i < n_node; i++) {
+        if (!visited[i]) {
+            dfs(i, G, visited, order);
+        }
+    }
+    fill(visited.begin(), visited.end(), false);
+    //dfs2
+    int k = 0;
+    for (int i = n_node - 1; i >= 0; i--) {
+        if (!visited[order[i]]) {
+            rdfs(order.at(i), rG, visited, k, comp);
+            k++;
+        }
+    }
+    return comp;
+}  //lowest topological order -> highest number in comp
+
+vector<vector<int>> adjmat2listmat(vector<vector<bool>> &adjmat){//隣接行列表現2隣接リスト表現
+    int n_node = adjmat.size();
+    vector<vector<int>> listmat(n_node);
+    for (int i = 0; i < n_node; i++) {
+        for (int j = 0; j < n_node; j++) {
+            if (adjmat.at(i).at(j)) {
+                listmat.at(i).push_back(j); //i to j
+            }
+        }
+    }
+    return listmat;
+}
+
+vector<vector<int>> adjmat2listmat_reverse(vector<vector<bool>> &adjmat){//隣接行列表現2隣接リスト表現(reversed)
+    int n_node = adjmat.size();
+    vector<vector<int>> listmat(n_node);
+    for (int i = 0; i < n_node; i++) {
+        for (int j = 0; j < n_node; j++) {
+            if (adjmat.at(i).at(j)) {
+                listmat.at(j).push_back(i); //reverse edge j to i
+            }
+        }
+    }
+    return listmat;
+}
+
+vector<vector<bool>> make_gs_graph(vector<vector<bool>> Gallgraph, vector<int> gs){
+    vector<vector<bool>> gsgraph(gs.size(), vector<bool>(gs.size(), false));
+    for (int i = 0; i < gs.size(); i++){
+        for (int j = 0; j < gs.size(); j++){
+            gsgraph.at(i).at(j) = Gallgraph.at(gs.at(i)).at(gs.at(j));
+        }
+    }
+    return gsgraph;
+}
+
+template <typename T> bool next_combination(const T first, const T last, int k) { //use sorted vector
+    const T subset = first + k;
+    // empty container | k = 0 | k == n 
+    if (first == last || first == subset || last == subset) {
+        return false;
+    }
+    T src = subset;
+    while (first != src) {
+        src--;
+        if (*src < *(last - 1)) {
+            T dest = subset;
+            while (*src >= *dest) {
+                dest++;
+            }
+            iter_swap(src, dest);
+            rotate(src + 1, dest + 1, last);
+            rotate(subset, subset + (last - dest) - 1, last);
+            return true;
+        }
+    }
+    // restore
+    rotate(first, subset, last);
+    return false;
+}
 
 struct PDAG {
   vector<vector<bool>> g;
 
   vector<int> successors(int i) {
-    // return the list of successors of node i
+    // return the list of successors of node i (include undirected edge)
     vector<int> succ;
     for (int j = 0; j < g.size(); j++) {
       if (g.at(i).at(j)) {
@@ -51,7 +149,7 @@ struct PDAG {
   }
 
   vector<int> predecessors(int i) {
-    // return the list of predecessors of node i
+    // return the list of predecessors of node i (include undirected edge)
     vector<int> pred;
     for (int j = 0; j < g.size(); j++) {
       if (g.at(j).at(i)) {
@@ -59,6 +157,17 @@ struct PDAG {
       }
     }
     return pred;
+  }
+
+  vector<int> neighbors(int i) { 
+    //return the list of neighbors {j} of node i (j -> i or i -> j)
+    vector<int> neigh;
+    for (int j = 0; j < g.size(); j++) {
+      if (g.at(j).at(i) || g.at(i).at(j)) {
+        neigh.push_back(j);
+      }
+    }
+    return neigh;
   }
 
   vector<int> undirected_neighbors(int i) {
@@ -72,12 +181,12 @@ struct PDAG {
     return neigh;
   }
 
-  void remove_oriented_edge(int i, int j) {
+  void remove_edge(int i, int j) {
     // remove the edge i -> j
     g.at(i).at(j) = false;
   }
 
-  void remove_edge(int i, int j) {
+  void remove_edge_completedly(int i, int j) {
     // remove edge between i and j
     g.at(i).at(j) = false;
     g.at(j).at(i) = false;
@@ -101,11 +210,141 @@ struct PDAG {
   bool has_undirected_edge(int i, int j) {
     return g.at(i).at(j) && g.at(j).at(i);
   }
+
+  bool has_directed_path(int X, int Y){ //check if there is a directed path from X to Y using DFS
+    vector<int> visited(g.size(), 0);
+    vector<int> stack;
+    stack.push_back(X);
+    while (!stack.empty()){
+      int node = stack.back();
+      visited.at(node) = 1;
+      stack.pop_back();
+      if (node == Y){
+        return true;
+      }
+      for (auto& succ : successors(node)){
+        if (visited.at(succ) == 0 && has_directed_edge(node, succ)){
+          stack.push_back(succ);
+        }
+      }
+    }
+    return false;
+  }
 };
 
 bool ci_test(const vector<vector<string>> &data, int node_x, int node_y, vector<int> Z, float ESS) {
   return true;
 }
+
+void orientation_A2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deletededges) {
+/*
+    orient edges in a PDAG to a maximally oriented graph.
+    orient rules are based on rule 1~3 from Meek,C.:Causal Inference and Causal Explanation with Background Knowledge,Proc.Confon Uncertainty in Artificial Inteligence (UAl-95),p.403-410 (195)
+    in this stage (stage A2 in Yehezkel and Lerner(2009)), only rule 1 is applied because only X -> Y - Z shape is created in stage A1 (X-Z removed).
+*/
+  //Rule 1: X -> Y - Z, no edge between X and Z then X -> Y -> Z
+  for (int i = 0; i < Gall.g.size(); i++){
+    for (int j = 0; j < Gall.g.size(); j++){
+      if (deletededges.at(i).at(j) || deletededges.at(j).at(i)){
+        int X = i;
+        int Z = j;
+        for (auto& Y : Gall.undirected_neighbors(Z)) {
+          if (Gall.has_directed_edge(X, Y)) {
+            Gall.remove_edge(Z, Y);
+          }
+        }
+      }
+    }
+  }
+  return;
+}
+
+void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deletededges, const vector<vector<string>> &data, float &ESS) {
+/*
+    orient edges in a PDAG to a maximally oriented graph.
+    orient rules are based on rule 1~3 from Meek,C.:Causal Inference and Causal Explanation with Background Knowledge,Proc.Confon Uncertainty in Artificial Inteligence (UAl-95),p.403-410 (195)
+*/
+  //for each X-Z-Y (X and Y is not adjecent), find V-structure and orient as X -> Z <- Y
+  for (auto& X : Gs) {
+    for (auto& Z : Gall.undirected_neighbors(X)) {
+      for (auto& Y : Gall.undirected_neighbors(Z)) {
+        if (X != Y && !Gall.has_edge(X, Y) && !Gall.has_edge(Y, X)) {
+          if (ci_test(data, X, Y, {Z}, ESS)){
+            Gall.remove_edge(Z, X);
+            Gall.remove_edge(Z, Y);
+          }
+        }
+      }
+    }
+  }
+  bool flag = true;
+  while (flag){
+    flag = false;
+    //Rule 1: X -> Y - Z, no edge between X and Z then X -> Y -> Z
+    for (auto& X : Gs) {
+      for (auto& Y : Gall.successors(X)) {
+        if (!Gall.has_directed_edge(Y, X)) {
+          for (auto& Z : Gall.undirected_neighbors(Y)) {
+            if (!Gall.has_edge(X, Z) && !Gall.has_edge(Z, X)) {
+              Gall.remove_edge(Z, Y);
+              flag = true;
+            }
+          }
+        }
+      }
+    }
+    //Rule 2: X - Y and if there is a directed path from X to Y, then X -> Y
+    for (auto& X : Gs) {
+      for (auto& Y : Gall.undirected_neighbors(X)) {
+        if (Gall.has_directed_path(X, Y)) {
+          Gall.remove_edge(Y, X);
+          flag = true;
+        }
+      }
+    }
+    //Rule 3: for each X->W<-Z X-Y-Z Y-W, orient Y->W
+    for (auto &X : Gs){
+      for (auto &Y : Gall.undirected_neighbors(X)){
+        for (auto &Z : Gall.undirected_neighbors(Y)){
+          if (Z != X){ //X-Y-Z
+            for (auto &W : Gall.undirected_neighbors(Y)){
+              if (W != X && W != Z && Gall.has_directed_edge(X, W) && Gall.has_directed_edge(Z, W)){
+                Gall.remove_edge(W, Y);
+                flag = true;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  return;
+}
+
+void  order_grouping(PDAG &Gall, vector<int> &Gs, vector<int> &Gd, vector<vector<int>> &g_subs) {
+  vector<vector<bool>> adjmat = make_gs_graph(Gall.g, Gs);
+  vector<vector<int>> listmat = adjmat2listmat(adjmat);
+  vector<vector<int>> rlistmat = adjmat2listmat_reverse(adjmat);
+  vector<int> comp = SCC(listmat, rlistmat);
+  bool flag = true;
+  int order = 0;
+  while(flag){
+    flag = false;
+    for (int i = 0; i < comp.size(); i++){
+      if (comp.at(i) == order){ // node Gs.at(i) is in the order-th group
+        g_subs.push_back(vector<int>());
+        g_subs.at(i).push_back(Gs.at(i));
+        flag = true;
+      }
+    }
+    order = order + 1;
+  }
+  Gd = g_subs.back();
+  g_subs.pop_back();
+  return;
+}
+
 
 PDAG recursive_search(const vector<vector<string>> &data, PDAG &Gall, vector<int> Gs, vector<int> Gex, int N, float ESS) {
   int n_node = data.at(0).size();
@@ -120,9 +359,9 @@ PDAG recursive_search(const vector<vector<string>> &data, PDAG &Gall, vector<int
   if (exitcondition) {
     return Gall;
   }
-  //stage A1: Do CI tests for nodes between Gex and Gs and remove edge
+  //stage A1: Do CI tests for nodes between Gex and Gs and remove edge   (bug?)
+  vector<vector<bool>>deletededges(n_node, vector<bool>(n_node, false));
   if (!(Gex.empty())){
-    vector<vector<bool>>deletededges(n_node, vector<bool>(n_node, false));
     for (auto& node_y : Gs) {
       for (auto& node_x : Gex) {
         if (Gall.has_edge(node_x, node_y) && !(deletededges.at(node_x).at(node_y) || deletededges.at(node_y).at(node_x))) {
@@ -132,28 +371,80 @@ PDAG recursive_search(const vector<vector<string>> &data, PDAG &Gall, vector<int
               Z.erase(Z.begin() + i);
             }
           } //erase node_x from Z
+          sort(Z.begin(), Z.end());
           if (Z.size() >= N) {
-            foreach_comb(Z.size(), N, [&Z, &Gall, &data, &node_x, &node_y, &N, &ESS, &deletededges](int *indexes) { //error?
-              //cout << indexes[0] << ',' << indexes[1] << endl;
-              vector<int> selected_z;
-              for (int j = 0; j < N; j++) {
-                selected_z.push_back(Z.at(indexes[j]));
-              }
-              if (ci_test(data, node_x, node_y, selected_z, ESS)) {
-                Gall.remove_edge(node_x, node_y);
-                deletededges.at(node_x).at(node_y) = true;
-                deletededges.at(node_y).at(node_x) = true;
-                //transive_cut
-              }
-            });
+            do {
+                  //cout << indexes[0] << ',' << indexes[1] << endl;
+                  vector<int> selected_z;
+                  for (int j = 0; j < 2; j++) {
+                    selected_z.push_back(Z.at(j));
+                  }
+                  if (ci_test(data, node_x, node_y, selected_z, ESS)) {
+                    Gall.remove_edge(node_x, node_y);
+                    deletededges.at(node_x).at(node_y) = true;
+                    deletededges.at(node_y).at(node_x) = true;
+                    //transive_cut();
+                  }
+              } while(next_combination(Z.begin(), Z.end(), 2));
           }
         }
       }
     }
   }
-  
-
-  return Gall;
+  //stage A2: orient edges in Gs using "smart" orientation rules R1
+  orientation_A2(Gall, Gs, deletededges);
+  //stage B1: Do CI tests for nodes between Gs and Gs and remove edge
+  for (auto& node_y : Gs) {
+    for (auto& node_x : Gall.neighbors(node_y)) {
+      if (N == 0) {
+        vector<int> S;
+        if (ci_test(data, node_x, node_y, S, ESS)){
+          Gall.remove_edge(node_x, node_y);
+          Gall.remove_edge(node_y, node_x);
+          deletededges.at(node_x).at(node_y) = true;
+          deletededges.at(node_y).at(node_x) = true;
+          //transive_cut();
+        }
+      }else{
+        vector<int> S = Gall.predecessors(node_y);
+        auto newEnd = remove(S.begin(), S.end(), node_x);
+        S.erase(newEnd, S.end()); // remove node_x from S  正しい？
+        if (S.size() >= N) {
+          do {
+            //cout << indexes[0] << ',' << indexes[1] << endl;
+            vector<int> selected_z;
+            for (int j = 0; j < N; j++) {
+              selected_z.push_back(S.at(j));
+            }
+            if (ci_test(data, node_x, node_y, selected_z, ESS)) {
+              Gall.remove_edge(node_x, node_y);
+              Gall.remove_edge(node_y, node_x);
+              deletededges.at(node_x).at(node_y) = true;
+              deletededges.at(node_y).at(node_x) = true;
+              //transive_cut();
+            }
+          } while(next_combination(S.begin(), S.end(), N));
+        }
+      }
+    }
+  }
+  //stage B2: orient edges in Gs using orientation rules R1~R3
+  orientation_B2(Gall, Gs, deletededges, data, ESS);
+  //stage B3: Group the nodes having the lowest topological order into a descendant substructure Gd
+  vector<int> Gd;
+  vector<vector<int>> g_subs;
+  order_grouping(Gall, Gs, Gd, g_subs);
+  //stage C: Ancestorsub-structure decomposition
+  vector<int> Gexd;
+  for (auto& Gex_i : g_subs) {
+    for (auto& node : Gex_i) {
+      Gexd.push_back(node);
+    }
+    sort(Gexd.begin(), Gexd.end());
+    Gall = recursive_search(data, Gall, Gex_i, Gex, N + 1, ESS);
+  }
+  //stage D:  Descendantsub-structure decomposition
+  return recursive_search(data, Gall, Gd, Gexd, N + 1, ESS);
 }
 
 
