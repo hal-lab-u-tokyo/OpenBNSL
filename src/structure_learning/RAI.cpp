@@ -232,10 +232,6 @@ struct PDAG {
   }
 };
 
-bool ci_test(const vector<vector<string>> &data, int node_x, int node_y, vector<int> Z, float ESS) {
-  return true;
-}
-
 void orientation_A2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deletededges) {
 /*
     orient edges in a PDAG to a maximally oriented graph.
@@ -345,22 +341,27 @@ void  order_grouping(PDAG &Gall, vector<int> &Gs, vector<int> &Gd, vector<vector
   return;
 }
 
-vector<vector<string>> stringdata2intdata(const vector<vector<string>> &data) {
-  vector<vector<string>> intdata = data;
-  set<string> unique_values;
-  for (int i = 0; i < data.size(); i++) {
-    for (int j = 0; j < data.at(i).size(); j++) {
-      unique_values.insert(data.at(i).at(j));
-    }
+bool ci_test(const vector<vector<string>> &data, int node_x, int node_y, vector<int> Z, float ESS) {
+  //CI test for X _|_ Y | Z
+  if (Z.empty()) {
+    
+    //independence test between X and Y
+    return true;
+  }else{
+    //independence test between X and Y | Z
+    return true;
   }
-  vector<string> unique_values_vec(unique_values.begin(), unique_values.end());
-  for (int i = 0; i < data.size(); i++) {
-    for (int j = 0; j < data.at(i).size(); j++) {
-      intdata.at(i).at(j) = to_string(distance(unique_values_vec.begin(), find(unique_values_vec.begin(), unique_values_vec.end(), data.at(i).at(j))));
-    }
-  }
-  return intdata;
+  return true;
 }
+
+vector<vector<int>> state_counts(const vector<vector<string>> &data, int node_x, int node_y, vector<int> Z) {
+  //return the state counts of X, Y | Z
+  vector<vector<int>> counts;
+  return counts;
+}
+
+
+
 
 PDAG recursive_search(const vector<vector<string>> &data, PDAG &Gall, vector<int> Gs, vector<int> Gex, int N, float ESS) {
   int n_node = data.at(0).size();
