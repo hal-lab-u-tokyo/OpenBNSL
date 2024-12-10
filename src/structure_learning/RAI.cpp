@@ -1,3 +1,4 @@
+#define _GLIBCXX_DEBUG
 using namespace std;
 
 #include <string>
@@ -23,11 +24,6 @@ using namespace std;
 // samples) output: leard PDAG
 // Gall.at(i).at(j)==1 means there is an edge i -> j
 // c++ 17 を仮定]
-
-
-
-
-
 
 
 void dfs(int now, vector<vector<int>> &G, vector<bool> &visited, vector<int> &order) {
@@ -102,7 +98,7 @@ vector<vector<int>> adjmat2listmat_reverse(vector<vector<bool>> &adjmat){//隣�
     return listmat;
 }
 
-vector<vector<bool>> make_gs_graph(vector<vector<bool>> Gallgraph, vector<int> gs){
+vector<vector<bool>> make_gs_graph(vector<vector<bool>> &Gallgraph, vector<int> &gs){
     vector<vector<bool>> gsgraph(gs.size(), vector<bool>(gs.size(), false));
     for (int i = 0; i < gs.size(); i++){
         for (int j = 0; j < gs.size(); j++){
@@ -139,6 +135,22 @@ template <typename T> bool next_combination(const T first, const T last, int k) 
 
 struct PDAG {
   vector<vector<bool>> g;
+  // コンストラクタ
+  PDAG() {
+    //cout << "normal constructor called" << endl;
+  }
+  // コピーコンストラクタ
+  PDAG(const PDAG &old) {
+    //cout << "copy constructor called" << endl;
+    g = old.g;
+  }
+  // 代入演算子
+  PDAG& operator=(const PDAG& a) {
+    if (this != &a) g = a.g;
+    return *this;
+  }
+  // デストラクタ
+  ~PDAG() = default;
 
   vector<int> successors(int i) {
     // return the list of successors of node i (include undirected edge)
@@ -235,6 +247,146 @@ struct PDAG {
   }
 };
 
+void  order_grouping(PDAG &Gall, vector<int> &Gs, vector<int> &Gd, vector<vector<int>> &g_subs) {
+  vector<vector<bool>> adjmat = make_gs_graph(Gall.g, Gs);
+  vector<vector<int>> listmat = adjmat2listmat(adjmat);
+  vector<vector<int>> rlistmat = adjmat2listmat_reverse(adjmat);
+  vector<int> comp = SCC(listmat, rlistmat);
+  bool flag = true;
+  int order = 0;
+  while(flag){
+    flag = false;
+    for (int i = 0; i < comp.size(); i++){
+      if (comp.at(i) == order){ // node Gs.at(i) is in the order-th group
+        g_subs.push_back(vector<int>());
+        g_subs.at(order).push_back(Gs.at(i)); // node Gs.at(i) is in the order-th group(g_subs.at(order))
+        flag = true;
+      }
+    }
+    order = order + 1;
+  }
+  Gd = g_subs.back();
+  g_subs.pop_back();
+  return;
+}
+
+vector<vector<int>> state_count(const vector<vector<int>> &data, int &node_x, vector<int> &parents, vector<vector<string>> &state_list, vector<int> &n_states) {
+  if(parents.empty()) {
+    int x = n_states.at(node_x);
+    vector<vector<int>> counts(x, vector<int>(1, 0));
+    for(int i = 0; i < data.size(); i++) {
+      counts.at(data.at(i).at(node_x)).at(0) += 1;
+    }
+    return counts;
+  } else {
+    //return the state counts of X, Y | Z shape: countmap[state of child][state of parents]
+    int x = n_states.at(node_x);
+    int y = 1;
+    for (int i = 0; i < parents.size(); i++) {
+      y = y * n_states.at(parents.at(i));
+    }
+    vector<vector<int>> counts(x, vector<int>(y, 0));
+    //count the number of each state
+    for(int i = 0; i < data.size(); i++) {
+      int yy;
+      for (int j = 0; j < parents.size(); j++) {
+        if (j == 0) {
+          yy = data.at(i).at(parents.at(j));
+        }
+        else {
+          yy = n_states.at(parents.at(j)) * yy + data.at(i).at(parents.at(j));
+        }
+      }
+      counts.at(data.at(i).at(node_x)).at(yy) += 1;
+    }
+    return counts;
+  }
+}
+
+float localBDeuscore(const vector<vector<int>> &data, int &node_x, vector<int> &parents, long double &ESS, vector<vector<string>> &state_list, vector<int> &n_states) {
+  //return log of the BDeu score of X, Y | Z
+  long double score = 0.0;
+  if (parents.empty()) {
+    //no parents
+    vector<vector<int>> count;
+    count = state_count(data, node_x, parents, state_list, n_states);
+    int r = count.size(); //number of states of node_x
+    int n_i = 0;
+    for (int k = 0; k < r; k++) {
+      n_i += count.at(k).at(0);
+    }
+    for (int k = 0; k < r; k++) { //for each state of node_x
+        score += lgamma(ESS / r + count.at(k).at(0)) - lgamma(ESS/r);
+    }
+    score += lgamma(ESS) - lgamma(ESS + n_i);
+  }
+  else {
+    //have parents
+    vector<vector<int>> count;
+    count = state_count(data, node_x, parents, state_list, n_states);
+    int q = count.at(0).size(); //number of states of parents
+    int r = count.size(); //number of states of node_x
+    vector<float> n_ij(q, 0.0);
+    for (int k = 0; k < r; k++) {
+      for(int j = 0; j < q; j++) {
+        n_ij.at(j) += count.at(k).at(j);
+      }
+    }
+    for (int j = 0; j < q; j++) { //for each state of parents
+      for (int k = 0; k < r; k++) { //for each state of node_x
+        score += lgamma(ESS / (r * q) + count.at(k).at(j)) - lgamma(ESS/(r * q));
+        if (isnan(score)) {
+          cout <<ESS / (r * q) + count.at(k).at(j)<< "score is nan" << endl;
+        }
+      }
+      score += lgamma(ESS / q) - lgamma(ESS / q + n_ij.at(j));
+    }
+  }
+    //calculate the score
+  return score;
+}
+
+bool ci_test(const vector<vector<int>> &data, int &node_x, int &node_y, vector<int> &Z, long double &ESS, vector<vector<string>> &state_list, vector<int> &n_states) {
+  //CI test for X _|_ Y | Z
+  float independent_score = 0;
+  float dependent_score = 0;
+  float temp = localBDeuscore(data, node_x, Z, ESS, state_list, n_states);
+  independent_score += temp;
+  independent_score += localBDeuscore(data, node_y, Z, ESS, state_list, n_states);
+  dependent_score += temp;
+  vector<int> zplusx = Z;
+  zplusx.push_back(node_x);
+  dependent_score += localBDeuscore(data, node_y, Z, ESS, state_list, n_states);
+  if(independent_score > dependent_score){
+    return true;
+  }else{
+    return false;
+  }
+}
+
+vector<vector<string>> get_state_list(const vector<vector<string>> &data){
+  vector<vector<string>> state_list(data.at(0).size());
+  for (int i = 0; i < data.at(0).size(); i++) { //node
+    for (int j = 0; j < data.size(); j++) { //n_sample
+      if(find(state_list.at(i).begin(), state_list.at(i).end(), data.at(j).at(i)) == state_list.at(i).end()){
+        state_list.at(i).push_back(data.at(j).at(i));
+      }
+    }
+  }
+  return state_list;
+}
+
+vector<vector<int>> data_string2int(const vector<vector<string>> &data, vector<vector<string>> &state_list) {
+  vector<vector<int>> data_int(data.size(), vector<int>(data.at(0).size()));
+  for (int i = 0; i < data.size(); i++) {
+    for (int j = 0; j < data.at(0).size(); j++) {
+      data_int.at(i).at(j) = find(state_list.at(j).begin(), state_list.at(j).end(), data.at(i).at(j)) - state_list.at(j).begin();
+    }
+  }
+  return data_int;
+
+}
+
 void orientation_A2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deletededges) {
 /*
     orient edges in a PDAG to a maximally oriented graph.
@@ -258,7 +410,7 @@ void orientation_A2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
   return;
 }
 
-void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deletededges, const vector<vector<string>> &data, float &ESS, vector<vector<string>> state_list) {
+void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deletededges, const vector<vector<int>> &data, long double &ESS, vector<vector<string>> &state_list, vector<int> &n_states) {
 /*
     orient edges in a PDAG to a maximally oriented graph.
     orient rules are based on rule 1~3 from Meek,C.:Causal Inference and Causal Explanation with Background Knowledge,Proc.Confon Uncertainty in Artificial Inteligence (UAl-95),p.403-410 (195)
@@ -268,7 +420,8 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
     for (auto& Z : Gall.undirected_neighbors(X)) {
       for (auto& Y : Gall.undirected_neighbors(Z)) {
         if (X != Y && !Gall.has_edge(X, Y) && !Gall.has_edge(Y, X)) {
-          if (ci_test(data, X, Y, {Z}, ESS, state_list)){
+          vector<int> z = {Z};
+          if (ci_test(data, X, Y, z, ESS, state_list, n_states)){
             Gall.remove_edge(Z, X);
             Gall.remove_edge(Z, Y);
           }
@@ -321,114 +474,7 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
   return;
 }
 
-void  order_grouping(PDAG &Gall, vector<int> &Gs, vector<int> &Gd, vector<vector<int>> &g_subs) {
-  vector<vector<bool>> adjmat = make_gs_graph(Gall.g, Gs);
-  vector<vector<int>> listmat = adjmat2listmat(adjmat);
-  vector<vector<int>> rlistmat = adjmat2listmat_reverse(adjmat);
-  vector<int> comp = SCC(listmat, rlistmat);
-  bool flag = true;
-  int order = 0;
-  while(flag){
-    flag = false;
-    for (int i = 0; i < comp.size(); i++){
-      if (comp.at(i) == order){ // node Gs.at(i) is in the order-th group
-        g_subs.push_back(vector<int>());
-        g_subs.at(order).push_back(Gs.at(i)); // node Gs.at(i) is in the order-th group(g_subs.at(order))
-        flag = true;
-      }
-    }
-    order = order + 1;
-  }
-  Gd = g_subs.back();
-  g_subs.pop_back();
-  return;
-}
-
-bool ci_test(const vector<vector<string>> &data, int node_x, int node_y, vector<int> Z, float ESS, vector<vector<string>> state_list) {
-  //CI test for X _|_ Y | Z
-  float independent_score = 0;
-  float dependent_score = 0;
-  float temp = localBDeuscore(data, node_x, Z, ESS, state_list);
-  independent_score += temp;
-  independent_score += localBDeuscore(data, node_y, Z, ESS, state_list);
-  dependent_score += temp;
-  vector<int> zplusx = Z;
-  zplusx.push_back(node_x);
-  dependent_score += localBDeuscore(data, node_y, Z, ESS, state_list);
-  //independence test between X and Y
-}
-
-vector<vector<int>> state_count(const vector<vector<string>> &data, int &node_x, vector<int> &parents, vector<vector<string>> &state_list) {
-  //return the state counts of X, Y | Z shape: countmap[state of child][state of parents]
-  int x = state_list.size();
-  int y = 1;
-  for (int i = 0; i < x; i++) {
-    y = y * state_list.at(i).size();
-  }
-  vector<vector<int>> counts(x, vector<int>(y, 0));
-  //count the number of each state
-  for(int i = 0; i < state_list.at(node_x).size(); i++) {
-    for (int j = 0; j < state_list.size(); j++) {
-      
-      }
-    }
-  return counts;
-}
-
-vector<vector<string>> get_state_list(const vector<vector<string>> &data){
-  vector<vector<string>> state_list(data.at(0).size());
-  for (int i = 0; i < data.at(0).size(); i++) {
-    for (int j = 0; j < data.size(); j++) {
-      if(find(state_list.at(i).begin(), state_list.at(i).end(), data.at(j).at(i)) == state_list.at(i).end()){
-        state_list.at(j).push_back(data.at(j).at(i));
-      }
-    }
-  }
-  return state_list;
-}
-
-float localBDeuscore(const vector<vector<string>> &data, int node_x, vector<int> parents, float ESS, vector<vector<string>> &state_list) {
-  //return log of the BDeu score of X, Y | Z
-  float score = 0.0;
-  if (parents.empty()) {
-    //no parents
-    vector<vector<int>> count;
-    count = state_count(data, node_x, parents, state_list);
-    int r = count.size(); //number of states of node_x
-    float n_i = 0.0;
-    for (int k = 0; k < r; k++) {
-      n_i += count.at(k).at(0);
-    }
-    for (int k = 0; k < r; k++) { //for each state of node_x
-        score += tgamma(ESS / r + count.at(k).at(0)) - tgamma(ESS/r);
-    }
-    score += tgamma(ESS) - tgamma(ESS + n_i);
-  }
-  else {
-    //have parents
-    //no parents
-    vector<vector<int>> count;
-    count = state_count(data, node_x, parents, state_list);
-    int q = count.at(0).size(); //number of states of parents
-    int r = count.size(); //number of states of node_x
-    vector<float> n_ij(q, 0.0);
-    for (int k = 0; k < r; k++) {
-      for(int j = 0; j < q; j++) {
-        n_ij.at(j) += count.at(k).at(j);
-      }
-    }
-    for (int j = 0; j < q; j++) { //for each state of parents
-      for (int k = 0; k < r; k++) { //for each state of node_x
-        score += tgamma(ESS / (r * q) + count.at(k).at(j)) - tgamma(ESS/(r * q));
-      }
-      score += tgamma(ESS / q) - tgamma(ESS / q + n_ij.at(j));
-    }
-  }
-    //calculate the score
-  return score;
-}
-
-PDAG recursive_search(const vector<vector<string>> &data, PDAG &Gall, vector<int> Gs, vector<int> Gex, int N, float ESS, vector<vector<string>> &state_list) {
+PDAG recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> Gs, vector<int> Gex, int N, long double &ESS, vector<vector<string>> &state_list, vector<int> &n_states) {
   int n_node = data.at(0).size();
   //stage 0: exit condition
   bool exitcondition = true;
@@ -461,7 +507,7 @@ PDAG recursive_search(const vector<vector<string>> &data, PDAG &Gall, vector<int
                   for (int j = 0; j < N; j++) {
                     selected_z.push_back(Z.at(j));
                   }
-                  if (ci_test(data, node_x, node_y, selected_z, ESS, state_list)) {
+                  if (ci_test(data, node_x, node_y, selected_z, ESS, state_list, n_states)) {
                     Gall.remove_edge(node_x, node_y);
                     deletededges.at(node_x).at(node_y) = true;
                     deletededges.at(node_y).at(node_x) = true;
@@ -480,7 +526,7 @@ PDAG recursive_search(const vector<vector<string>> &data, PDAG &Gall, vector<int
     for (auto& node_x : Gall.neighbors(node_y)) {
       if (N == 0) {
         vector<int> S;
-        if (ci_test(data, node_x, node_y, S, ESS, state_list)) {
+        if (ci_test(data, node_x, node_y, S, ESS, state_list, n_states)) {
           Gall.remove_edge(node_x, node_y);
           Gall.remove_edge(node_y, node_x);
           deletededges.at(node_x).at(node_y) = true;
@@ -498,7 +544,7 @@ PDAG recursive_search(const vector<vector<string>> &data, PDAG &Gall, vector<int
             for (int j = 0; j < N; j++) {
               selected_z.push_back(S.at(j));
             }
-            if (ci_test(data, node_x, node_y, selected_z, ESS, state_list)) {
+            if (ci_test(data, node_x, node_y, selected_z, ESS, state_list, n_states)) {
               Gall.remove_edge(node_x, node_y);
               Gall.remove_edge(node_y, node_x);
               deletededges.at(node_x).at(node_y) = true;
@@ -511,7 +557,7 @@ PDAG recursive_search(const vector<vector<string>> &data, PDAG &Gall, vector<int
     }
   }
   //stage B2: orient edges in Gs using orientation rules R1~R3
-  orientation_B2(Gall, Gs, deletededges, data, ESS, state_list);
+  orientation_B2(Gall, Gs, deletededges, data, ESS, state_list, n_states);
   //stage B3: Group the nodes having the lowest topological order into a descendant substructure Gd
   vector<int> Gd;
   vector<vector<int>> g_subs;
@@ -523,13 +569,13 @@ PDAG recursive_search(const vector<vector<string>> &data, PDAG &Gall, vector<int
       Gexd.push_back(node);
     }
     sort(Gexd.begin(), Gexd.end());
-    Gall = recursive_search(data, Gall, Gex_i, Gex, N + 1, ESS, state_list);
+    Gall = recursive_search(data, Gall, Gex_i, Gex, N + 1, ESS, state_list, n_states);
   }
   //stage D:  Descendantsub-structure decomposition
-  return recursive_search(data, Gall, Gd, Gexd, N + 1, ESS, state_list);
+  return recursive_search(data, Gall, Gd, Gexd, N + 1, ESS, state_list, n_states);
 }
 
-PDAG RAI(const vector<vector<string>> &data, float ESS) {
+PDAG RAI(const vector<vector<string>> &data, long double ESS) {
   int n_node = data.at(0).size(); // number of nodes
   // initialize Gall, Gs, Gex
   PDAG Gall;
@@ -545,7 +591,12 @@ PDAG RAI(const vector<vector<string>> &data, float ESS) {
   vector<int> Gex;// Gex is empty
   PDAG Gend;
   vector<vector<string>> state_list = get_state_list(data);
-  Gend = recursive_search(data, Gall, Gs, Gex, 0, ESS, state_list);
+  vector<vector<int>> data_int = data_string2int(data, state_list);
+  vector<int> n_states;
+  for (int i = 0; i < n_node; i++) {
+    n_states.push_back(state_list.at(i).size());
+  } 
+  Gend = recursive_search(data_int, Gall, Gs, Gex, 0, ESS, state_list, n_states);
   return Gend;
 }
 
@@ -553,9 +604,14 @@ PDAG RAI(const vector<vector<string>> &data, float ESS) {
 
 int main() {
   // dummy data,ESS
-  vector<vector<string>> data = {{"a", "b", "c"}, {"a", "b", "c"}, {"a", "b", "c"}, {"a", "b", "c"}};
-  float ESS = 1.0;
-  
+  vector<vector<string>> data = {{"a", "a", "a"}, {"a", "a", "b"}, {"a", "a", "c"}, {"b", "b", "d"}};
+  long double ESS = 1.0;
   PDAG Gend;
   Gend = RAI(data, ESS);
+  for (int i = 0; i < Gend.g.size(); i++) {
+    for (int j = 0; j < Gend.g.size(); j++) {
+      cout << Gend.g.at(i).at(j) << " ";
+    }
+    cout << endl;
+  }
 }
