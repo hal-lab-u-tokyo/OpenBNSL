@@ -356,10 +356,12 @@ bool ci_test(const vector<vector<int>> &data, int &node_x, int &node_y, vector<i
   dependent_score += temp;
   vector<int> zplusx = Z;
   zplusx.push_back(node_x);
-  dependent_score += localBDeuscore(data, node_y, Z, ESS, state_list, n_states);
+  dependent_score += localBDeuscore(data, node_y, zplusx, ESS, state_list, n_states);
   if(independent_score > dependent_score){
+    cout<< "CI independent:" <<node_x<<" _|_"<<node_y<<" | "<<independent_score<<">"<<dependent_score<< endl;
     return true;
   }else{
+    cout<< "CI dependent:" <<node_x<<" _|_"<<node_y<<" | "<<independent_score<<"<"<<dependent_score<< endl;
     return false;
   }
 }
@@ -424,6 +426,7 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
           if (ci_test(data, X, Y, z, ESS, state_list, n_states)){
             Gall.remove_edge(Z, X);
             Gall.remove_edge(Z, Y);
+            cout<< "V-structure found:" <<X<<"->"<<Z<<"<-"<<Y<< endl;
           }
         }
       }
@@ -437,8 +440,9 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
       for (auto& Y : Gall.successors(X)) {
         if (!Gall.has_directed_edge(Y, X)) {
           for (auto& Z : Gall.undirected_neighbors(Y)) {
-            if (!Gall.has_edge(X, Z) && !Gall.has_edge(Z, X)) {
+            if (!Gall.has_edge(X, Z) && !Gall.has_edge(Z, X) && Z != X) {
               Gall.remove_edge(Z, Y);
+              cout<< "R1:" <<Y<<"->"<<Z<< endl;
               flag = true;
             }
           }
@@ -450,6 +454,7 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
       for (auto& Y : Gall.undirected_neighbors(X)) {
         if (Gall.has_directed_path(X, Y)) {
           Gall.remove_edge(Y, X);
+          cout<< "R2:" <<X<<"->"<<Y<< endl;
           flag = true;
         }
       }
@@ -462,6 +467,7 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
             for (auto &W : Gall.undirected_neighbors(Y)){
               if (W != X && W != Z && Gall.has_directed_edge(X, W) && Gall.has_directed_edge(Z, W)){
                 Gall.remove_edge(W, Y);
+                cout<< "R3:" <<Y<<"->"<<W<< endl;
                 flag = true;
               }
             }
@@ -511,6 +517,7 @@ PDAG recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> G
                     Gall.remove_edge(node_x, node_y);
                     deletededges.at(node_x).at(node_y) = true;
                     deletededges.at(node_y).at(node_x) = true;
+                    cout<< "A1_removed:" <<node_x<<"-"<<node_y<< endl;
                     //transive_cut();
                   }
               } while(next_combination(Z.begin(), Z.end(), N));
@@ -521,6 +528,7 @@ PDAG recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> G
   }
   //stage A2: orient edges in Gs using "smart" orientation rules R1
   orientation_A2(Gall, Gs, deletededges);
+
   //stage B1: Do CI tests for nodes between Gs and Gs and remove edge
   for (auto& node_y : Gs) {
     for (auto& node_x : Gall.neighbors(node_y)) {
@@ -531,6 +539,7 @@ PDAG recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> G
           Gall.remove_edge(node_y, node_x);
           deletededges.at(node_x).at(node_y) = true;
           deletededges.at(node_y).at(node_x) = true;
+          cout<< "B1_removed:" <<node_x<<"-"<<node_y<< endl;
           //transive_cut();
         }
       }else{
@@ -549,6 +558,7 @@ PDAG recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> G
               Gall.remove_edge(node_y, node_x);
               deletededges.at(node_x).at(node_y) = true;
               deletededges.at(node_y).at(node_x) = true;
+              cout<< "B1_removed:" <<node_x<<"-"<<node_y<< endl;
               //transive_cut();
             }
           } while(next_combination(S.begin(), S.end(), N));
@@ -556,6 +566,7 @@ PDAG recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> G
       }
     }
   }
+  
   //stage B2: orient edges in Gs using orientation rules R1~R3
   orientation_B2(Gall, Gs, deletededges, data, ESS, state_list, n_states);
   //stage B3: Group the nodes having the lowest topological order into a descendant substructure Gd
@@ -602,9 +613,26 @@ PDAG RAI(const vector<vector<string>> &data, long double ESS) {
 
 
 
+
 int main() {
   // dummy data,ESS
-  vector<vector<string>> data = {{"a", "a", "a"}, {"a", "a", "b"}, {"a", "a", "c"}, {"b", "b", "d"}};
+  vector<vector<string>> data(200, vector<string>(2));
+  for (int i = 0; i < 50; i++) {
+    data.at(i).at(0) = "a";
+    data.at(i).at(1) = "a";
+  }
+  for (int i = 50; i < 100; i++) {
+    data.at(i).at(0) = "b";
+    data.at(i).at(1) = "b";
+  }
+  for (int i = 100; i < 150; i++) {
+    data.at(i).at(0) = "a";
+    data.at(i).at(1) = "a";
+  }
+  for (int i = 150; i < 200; i++) {
+    data.at(i).at(0) = "b";
+    data.at(i).at(1) = "b";
+  }
   long double ESS = 1.0;
   PDAG Gend;
   Gend = RAI(data, ESS);
