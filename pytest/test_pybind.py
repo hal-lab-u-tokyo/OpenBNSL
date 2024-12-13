@@ -7,4 +7,4 @@ c = openbnsl.myadd(1, 2)
 print(c)
 
 
-G = openbnsl.RAI([1,1], 1.2)
+G = openbnsl.RAI([], 1.2)

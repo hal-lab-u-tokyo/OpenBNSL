@@ -14,11 +14,8 @@ using namespace std;
 //for gamma function
 #include <cmath>
 
+#include "structure_learning/RAI.h"
 
-//#include "structure_learning/RAI.h"
-//#include <gmpxx.h>
-//#include "base/PDAG.h"
-//#include "util.h"
 
 // input: data: np.ndarray,  shape: (n: number of variables, d: number of
 // samples) output: leard PDAG
@@ -586,7 +583,7 @@ PDAG recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> G
   return recursive_search(data, Gall, Gd, Gexd, N + 1, ESS, state_list, n_states);
 }
 
-PDAG RAI(const vector<vector<string>> &data, double ESS) {
+vector<vector<bool>> RAI(vector<vector<string>> &data, double ESS) {
   int n_node = data.at(0).size(); // number of nodes
   // initialize Gall, Gs, Gex
   PDAG Gall;
@@ -608,7 +605,7 @@ PDAG RAI(const vector<vector<string>> &data, double ESS) {
     n_states.push_back(state_list.at(i).size());
   } 
   Gend = recursive_search(data_int, Gall, Gs, Gex, 0, ESS, state_list, n_states);
-  return Gend;
+  return Gend.g;
 }
 
 
