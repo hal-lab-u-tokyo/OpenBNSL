@@ -72,3 +72,7 @@ py::array_t<double> matmul_openmp(py::array_t<double> A,
   }
   return C;
 }
+
+
+
+int myadd(int a, int b) { return a + b; }

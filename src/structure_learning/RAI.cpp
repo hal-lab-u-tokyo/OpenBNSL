@@ -303,9 +303,9 @@ vector<vector<int>> state_count(const vector<vector<int>> &data, int &node_x, ve
   }
 }
 
-float localBDeuscore(const vector<vector<int>> &data, int &node_x, vector<int> &parents, long double &ESS, vector<vector<string>> &state_list, vector<int> &n_states) {
+float localBDeuscore(const vector<vector<int>> &data, int &node_x, vector<int> &parents, double &ESS, vector<vector<string>> &state_list, vector<int> &n_states) {
   //return log of the BDeu score of X, Y | Z
-  long double score = 0.0;
+  double score = 0.0;
   if (parents.empty()) {
     //no parents
     vector<vector<int>> count;
@@ -346,7 +346,7 @@ float localBDeuscore(const vector<vector<int>> &data, int &node_x, vector<int> &
   return score;
 }
 
-bool ci_test(const vector<vector<int>> &data, int &node_x, int &node_y, vector<int> &Z, long double &ESS, vector<vector<string>> &state_list, vector<int> &n_states) {
+bool ci_test(const vector<vector<int>> &data, int &node_x, int &node_y, vector<int> &Z, double &ESS, vector<vector<string>> &state_list, vector<int> &n_states) {
   //CI test for X _|_ Y | Z
   float independent_score = 0;
   float dependent_score = 0;
@@ -412,7 +412,7 @@ void orientation_A2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
   return;
 }
 
-void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deletededges, const vector<vector<int>> &data, long double &ESS, vector<vector<string>> &state_list, vector<int> &n_states) {
+void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deletededges, const vector<vector<int>> &data, double &ESS, vector<vector<string>> &state_list, vector<int> &n_states) {
 /*
     orient edges in a PDAG to a maximally oriented graph.
     orient rules are based on rule 1~3 from Meek,C.:Causal Inference and Causal Explanation with Background Knowledge,Proc.Confon Uncertainty in Artificial Inteligence (UAl-95),p.403-410 (195)
@@ -480,7 +480,7 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
   return;
 }
 
-PDAG recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> Gs, vector<int> Gex, int N, long double &ESS, vector<vector<string>> &state_list, vector<int> &n_states) {
+PDAG recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> Gs, vector<int> Gex, int N, double &ESS, vector<vector<string>> &state_list, vector<int> &n_states) {
   int n_node = data.at(0).size();
   //stage 0: exit condition
   bool exitcondition = true;
@@ -586,7 +586,7 @@ PDAG recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> G
   return recursive_search(data, Gall, Gd, Gexd, N + 1, ESS, state_list, n_states);
 }
 
-PDAG RAI(const vector<vector<string>> &data, long double ESS) {
+PDAG RAI(const vector<vector<string>> &data, double ESS) {
   int n_node = data.at(0).size(); // number of nodes
   // initialize Gall, Gs, Gex
   PDAG Gall;
@@ -612,34 +612,32 @@ PDAG RAI(const vector<vector<string>> &data, long double ESS) {
 }
 
 
-
-
-int main() {
-  // dummy data,ESS
-  vector<vector<string>> data(200, vector<string>(2));
-  for (int i = 0; i < 50; i++) {
-    data.at(i).at(0) = "a";
-    data.at(i).at(1) = "a";
-  }
-  for (int i = 50; i < 100; i++) {
-    data.at(i).at(0) = "b";
-    data.at(i).at(1) = "b";
-  }
-  for (int i = 100; i < 150; i++) {
-    data.at(i).at(0) = "a";
-    data.at(i).at(1) = "a";
-  }
-  for (int i = 150; i < 200; i++) {
-    data.at(i).at(0) = "b";
-    data.at(i).at(1) = "b";
-  }
-  long double ESS = 1.0;
-  PDAG Gend;
-  Gend = RAI(data, ESS);
-  for (int i = 0; i < Gend.g.size(); i++) {
-    for (int j = 0; j < Gend.g.size(); j++) {
-      cout << Gend.g.at(i).at(j) << " ";
-    }
-    cout << endl;
-  }
-}
+// int main() {
+//   // dummy data,ESS
+//   vector<vector<string>> data(200, vector<string>(2));
+//   for (int i = 0; i < 50; i++) {
+//     data.at(i).at(0) = "a";
+//     data.at(i).at(1) = "a";
+//   }
+//   for (int i = 50; i < 100; i++) {
+//     data.at(i).at(0) = "b";
+//     data.at(i).at(1) = "b";
+//   }
+//   for (int i = 100; i < 150; i++) {
+//     data.at(i).at(0) = "a";
+//     data.at(i).at(1) = "a";
+//   }
+//   for (int i = 150; i < 200; i++) {
+//     data.at(i).at(0) = "b";
+//     data.at(i).at(1) = "b";
+//   }
+//   double ESS = 1.0;
+//   PDAG Gend;
+//   Gend = RAI(data, ESS);
+//   for (int i = 0; i < Gend.g.size(); i++) {
+//     for (int j = 0; j < Gend.g.size(); j++) {
+//       cout << Gend.g.at(i).at(j) << " ";
+//     }
+//     cout << endl;
+//   }
+// }
