@@ -4,4 +4,5 @@
 namespace py = pybind11;
 
 
-std::vector<std::vector<bool>> RAI(std::vector<std::vector<std::string>>& data, double ESS);
+//void RAI(const py::array_t<std::string>& data, double ESS, py::array_t<bool>& g);
+void RAI(const py::array_t<std::array<char, 8>>& data, double ESS, py::array_t<bool>& g);

@@ -1,6 +1,6 @@
 #define _GLIBCXX_DEBUG
 using namespace std;
-
+#include "structure_learning/RAI.h"
 #include <string>
 #include <set>
 #include<vector>
@@ -14,7 +14,6 @@ using namespace std;
 //for gamma function
 #include <cmath>
 
-#include "structure_learning/RAI.h"
 
 
 // input: data: np.ndarray,  shape: (n: number of variables, d: number of
@@ -583,29 +582,32 @@ PDAG recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> G
   return recursive_search(data, Gall, Gd, Gexd, N + 1, ESS, state_list, n_states);
 }
 
-vector<vector<bool>> RAI(vector<vector<string>> &data, double ESS) {
-  int n_node = data.at(0).size(); // number of nodes
-  // initialize Gall, Gs, Gex
-  PDAG Gall;
-  vector<vector<bool>> gall(n_node, vector<bool>(n_node, true));
-  for  (int i = 0; i < n_node; i++) {
-          gall.at(i).at(i) = false;
-      }
-  Gall.g = gall; //Gall is complete graph
-  vector<int> Gs(n_node, -1);
-  for (int i = 0; i < n_node; i++) {
-    Gs.at(i) = i;
-  }// Gs contains all nodes 0 ~ n_node - 1
-  vector<int> Gex;// Gex is empty
-  PDAG Gend;
-  vector<vector<string>> state_list = get_state_list(data);
-  vector<vector<int>> data_int = data_string2int(data, state_list);
-  vector<int> n_states;
-  for (int i = 0; i < n_node; i++) {
-    n_states.push_back(state_list.at(i).size());
-  } 
-  Gend = recursive_search(data_int, Gall, Gs, Gex, 0, ESS, state_list, n_states);
-  return Gend.g;
+//void RAI(const py::array_t<string>& data, double ESS, py::array_t<int>& g) {
+void RAI(const py::array_t<std::array<char, 8>>& data, double ESS, py::array_t<int>& g) {
+  *g.mutable_data(1, 1) = 1;
+  return ;
+  // int n_node = data.at(0).size(); // number of nodes
+  // // initialize Gall, Gs, Gex
+  // PDAG Gall;
+  // vector<vector<bool>> gall(n_node, vector<bool>(n_node, true));
+  // for  (int i = 0; i < n_node; i++) {
+  //         gall.at(i).at(i) = false;
+  //     }
+  // Gall.g = gall; //Gall is complete graph
+  // vector<int> Gs(n_node, -1);
+  // for (int i = 0; i < n_node; i++) {
+  //   Gs.at(i) = i;
+  // }// Gs contains all nodes 0 ~ n_node - 1
+  // vector<int> Gex;// Gex is empty
+  // PDAG Gend;
+  // vector<vector<string>> state_list = get_state_list(data);
+  // vector<vector<int>> data_int = data_string2int(data, state_list);
+  // vector<int> n_states;
+  // for (int i = 0; i < n_node; i++) {
+  //   n_states.push_back(state_list.at(i).size());
+  // } 
+  // Gend = recursive_search(data_int, Gall, Gs, Gex, 0, ESS, state_list, n_states);
+  // return Gend.g;
 }
 
 
