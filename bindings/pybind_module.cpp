@@ -13,7 +13,5 @@ PYBIND11_MODULE(openbnsl, m) {
   m.def("matmul_naive", &matmul_naive, "Multiply two NumPy arrays");
   m.def("matmul_openmp", &matmul_openmp,
         "Multiply two NumPy arrays with OpenMP");
-  m.def("myadd", &myadd, "test add function2");
   m.def("RAI", &RAI, "Run RAI algorithm");
-  ///m.def("addadd", &addadd, "test add function");
 }

@@ -270,9 +270,10 @@ vector<vector<int>> state_count(const vector<vector<int>> &data, int &node_x, ve
   if(parents.empty()) {
     int x = n_states.at(node_x);
     vector<vector<int>> counts(x, vector<int>(1, 0));
-    for(int i = 0; i < data.size(); i++) {
-      counts.at(data.at(i).at(node_x)).at(0) += 1;
-    }
+    #pragma omp parallel for
+      for(int i = 0; i < data.size(); i++) {
+        counts.at(data.at(i).at(node_x)).at(0) += 1;
+      }
     return counts;
   } else {
     //return the state counts of X, Y | Z shape: countmap[state of child][state of parents]
@@ -283,18 +284,19 @@ vector<vector<int>> state_count(const vector<vector<int>> &data, int &node_x, ve
     }
     vector<vector<int>> counts(x, vector<int>(y, 0));
     //count the number of each state
-    for(int i = 0; i < data.size(); i++) {
-      int yy;
-      for (int j = 0; j < parents.size(); j++) {
-        if (j == 0) {
-          yy = data.at(i).at(parents.at(j));
+    #pragma omp parallel for
+      for(int i = 0; i < data.size(); i++) {
+        int yy;
+        for (int j = 0; j < parents.size(); j++) {
+          if (j == 0) {
+            yy = data.at(i).at(parents.at(j));
+          }
+          else {
+            yy = n_states.at(parents.at(j)) * yy + data.at(i).at(parents.at(j));
+          }
         }
-        else {
-          yy = n_states.at(parents.at(j)) * yy + data.at(i).at(parents.at(j));
-        }
+        counts.at(data.at(i).at(node_x)).at(yy) += 1;
       }
-      counts.at(data.at(i).at(node_x)).at(yy) += 1;
-    }
     return counts;
   }
 }
@@ -354,10 +356,10 @@ bool ci_test(const vector<vector<int>> &data, int &node_x, int &node_y, vector<i
   zplusx.push_back(node_x);
   dependent_score += localBDeuscore(data, node_y, zplusx, ESS, n_states);
   if(independent_score > dependent_score){
-    cout<< "CI independent:" <<node_x<<" _|_"<<node_y<<" | "<<independent_score<<">"<<dependent_score<< endl;
+    //cout<< "CI independent:" <<node_x<<" _|_"<<node_y<<" | "<<independent_score<<">"<<dependent_score<< endl;
     return true;
   }else{
-    cout<< "CI dependent:" <<node_x<<" _|_"<<node_y<<" | "<<independent_score<<"<"<<dependent_score<< endl;
+    //cout<< "CI dependent:" <<node_x<<" _|_"<<node_y<<" | "<<independent_score<<"<"<<dependent_score<< endl;
     return false;
   }
 }
@@ -419,10 +421,11 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
       for (auto& Y : Gall.undirected_neighbors(Z)) {
         if (X != Y && !Gall.has_edge(X, Y) && !Gall.has_edge(Y, X)) {
           vector<int> z = {Z};
-          if (ci_test(data, X, Y, z, ESS, n_states)){
+          //cout<< "V-structure think:" <<X<<"->"<<Z<<"<-"<<Y<< endl;
+          if (!ci_test(data, X, Y, z, ESS, n_states)){
             Gall.remove_edge(Z, X);
             Gall.remove_edge(Z, Y);
-            cout<< "V-structure found:" <<X<<"->"<<Z<<"<-"<<Y<< endl;
+            //cout<< "V-structure found:" <<X<<"->"<<Z<<"<-"<<Y<< endl;
           }
         }
       }
@@ -438,7 +441,7 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
           for (auto& Z : Gall.undirected_neighbors(Y)) {
             if (!Gall.has_edge(X, Z) && !Gall.has_edge(Z, X) && Z != X) {
               Gall.remove_edge(Z, Y);
-              cout<< "R1:" <<Y<<"->"<<Z<< endl;
+              //cout<< "R1:" <<Y<<"->"<<Z<< endl;
               flag = true;
             }
           }
@@ -450,7 +453,7 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
       for (auto& Y : Gall.undirected_neighbors(X)) {
         if (Gall.has_directed_path(X, Y)) {
           Gall.remove_edge(Y, X);
-          cout<< "R2:" <<X<<"->"<<Y<< endl;
+          //cout<< "R2:" <<X<<"->"<<Y<< endl;
           flag = true;
         }
       }
@@ -463,7 +466,7 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
             for (auto &W : Gall.undirected_neighbors(Y)){
               if (W != X && W != Z && Gall.has_directed_edge(X, W) && Gall.has_directed_edge(Z, W)){
                 Gall.remove_edge(W, Y);
-                cout<< "R3:" <<Y<<"->"<<W<< endl;
+                //cout<< "R3:" <<Y<<"->"<<W<< endl;
                 flag = true;
               }
             }
@@ -504,7 +507,6 @@ PDAG recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> G
           sort(Z.begin(), Z.end());
           if (Z.size() >= N) {
             do {
-                  //cout << indexes[0] << ',' << indexes[1] << endl;
                   vector<int> selected_z;
                   for (int j = 0; j < N; j++) {
                     selected_z.push_back(Z.at(j));
@@ -513,7 +515,7 @@ PDAG recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> G
                     Gall.remove_edge(node_x, node_y);
                     deletededges.at(node_x).at(node_y) = true;
                     deletededges.at(node_y).at(node_x) = true;
-                    cout<< "A1_removed:" <<node_x<<"-"<<node_y<< endl;
+                    //cout<< "A1_removed:" <<node_x<<"-"<<node_y<< endl;
                     //transive_cut();
                   }
               } while(next_combination(Z.begin(), Z.end(), N));
@@ -535,7 +537,7 @@ PDAG recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> G
           Gall.remove_edge(node_y, node_x);
           deletededges.at(node_x).at(node_y) = true;
           deletededges.at(node_y).at(node_x) = true;
-          cout<< "B1_removed:" <<node_x<<"-"<<node_y<< endl;
+          //cout<< "B1_removed:" <<node_x<<"-"<<node_y<< endl;
           //transive_cut();
         }
       }else{
@@ -544,7 +546,6 @@ PDAG recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> G
         S.erase(newEnd, S.end()); // remove node_x from S  正しい？
         if (S.size() >= N) {
           do {
-            //cout << indexes[0] << ',' << indexes[1] << endl;
             vector<int> selected_z;
             for (int j = 0; j < N; j++) {
               selected_z.push_back(S.at(j));
@@ -554,7 +555,7 @@ PDAG recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> G
               Gall.remove_edge(node_y, node_x);
               deletededges.at(node_x).at(node_y) = true;
               deletededges.at(node_y).at(node_x) = true;
-              cout<< "B1_removed:" <<node_x<<"-"<<node_y<< endl;
+              //cout<< "B1_removed:" <<node_x<<"-"<<node_y<< endl;
               //transive_cut();
             }
           } while(next_combination(S.begin(), S.end(), N));

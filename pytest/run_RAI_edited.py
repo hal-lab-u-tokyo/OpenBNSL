@@ -13,6 +13,7 @@ import time
 import sys 
 sys.path.append('/workspace')
 from modules.RAIEstimator_fixed import RAIEstimator, RAIEstimator_transitivity
+from modules.RAI_cpp import RAIEstimator_cpp
 from modules.structural_distance import structural_errors, DAG2CPDAG, PDAG2CPDAG
 from modules.visualize_graph import display_graph_info as show
 from modules.CITests_fixed import NatoriScore
@@ -20,6 +21,7 @@ SAVE_DIR = "./results_2"
 
 ESTIMATOR={
     "RAI": RAIEstimator,
+    "RAI_cpp" : RAIEstimator_cpp,
     "RAI_t": RAIEstimator_transitivity,
     "HC": HillClimbSearch,
     "PC": PC
@@ -49,10 +51,13 @@ def test_benchmark(
     comparemodel = DAG2CPDAG(comparemodel)
     for i in range(max_iter):
         model , data = load_data(data_type, sample_size)
-        estimator = ESTIMATOR[estimate_type](data)
+        if not estimate_type == "RAI_cpp":
+            estimator = ESTIMATOR[estimate_type](data)
         score = SCORE[structure_score](data)
         t = time.time()
-        if estimate_type == "RAI":
+        if estimate_type == "RAI_cpp":
+            best_model = RAIEstimator_cpp(data = data, ESS = ess)
+        elif estimate_type == "RAI":
             best_model = estimator.estimate(ESS = ess)
         elif estimate_type == "RAI_t":
             best_model = estimator.estimate(ESS = ess)
@@ -63,8 +68,11 @@ def test_benchmark(
         else:
             raise ValueError("Invalid estimator type")
         calc_time += time.time() - t
-        #compare_best_model = PDAG2CPDAG(best_model)
-        errors = structural_errors(comparemodel, best_model)
+        best_model_compare = PDAG2CPDAG(best_model)
+        # show(best_model)
+        # show(best_model_compare)
+        #show(comparemodel)
+        errors = structural_errors(comparemodel, best_model_compare)
         print(f"iteration {i}: [SHD, ME, EE, DE, ED, MD, RD]:{errors[0]}, {errors[1]}, {errors[2]}, {errors[3]}, {errors[4]}, {errors[5]}, {errors[6]}")
         #print(f"iteration {i}: SHD:{errors[0]}, ME:{errors[1]}, EE:{errors[2]}, {errors[3]}, {errors[4]}, {errors[5]}, {errors[6]}")
         ave_score = [x + y for x, y in zip(ave_score, errors)]
@@ -88,12 +96,12 @@ def save_benchmark(estimate_type, data_type, size, structure_score, ave_score, c
 
 def arg_parser():
     parser = argparse.ArgumentParser(description="Benchmarking for Bayesian Network Structure Learning")
-    parser.add_argument("--estimate_type", type=str, default="RAI_t", help="Estimator type")
-    parser.add_argument("--data_type", type=str, default="cancer", help="Data type")
-    parser.add_argument("--sample_size", type=int, default=10000, help="Sample size")
+    parser.add_argument("--estimate_type", type=str, default="RAI_cpp", help="Estimator type")
+    parser.add_argument("--data_type", type=str, default="alarm", help="Data type")
+    parser.add_argument("--sample_size", type=int, default=2000000, help="Sample size")
     parser.add_argument("--structure_score", type=str, default="BIC", help="Structure score")
-    parser.add_argument("--ess", type=float, default=5, help="ESS")
-    parser.add_argument("--max_iter", type=int, default=50, help="Number of iterations")
+    parser.add_argument("--ess", type=float, default=10, help="ESS")
+    parser.add_argument("--max_iter", type=int, default=1, help="Number of iterations")
     return parser.parse_args()
 
 def main():

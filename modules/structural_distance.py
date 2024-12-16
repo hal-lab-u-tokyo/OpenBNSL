@@ -6,6 +6,7 @@ from pgmpy.base import PDAG
 from itertools import combinations
 import argparse
 import os
+from modules.visualize_graph import display_graph_info as show
 
 def retrieve_adjacency_matrix(graph, order_nodes=None, weight=False):
     """Retrieve the adjacency matrix from the nx.DiGraph or numpy array."""
@@ -87,7 +88,6 @@ def reversed_direction(target, pred):
 def directional_error(target, pred):
     return SHD(target, pred) - missing_edge(target, pred) - extra_edge(target, pred)
 
-
 def structural_errors(target, pred):
     """
     Conpute Structural Hamming Distance (SHD), Extra Edge (EE), Missing Edge (ME), Directional Error (DE),ED (Extra Direction), MD (Missing Direction), RD(Reversed Direction)
@@ -146,31 +146,33 @@ def PDAG2CPDAG(pdag):
     reversedag = pdag.reverse(copy = True)
     cpdag.add_edges_from(reversedag.edges)
 
-    vstructuredag = PDAG()
-    vstructuredag.add_nodes_from(pdag.nodes)
+    # vstructuredag = PDAG()
+    # vstructuredag.add_nodes_from(pdag.nodes)
 
-    pdag_removed = pdag.copy() #remove all undirected edges
+    #pdag_removed = pdag.copy() #remove all undirected edges
+    pdag_removed = PDAG()
+    pdag_removed.add_nodes_from(pdag.nodes)
+    pdag_removed.add_edges_from(pdag.edges)
     for pair in list(combinations(pdag.nodes(), 2)):
             X, Y = pair
             if pdag_removed.has_edge(X, Y) and pdag_removed.has_edge(Y, X): 
                 pdag_removed.remove_edge(Y, X)
                 pdag_removed.remove_edge(X, Y)
-
     for X in pdag_removed.nodes:
         if pdag_removed.in_degree(X) > 1:
             for Y in pdag_removed.predecessors(X): #for every parent of V-structure fix it
                 cpdag.remove_edge(X, Y)
-                vstructuredag.add_edge(Y, X)
+    #             vstructuredag.add_edge(Y, X)
     
-    for X in pdag.nodes:
-        for Y in pdag.nodes:
-            if cpdag.has_edge(X, Y) and cpdag.has_edge(Y, X):
-                if vstructuredag.in_degree(X) > 0 and vstructuredag.in_degree(Y) == 0:
-                    vstructuredag.add_edge(X, Y)
-                    cpdag.remove_edge(Y, X)
-                elif vstructuredag.in_degree(Y) > 0 and vstructuredag.in_degree(X) == 0:
-                    vstructuredag.add_edge(Y, X)
-                    cpdag.remove_edge(X, Y)
+    # for X in pdag.nodes:
+    #     for Y in pdag.nodes:
+    #         if cpdag.has_edge(X, Y) and cpdag.has_edge(Y, X):
+    #             if vstructuredag.in_degree(X) > 0 and vstructuredag.in_degree(Y) == 0:
+    #                 vstructuredag.add_edge(X, Y)
+    #                 cpdag.remove_edge(Y, X)
+    #             elif vstructuredag.in_degree(Y) > 0 and vstructuredag.in_degree(X) == 0:
+    #                 vstructuredag.add_edge(Y, X)
+    #                 cpdag.remove_edge(X, Y)
 
     return cpdag
 
@@ -196,23 +198,23 @@ def DAG2CPDAG(dag):
     reversedag = dag.reverse(copy = True)
     cpdag.add_edges_from(reversedag.edges)
 
-    vstructuredag = PDAG()
-    vstructuredag.add_nodes_from(dag.nodes)
+    # vstructuredag = PDAG()
+    # vstructuredag.add_nodes_from(dag.nodes)
 
     for X in dag.nodes:
         if dag.in_degree(X) > 1:
             for Y in dag.predecessors(X): #for every parent of V-structure fix it
                 cpdag.remove_edge(X, Y)
-                vstructuredag.add_edge(Y, X)
+                # vstructuredag.add_edge(Y, X)
     
-    for X in dag.nodes:
-        for Y in dag.nodes:
-            if cpdag.has_edge(X, Y) and cpdag.has_edge(Y, X):
-                if vstructuredag.in_degree(X) > 0 and vstructuredag.in_degree(Y) == 0:
-                    vstructuredag.add_edge(X, Y)
-                    cpdag.remove_edge(Y, X)
-                elif vstructuredag.in_degree(Y) > 0 and vstructuredag.in_degree(X) == 0:
-                    vstructuredag.add_edge(Y, X)
-                    cpdag.remove_edge(X, Y)
+    # for X in dag.nodes:
+    #     for Y in dag.nodes:
+    #         if cpdag.has_edge(X, Y) and cpdag.has_edge(Y, X):
+    #             if vstructuredag.in_degree(X) > 0 and vstructuredag.in_degree(Y) == 0:
+    #                 vstructuredag.add_edge(X, Y)
+    #                 cpdag.remove_edge(Y, X)
+    #             elif vstructuredag.in_degree(Y) > 0 and vstructuredag.in_degree(X) == 0:
+    #                 vstructuredag.add_edge(Y, X)
+    #                 cpdag.remove_edge(X, Y)
 
     return cpdag
