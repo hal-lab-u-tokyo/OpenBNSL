@@ -14,6 +14,7 @@ import sys
 sys.path.append('/workspace')
 from modules.RAIEstimator_fixed import RAIEstimator, RAIEstimator_transitivity
 from modules.RAI_cpp import RAIEstimator_cpp
+from modules.PC_cpp import PCEstimator_cpp
 from modules.structural_distance import structural_errors, DAG2CPDAG, PDAG2CPDAG
 from modules.visualize_graph import display_graph_info as show
 from modules.CITests_fixed import NatoriScore
@@ -22,6 +23,7 @@ SAVE_DIR = "./results_2"
 ESTIMATOR={
     "RAI": RAIEstimator,
     "RAI_cpp" : RAIEstimator_cpp,
+    "PC_cpp" : PCEstimator_cpp,
     "RAI_t": RAIEstimator_transitivity,
     "HC": HillClimbSearch,
     "PC": PC
@@ -51,12 +53,14 @@ def test_benchmark(
     comparemodel = DAG2CPDAG(comparemodel)
     for i in range(max_iter):
         model , data = load_data(data_type, sample_size)
-        if not estimate_type == "RAI_cpp":
+        if not (estimate_type == "RAI_cpp" or estimate_type == "PC_cpp"):
             estimator = ESTIMATOR[estimate_type](data)
         score = SCORE[structure_score](data)
         t = time.time()
         if estimate_type == "RAI_cpp":
             best_model = RAIEstimator_cpp(data = data, ESS = ess)
+        elif estimate_type == "PC_cpp":
+            best_model = PCEstimator_cpp(data = data, ESS = ess)
         elif estimate_type == "RAI":
             best_model = estimator.estimate(ESS = ess)
         elif estimate_type == "RAI_t":
@@ -97,10 +101,10 @@ def save_benchmark(estimate_type, data_type, size, structure_score, ave_score, c
 def arg_parser():
     parser = argparse.ArgumentParser(description="Benchmarking for Bayesian Network Structure Learning")
     parser.add_argument("--estimate_type", type=str, default="RAI_cpp", help="Estimator type")
-    parser.add_argument("--data_type", type=str, default="alarm", help="Data type")
-    parser.add_argument("--sample_size", type=int, default=2000000, help="Sample size")
+    parser.add_argument("--data_type", type=str, default="cancer", help="Data type")
+    parser.add_argument("--sample_size", type=int, default=1000000, help="Sample size")
     parser.add_argument("--structure_score", type=str, default="BIC", help="Structure score")
-    parser.add_argument("--ess", type=float, default=10, help="ESS")
+    parser.add_argument("--ess", type=float, default=1, help="ESS")
     parser.add_argument("--max_iter", type=int, default=1, help="Number of iterations")
     return parser.parse_args()
 

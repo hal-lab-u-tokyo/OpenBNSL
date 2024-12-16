@@ -11,11 +11,11 @@ from modules.visualize_graph import display_graph_info as show
 
 
 
-def RAIEstimator_cpp(data, ESS):
+def PCEstimator_cpp(data, ESS):
     #translate data from pandas dataframe to numpy array and extract column names
     columns = np.array(data.columns.tolist())
     t_data = data.to_numpy()
-    print(columns)
+    #print(columns)
 
     #get statelist
     statelist = [[] for i in range(len(columns))]
@@ -37,8 +37,8 @@ def RAIEstimator_cpp(data, ESS):
         n_states[i] = len(statelist[i])
     #print(n_states)
 
-    ansmat = openbnsl.RAI(data_int, n_states, ESS)
-    print(ansmat)
+    ansmat = openbnsl.PC(data_int, n_states, ESS)
+
     G = PDAG()
     G.add_nodes_from(columns)
     edges = []

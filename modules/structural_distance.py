@@ -30,7 +30,7 @@ def SHD(target, pred):
     diff = np.abs(true_labels - predictions)
     diff = diff + diff.transpose()
     diff[diff > 1] = 1  # Ignoring the double edges.
-    return np.sum(diff)/2
+    return int(np.sum(diff)/2)
 
 def missing_edge(target, pred):
     true_labels = retrieve_adjacency_matrix(target)
@@ -40,7 +40,7 @@ def missing_edge(target, pred):
     diff[diff < 0] = 0  # Ignoring other types of error.
     diff = diff + diff.transpose()
     diff[diff > 1] = 1  # Ignoring the double edges.
-    return np.sum(diff)/2
+    return int(np.sum(diff)/2)
 
 def extra_edge(target, pred):
     true_labels = retrieve_adjacency_matrix(target)
@@ -50,7 +50,7 @@ def extra_edge(target, pred):
     diff[diff < 0] = 0  # Ignoring other types of error.
     diff = diff + diff.transpose()
     diff[diff > 1] = 1  # Ignoring the double edges.
-    return np.sum(diff)/2
+    return int(np.sum(diff)/2)
 
 def extra_direction(target, pred):
     true_labels = retrieve_adjacency_matrix(target)

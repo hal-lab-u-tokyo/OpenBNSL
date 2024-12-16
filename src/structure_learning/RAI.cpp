@@ -356,10 +356,10 @@ bool ci_test(const vector<vector<int>> &data, int &node_x, int &node_y, vector<i
   zplusx.push_back(node_x);
   dependent_score += localBDeuscore(data, node_y, zplusx, ESS, n_states);
   if(independent_score > dependent_score){
-    //cout<< "CI independent:" <<node_x<<" _|_"<<node_y<<" | "<<independent_score<<">"<<dependent_score<< endl;
+    cout<< "CI independent:" <<node_x<<" _|_"<<node_y<<" | "<<independent_score<<">"<<dependent_score<< endl;
     return true;
   }else{
-    //cout<< "CI dependent:" <<node_x<<" _|_"<<node_y<<" | "<<independent_score<<"<"<<dependent_score<< endl;
+    cout<< "CI dependent:" <<node_x<<" _|_"<<node_y<<" | "<<independent_score<<"<"<<dependent_score<< endl;
     return false;
   }
 }
@@ -388,11 +388,11 @@ bool ci_test(const vector<vector<int>> &data, int &node_x, int &node_y, vector<i
 // }
 
 void orientation_A2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deletededges) {
-/*
-    orient edges in a PDAG to a maximally oriented graph.
-    orient rules are based on rule 1~3 from Meek,C.:Causal Inference and Causal Explanation with Background Knowledge,Proc.Confon Uncertainty in Artificial Inteligence (UAl-95),p.403-410 (195)
-    in this stage (stage A2 in Yehezkel and Lerner(2009)), only rule 1 is applied because only X -> Y - Z shape is created in stage A1 (X-Z removed).
-*/
+  /*
+      orient edges in a PDAG to a maximally oriented graph.
+      orient rules are based on rule 1~3 from Meek,C.:Causal Inference and Causal Explanation with Background Knowledge,Proc.Confon Uncertainty in Artificial Inteligence (UAl-95),p.403-410 (195)
+      in this stage (stage A2 in Yehezkel and Lerner(2009)), only rule 1 is applied because only X -> Y - Z shape is created in stage A1 (X-Z removed).
+  */
   //Rule 1: X -> Y - Z, no edge between X and Z then X -> Y -> Z
   for (int i = 0; i < Gall.g.size(); i++){
     for (int j = 0; j < Gall.g.size(); j++){
@@ -402,6 +402,7 @@ void orientation_A2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
         for (auto& Y : Gall.undirected_neighbors(Z)) {
           if (Gall.has_directed_edge(X, Y)) {
             Gall.remove_edge(Z, Y);
+            cout<< "A2_removed:" <<Y<<"->"<<Z<< endl;
           }
         }
       }
@@ -411,21 +412,21 @@ void orientation_A2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
 }
 
 void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deletededges, const vector<vector<int>> &data, double &ESS, vector<int> &n_states) {
-/*
-    orient edges in a PDAG to a maximally oriented graph.
-    orient rules are based on rule 1~3 from Meek,C.:Causal Inference and Causal Explanation with Background Knowledge,Proc.Confon Uncertainty in Artificial Inteligence (UAl-95),p.403-410 (195)
-*/
+  /*
+      orient edges in a PDAG to a maximally oriented graph.
+      orient rules are based on rule 1~3 from Meek,C.:Causal Inference and Causal Explanation with Background Knowledge,Proc.Confon Uncertainty in Artificial Inteligence (UAl-95),p.403-410 (195)
+  */
   //for each X-Z-Y (X and Y is not adjecent), find V-structure and orient as X -> Z <- Y
   for (auto& X : Gs) {
     for (auto& Z : Gall.undirected_neighbors(X)) {
       for (auto& Y : Gall.undirected_neighbors(Z)) {
         if (X != Y && !Gall.has_edge(X, Y) && !Gall.has_edge(Y, X)) {
           vector<int> z = {Z};
-          //cout<< "V-structure think:" <<X<<"->"<<Z<<"<-"<<Y<< endl;
+          cout<< "V-structure think:" <<X<<"->"<<Z<<"<-"<<Y<< endl;
           if (!ci_test(data, X, Y, z, ESS, n_states)){
             Gall.remove_edge(Z, X);
             Gall.remove_edge(Z, Y);
-            //cout<< "V-structure found:" <<X<<"->"<<Z<<"<-"<<Y<< endl;
+            cout<< "V-structure found:" <<X<<"->"<<Z<<"<-"<<Y<< endl;
           }
         }
       }
@@ -441,7 +442,7 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
           for (auto& Z : Gall.undirected_neighbors(Y)) {
             if (!Gall.has_edge(X, Z) && !Gall.has_edge(Z, X) && Z != X) {
               Gall.remove_edge(Z, Y);
-              //cout<< "R1:" <<Y<<"->"<<Z<< endl;
+              cout<< "R1:" <<Y<<"->"<<Z<< endl;
               flag = true;
             }
           }
@@ -453,7 +454,7 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
       for (auto& Y : Gall.undirected_neighbors(X)) {
         if (Gall.has_directed_path(X, Y)) {
           Gall.remove_edge(Y, X);
-          //cout<< "R2:" <<X<<"->"<<Y<< endl;
+          cout<< "R2:" <<X<<"->"<<Y<< endl;
           flag = true;
         }
       }
@@ -466,7 +467,7 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
             for (auto &W : Gall.undirected_neighbors(Y)){
               if (W != X && W != Z && Gall.has_directed_edge(X, W) && Gall.has_directed_edge(Z, W)){
                 Gall.remove_edge(W, Y);
-                //cout<< "R3:" <<Y<<"->"<<W<< endl;
+                cout<< "R3:" <<Y<<"->"<<W<< endl;
                 flag = true;
               }
             }
@@ -515,7 +516,7 @@ PDAG recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> G
                     Gall.remove_edge(node_x, node_y);
                     deletededges.at(node_x).at(node_y) = true;
                     deletededges.at(node_y).at(node_x) = true;
-                    //cout<< "A1_removed:" <<node_x<<"-"<<node_y<< endl;
+                    cout<< "A1_removed:" <<node_x<<"-"<<node_y<< endl;
                     //transive_cut();
                   }
               } while(next_combination(Z.begin(), Z.end(), N));
@@ -537,7 +538,7 @@ PDAG recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> G
           Gall.remove_edge(node_y, node_x);
           deletededges.at(node_x).at(node_y) = true;
           deletededges.at(node_y).at(node_x) = true;
-          //cout<< "B1_removed:" <<node_x<<"-"<<node_y<< endl;
+          cout<< "B1_removed:" <<node_x<<"-"<<node_y<< endl;
           //transive_cut();
         }
       }else{
@@ -555,7 +556,7 @@ PDAG recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> G
               Gall.remove_edge(node_y, node_x);
               deletededges.at(node_x).at(node_y) = true;
               deletededges.at(node_y).at(node_x) = true;
-              //cout<< "B1_removed:" <<node_x<<"-"<<node_y<< endl;
+              cout<< "B1_removed:" <<node_x<<"-"<<node_y<< endl;
               //transive_cut();
             }
           } while(next_combination(S.begin(), S.end(), N));
@@ -629,33 +630,3 @@ py::array_t<bool> RAI(py::array_t<int> data, py::array_t<int> n_states, double E
   return endg;
 }
 
-
-// int main() {
-//   // dummy data,ESS
-//   vector<vector<string>> data(200, vector<string>(2));
-//   for (int i = 0; i < 50; i++) {
-//     data.at(i).at(0) = "a";
-//     data.at(i).at(1) = "a";
-//   }
-//   for (int i = 50; i < 100; i++) {
-//     data.at(i).at(0) = "b";
-//     data.at(i).at(1) = "b";
-//   }
-//   for (int i = 100; i < 150; i++) {
-//     data.at(i).at(0) = "a";
-//     data.at(i).at(1) = "a";
-//   }
-//   for (int i = 150; i < 200; i++) {
-//     data.at(i).at(0) = "b";
-//     data.at(i).at(1) = "b";
-//   }
-//   double ESS = 1.0;
-//   PDAG Gend;
-//   Gend = RAI(data, ESS);
-//   for (int i = 0; i < Gend.g.size(); i++) {
-//     for (int j = 0; j < Gend.g.size(); j++) {
-//       cout << Gend.g.at(i).at(j) << " ";
-//     }
-//     cout << endl;
-//   }
-// }
