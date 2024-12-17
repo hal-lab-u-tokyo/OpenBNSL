@@ -270,9 +270,17 @@ vector<vector<int>> state_count(const vector<vector<int>> &data, int &node_x, ve
   if(parents.empty()) {
     int x = n_states.at(node_x);
     vector<vector<int>> counts(x, vector<int>(1, 0));
-    #pragma omp parallel for
-      for(int i = 0; i < data.size(); i++) {
-        counts.at(data.at(i).at(node_x)).at(0) += 1;
+    #pragma omp parallel
+      {
+        vector<int> temp(x, 0);
+        #pragma omp for
+          for(int i = 0; i < data.size(); i++) {
+            temp.at(data.at(i).at(node_x)) += 1;
+          }
+        for(int j = 0; j < x; j++){
+          #pragma omp atomic
+          counts.at(j).at(0) += temp.at(j);
+        }
       }
     return counts;
   } else {
@@ -284,18 +292,28 @@ vector<vector<int>> state_count(const vector<vector<int>> &data, int &node_x, ve
     }
     vector<vector<int>> counts(x, vector<int>(y, 0));
     //count the number of each state
-    #pragma omp parallel for
-      for(int i = 0; i < data.size(); i++) {
-        int yy;
-        for (int j = 0; j < parents.size(); j++) {
-          if (j == 0) {
-            yy = data.at(i).at(parents.at(j));
+    int yy;
+     #pragma omp parallel private(yy) 
+      {
+        vector<vector<int>> temp(x, vector<int>(y, 0));
+        #pragma omp for
+          for(int i = 0; i < data.size(); i++) {
+            for (int j = 0; j < parents.size(); j++) {
+              if (j == 0) {
+                yy = data.at(i).at(parents.at(j));
+              }
+              else {
+                yy = n_states.at(parents.at(j)) * yy + data.at(i).at(parents.at(j));
+              }
+            }
+            temp.at(data.at(i).at(node_x)).at(yy) += 1;
           }
-          else {
-            yy = n_states.at(parents.at(j)) * yy + data.at(i).at(parents.at(j));
+        for(int j = 0; j < x; j++){
+          for(int k = 0; k < y; k++){
+            #pragma omp atomic
+            counts.at(j).at(k) += temp.at(j).at(k);
           }
         }
-        counts.at(data.at(i).at(node_x)).at(yy) += 1;
       }
     return counts;
   }
@@ -348,11 +366,12 @@ bool ci_test(const vector<vector<int>> &data, int &node_x, int &node_y, vector<i
   //CI test for X _|_ Y | Z
   float independent_score = 0;
   float dependent_score = 0;
-  float temp = localBDeuscore(data, node_x, Z, ESS, n_states);
-  independent_score += temp;
+  //float tmp = localBDeuscore(data, node_x, Z, ESS, n_states);
+  //independent_score += tmp;
   independent_score += localBDeuscore(data, node_y, Z, ESS, n_states);
-  dependent_score += temp;
-  vector<int> zplusx = Z;
+  //dependent_score += tmp;
+  vector<int> zplusx(Z.size());
+  copy(Z.begin(), Z.end(), zplusx.begin());
   zplusx.push_back(node_x);
   dependent_score += localBDeuscore(data, node_y, zplusx, ESS, n_states);
   if(independent_score > dependent_score){
@@ -438,11 +457,11 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
     //Rule 1: X -> Y - Z, no edge between X and Z then X -> Y -> Z
     for (auto& X : Gs) {
       for (auto& Y : Gall.successors(X)) {
-        if (!Gall.has_directed_edge(Y, X)) {
+        if (!Gall.has_edge(Y, X) && Gall.has_edge(X, Y)) {
           for (auto& Z : Gall.undirected_neighbors(Y)) {
             if (!Gall.has_edge(X, Z) && !Gall.has_edge(Z, X) && Z != X) {
               Gall.remove_edge(Z, Y);
-              cout<< "R1:" <<Y<<"->"<<Z<< endl;
+              cout<< "R1:" <<Y<<"->"<<Z<<"|"<<X<< endl;
               flag = true;
             }
           }
@@ -467,7 +486,7 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
             for (auto &W : Gall.undirected_neighbors(Y)){
               if (W != X && W != Z && Gall.has_directed_edge(X, W) && Gall.has_directed_edge(Z, W)){
                 Gall.remove_edge(W, Y);
-                cout<< "R3:" <<Y<<"->"<<W<< endl;
+                cout<< "R3:" <<Y<<"->"<<W<<"|"<<"X="<<X<<"Z="<<Z<< endl;
                 flag = true;
               }
             }
