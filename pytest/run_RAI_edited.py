@@ -58,7 +58,7 @@ def test_benchmark(
         score = SCORE[structure_score](data)
         t = time.time()
         if estimate_type == "RAI_cpp":
-            best_model = RAIEstimator_cpp(data = data, ESS = ess)
+            best_model = RAIEstimator_cpp(data = data)
         elif estimate_type == "PC_cpp":
             best_model = PCEstimator_cpp(data = data, ESS = ess)
         elif estimate_type == "RAI":
@@ -73,7 +73,7 @@ def test_benchmark(
             raise ValueError("Invalid estimator type")
         calc_time += time.time() - t
         best_model_compare = PDAG2CPDAG(best_model)
-        # show(best_model)
+        show(best_model)
         # show(best_model_compare)
         #show(comparemodel)
         errors = structural_errors(comparemodel, best_model_compare)
@@ -102,9 +102,9 @@ def arg_parser():
     parser = argparse.ArgumentParser(description="Benchmarking for Bayesian Network Structure Learning")
     parser.add_argument("--estimate_type", type=str, default="RAI_cpp", help="Estimator type")
     parser.add_argument("--data_type", type=str, default="cancer", help="Data type")
-    parser.add_argument("--sample_size", type=int, default=1000000, help="Sample size")
+    parser.add_argument("--sample_size", type=int, default=2000000, help="Sample size")
     parser.add_argument("--structure_score", type=str, default="BIC", help="Structure score")
-    parser.add_argument("--ess", type=float, default=1, help="ESS")
+    parser.add_argument("--ess", type=float, default=5, help="ESS")
     parser.add_argument("--max_iter", type=int, default=1, help="Number of iterations")
     return parser.parse_args()
 
