@@ -1,5 +1,4 @@
 #include "template.h"
-#include "template_cuda.h"
 
 #include <gtest/gtest.h>
 #include <pybind11/numpy.h>
@@ -7,6 +6,8 @@
 
 #include <random>
 #include <vector>
+
+#include "template_cuda.h"
 
 namespace py = pybind11;
 
