@@ -7,6 +7,8 @@ on:
 jobs:
   build_and_test:
     runs-on: ubuntu-22.04
+    container:
+      image: nvidia/cuda:12.6.2-devel-ubuntu22.04 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
