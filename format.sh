@@ -1,7 +1,7 @@
 #!/bin/bash
 
 TARGET_DIRS=("src" "include" "gtest" "bindings")
-FILE_EXTENSIONS=("*.c" "*.cpp" "*.h" "*.hpp")
+FILE_EXTENSIONS=("*.c" "*.cpp" "*.cu" "*.h" "*.hpp")
 
 PYTHON_TARGET_DIRS=("scripts" "pytest")
 PYTHON_EXTENSION="*.py"

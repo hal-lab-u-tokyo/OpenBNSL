@@ -3,6 +3,7 @@
 
 #include "base/PDAG.h"
 #include "template.h"
+#include "template_cuda.h"
 namespace py = pybind11;
 
 PYBIND11_MODULE(openbnsl, m) {
@@ -11,4 +12,5 @@ PYBIND11_MODULE(openbnsl, m) {
   m.def("matmul_naive", &matmul_naive, "Multiply two NumPy arrays");
   m.def("matmul_openmp", &matmul_openmp,
         "Multiply two NumPy arrays with OpenMP");
+  m.def("matmul_cuda", &matmul_cuda, "Multiply two NumPy arrays with CUDA");
 }

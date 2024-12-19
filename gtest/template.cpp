@@ -1,4 +1,5 @@
 #include "template.h"
+#include "template_cuda.h"
 
 #include <gtest/gtest.h>
 #include <pybind11/numpy.h>
@@ -29,12 +30,16 @@ TEST(MatmulTest, correctness) {
 
   auto c_naive = matmul_naive(a, b);
   auto c_openmp = matmul_openmp(a, b);
+  auto c_cuda = matmul_cuda(a, b);
   auto c_naive_buf = c_naive.request();
   auto c_openmp_buf = c_openmp.request();
+  auto c_cuda_buf = c_cuda.request();
   double *c_naive_ptr = static_cast<double *>(c_naive_buf.ptr);
   double *c_openmp_ptr = static_cast<double *>(c_openmp_buf.ptr);
+  double *c_cuda_ptr = static_cast<double *>(c_cuda_buf.ptr);
 
   for (int i = 0; i < n * p; i++) {
     ASSERT_NEAR(c_naive_ptr[i], c_openmp_ptr[i], epsilon);
+    ASSERT_NEAR(c_naive_ptr[i], c_cuda_ptr[i], epsilon);
   }
 }
