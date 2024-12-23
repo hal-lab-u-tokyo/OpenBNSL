@@ -1,11 +1,8 @@
 name: Deploy Docker Image and Documentation
 
 on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
-
+  pull_request:
+  
 env:
   IMAGE_NAME: ghcr.io/${{ github.repository }}
   IMAGE_TAG: latest
