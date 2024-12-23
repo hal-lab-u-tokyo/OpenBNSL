@@ -1,69 +1,32 @@
-name: Build and Test
+name: Build, Test, and Format Check
 
 on:
   pull_request:
-  workflow_dispatch:
 
 jobs:
-  build_and_test:
-    runs-on: ubuntu-22.04
-    container:
-      image: nvidia/cuda:12.6.2-devel-ubuntu22.04 
+  build_test_and_format:
+    name: Build, Test, and Format Check
+    runs-on: ubuntu-latest
     steps:
+      - name: Log in to GitHub Docker Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      - name: Pull Docker Image
+        run: docker pull $IMAGE_NAME:$IMAGE_TAG
+
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
           submodules: recursive
 
-      - name: Install Dependencies
+      - name: Run Build
         run: |
-          sudo apt update && sudo apt install -y \
-            build-essential \
-            cmake \
-            git \
-            python3.10 \
-            python3.10-dev \
-            python3-pip \
-            libomp-dev \
-            libgmp-dev \
-            libgtest-dev
-          sudo apt clean
-          sudo rm -rf /var/lib/apt/lists/*
+          docker run --rm $IMAGE_NAME:$IMAGE_TAG ./build.sh
 
-      - name: Build Google Test
+      - name: Run Tests
         run: |
-          cd /usr/src/googletest && \
-          sudo cmake CMakeLists.txt && \
-          sudo make && \
-          sudo cp lib/*.a /usr/lib
+          docker run --rm $IMAGE_NAME:$IMAGE_TAG ./test.sh
 
-      - name: Install Python Packages
+      - name: Run Format Check
         run: |
-          pip3 install --upgrade pip
-          pip3 install \
-            pandas==2.2.3 \
-            pgmpy==0.1.26 \
-            pulp==2.9.0 \
-            pytest==8.3.3
-
-      - name: Build the Project
-        run: chmod +x build.sh && ./build.sh
-
-      - name: Run gtests
-        run: |
-          build/openbnsl_test --gtest_output=xml:gtest_results.xml
-
-      - name: Run pytest
-        run: pytest --junitxml=pytest_results.xml
-
-      - name: Upload gtest Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: gtest-results
-          path: gtest_results.xml
-
-      - name: Upload pytest Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: pytest-results
-          path: pytest_results.xml
+          docker run --rm $IMAGE_NAME:$IMAGE_TAG ./format --check
