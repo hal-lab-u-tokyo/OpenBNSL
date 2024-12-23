@@ -4,37 +4,32 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:
+
+env:
+  IMAGE_NAME: ghcr.io/${{ github.repository }}
+  IMAGE_TAG: latest
 
 jobs:
   generate_and_deploy_docs:
-    runs-on: ubuntu-22.04
+    name: Generate and Deploy Documentation
+    runs-on: ubuntu-latest
     steps:
+      - name: Log in to GitHub Docker Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      - name: Pull Docker Image
+        run: docker pull $IMAGE_NAME:$IMAGE_TAG
+
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
           submodules: recursive
 
-      - name: Install Dependencies
-        run: |
-          sudo apt update && apt install -y \
-            doxygen \
-            graphviz \
-            python3.10 \
-            python3.10-dev \
-            python3-pip
-          sudo apt clean
-          sudo rm -rf /var/lib/apt/lists/*
-            
-      - name: Install Python Packages
-        run: |
-          pip3 install --upgrade pip
-          pip3 install \
-            sphinx==8.1.3 \
-            breathe==4.35.0
+      - name: Set execute permissions for bash scripts
+        run: chmod +x ./gen_docs.sh
 
       - name: Generate Documentation
-        run: chmod +x gen_docs.sh && ./gen_docs.sh
+        run: docker run --rm $IMAGE_NAME:$IMAGE_TAG ./gen_docs.sh
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v1
