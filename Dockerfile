@@ -24,21 +24,23 @@ RUN update-alternatives --set python3 /usr/bin/python3.10
 RUN cd /usr/src/googletest && \
     cmake CMakeLists.txt && \
     make && \
-    cp lib/*.a /usr/lib
+    cp lib/*.a /usr/lib && \
+    rm -rf /usr/src/googletest
 
 # Install Python packages
-RUN pip3 install --upgrade pip
-RUN pip3 install \
-    pandas==2.2.3 \
-    pgmpy==0.1.26 \
-    networkx==3.4.2 \
-    matplotlib==3.9.2 \
-    notebook==7.2.2 \
-    pulp==2.9.0 \
-    pytest==8.3.3 \
-    black==24.10.0 \
-    sphinx==8.1.3 \
-    breathe==4.35.0
+RUN pip3 install --upgrade pip && \
+    pip3 install \
+        pandas==2.2.3 \
+        pgmpy==0.1.26 \
+        networkx==3.4.2 \
+        matplotlib==3.9.2 \
+        notebook==7.2.2 \
+        pulp==2.9.0 \
+        pytest==8.3.3 \
+        black==24.10.0 \
+        sphinx==8.1.3 \
+        breathe==4.35.0 && \
+    rm -rf /root/.cache/pip
 
 # Install Gurobi if needed
 RUN if [ "$INSTALL_GUROBI" = "true" ] ; then \
