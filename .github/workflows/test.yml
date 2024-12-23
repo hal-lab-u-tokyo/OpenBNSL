@@ -3,6 +3,10 @@ name: Build, Test, and Format Check
 on:
   pull_request:
 
+env:
+  IMAGE_NAME: ghcr.io/${{ github.repository }}/openbnsl
+  IMAGE_TAG: latest
+
 jobs:
   build_test_and_format:
     name: Build, Test, and Format Check
