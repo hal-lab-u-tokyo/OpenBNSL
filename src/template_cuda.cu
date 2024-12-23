@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "template_cuda.h"
+#include "template.h"
 namespace py = pybind11;
 
 __global__ void matmul(const double* A, const double* B, double* C, int M,

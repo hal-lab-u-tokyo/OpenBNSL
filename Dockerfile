@@ -1,5 +1,6 @@
+ARG BASE_IMAGE=ubuntu:22.04
 ARG INSTALL_GUROBI=false
-FROM nvidia/cuda:12.6.2-devel-ubuntu22.04
+FROM ${BASE_IMAGE}
 
 RUN apt update && apt install -y \
     build-essential \

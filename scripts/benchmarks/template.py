@@ -28,9 +28,10 @@ func_variants = [
     ("OpenMP", openbnsl.matmul_openmp, 1),
     ("OpenMP", openbnsl.matmul_openmp, 4),
     ("OpenMP", openbnsl.matmul_openmp, 8),
-    ("CUDA", openbnsl.matmul_cuda, -1),
     ("NumPy", np.dot, -1),
 ]
+if openbnsl.cuda_enabled:
+    func_variants += [("CUDA", openbnsl.matmul_cuda, -1)]
 
 benchmark_functions_variants(
     func_variants,
