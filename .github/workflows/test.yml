@@ -23,6 +23,9 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Set execute permissions for bash scripts
+        run: chmod +x ./build.sh ./test.sh ./format.sh
+
       - name: Run Build
         run: |
           docker run --rm -v "$(pwd):/workspace" $IMAGE_NAME:$IMAGE_TAG ./build.sh

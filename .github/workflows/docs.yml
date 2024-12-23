@@ -25,6 +25,9 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Set execute permissions for bash scripts
+        run: chmod +x ./gen_docs.sh
+
       - name: Generate Documentation
         run: docker run --rm $IMAGE_NAME:$IMAGE_TAG ./gen_docs.sh
 
