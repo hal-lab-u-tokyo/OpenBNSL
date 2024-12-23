@@ -1,0 +1,34 @@
+name: Generate and Deploy Documentation
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  IMAGE_NAME: ghcr.io/${{ github.repository }}
+  IMAGE_TAG: latest
+
+jobs:
+  generate_and_deploy_docs:
+    name: Generate and Deploy Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log in to GitHub Docker Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      - name: Pull Docker Image
+        run: docker pull $IMAGE_NAME:$IMAGE_TAG
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Generate Documentation
+        run: docker run --rm $IMAGE_NAME:$IMAGE_TAG ./gen_docs.sh
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v1
+        with:
+          path: sphinx/build/html
