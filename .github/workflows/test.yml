@@ -4,7 +4,7 @@ on:
   pull_request:
 
 env:
-  IMAGE_NAME: ghcr.io/${{ github.repository }}/docker-image
+  IMAGE_NAME: ghcr.io/${{ github.repository }}
   IMAGE_TAG: latest
 
 jobs:
