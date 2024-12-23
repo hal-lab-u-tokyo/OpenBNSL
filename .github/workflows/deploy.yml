@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE_NAME: ghcr.io/${{ github.repository }}/openbnsl
+  IMAGE_NAME: ghcr.io/${{ github.repository }}
   IMAGE_TAG: latest
 
 jobs:
