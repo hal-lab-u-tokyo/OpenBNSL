@@ -1,7 +1,5 @@
 build/
 doxygen/build/
 sphinx/build/
-Testing/
 
-*/__pycache__/*
-*/.pytest_cache/*
+**/__pycache__/

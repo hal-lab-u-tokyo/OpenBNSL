@@ -3,7 +3,8 @@ import numpy as np
 from benchmark_utils import benchmark_functions_variants
 
 sys.path.append("/workspace/build")
-import openbn
+import openbnsl
+
 
 def python_matmul(a, b):
     n, m = len(a), len(b[0])
@@ -15,6 +16,7 @@ def python_matmul(a, b):
                 result[i][j] += a[i][k] * b[k][j]
     return result
 
+
 matrix_size = 256
 np.random.seed(0)
 a = np.random.rand(matrix_size, matrix_size)
@@ -22,19 +24,19 @@ b = np.random.rand(matrix_size, matrix_size)
 input_args = (a, b)
 func_variants = [
     ("Python", python_matmul, -1),
-    ("Naive C++", openbn.matmul_naive, -1),
-    ("OpenMP", openbn.matmul_openmp, 1),
-    ("OpenMP", openbn.matmul_openmp, 10),
-    ("OpenMP", openbn.matmul_openmp, 20),
+    ("Naive C++", openbnsl.matmul_naive, -1),
+    ("OpenMP", openbnsl.matmul_openmp, 1),
+    ("OpenMP", openbnsl.matmul_openmp, 4),
+    ("OpenMP", openbnsl.matmul_openmp, 8),
     ("NumPy", np.dot, -1),
 ]
+if openbnsl.cuda_enabled:
+    func_variants += [("CUDA", openbnsl.matmul_cuda, -1)]
 
 benchmark_functions_variants(
-    func_variants, 
-    input_args, 
-    trials=10,
-    unit="ms", 
-    benchmark_name="Benchmark Matrix Multiplication ({}x{})".format(a.shape, b.shape)
+    func_variants,
+    input_args,
+    trials=30,
+    unit="ms",
+    benchmark_name="Benchmark Matrix Multiplication ({}x{})".format(a.shape, b.shape),
 )
-
-
