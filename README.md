@@ -68,21 +68,21 @@ Note: When cloning this repository, please make sure to clone the repository wit
 ## Set Up
 
 ```bash
-docker-compose build
-docker-compose up
+docker compose build
+docker compose up
 ```
 
 ### Optional: Nvidia GPU Support
 If you have an Nvidia GPU, you can use the following command to build the image with GPU support.
 ```bash
-docker-compose build --build-arg BASE_IMAGE=nvidia/cuda:12.6.2-devel-ubuntu22.04
+docker compose build --build-arg BASE_IMAGE=nvidia/cuda:12.6.2-devel-ubuntu22.04
 ```
 
 ### Optional: Gurobi License
 If you want to use gurobi, you need to get a license file (gurobi.lic) and put it in the same directory as the Dockerfile.
 Gurobi provides free licenses for academic use.
 ```bash
-docker-compose build --build-arg INSTALL_GUROBI=true
+docker compose build --build-arg INSTALL_GUROBI=true
 ```
 
 ## Build the project
