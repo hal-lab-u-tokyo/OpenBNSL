@@ -1,8 +1,7 @@
 #pragma once
 #include <pybind11/numpy.h>
 #include <pybind11/pybind11.h>
-
-#include "base/PDAG.h"
+#include <pybind11/stl.h>
 namespace py = pybind11;
 
-PDAGwithAdjMat PC(const py::array_t<int> &data);
+py::array_t<bool> PC(py::array_t<int> data, py::array_t<int> n_states, double ESS);
