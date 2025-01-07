@@ -550,13 +550,13 @@ float natori_independent_score(const vector<vector<int>> &data, int &node_x, int
     int q = count.at(0).size(); //number of states of parents
     int r = count.size(); //number of states of node_x
     vector<float> n_ij(q, 0.0);
-    //////cout << "independent_x"<<endl;
+    //cout<<"independent_score_x"<<endl;
     for (int k = 0; k < r; k++) {
       for(int j = 0; j < q; j++) {
         n_ij.at(j) += count.at(k).at(j);
-        //////cout<<count.at(k).at(j)<<", ";
+        //cout<<count.at(k).at(j)<<", ";
       }
-      //////cout<<endl;
+      //cout<<endl;
     }
     for (int j = 0; j < q; j++) { //for each state of parents
       for (int k = 0; k < r; k++) { //for each state of node_x
@@ -572,13 +572,13 @@ float natori_independent_score(const vector<vector<int>> &data, int &node_x, int
     q = count2.at(0).size(); //number of states of parents
     r = count2.size(); //number of states of node_x
     vector<float> n_ij2(q, 0.0);
-    //////cout << "independent_y"<<endl;
+    //cout << "independent_score_y"<<endl;
     for (int k = 0; k < r; k++) {
       for(int j = 0; j < q; j++) {
         n_ij2.at(j) += count2.at(k).at(j);
-        //////cout<<count2.at(k).at(j)<<", ";
+        //cout<<count2.at(k).at(j)<<", ";
       }
-      //////cout<<endl;
+      //cout<<endl;
     }
     for (int j = 0; j < q; j++) { //for each state of parents
       for (int k = 0; k < r; k++) { //for each state of node_x
@@ -628,12 +628,13 @@ float natori_dependent_score(const vector<vector<int>> &data, int &node_x, int &
     alpha = ESS / (r * q);
     }
     vector<float> n_ij(q, 0.0);
+    //cout<<"dependent_score"<<endl;
     for (int k = 0; k < r; k++) {
       for(int j = 0; j < q; j++) {
         n_ij.at(j) += count.at(k).at(j);
-        //////cout<<count.at(k).at(j)<<", ";
+        //cout<<count.at(k).at(j)<<", ";
       }
-      //////cout<<endl;
+      //cout<<endl;
     }
     for (int j = 0; j < q; j++) { //for each state of parents
       for (int k = 0; k < r; k++) { //for each state of node_x
@@ -657,10 +658,10 @@ bool ci_test(const vector<vector<int>> &data, int &node_x, int &node_y, vector<i
   independent_score += natori_independent_score(data, node_x, node_y, Z, n_states, ESS);
   dependent_score += natori_dependent_score(data, node_x, node_y, Z, n_states, ESS);
   if(independent_score > dependent_score){
-    //cout<< "CI independent:" <<node_x<<" _|_"<<node_y<<" | "<<independent_score<<">"<<dependent_score<< endl;
+    cout<< "CI independent:" <<node_x<<" _|_"<<node_y<<" | "<<independent_score<<">"<<dependent_score<< endl;
     return true;
   }else{
-    //cout<< "CI dependent:" <<node_x<<" _|_"<<node_y<<" | "<<independent_score<<"<"<<dependent_score<< endl;
+    cout<< "CI dependent:" <<node_x<<" _|_"<<node_y<<" | "<<independent_score<<"<"<<dependent_score<< endl;
     return false;
   }
 }
@@ -745,7 +746,7 @@ double qchi(double x2, int n)
 
 bool ci_test_for_vstructure_detect_by_Chi_squared_test(const vector<vector<int>> &data, int &node_x, int &node_y, int &node_z, vector<int> &n_states) {
   //CI test for X _|_ Y | Z using Chi-squared test; Test statistics G = 2 * sum_x,y,z(n_xyz * log(n_xyz / (n_xz n_yz / n))) ~ chi^2_{d.f= (|X| - 1) * (|Y| - 1) * |Z|} (from http://www.ai.lab.uec.ac.jp/wp-content/uploads/2019/04/41f06ccbd0ac30d15c7728117770b105.pdf)
-  float threthold = 0.1;
+  float threthold = 0.2;
   vector<int> children(2);
   children.at(0) = node_x;
   children.at(1) = node_y;
@@ -807,15 +808,15 @@ bool ci_test_for_vstructure_detect_by_Chi_squared_test(const vector<vector<int>>
     for (int j = 0; j < r_y; j++) {
       for (int k = 0; k < r_z; k++) {
         ////cout << "ijk:" << (double)count.at(i * r_y + j).at(k) /(double)n << "xzyz:" <<((double)n_xz.at(i).at(k) * (double)n_yz.at(j).at(k) / (sum_x.at(k) * sum_y.at(k))) *sum_z.at(k)/(double)n << "ijk/xzyz:"<< ((double)count.at(i * r_y + j).at(k) / (double)n )/ (((double)n_xz.at(i).at(k) * (double)n_yz.at(j).at(k) / (sum_x.at(k) * sum_y.at(k)))*sum_z.at(k)/(double)n)<< endl;
-        G = G + 2 * (double)count.at(i * r_y + j).at(k) * log(((double)count.at(i * r_y + j).at(k) / (double)n )/ (((double)n_xz.at(i).at(k) * (double)n_yz.at(j).at(k) / (sum_x.at(k) * sum_y.at(k)))*sum_z.at(k)/(double)n));
-        //G = G + 2 * (double)count.at(i * r_y + j).at(k) * log((double)count.at(i * r_y + j).at(k) / ((double)n_xz.at(i).at(k) * (double)n_yz.at(j).at(k) / (double)n));
+        // G = G + 2 * (double)count.at(i * r_y + j).at(k) * log(((double)count.at(i * r_y + j).at(k) / (double)n )/ (((double)n_xz.at(i).at(k) * (double)n_yz.at(j).at(k) / (sum_x.at(k) * sum_y.at(k)))*sum_z.at(k)/(double)n));
+        G = G + 2 * (double)count.at(i * r_y + j).at(k) * log((double)count.at(i * r_y + j).at(k) * (double)n / ((double)n_xz.at(i).at(k) * (double)n_yz.at(j).at(k)));
       }
     }
   }
   ////cout<< "G:" <<G<< endl;
   int dim = (r_x - 1) * (r_y - 1) * r_z;
   double p_value = qchi(G, dim);
-  //cout<< "p_value:" <<p_value<< endl;
+  cout<< "p_value:" <<p_value<< endl;
   bool flag = false;
   if (p_value <= threthold || 1 - p_value <= threthold){
     flag = true;
@@ -830,9 +831,10 @@ bool ci_test_for_vstructure_detect_by_Chi_squared_test(const vector<vector<int>>
   }
 }
 
-float localBDeuscore(const vector<vector<int>> &data, int &node_x, vector<int> &parents, double &ESS, vector<int> &n_states) {
+float localBDeuscore(const vector<vector<int>> &data, int &node_x, vector<int> &parents, vector<int> &n_states) {
   //return log of the BDeu score of X, Y | Z
   double score = 0.0;
+  float alpha = 0.5;
   if (parents.empty()) {
     //no parents
     vector<vector<int>> count;
@@ -844,9 +846,11 @@ float localBDeuscore(const vector<vector<int>> &data, int &node_x, vector<int> &
       n_i += count.at(k).at(0);
     }
     for (int k = 0; k < r; k++) { //for each state of node_x
-        score += lgamma(ESS / r + count.at(k).at(0)) - lgamma(ESS/r);
+        score += lgamma(alpha + count.at(k).at(0)) - lgamma(alpha);
+        cout << count.at(k).at(0) << ", ";
+        cout << endl;
     }
-    score += lgamma(ESS) - lgamma(ESS + n_i);
+    score += lgamma(alpha * r) - lgamma(alpha * r + n_i);
   }
   else {
     //have parents
@@ -863,12 +867,14 @@ float localBDeuscore(const vector<vector<int>> &data, int &node_x, vector<int> &
     }
     for (int j = 0; j < q; j++) { //for each state of parents
       for (int k = 0; k < r; k++) { //for each state of node_x
-        score += lgamma(ESS / (r * q) + count.at(k).at(j)) - lgamma(ESS/(r * q));
+        score += lgamma(alpha + count.at(k).at(j)) - lgamma(alpha);
         if (isnan(score)) {
           //cout <<ESS / (r * q) + count.at(k).at(j)<< "score is nan" << endl;
         }
+        cout << count.at(k).at(j) << ", ";
       }
-      score += lgamma(ESS / q) - lgamma(ESS / q + n_ij.at(j));
+      score += lgamma(alpha * r) - lgamma(alpha * r + n_ij.at(j));
+      cout << endl;
     }
   }
     //calculate the score
@@ -879,24 +885,134 @@ bool ci_test_for_vstructure_detect_by_beyesfactor(const vector<vector<int>> &dat
   //CI test for X _|_ Y | Z compare X->Z<-Y and X->Z->Y
   float independent_score = 0.0; //X->Z->Y
   float dependent_score = 0.0; //X->Z<-Y
-  vector<int> parents_z_independent = {node_x};
-  vector<int> parents_z_dependent = {node_x, node_y};
-  vector<int> parents_y_independent = {node_z};
-  vector<int> parents_y_dependent;
-  double ESS = 5.0;
 
-  independent_score += localBDeuscore(data, node_z, parents_z_independent, ESS, n_states);
-  independent_score += localBDeuscore(data, node_y, parents_y_independent, ESS, n_states);
-  dependent_score += localBDeuscore(data, node_z, parents_z_dependent, ESS, n_states);
-  dependent_score += localBDeuscore(data, node_y, parents_y_dependent, ESS, n_states);
+  double alpha = 0.5;
+
+  vector<vector<int>> count_independent;
+  vector<int> children_independent = {node_x, node_y, node_z};
+  vector<int> parents_independent;
+  count_independent = state_count(data, children_independent, parents_independent, n_states);
+  int r = count_independent.size(); //number of states of node_x
+  int n_i = 0;
+  for (int k = 0; k < r; k++) {
+    n_i += count_independent.at(k).at(0);
+  }
+  for (int k = 0; k < r; k++) { //for each state of node_x
+      independent_score += lgamma(alpha + count_independent.at(k).at(0)) - lgamma(alpha);
+  }
+  independent_score += lgamma(alpha) - lgamma(alpha + n_i);
+  
+
+  vector<vector<int>> count_dependent_z;
+  vector<int> parents_dependent_z = {node_x, node_y};
+  vector<int> parents_dependent_x;
+  vector<int> parents_dependent_y;
+  vector<int> zz = {node_z};
+  dependent_score += localBDeuscore(data, node_z, parents_dependent_z, n_states);
+  dependent_score += localBDeuscore(data, node_x, parents_dependent_x, n_states);
+  cout<< "xlocal"<<localBDeuscore(data, node_x, parents_dependent_x, n_states)<<endl;
+  dependent_score += localBDeuscore(data, node_y, parents_dependent_y, n_states);
+  cout<< "ylocal"<<localBDeuscore(data, node_y, parents_dependent_y, n_states)<<endl;
+  // float ess = -2.0;
+  // dependent_score += natori_dependent_score(data, node_x, node_y, zz, n_states, ess);
   if(independent_score > dependent_score){
-    //cout<< "CI independent:" <<node_x<<" _|_"<<node_y<<" | "<<independent_score<<">"<<dependent_score<< endl;
+    cout<< "CI independent:" <<node_x<<" _|_"<<node_y<<" | "<<independent_score<<">"<<dependent_score<< endl;
     return false;
   }else{
-    //cout<< "CI dependent:" <<node_x<<" _|_"<<node_y<<" | "<<independent_score<<"<"<<dependent_score<< endl;
+    cout<< "CI dependent:" <<node_x<<" _|_"<<node_y<<" | "<<independent_score<<"<"<<dependent_score<< endl;
     return true;
   }
 }
+
+
+bool ci_test_for_vstructure_detect_by_CMI(const vector<vector<int>> &data, int &node_x, int &node_y, int &node_z, vector<int> &n_states) {
+  //CI test for X _|_ Y | Z using CMI; Test statistics cmi(x,y|z) = sum_x,y,z p(x,y,z) * log(p(x,y|z)/p(x|z)p(y|z))
+  double threthold = 0.003;
+  vector<int> children(2);
+  children.at(0) = node_x;
+  children.at(1) = node_y;
+  vector<int> parents(1, node_z);
+  vector<vector<int>>count;
+  count = state_count(data, children, parents, n_states);
+  int r_x = n_states.at(node_x);
+  int r_y = n_states.at(node_y);
+  int r_z = n_states.at(node_z);
+  int n = data.size();
+  vector<vector<double>> n_xz(r_x, vector<double>(r_z, 0));
+  vector<vector<double>> n_yz(r_y, vector<double>(r_z, 0));
+  for (int i = 0; i < r_x; i++) {
+    for (int j = 0; j < r_y; j++) {
+      for (int k = 0; k < r_z; k++) {
+        n_xz.at(i).at(k) += count.at(i * r_y + j).at(k);
+        n_yz.at(j).at(k) += count.at(i * r_y + j).at(k);
+        ////cout << count.at(i * r_y + j).at(k)<< ", ";
+      }
+      ////cout << endl;
+    }
+  }
+  vector<double> sum_x(r_z, 0);
+  vector<double> sum_y(r_z, 0);
+  vector<double> sum_z(r_z, 0);
+  for (int i = 0; i < r_x; i++) {
+    for (int k = 0; k < r_z; k++) {
+      sum_x.at(k) += n_xz.at(i).at(k);
+    }
+  }
+  for (int j = 0; j < r_y; j++) {
+    for (int k = 0; k < r_z; k++) {
+      sum_y.at(k) += n_yz.at(j).at(k);
+    }
+  }
+  for (int i = 0; i < r_x; i++) {
+    for (int j = 0; j < r_y; j++) {
+      for (int k = 0; k < r_z; k++) {
+        sum_z.at(k) += count.at(i * r_y + j).at(k);
+      }
+    }
+  }
+
+
+  vector<vector<double>> p_xyz(r_x * r_y, vector<double>(r_z, 0.0));
+  vector<vector<double>> p_xy_z(r_x * r_y, vector<double>(r_z, 0.0));
+  vector<vector<double>> p_xz(r_x, vector<double>(r_z, 0.0));
+  vector<vector<double>> p_yz(r_y, vector<double>(r_z, 0.0));
+  for (int i = 0; i < r_x; i++) {
+    for (int j = 0; j < r_y; j++) {
+      for (int k = 0; k < r_z; k++) {
+        p_xyz.at(i * r_y + j).at(k) = (double)count.at(i * r_y + j).at(k) / (double)n; 
+        p_xy_z.at(i * r_y + j).at(k) = (double)count.at(i * r_y + j).at(k) / (double)sum_z.at(k); 
+      }
+    }
+  }
+  for (int i = 0; i < r_x; i++) {
+    for (int k = 0; k < r_z; k++) {
+      p_xz.at(i).at(k) = (double)n_xz.at(i).at(k) / (double)sum_x.at(k);
+    }
+  }
+  for (int j = 0; j < r_y; j++) {
+    for (int k = 0; k < r_z; k++) {
+      p_yz.at(j).at(k) = (double)n_yz.at(j).at(k) / (double)sum_y.at(k);
+    }
+  }
+
+  double cmi = 0.0;
+  for (int i = 0; i < r_x; i++) {
+    for (int j = 0; j < r_y; j++) {
+      for (int k = 0; k < r_z; k++) {
+        cmi = cmi + p_xyz.at(i * r_y + j).at(k) * log(p_xy_z.at(i * r_y + j).at(k) / (p_xz.at(i).at(k) * p_yz.at(j).at(k)));
+      }
+    }
+  }
+  cout << "CMI: " << cmi << endl;
+  if(cmi < threthold){
+    cout<< "CI independent:" <<node_x<<" _|_"<<node_y<<" | "<<node_z<< endl;
+    return false;
+  }else{
+    cout<< "CI dependent:" <<node_x<<" _|_"<<node_y<<" | "<<node_z<< endl;
+    return true;
+  }
+}
+
 
 void orientation_A2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deletededges) {
   /*
@@ -933,13 +1049,14 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
       for (auto& Y : Gall.undirected_neighbors(Z)) {
         if (X != Y && !Gall.has_edge(X, Y) && !Gall.has_edge(Y, X) && Gall.has_edge(X, Z) && Gall.has_edge(Z, X) && Gall.has_edge(Y, Z) && Gall.has_edge(Z, Y)) {
           vector<int> z = {Z};
-          //cout<< "V-structure think:" <<X<<"->"<<Z<<"<-"<<Y<< endl;
-          if (!ci_test(data, X, Y, z, n_states, ESS)){
+          cout<< "V-structure think:" <<X<<"->"<<Z<<"<-"<<Y<< endl;
+          //if (!ci_test(data, X, Y, z, n_states, ESS)){
           //if(ci_test_for_vstructure_detect_by_Chi_squared_test(data, X, Y, Z, n_states)){
+          if(ci_test_for_vstructure_detect_by_CMI(data, X, Y, Z, n_states)){ 
           //if(ci_test_for_vstructure_detect_by_beyesfactor(data, X, Y, Z, n_states)){
             Gall.remove_edge(Z, X);
             Gall.remove_edge(Z, Y);
-            //cout<< "V-structure found:" <<X<<"->"<<Z<<"<-"<<Y<< endl;
+            cout<< "V-structure found:" <<X<<"->"<<Z<<"<-"<<Y<< endl;
           }
         }
       }
