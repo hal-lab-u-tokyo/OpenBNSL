@@ -23,7 +23,7 @@ using namespace std;
 
 
 void dfs(int now, vector<vector<int>> &G, vector<bool> &visited, vector<int> &order) {
-    //////////////cout<<now<<endl;
+    ////////////////cout<<now<<endl;
     visited[now] = true;
     for (int i = 0; i < (int)G.at(now).size(); i++) {
         if (!visited[G.at(now).at(i)]) {
@@ -34,7 +34,7 @@ void dfs(int now, vector<vector<int>> &G, vector<bool> &visited, vector<int> &or
 }
 
 void rdfs(int now, vector<vector<int>> &rG, vector<bool> &visited, int k, vector<int> &comp) {
-    //////////////cout<<now<<endl;
+    ////////////////cout<<now<<endl;
     visited[now] = true;
     comp[now] = k;
     for (int i = 0; i < (int)rG.at(now).size(); i++) {
@@ -133,11 +133,11 @@ struct PDAG {
   vector<vector<bool>> g;
   // コンストラクタ
   PDAG() {
-    //////////////cout << "normal constructor called" << endl;
+    ////////////////cout << "normal constructor called" << endl;
   }
   // コピーコンストラクタ
   PDAG(const PDAG &old) {
-    //////////////cout << "copy constructor called" << endl;
+    ////////////////cout << "copy constructor called" << endl;
     g = old.g;
   }
   // 代入演算子
@@ -306,11 +306,11 @@ void  order_grouping(PDAG &Gall, vector<int> &Gs, vector<int> &Gd, vector<vector
     }
     order = order + 1;
   }
-  ////cout<< "comp:";
+  //////cout<< "comp:";
   for (int i = 0; i < comp.size(); i++){
-    ////cout<< comp.at(i)<<", ";
+    //////cout<< comp.at(i)<<", ";
   }
-  ////cout<<endl;
+  //////cout<<endl;
 
 
   //子孫部分集合の分離
@@ -399,13 +399,19 @@ void  order_grouping(PDAG &Gall, vector<int> &Gs, vector<int> &Gd, vector<vector
   return;
 }
 
-vector<vector<int>> state_count(const vector<vector<int>> &data, vector<int> &children, vector<int> &parents, vector<int> &n_states) {
+vector<vector<int>> state_count(const vector<vector<int>> &data, vector<int> &children, vector<int> &parents, vector<int> &n_states, int &parallel) {
+  //if parallel == 0 then use single thread, if parallel == 1 then use multi thread(CPU), if parallel == 2 then use GPU
   if (children.size() == 1){
     int node_x = children.at(0);
     if(parents.empty()) {
       int x = n_states.at(node_x);
       vector<vector<int>> counts(x, vector<int>(1, 0));
-      #pragma omp parallel
+      if (parallel == 0){
+        for(int i = 0; i < data.size(); i++) {
+            counts.at(data.at(i).at(node_x)).at(0) += 1;
+          }
+      }else if (parallel == 1){
+        #pragma omp parallel
         {
           vector<int> temp(x, 0);
           #pragma omp for
@@ -417,6 +423,28 @@ vector<vector<int>> state_count(const vector<vector<int>> &data, vector<int> &ch
             counts.at(j).at(0) += temp.at(j);
           }
         }
+      }else if (parallel == 2){
+        // double* data_novec = data.data();
+        // double* result = vec_res.data();
+        // int n1 = vec_data.size();
+        // int n2 = vec_data.at(0).size();
+
+        // #pragma omp target data map(tofrom:data[0:n],result[0:n])
+
+        // #pragma omp target data map(to: data[0:data.size()][0:data.at(0).size()]) map(tofrom:counts[0:x][0:1])
+        // #pragma omp target teams distribute parallel 
+        // {
+        //   vector<int> temp(x, 0);
+        //   #pragma omp for thread_limit(256)
+        //     for(int i = 0; i < data.size(); i++) {
+        //       temp.at(data.at(i).at(node_x)) += 1;
+        //     }
+        //   for(int j = 0; j < x; j++){
+        //     #pragma omp atomic
+        //     counts.at(j).at(0) += temp.at(j);
+        //   }
+        // }
+      }
       return counts;
     } else {
       //return the state counts of X, Y | Z shape: countmap[state of child][state of parents]
@@ -427,39 +455,62 @@ vector<vector<int>> state_count(const vector<vector<int>> &data, vector<int> &ch
       }
       vector<vector<int>> counts(x, vector<int>(y, 0));
       //count the number of each state
-      int yy;
-      #pragma omp parallel private(yy) 
-        {
-          vector<vector<int>> temp(x, vector<int>(y, 0));
-          #pragma omp for
-            for(int i = 0; i < data.size(); i++) {
-              for (int j = 0; j < parents.size(); j++) {
-                if (j == 0) {
-                  yy = data.at(i).at(parents.at(j));
-                }
-                else {
-                  yy = n_states.at(parents.at(j)) * yy + data.at(i).at(parents.at(j));
-                }
-              }
-              temp.at(data.at(i).at(node_x)).at(yy) += 1;
+      if (parallel == 0){
+        for(int i = 0; i < data.size(); i++) {
+          int yy;
+          for (int j = 0; j < parents.size(); j++) {
+            if (j == 0) {
+              yy = data.at(i).at(parents.at(j));
             }
-          for(int j = 0; j < x; j++){
-            for(int k = 0; k < y; k++){
-              #pragma omp atomic
-              counts.at(j).at(k) += temp.at(j).at(k);
+            else {
+              yy = n_states.at(parents.at(j)) * yy + data.at(i).at(parents.at(j));
             }
           }
+          counts.at(data.at(i).at(node_x)).at(yy) += 1;
         }
+      }else if (parallel == 1){
+        int yy;
+        #pragma omp parallel private(yy) 
+          {
+            vector<vector<int>> temp(x, vector<int>(y, 0));
+            #pragma omp for
+              for(int i = 0; i < data.size(); i++) {
+                for (int j = 0; j < parents.size(); j++) {
+                  if (j == 0) {
+                    yy = data.at(i).at(parents.at(j));
+                  }
+                  else {
+                    yy = n_states.at(parents.at(j)) * yy + data.at(i).at(parents.at(j));
+                  }
+                }
+                temp.at(data.at(i).at(node_x)).at(yy) += 1;
+              }
+            for(int j = 0; j < x; j++){
+              for(int k = 0; k < y; k++){
+                #pragma omp atomic
+                counts.at(j).at(k) += temp.at(j).at(k);
+              }
+            }
+          }
+      }else if (parallel == 2){
+        return counts;
+      }
+      
       return counts;
     }
-  }else{
+  }else{ //if children.size() == 2
     if(parents.empty()) {
       int xc = n_states.at(children.at(0));
       int yc = n_states.at(children.at(1));
       int len;
       len = xc * yc;
       vector<vector<int>> counts(len, vector<int>(1, 0));
-      #pragma omp parallel
+      if (parallel == 0){
+        for(int i = 0; i < data.size(); i++) {
+          counts.at(data.at(i).at(children.at(0)) * yc + data.at(i).at(children.at(1))).at(0) += 1;
+        }
+      }else if (parallel == 1){
+        #pragma omp parallel
         {
           vector<int> temp(len, 0);
           #pragma omp for
@@ -471,6 +522,10 @@ vector<vector<int>> state_count(const vector<vector<int>> &data, vector<int> &ch
             counts.at(j).at(0) += temp.at(j);
           }
         }
+      }else if (parallel == 2){
+        return counts;
+      }
+      
       return counts;
     } else {
       //return the state counts of X, Y | Z shape: countmap[state of child][state of parents]
@@ -484,35 +539,145 @@ vector<vector<int>> state_count(const vector<vector<int>> &data, vector<int> &ch
       }
       vector<vector<int>> counts(len, vector<int>(y, 0));
       //count the number of each state
-      int yy;
-      #pragma omp parallel private(yy) 
-        {
-          vector<vector<int>> temp(len, vector<int>(y, 0));
-          #pragma omp for
-            for(int i = 0; i < data.size(); i++) {
-              for (int j = 0; j < parents.size(); j++) {
-                if (j == 0) {
-                  yy = data.at(i).at(parents.at(j));
-                }
-                else {
-                  yy = n_states.at(parents.at(j)) * yy + data.at(i).at(parents.at(j));
-                }
-              }
-              temp.at(data.at(i).at(children.at(0)) * yc + data.at(i).at(children.at(1))).at(yy) += 1;
+      if (parallel == 0){
+        for(int i = 0; i < data.size(); i++) {
+          int yy;
+          for (int j = 0; j < parents.size(); j++) {
+            if (j == 0) {
+              yy = data.at(i).at(parents.at(j));
             }
-          for(int j = 0; j < len; j++){
-            for(int k = 0; k < y; k++){
-              #pragma omp atomic
-              counts.at(j).at(k) += temp.at(j).at(k);
+            else {
+              yy = n_states.at(parents.at(j)) * yy + data.at(i).at(parents.at(j));
             }
           }
+          counts.at(data.at(i).at(children.at(0)) * yc + data.at(i).at(children.at(1))).at(yy) += 1;
         }
+      }else if (parallel == 1){
+        int yy;
+        #pragma omp parallel private(yy) 
+          {
+            vector<vector<int>> temp(len, vector<int>(y, 0));
+            #pragma omp for
+              for(int i = 0; i < data.size(); i++) {
+                for (int j = 0; j < parents.size(); j++) {
+                  if (j == 0) {
+                    yy = data.at(i).at(parents.at(j));
+                  }
+                  else {
+                    yy = n_states.at(parents.at(j)) * yy + data.at(i).at(parents.at(j));
+                  }
+                }
+                temp.at(data.at(i).at(children.at(0)) * yc + data.at(i).at(children.at(1))).at(yy) += 1;
+              }
+            for(int j = 0; j < len; j++){
+              for(int k = 0; k < y; k++){
+                #pragma omp atomic
+                counts.at(j).at(k) += temp.at(j).at(k);
+              }
+            }
+          }
+      }else if (parallel == 2){
+        return counts;
+      }
+      
       return counts;
     }
   }
 }
 
-float natori_independent_score(const vector<vector<int>> &data, int &node_x, int &node_y, vector<int> &parents, vector<int> &n_states, float &ESS) {
+vector<int> make_count_DP(const vector<vector<int>> &data, vector<int> &Gs, vector<int> &n_states, int &parallel) {
+  // Gs全ノードの頻度表を計算
+  int x_len = 1;
+  for (int i = 0; i < Gs.size(); i++) {
+    x_len = x_len * n_states.at(Gs.at(i));
+  }
+  vector<int> count_DP(x_len, 0);
+  int yy;
+  #pragma omp parallel private(yy) 
+    {
+      vector<int> temp(x_len, 0);
+      #pragma omp for
+        for(int i = 0; i < data.size(); i++) {
+          for (int j = 0; j < Gs.size(); j++) {
+            if (j == 0) {
+              yy = data.at(i).at(Gs.at(j));
+            }
+            else {
+              yy = n_states.at(Gs.at(j)) * yy + data.at(i).at(Gs.at(j));
+            }
+          }
+          temp.at(yy) += 1;
+        }
+      for(int j = 0; j < x_len; j++){
+        #pragma omp atomic
+        count_DP.at(j) += temp.at(j);
+      }
+    }
+  return count_DP;
+}
+
+vector<vector<int>> state_count_DP(const vector<vector<int>> &data, vector<int> &children, vector<int> &parents, vector<int> &n_states, vector<int> &count_DP, vector<int> & Gs) {
+  //count the number of each state using dynamic programming
+  int xx = 1;
+  int yy = 1;
+  for (int i = 0; i < children.size(); i++) {
+    xx = xx * n_states.at(children.at(i));
+  }
+  for (int i = 0; i < parents.size(); i++) {
+    yy = yy * n_states.at(parents.at(i));
+  }
+  vector<vector<int>> counts(xx, vector<int>(yy, 0));
+  int size_Gs = Gs.size();
+  vector<int> children_Gs;
+  vector<int> parents_Gs;
+  for (int i = 0; i < children.size(); i++) {
+    for (int j = 0; j < size_Gs; j++) {
+      if (children.at(i) == Gs.at(j)) {
+        children_Gs.push_back(j);
+        break;
+      }
+    }
+  }
+  for (int i = 0; i < parents.size(); i++) {
+    for (int j = 0; j < size_Gs; j++) {
+      if (parents.at(i) == Gs.at(j)) {
+        parents_Gs.push_back(j);
+        break;
+      }
+    }
+  }
+  for(int i = 0; i < count_DP.size(); i++){
+    vector<int> Gs_val(size_Gs, 0);
+    int val = i;
+    for (int j = size_Gs - 1; j >= 0; j--){
+      Gs_val.at(j) = val % n_states.at(Gs.at(j));
+      val = val / n_states.at(Gs.at(j));
+    } //calculate Gs_val from index of count_DP
+    int x_val = 0;
+    int y_val = 0;
+    for (int j = 0; j < children.size(); j++) {
+      if (j == 0) {
+        x_val = Gs_val.at(children_Gs.at(j));
+      }
+      else {
+        x_val = n_states.at(children.at(j)) * x_val + Gs_val.at(children_Gs.at(j));
+      }
+    }
+    for (int j = 0; j < parents.size(); j++) {
+      if (j == 0) {
+        y_val = Gs_val.at(parents_Gs.at(j));
+      }
+      else {
+        y_val = n_states.at(parents.at(j)) * y_val + Gs_val.at(parents_Gs.at(j));
+      }
+    }
+    // cout << "x_val: " << x_val << ", y_val: " << y_val << ", count: "<< counts.size() << ", " << counts.at(0).size() <<endl;
+    counts.at(x_val).at(y_val) += count_DP.at(i);
+  }
+  return counts;
+}
+
+float natori_independent_score(const vector<vector<int>> &data, int &node_x, int &node_y, vector<int> &parents, vector<int> &n_states, float &ESS, int &parallel, bool &count_DP_flag, vector<int> &count_DP, vector<int> & Gs) {
   //return log of the BDeu score of X, Y | Z
   double score = 0.0;
   double alpha = 0.5; // hyperparameter
@@ -521,7 +686,11 @@ float natori_independent_score(const vector<vector<int>> &data, int &node_x, int
   if (parents.empty()) {
     //no parents
     vector<vector<int>> count;
-    count = state_count(data, node_x_vec, parents, n_states);
+    if (count_DP_flag){
+      count = state_count_DP(data, node_x_vec, parents, n_states, count_DP, Gs);
+    }else{
+      count = state_count(data, node_x_vec, parents, n_states, parallel);
+    }
     int r = count.size(); //number of states of node_x
     int n_i = 0;
     for (int k = 0; k < r; k++) {
@@ -532,7 +701,11 @@ float natori_independent_score(const vector<vector<int>> &data, int &node_x, int
     }
     score += lgamma(r * alpha) - lgamma(r * alpha + n_i);
     vector<vector<int>> count2;
-    count2 = state_count(data, node_y_vec, parents, n_states);
+    if (count_DP_flag){
+      count2 = state_count_DP(data, node_y_vec, parents, n_states, count_DP, Gs);
+    }else{
+      count2 = state_count(data, node_y_vec, parents, n_states, parallel);
+    }
     r = count2.size(); //number of states of node_x
     n_i = 0;
     for (int k = 0; k < r; k++) {
@@ -546,45 +719,53 @@ float natori_independent_score(const vector<vector<int>> &data, int &node_x, int
   else {
     //have parents
     vector<vector<int>> count;
-    count = state_count(data, node_x_vec, parents, n_states);
+    if (count_DP_flag){
+      count = state_count_DP(data, node_x_vec, parents, n_states, count_DP, Gs);
+    }else{
+      count = state_count(data, node_x_vec, parents, n_states, parallel);
+    }
     int q = count.at(0).size(); //number of states of parents
     int r = count.size(); //number of states of node_x
     vector<float> n_ij(q, 0.0);
-    ////cout<<"independent_score_x"<<endl;
+    //////cout<<"independent_score_x"<<endl;
     for (int k = 0; k < r; k++) {
       for(int j = 0; j < q; j++) {
         n_ij.at(j) += count.at(k).at(j);
-        ////cout<<count.at(k).at(j)<<", ";
+        //////cout<<count.at(k).at(j)<<", ";
       }
-      ////cout<<endl;
+      //////cout<<endl;
     }
     for (int j = 0; j < q; j++) { //for each state of parents
       for (int k = 0; k < r; k++) { //for each state of node_x
         score += lgamma(alpha + count.at(k).at(j)) - lgamma(alpha);
         if (isnan(score)) {
-          ////////////cout <<ESS / (r * q) + count.at(k).at(j)<< "score is nan" << endl;
+          //////////////cout <<ESS / (r * q) + count.at(k).at(j)<< "score is nan" << endl;
         }
       }
       score += lgamma(r * alpha) - lgamma(r * alpha + n_ij.at(j));
     }
     vector<vector<int>> count2;
-    count2 = state_count(data, node_y_vec, parents, n_states);
+    if (count_DP_flag){
+      count2 = state_count_DP(data, node_y_vec, parents, n_states, count_DP, Gs);
+    }else{
+      count2 = state_count(data, node_y_vec, parents, n_states, parallel);
+    }
     q = count2.at(0).size(); //number of states of parents
     r = count2.size(); //number of states of node_x
     vector<float> n_ij2(q, 0.0);
-    ////cout << "independent_score_y"<<endl;
+    //////cout << "independent_score_y"<<endl;
     for (int k = 0; k < r; k++) {
       for(int j = 0; j < q; j++) {
         n_ij2.at(j) += count2.at(k).at(j);
-        ////cout<<count2.at(k).at(j)<<", ";
+        //////cout<<count2.at(k).at(j)<<", ";
       }
-      ////cout<<endl;
+      //////cout<<endl;
     }
     for (int j = 0; j < q; j++) { //for each state of parents
       for (int k = 0; k < r; k++) { //for each state of node_x
         score += lgamma(alpha + count2.at(k).at(j)) - lgamma(alpha);
         if (isnan(score)) {
-          ////////////cout <<ESS / (r * q) + count2.at(k).at(j)<< "score is nan" << endl;
+          //////////////cout <<ESS / (r * q) + count2.at(k).at(j)<< "score is nan" << endl;
         }
       }
       score += lgamma(r * alpha) - lgamma(r * alpha + n_ij2.at(j));
@@ -594,7 +775,7 @@ float natori_independent_score(const vector<vector<int>> &data, int &node_x, int
   return score;
 }
 
-float natori_dependent_score(const vector<vector<int>> &data, int &node_x, int &node_y, vector<int> &parents, vector<int> &n_states, float &ESS) {
+float natori_dependent_score(const vector<vector<int>> &data, int &node_x, int &node_y, vector<int> &parents, vector<int> &n_states, float &ESS, int &parallel, bool &count_DP_flag, vector<int> &count_DP, vector<int> & Gs) {
   //return log of the BDeu score of X, Y | Z
   double score = 0.0;
   double alpha = 0.5;
@@ -604,7 +785,11 @@ float natori_dependent_score(const vector<vector<int>> &data, int &node_x, int &
   if (parents.empty()) {
     //no parents
     vector<vector<int>> count;
-    count = state_count(data, children, parents, n_states);
+    if (count_DP_flag){
+      count = state_count_DP(data, children, parents, n_states, count_DP, Gs);
+    }else{
+      count = state_count(data, children, parents, n_states, parallel);
+    }
     int r = count.size(); //number of states of node_x]
     if (ESS > -1){
     alpha = ESS / r;
@@ -621,26 +806,30 @@ float natori_dependent_score(const vector<vector<int>> &data, int &node_x, int &
   else {
     //have parents
     vector<vector<int>> count;
-    count = state_count(data, children, parents, n_states);
+    if (count_DP_flag){
+      count = state_count_DP(data, children, parents, n_states, count_DP, Gs);
+    }else{
+      count = state_count(data, children, parents, n_states, parallel);
+    }
     int q = count.at(0).size(); //number of states of parents
     int r = count.size(); //number of states of node_x
     if (ESS > -1){
     alpha = ESS / (r * q);
     }
     vector<float> n_ij(q, 0.0);
-    ////cout<<"dependent_score"<<endl;
+    //////cout<<"dependent_score"<<endl;
     for (int k = 0; k < r; k++) {
       for(int j = 0; j < q; j++) {
         n_ij.at(j) += count.at(k).at(j);
-        ////cout<<count.at(k).at(j)<<", ";
+        //////cout<<count.at(k).at(j)<<", ";
       }
-      ////cout<<endl;
+      //////cout<<endl;
     }
     for (int j = 0; j < q; j++) { //for each state of parents
       for (int k = 0; k < r; k++) { //for each state of node_x
         score += lgamma(alpha + count.at(k).at(j)) - lgamma(alpha);
         if (isnan(score)) {
-          ////////////cout <<ESS / (r * q) + count.at(k).at(j)<< "score is nan" << endl;
+          //////////////cout <<ESS / (r * q) + count.at(k).at(j)<< "score is nan" << endl;
         }
       }
       score += lgamma(r * alpha) - lgamma(r * alpha + n_ij.at(j));
@@ -651,17 +840,17 @@ float natori_dependent_score(const vector<vector<int>> &data, int &node_x, int &
   return score;
 }
 
-bool ci_test(const vector<vector<int>> &data, int &node_x, int &node_y, vector<int> &Z, vector<int> &n_states, float &ESS, int &parallel) {
+bool ci_test(const vector<vector<int>> &data, int &node_x, int &node_y, vector<int> &Z, vector<int> &n_states, float &ESS, int &parallel, bool &count_DP_flag, vector<int> &count_DP, vector<int> & Gs) {
   //CI test for X _|_ Y | Z
   float independent_score = 0.0;
   float dependent_score = 0.0;
-  independent_score += natori_independent_score(data, node_x, node_y, Z, n_states, ESS);
-  dependent_score += natori_dependent_score(data, node_x, node_y, Z, n_states, ESS);
+  independent_score += natori_independent_score(data, node_x, node_y, Z, n_states, ESS, parallel, count_DP_flag, count_DP, Gs);
+  dependent_score += natori_dependent_score(data, node_x, node_y, Z, n_states, ESS, parallel, count_DP_flag, count_DP, Gs);
   if(independent_score > dependent_score){
-    cout<< "CI independent:" <<node_x<<" _|_"<<node_y<<" | "<<independent_score<<">"<<dependent_score<< endl;
+    //cout<< "CI independent:" <<node_x<<" _|_"<<node_y<<" | "<<independent_score<<">"<<dependent_score<< endl;
     return true;
   }else{
-    cout<< "CI dependent:" <<node_x<<" _|_"<<node_y<<" | "<<independent_score<<"<"<<dependent_score<< endl;
+    //cout<< "CI dependent:" <<node_x<<" _|_"<<node_y<<" | "<<independent_score<<"<"<<dependent_score<< endl;
     return false;
   }
 }
@@ -744,339 +933,339 @@ double qchi(double x2, int n)
 	return qc;
 }
 
-bool ci_test_for_vstructure_detect_by_Chi_squared_test(const vector<vector<int>> &data, int &node_x, int &node_y, int &node_z, vector<int> &n_states) {
-  //CI test for X _|_ Y | Z using Chi-squared test; Test statistics G = 2 * sum_x,y,z(n_xyz * log(n_xyz / (n_xz n_yz / n))) ~ chi^2_{d.f= (|X| - 1) * (|Y| - 1) * |Z|} (from http://www.ai.lab.uec.ac.jp/wp-content/uploads/2019/04/41f06ccbd0ac30d15c7728117770b105.pdf)
-  float threthold = 0.05;
-  vector<int> children(2);
-  children.at(0) = node_x;
-  children.at(1) = node_y;
-  vector<int> parents(1, node_z);
-  vector<vector<int>>count;
-  count = state_count(data, children, parents, n_states);
-  int r_x = n_states.at(node_x);
-  int r_y = n_states.at(node_y);
-  int r_z = n_states.at(node_z);
-  int n = data.size();
-  vector<vector<double>> n_xz(r_x, vector<double>(r_z, 0));
-  vector<vector<double>> n_yz(r_y, vector<double>(r_z, 0));
-  for (int i = 0; i < r_x; i++) {
-    for (int j = 0; j < r_y; j++) {
-      for (int k = 0; k < r_z; k++) {
-        n_xz.at(i).at(k) += count.at(i * r_y + j).at(k);
-        n_yz.at(j).at(k) += count.at(i * r_y + j).at(k);
-        //////cout << count.at(i * r_y + j).at(k)<< ", ";
-      }
-      //////cout << endl;
-    }
-  }
-  vector<double> sum_x(r_z, 0);
-  vector<double> sum_y(r_z, 0);
-  vector<double> sum_z(r_z, 0);
-  for (int i = 0; i < r_x; i++) {
-    for (int k = 0; k < r_z; k++) {
-      sum_x.at(k) += n_xz.at(i).at(k);
-    }
-  }
-  for (int j = 0; j < r_y; j++) {
-    for (int k = 0; k < r_z; k++) {
-      sum_y.at(k) += n_yz.at(j).at(k);
-    }
-  }
-  for (int i = 0; i < r_x; i++) {
-    for (int j = 0; j < r_y; j++) {
-      for (int k = 0; k < r_z; k++) {
-        sum_z.at(k) += count.at(i * r_y + j).at(k);
-      }
-    }
-  }
-  //////cout<< "n_xz"<<endl;
-  for (int i = 0; i < r_x; i++) {
-    for (int k = 0; k < r_z; k++) {
-      //////cout << n_xz.at(i).at(k)/ sum_x.at(k)<< ", ";
-    }
-    //////cout << endl;
-  }
-  //////cout<< "n_yz"<<endl;
-  for (int j = 0; j < r_y; j++) {
-    for (int k = 0; k < r_z; k++) {
-      //////cout << n_yz.at(j).at(k)/ sum_y.at(k)<< ", ";
-    }
-    //////cout << endl;
-  }
-  double G = 0.0;
-  for (int i = 0; i < r_x; i++) {
-    for (int j = 0; j < r_y; j++) {
-      for (int k = 0; k < r_z; k++) {
-        //////cout << "ijk:" << (double)count.at(i * r_y + j).at(k) /(double)n << "xzyz:" <<((double)n_xz.at(i).at(k) * (double)n_yz.at(j).at(k) / (sum_x.at(k) * sum_y.at(k))) *sum_z.at(k)/(double)n << "ijk/xzyz:"<< ((double)count.at(i * r_y + j).at(k) / (double)n )/ (((double)n_xz.at(i).at(k) * (double)n_yz.at(j).at(k) / (sum_x.at(k) * sum_y.at(k)))*sum_z.at(k)/(double)n)<< endl;
-        // G = G + 2 * (double)count.at(i * r_y + j).at(k) * log(((double)count.at(i * r_y + j).at(k) / (double)n )/ (((double)n_xz.at(i).at(k) * (double)n_yz.at(j).at(k) / (sum_x.at(k) * sum_y.at(k)))*sum_z.at(k)/(double)n));
-        G = G + 2 * (double)count.at(i * r_y + j).at(k) * log((double)count.at(i * r_y + j).at(k) * (double)n / ((double)n_xz.at(i).at(k) * (double)n_yz.at(j).at(k)));
-      }
-    }
-  }
-  //////cout<< "G:" <<G<< endl;
-  int dim = (r_x - 1) * (r_y - 1) * r_z;
-  double p_value = qchi(G, dim);
-  //cout<< "p_value:" <<p_value<< endl;
-  bool flag = false;
-  if (p_value <= threthold || 1 - p_value <= threthold){
-    flag = true;
-  }
-  if (flag){
-    return true;//dependent, reject null hypothesis, find V-structure
-    ////cout<< "CI dependent:" <<node_x<<" _|_"<<node_y<<" | "<< node_z << endl;
-  }
-  else{
-    ////cout<< "CI independent:" <<node_x<<" _|_"<<node_y<<" | "<< node_z << endl;
-    return false;
-  }
-}
+// bool ci_test_for_vstructure_detect_by_Chi_squared_test(const vector<vector<int>> &data, int &node_x, int &node_y, int &node_z, vector<int> &n_states) {
+//   //CI test for X _|_ Y | Z using Chi-squared test; Test statistics G = 2 * sum_x,y,z(n_xyz * log(n_xyz / (n_xz n_yz / n))) ~ chi^2_{d.f= (|X| - 1) * (|Y| - 1) * |Z|} (from http://www.ai.lab.uec.ac.jp/wp-content/uploads/2019/04/41f06ccbd0ac30d15c7728117770b105.pdf)
+//   float threthold = 0.05;
+//   vector<int> children(2);
+//   children.at(0) = node_x;
+//   children.at(1) = node_y;
+//   vector<int> parents(1, node_z);
+//   vector<vector<int>>count;
+//   count = state_count(data, children, parents, n_states);
+//   int r_x = n_states.at(node_x);
+//   int r_y = n_states.at(node_y);
+//   int r_z = n_states.at(node_z);
+//   int n = data.size();
+//   vector<vector<double>> n_xz(r_x, vector<double>(r_z, 0));
+//   vector<vector<double>> n_yz(r_y, vector<double>(r_z, 0));
+//   for (int i = 0; i < r_x; i++) {
+//     for (int j = 0; j < r_y; j++) {
+//       for (int k = 0; k < r_z; k++) {
+//         n_xz.at(i).at(k) += count.at(i * r_y + j).at(k);
+//         n_yz.at(j).at(k) += count.at(i * r_y + j).at(k);
+//         ////////cout << count.at(i * r_y + j).at(k)<< ", ";
+//       }
+//       ////////cout << endl;
+//     }
+//   }
+//   vector<double> sum_x(r_z, 0);
+//   vector<double> sum_y(r_z, 0);
+//   vector<double> sum_z(r_z, 0);
+//   for (int i = 0; i < r_x; i++) {
+//     for (int k = 0; k < r_z; k++) {
+//       sum_x.at(k) += n_xz.at(i).at(k);
+//     }
+//   }
+//   for (int j = 0; j < r_y; j++) {
+//     for (int k = 0; k < r_z; k++) {
+//       sum_y.at(k) += n_yz.at(j).at(k);
+//     }
+//   }
+//   for (int i = 0; i < r_x; i++) {
+//     for (int j = 0; j < r_y; j++) {
+//       for (int k = 0; k < r_z; k++) {
+//         sum_z.at(k) += count.at(i * r_y + j).at(k);
+//       }
+//     }
+//   }
+//   ////////cout<< "n_xz"<<endl;
+//   for (int i = 0; i < r_x; i++) {
+//     for (int k = 0; k < r_z; k++) {
+//       ////////cout << n_xz.at(i).at(k)/ sum_x.at(k)<< ", ";
+//     }
+//     ////////cout << endl;
+//   }
+//   ////////cout<< "n_yz"<<endl;
+//   for (int j = 0; j < r_y; j++) {
+//     for (int k = 0; k < r_z; k++) {
+//       ////////cout << n_yz.at(j).at(k)/ sum_y.at(k)<< ", ";
+//     }
+//     ////////cout << endl;
+//   }
+//   double G = 0.0;
+//   for (int i = 0; i < r_x; i++) {
+//     for (int j = 0; j < r_y; j++) {
+//       for (int k = 0; k < r_z; k++) {
+//         ////////cout << "ijk:" << (double)count.at(i * r_y + j).at(k) /(double)n << "xzyz:" <<((double)n_xz.at(i).at(k) * (double)n_yz.at(j).at(k) / (sum_x.at(k) * sum_y.at(k))) *sum_z.at(k)/(double)n << "ijk/xzyz:"<< ((double)count.at(i * r_y + j).at(k) / (double)n )/ (((double)n_xz.at(i).at(k) * (double)n_yz.at(j).at(k) / (sum_x.at(k) * sum_y.at(k)))*sum_z.at(k)/(double)n)<< endl;
+//         // G = G + 2 * (double)count.at(i * r_y + j).at(k) * log(((double)count.at(i * r_y + j).at(k) / (double)n )/ (((double)n_xz.at(i).at(k) * (double)n_yz.at(j).at(k) / (sum_x.at(k) * sum_y.at(k)))*sum_z.at(k)/(double)n));
+//         G = G + 2 * (double)count.at(i * r_y + j).at(k) * log((double)count.at(i * r_y + j).at(k) * (double)n / ((double)n_xz.at(i).at(k) * (double)n_yz.at(j).at(k)));
+//       }
+//     }
+//   }
+//   ////////cout<< "G:" <<G<< endl;
+//   int dim = (r_x - 1) * (r_y - 1) * r_z;
+//   double p_value = qchi(G, dim);
+//   ////cout<< "p_value:" <<p_value<< endl;
+//   bool flag = false;
+//   if (p_value <= threthold || 1 - p_value <= threthold){
+//     flag = true;
+//   }
+//   if (flag){
+//     return true;//dependent, reject null hypothesis, find V-structure
+//     //////cout<< "CI dependent:" <<node_x<<" _|_"<<node_y<<" | "<< node_z << endl;
+//   }
+//   else{
+//     //////cout<< "CI independent:" <<node_x<<" _|_"<<node_y<<" | "<< node_z << endl;
+//     return false;
+//   }
+// }
 
-float localBDeuscore(const vector<vector<int>> &data, int &node_x, vector<int> &parents, vector<int> &n_states) {
-  //return log of the BDeu score of X, Y | Z
-  double score = 0.0;
-  float alpha = 0.5;
-  if (parents.empty()) {
-    //no parents
-    vector<vector<int>> count;
-    vector<int> node_x_vec(1, node_x);
-    count = state_count(data, node_x_vec, parents, n_states);
-    int r = count.size(); //number of states of node_x
-    int n_i = 0;
-    for (int k = 0; k < r; k++) {
-      n_i += count.at(k).at(0);
-    }
-    for (int k = 0; k < r; k++) { //for each state of node_x
-        score += lgamma(alpha + count.at(k).at(0)) - lgamma(alpha);
-        //cout << count.at(k).at(0) << ", ";
-        //cout << endl;
-    }
-    score += lgamma(alpha * r) - lgamma(alpha * r + n_i);
-  }
-  else {
-    //have parents
-    vector<vector<int>> count;
-    vector<int> node_x_vec(1, node_x);
-    count = state_count(data, node_x_vec, parents, n_states);
-    int q = count.at(0).size(); //number of states of parents
-    int r = count.size(); //number of states of node_x
-    vector<float> n_ij(q, 0.0);
-    for (int k = 0; k < r; k++) {
-      for(int j = 0; j < q; j++) {
-        n_ij.at(j) += count.at(k).at(j);
-      }
-    }
-    for (int j = 0; j < q; j++) { //for each state of parents
-      for (int k = 0; k < r; k++) { //for each state of node_x
-        score += lgamma(alpha + count.at(k).at(j)) - lgamma(alpha);
-        if (isnan(score)) {
-          ////cout <<ESS / (r * q) + count.at(k).at(j)<< "score is nan" << endl;
-        }
-        //cout << count.at(k).at(j) << ", ";
-      }
-      score += lgamma(alpha * r) - lgamma(alpha * r + n_ij.at(j));
-      //cout << endl;
-    }
-  }
-    //calculate the score
-  return score;
-}
+// float localBDeuscore(const vector<vector<int>> &data, int &node_x, vector<int> &parents, vector<int> &n_states) {
+//   //return log of the BDeu score of X, Y | Z
+//   double score = 0.0;
+//   float alpha = 0.5;
+//   if (parents.empty()) {
+//     //no parents
+//     vector<vector<int>> count;
+//     vector<int> node_x_vec(1, node_x);
+//     count = state_count(data, node_x_vec, parents, n_states);
+//     int r = count.size(); //number of states of node_x
+//     int n_i = 0;
+//     for (int k = 0; k < r; k++) {
+//       n_i += count.at(k).at(0);
+//     }
+//     for (int k = 0; k < r; k++) { //for each state of node_x
+//         score += lgamma(alpha + count.at(k).at(0)) - lgamma(alpha);
+//         ////cout << count.at(k).at(0) << ", ";
+//         ////cout << endl;
+//     }
+//     score += lgamma(alpha * r) - lgamma(alpha * r + n_i);
+//   }
+//   else {
+//     //have parents
+//     vector<vector<int>> count;
+//     vector<int> node_x_vec(1, node_x);
+//     count = state_count(data, node_x_vec, parents, n_states);
+//     int q = count.at(0).size(); //number of states of parents
+//     int r = count.size(); //number of states of node_x
+//     vector<float> n_ij(q, 0.0);
+//     for (int k = 0; k < r; k++) {
+//       for(int j = 0; j < q; j++) {
+//         n_ij.at(j) += count.at(k).at(j);
+//       }
+//     }
+//     for (int j = 0; j < q; j++) { //for each state of parents
+//       for (int k = 0; k < r; k++) { //for each state of node_x
+//         score += lgamma(alpha + count.at(k).at(j)) - lgamma(alpha);
+//         if (isnan(score)) {
+//           //////cout <<ESS / (r * q) + count.at(k).at(j)<< "score is nan" << endl;
+//         }
+//         ////cout << count.at(k).at(j) << ", ";
+//       }
+//       score += lgamma(alpha * r) - lgamma(alpha * r + n_ij.at(j));
+//       ////cout << endl;
+//     }
+//   }
+//     //calculate the score
+//   return score;
+// }
 
-bool ci_test_for_vstructure_detect_by_beyesfactor(const vector<vector<int>> &data, int &node_x, int &node_y, int &node_z, vector<int> &n_states) {
-  //CI test for X _|_ Y | Z compare X->Z<-Y and X->Z->Y
-  float independent_score = 0.0; //X->Z->Y
-  float dependent_score = 0.0; //X->Z<-Y
+// bool ci_test_for_vstructure_detect_by_beyesfactor(const vector<vector<int>> &data, int &node_x, int &node_y, int &node_z, vector<int> &n_states) {
+//   //CI test for X _|_ Y | Z compare X->Z<-Y and X->Z->Y
+//   float independent_score = 0.0; //X->Z->Y
+//   float dependent_score = 0.0; //X->Z<-Y
 
-  double alpha = 0.5;
+//   double alpha = 0.5;
 
-  vector<vector<int>> count_independent;
-  vector<int> children_independent = {node_x, node_y, node_z};
-  vector<int> parents_independent;
-  count_independent = state_count(data, children_independent, parents_independent, n_states);
-  int r = count_independent.size(); //number of states of node_x
-  int n_i = 0;
-  for (int k = 0; k < r; k++) {
-    n_i += count_independent.at(k).at(0);
-  }
-  for (int k = 0; k < r; k++) { //for each state of node_x
-      independent_score += lgamma(alpha + count_independent.at(k).at(0)) - lgamma(alpha);
-  }
-  independent_score += lgamma(alpha) - lgamma(alpha + n_i);
+//   vector<vector<int>> count_independent;
+//   vector<int> children_independent = {node_x, node_y, node_z};
+//   vector<int> parents_independent;
+//   count_independent = state_count(data, children_independent, parents_independent, n_states);
+//   int r = count_independent.size(); //number of states of node_x
+//   int n_i = 0;
+//   for (int k = 0; k < r; k++) {
+//     n_i += count_independent.at(k).at(0);
+//   }
+//   for (int k = 0; k < r; k++) { //for each state of node_x
+//       independent_score += lgamma(alpha + count_independent.at(k).at(0)) - lgamma(alpha);
+//   }
+//   independent_score += lgamma(alpha) - lgamma(alpha + n_i);
   
 
-  vector<vector<int>> count_dependent_z;
-  vector<int> parents_dependent_z = {node_x, node_y};
-  vector<int> parents_dependent_x;
-  vector<int> parents_dependent_y;
-  vector<int> zz = {node_z};
-  dependent_score += localBDeuscore(data, node_z, parents_dependent_z, n_states);
-  dependent_score += localBDeuscore(data, node_x, parents_dependent_x, n_states);
-  //cout<< "xlocal"<<localBDeuscore(data, node_x, parents_dependent_x, n_states)<<endl;
-  dependent_score += localBDeuscore(data, node_y, parents_dependent_y, n_states);
-  //cout<< "ylocal"<<localBDeuscore(data, node_y, parents_dependent_y, n_states)<<endl;
-  // float ess = -2.0;
-  // dependent_score += natori_dependent_score(data, node_x, node_y, zz, n_states, ess);
-  if(independent_score > dependent_score){
-    //cout<< "CI independent:" <<node_x<<" _|_"<<node_y<<" | "<<independent_score<<">"<<dependent_score<< endl;
-    return false;
-  }else{
-    //cout<< "CI dependent:" <<node_x<<" _|_"<<node_y<<" | "<<independent_score<<"<"<<dependent_score<< endl;
-    return true;
-  }
-}
+//   vector<vector<int>> count_dependent_z;
+//   vector<int> parents_dependent_z = {node_x, node_y};
+//   vector<int> parents_dependent_x;
+//   vector<int> parents_dependent_y;
+//   vector<int> zz = {node_z};
+//   dependent_score += localBDeuscore(data, node_z, parents_dependent_z, n_states);
+//   dependent_score += localBDeuscore(data, node_x, parents_dependent_x, n_states);
+//   ////cout<< "xlocal"<<localBDeuscore(data, node_x, parents_dependent_x, n_states)<<endl;
+//   dependent_score += localBDeuscore(data, node_y, parents_dependent_y, n_states);
+//   ////cout<< "ylocal"<<localBDeuscore(data, node_y, parents_dependent_y, n_states)<<endl;
+//   // float ess = -2.0;
+//   // dependent_score += natori_dependent_score(data, node_x, node_y, zz, n_states, ess);
+//   if(independent_score > dependent_score){
+//     ////cout<< "CI independent:" <<node_x<<" _|_"<<node_y<<" | "<<independent_score<<">"<<dependent_score<< endl;
+//     return false;
+//   }else{
+//     ////cout<< "CI dependent:" <<node_x<<" _|_"<<node_y<<" | "<<independent_score<<"<"<<dependent_score<< endl;
+//     return true;
+//   }
+// }
 
 
-bool ci_test_for_vstructure_detect_by_CMI(const vector<vector<int>> &data, int &node_x, int &node_y, int &node_z, vector<int> &n_states) {
-  //CI test for X _|_ Y | Z using CMI; Test statistics cmi(x,y|z) = sum_x,y,z p(x,y,z) * log(p(x,y|z)/p(x|z)p(y|z))
-  double threthold = 0.003;
-  vector<int> children(2);
-  children.at(0) = node_x;
-  children.at(1) = node_y;
-  vector<int> parents(1, node_z);
-  vector<vector<int>>count;
-  count = state_count(data, children, parents, n_states);
-  int r_x = n_states.at(node_x);
-  int r_y = n_states.at(node_y);
-  int r_z = n_states.at(node_z);
-  int n = data.size();
-  vector<vector<double>> n_xz(r_x, vector<double>(r_z, 0));
-  vector<vector<double>> n_yz(r_y, vector<double>(r_z, 0));
-  for (int i = 0; i < r_x; i++) {
-    for (int j = 0; j < r_y; j++) {
-      for (int k = 0; k < r_z; k++) {
-        n_xz.at(i).at(k) += count.at(i * r_y + j).at(k);
-        n_yz.at(j).at(k) += count.at(i * r_y + j).at(k);
-        //////cout << count.at(i * r_y + j).at(k)<< ", ";
-      }
-      //////cout << endl;
-    }
-  }
-  vector<double> sum_x(r_z, 0);
-  vector<double> sum_y(r_z, 0);
-  vector<double> sum_z(r_z, 0);
-  for (int i = 0; i < r_x; i++) {
-    for (int k = 0; k < r_z; k++) {
-      sum_x.at(k) += n_xz.at(i).at(k);
-    }
-  }
-  for (int j = 0; j < r_y; j++) {
-    for (int k = 0; k < r_z; k++) {
-      sum_y.at(k) += n_yz.at(j).at(k);
-    }
-  }
-  for (int i = 0; i < r_x; i++) {
-    for (int j = 0; j < r_y; j++) {
-      for (int k = 0; k < r_z; k++) {
-        sum_z.at(k) += count.at(i * r_y + j).at(k);
-      }
-    }
-  }
+// bool ci_test_for_vstructure_detect_by_CMI(const vector<vector<int>> &data, int &node_x, int &node_y, int &node_z, vector<int> &n_states) {
+//   //CI test for X _|_ Y | Z using CMI; Test statistics cmi(x,y|z) = sum_x,y,z p(x,y,z) * log(p(x,y|z)/p(x|z)p(y|z))
+//   double threthold = 0.003;
+//   vector<int> children(2);
+//   children.at(0) = node_x;
+//   children.at(1) = node_y;
+//   vector<int> parents(1, node_z);
+//   vector<vector<int>>count;
+//   count = state_count(data, children, parents, n_states, parallel);
+//   int r_x = n_states.at(node_x);
+//   int r_y = n_states.at(node_y);
+//   int r_z = n_states.at(node_z);
+//   int n = data.size();
+//   vector<vector<double>> n_xz(r_x, vector<double>(r_z, 0));
+//   vector<vector<double>> n_yz(r_y, vector<double>(r_z, 0));
+//   for (int i = 0; i < r_x; i++) {
+//     for (int j = 0; j < r_y; j++) {
+//       for (int k = 0; k < r_z; k++) {
+//         n_xz.at(i).at(k) += count.at(i * r_y + j).at(k);
+//         n_yz.at(j).at(k) += count.at(i * r_y + j).at(k);
+//         ////////cout << count.at(i * r_y + j).at(k)<< ", ";
+//       }
+//       ////////cout << endl;
+//     }
+//   }
+//   vector<double> sum_x(r_z, 0);
+//   vector<double> sum_y(r_z, 0);
+//   vector<double> sum_z(r_z, 0);
+//   for (int i = 0; i < r_x; i++) {
+//     for (int k = 0; k < r_z; k++) {
+//       sum_x.at(k) += n_xz.at(i).at(k);
+//     }
+//   }
+//   for (int j = 0; j < r_y; j++) {
+//     for (int k = 0; k < r_z; k++) {
+//       sum_y.at(k) += n_yz.at(j).at(k);
+//     }
+//   }
+//   for (int i = 0; i < r_x; i++) {
+//     for (int j = 0; j < r_y; j++) {
+//       for (int k = 0; k < r_z; k++) {
+//         sum_z.at(k) += count.at(i * r_y + j).at(k);
+//       }
+//     }
+//   }
 
 
-  vector<vector<double>> p_xyz(r_x * r_y, vector<double>(r_z, 0.0));
-  vector<vector<double>> p_xy_z(r_x * r_y, vector<double>(r_z, 0.0));
-  vector<vector<double>> p_xz(r_x, vector<double>(r_z, 0.0));
-  vector<vector<double>> p_yz(r_y, vector<double>(r_z, 0.0));
-  //cout << "p_xy_z" << endl;
-  for (int i = 0; i < r_x; i++) {
-    for (int j = 0; j < r_y; j++) {
-      for (int k = 0; k < r_z; k++) {
-        p_xyz.at(i * r_y + j).at(k) = (double)count.at(i * r_y + j).at(k) / (double)n; 
-        p_xy_z.at(i * r_y + j).at(k) = (double)count.at(i * r_y + j).at(k) / (double)sum_z.at(k);
-        //cout << p_xy_z.at(i * r_y + j).at(k) << ", "; 
-      }
-      //cout << endl;
-    }
-  }
-  //cout << "p_xz" << endl;
-  for (int i = 0; i < r_x; i++) {
-    for (int k = 0; k < r_z; k++) {
-      p_xz.at(i).at(k) = (double)n_xz.at(i).at(k) / (double)sum_x.at(k);
-      //cout << p_xz.at(i).at(k) << ", ";
-    }
-    //cout << endl;
-  }
-  //cout << "p_yz" << endl;
-  for (int j = 0; j < r_y; j++) {
-    for (int k = 0; k < r_z; k++) {
-      p_yz.at(j).at(k) = (double)n_yz.at(j).at(k) / (double)sum_y.at(k);
-      //cout << p_yz.at(j).at(k) << ", ";
-    }
-    //cout << endl;
-  }
-  //cout << "log" << endl;
-  double cmi = 0.0;
-  for (int i = 0; i < r_x; i++) {
-    for (int j = 0; j < r_y; j++) {
-      for (int k = 0; k < r_z; k++) {
-        double temp = 0;
-        temp = p_xyz.at(i * r_y + j).at(k) * log(p_xy_z.at(i * r_y + j).at(k) / (p_xz.at(i).at(k) * p_yz.at(j).at(k)));
-        cmi = cmi + temp;
-        ////cout <<"(" << p_xy_z.at(i * r_y + j).at(k) / (p_xz.at(i).at(k) * p_yz.at(j).at(k)) <<"," << log(p_xy_z.at(i * r_y + j).at(k) / (p_xz.at(i).at(k) * p_yz.at(j).at(k)))<<")";
-        ////cout << temp << ", ";
-      }
-      ////cout << endl;
-    }
-  }
+//   vector<vector<double>> p_xyz(r_x * r_y, vector<double>(r_z, 0.0));
+//   vector<vector<double>> p_xy_z(r_x * r_y, vector<double>(r_z, 0.0));
+//   vector<vector<double>> p_xz(r_x, vector<double>(r_z, 0.0));
+//   vector<vector<double>> p_yz(r_y, vector<double>(r_z, 0.0));
+//   ////cout << "p_xy_z" << endl;
+//   for (int i = 0; i < r_x; i++) {
+//     for (int j = 0; j < r_y; j++) {
+//       for (int k = 0; k < r_z; k++) {
+//         p_xyz.at(i * r_y + j).at(k) = (double)count.at(i * r_y + j).at(k) / (double)n; 
+//         p_xy_z.at(i * r_y + j).at(k) = (double)count.at(i * r_y + j).at(k) / (double)sum_z.at(k);
+//         ////cout << p_xy_z.at(i * r_y + j).at(k) << ", "; 
+//       }
+//       ////cout << endl;
+//     }
+//   }
+//   ////cout << "p_xz" << endl;
+//   for (int i = 0; i < r_x; i++) {
+//     for (int k = 0; k < r_z; k++) {
+//       p_xz.at(i).at(k) = (double)n_xz.at(i).at(k) / (double)sum_x.at(k);
+//       ////cout << p_xz.at(i).at(k) << ", ";
+//     }
+//     ////cout << endl;
+//   }
+//   ////cout << "p_yz" << endl;
+//   for (int j = 0; j < r_y; j++) {
+//     for (int k = 0; k < r_z; k++) {
+//       p_yz.at(j).at(k) = (double)n_yz.at(j).at(k) / (double)sum_y.at(k);
+//       ////cout << p_yz.at(j).at(k) << ", ";
+//     }
+//     ////cout << endl;
+//   }
+//   ////cout << "log" << endl;
+//   double cmi = 0.0;
+//   for (int i = 0; i < r_x; i++) {
+//     for (int j = 0; j < r_y; j++) {
+//       for (int k = 0; k < r_z; k++) {
+//         double temp = 0;
+//         temp = p_xyz.at(i * r_y + j).at(k) * log(p_xy_z.at(i * r_y + j).at(k) / (p_xz.at(i).at(k) * p_yz.at(j).at(k)));
+//         cmi = cmi + temp;
+//         //////cout <<"(" << p_xy_z.at(i * r_y + j).at(k) / (p_xz.at(i).at(k) * p_yz.at(j).at(k)) <<"," << log(p_xy_z.at(i * r_y + j).at(k) / (p_xz.at(i).at(k) * p_yz.at(j).at(k)))<<")";
+//         //////cout << temp << ", ";
+//       }
+//       //////cout << endl;
+//     }
+//   }
 
 
   
-  //cout << "CMI: " << cmi << endl;
-  if(cmi < threthold){
-    //cout<< "CI independent:" <<node_x<<" _|_"<<node_y<<" | "<<node_z<< endl;
-    return false;
-  }else{
-    //cout<< "CI dependent:" <<node_x<<" _|_"<<node_y<<" | "<<node_z<< endl;
-    return true;
-  }
-}
+//   ////cout << "CMI: " << cmi << endl;
+//   if(cmi < threthold){
+//     ////cout<< "CI independent:" <<node_x<<" _|_"<<node_y<<" | "<<node_z<< endl;
+//     return false;
+//   }else{
+//     ////cout<< "CI dependent:" <<node_x<<" _|_"<<node_y<<" | "<<node_z<< endl;
+//     return true;
+//   }
+// }
 
-bool ci_test_for_vstructure_detect_by_MI(const vector<vector<int>> &data, int &node_x, int &node_y, vector<int> &n_states) {
-  //CI test for X _|_ Y using MI; Test statistics cmi(x,y) = sum_x,y,z p(x,y) * log(p(x,y)/p(x)p(y))
-  double threthold = 0.003;
-  vector<int> children(2);
-  children.at(0) = node_x;
-  children.at(1) = node_y;
-  vector<int> parents;
-  vector<vector<int>>count;
-  count = state_count(data, children, parents, n_states);
-  int r_x = n_states.at(node_x);
-  int r_y = n_states.at(node_y);
-  int n = data.size();
+// bool ci_test_for_vstructure_detect_by_MI(const vector<vector<int>> &data, int &node_x, int &node_y, vector<int> &n_states) {
+//   //CI test for X _|_ Y using MI; Test statistics cmi(x,y) = sum_x,y,z p(x,y) * log(p(x,y)/p(x)p(y))
+//   double threthold = 0.003;
+//   vector<int> children(2);
+//   children.at(0) = node_x;
+//   children.at(1) = node_y;
+//   vector<int> parents;
+//   vector<vector<int>>count;
+//   count = state_count(data, children, parents, n_states, parallel);
+//   int r_x = n_states.at(node_x);
+//   int r_y = n_states.at(node_y);
+//   int n = data.size();
 
-  vector<double> p_xy(r_x * r_y, 0.0);
-  vector<double> p_x(r_x, 0.0);
-  vector<double> p_y(r_y, 0.0);
-  for (int i = 0; i < r_x; i++) {
-    for (int j = 0; j < r_y; j++) {
-      p_xy.at(i * r_y + j) = (double)count.at(i * r_y + j).at(0) / (double)n; 
-    }
-  }
-  cout << "p_xy" << endl;
-  for (int i = 0; i < r_x; i++) {
-    for (int j = 0; j < r_y; j++) {
-      p_x.at(i) += p_xy.at(i * r_y + j);
-      p_y.at(j) += p_xy.at(i * r_y + j);
-      cout << p_xy.at(i * r_y + j) << ", ";
-    }
-    cout << endl;
-  }
-  double cmi = 0.0;
-  for (int i = 0; i < r_x; i++) {
-    for (int j = 0; j < r_y; j++) {
-      double temp = 0;
-      temp = p_xy.at(i * r_y + j) * log(p_xy.at(i * r_y + j) / (p_x.at(i) * p_y.at(j)));
-      cmi = cmi + temp;
-    }
-  }
+//   vector<double> p_xy(r_x * r_y, 0.0);
+//   vector<double> p_x(r_x, 0.0);
+//   vector<double> p_y(r_y, 0.0);
+//   for (int i = 0; i < r_x; i++) {
+//     for (int j = 0; j < r_y; j++) {
+//       p_xy.at(i * r_y + j) = (double)count.at(i * r_y + j).at(0) / (double)n; 
+//     }
+//   }
+//   //cout << "p_xy" << endl;
+//   for (int i = 0; i < r_x; i++) {
+//     for (int j = 0; j < r_y; j++) {
+//       p_x.at(i) += p_xy.at(i * r_y + j);
+//       p_y.at(j) += p_xy.at(i * r_y + j);
+//       //cout << p_xy.at(i * r_y + j) << ", ";
+//     }
+//     //cout << endl;
+//   }
+//   double cmi = 0.0;
+//   for (int i = 0; i < r_x; i++) {
+//     for (int j = 0; j < r_y; j++) {
+//       double temp = 0;
+//       temp = p_xy.at(i * r_y + j) * log(p_xy.at(i * r_y + j) / (p_x.at(i) * p_y.at(j)));
+//       cmi = cmi + temp;
+//     }
+//   }
 
-  if(cmi < threthold){
-    cout<< "CI independent:" <<node_x<<" _|_"<<node_y << cmi<< endl;
-    return true;
-  }else{
-    cout<< "CI dependent:" <<node_x<<" _|_"<<node_y<< cmi<< endl;
-    return false;
-  }
-}
+//   if(cmi < threthold){
+//     //cout<< "CI independent:" <<node_x<<" _|_"<<node_y << cmi<< endl;
+//     return true;
+//   }else{
+//     //cout<< "CI dependent:" <<node_x<<" _|_"<<node_y<< cmi<< endl;
+//     return false;
+//   }
+// }
 
 void orientation_A2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deletededges) {
   /*
@@ -1093,7 +1282,7 @@ void orientation_A2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
         for (auto& Y : Gall.undirected_neighbors(Z)) {
           if (Gall.has_directed_edge(X, Y)) {
             Gall.remove_edge(Z, Y);
-            ////////////cout<< "A2_removed:" <<Y<<"->"<<Z<< endl;
+            //////////////cout<< "A2_removed:" <<Y<<"->"<<Z<< endl;
           }
         }
       }
@@ -1102,12 +1291,17 @@ void orientation_A2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
   return;
 }
 
-void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deletededges, const vector<vector<int>> &data, vector<int> &n_states, float &ESS, int &parallel) {
+void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deletededges, const vector<vector<int>> &data, vector<int> &n_states, float &ESS, int &parallel, bool &count_DP_flag, vector<int> &count_DP) {
   /*
       orient edges in a PDAG to a maximally oriented graph.
       orient rules are based on rule 1~3 from Meek,C.:Causal Inference and Causal Explanation with Background Knowledge,Proc.Confon Uncertainty in Artificial Inteligence (UAl-95),p.403-410 (195)
   */
   //for each X-Z-Y (X and Y is not adjecent), find V-structure and orient as X -> Z <- Y
+  bool store = count_DP_flag;
+  vector<bool> Gs_flag(Gall.g.size(), true);
+  for (auto& node : Gs) {
+    Gs_flag.at(node) = true;
+  }
   for (auto& X : Gs) {
     for (auto& Z : Gall.undirected_neighbors(X)) {
       for (auto& Y : Gall.undirected_neighbors(Z)) {
@@ -1115,9 +1309,12 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
         if (X != Y && !Gall.has_edge(X, Y) && !Gall.has_edge(Y, X) && Gall.has_edge(X, Z) && Gall.has_edge(Y, Z) && (Gall.has_edge(Z, Y) || Gall.has_edge(Z, X))) {
           vector<int> z = {Z};
           vector<int> v;
-          cout<< "V-structure think:" <<X<<"->"<<Z<<"<-"<<Y<< endl;
+          if (Gs_flag.at(Y) == false || Gs_flag.at(Z) == false){
+            count_DP_flag = false;
+          }
+          //cout<< "V-structure think:" <<X<<"->"<<Z<<"<-"<<Y<< endl;
           //if(!ci_test(data, X, Y, z, n_states, ESS)){
-          if(ci_test(data, X, Y, v, n_states, ESS, parallel)){
+          if(ci_test(data, X, Y, v, n_states, ESS, parallel, count_DP_flag, count_DP, Gs)){
           //if(ci_test_for_vstructure_detect_by_MI(data, X, Y, n_states)){
           //if(ci_test_for_vstructure_detect_by_CMI(data, X, Y, v, n_states)){
           //if(ci_test_for_vstructure_detect_by_Chi_squared_test(data, X, Y, Z, n_states)){
@@ -1125,12 +1322,14 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
           //if(ci_test_for_vstructure_detect_by_beyesfactor(data, X, Y, Z, n_states)){
             Gall.remove_edge(Z, X);
             Gall.remove_edge(Z, Y);
-            cout<< "V-structure found:" <<X<<"->"<<Z<<"<-"<<Y<< endl;
+            //cout<< "V-structure found:" <<X<<"->"<<Z<<"<-"<<Y<< endl;
           }
+          count_DP_flag = true;
         }
       }
     }
   }
+  count_DP_flag = store;
   bool flag = true;
   while (flag){
     flag = false;
@@ -1141,7 +1340,7 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
           for (auto& Z : Gall.undirected_neighbors(Y)) {
             if (!Gall.has_edge(X, Z) && !Gall.has_edge(Z, X) && Z != X) {
               Gall.remove_edge(Z, Y);
-              cout<< "R1:" <<Y<<"->"<<Z<<"|"<<X<< endl;
+              //cout<< "R1:" <<Y<<"->"<<Z<<"|"<<X<< endl;
               flag = true;
             }
           }
@@ -1153,7 +1352,7 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
       for (auto& Y : Gall.undirected_neighbors(X)) {
         if (Gall.has_directed_path(X, Y)) {
           Gall.remove_edge(Y, X);
-          cout<< "R2:" <<X<<"->"<<Y<< endl;
+          //cout<< "R2:" <<X<<"->"<<Y<< endl;
           flag = true;
         }
       }
@@ -1166,7 +1365,7 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
             for (auto &W : Gall.undirected_neighbors(Y)){
               if (W != X && W != Z && Gall.has_directed_edge(X, W) && Gall.has_directed_edge(Z, W)){
                 Gall.remove_edge(W, Y);
-                cout<< "R3:" <<Y<<"->"<<W<<"|"<<"X="<<X<<"Z="<<Z<< endl;
+                //cout<< "R3:" <<Y<<"->"<<W<<"|"<<"X="<<X<<"Z="<<Z<< endl;
                 flag = true;
               }
             }
@@ -1179,19 +1378,21 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
   return;
 }
 
-void recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> Gs, vector<int> &Gex, int N, vector<int> &n_states, float &ESS, int &parallel) {
+void recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> Gs, vector<int> &Gex, int N, vector<int> &n_states, float &ESS, int &parallel, int &threshold_DP) {
   int n_node = data.at(0).size();
+  vector<int> count_DP;
+  bool count_DP_flag = false;
   //print
-  ////cout<< "N=" <<N<< ", ";
-  ////cout<< "Gs: ";
+  //////cout<< "N=" <<N<< ", ";
+  //////cout<< "Gs: ";
   for (auto& node : Gs) {
-    ////cout<< node << ", ";
+    //////cout<< node << ", ";
   }
-  ////cout<< "Gex: ";
+  //////cout<< "Gex: ";
   for (auto& node : Gex) {
-    ////cout<< node << ", ";
+    //////cout<< node << ", ";
   }
-  ////cout<< endl;
+  //////cout<< endl;
 
   //stage 0: exit condition
   bool exitcondition = true;
@@ -1204,7 +1405,7 @@ void recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> G
   if (exitcondition) {
     return;
   }
-  //stage A1: Do CI tests for nodes between Gex and Gs and remove edge   (bug?)
+  //stage A1: Do CI tests for nodes between Gex and Gs and remove edge
   vector<vector<bool>>deletededges(n_node, vector<bool>(n_node, false));
   if (!(Gex.empty())){
     for (auto& node_y : Gs) {
@@ -1224,11 +1425,11 @@ void recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> G
                     selected_z.push_back(Z.at(j));
                   }
                   if (!deletededges.at(node_x).at(node_y)){
-                    if (ci_test(data, node_x, node_y, selected_z, n_states, ESS, parallel)) {
+                    if (ci_test(data, node_x, node_y, selected_z, n_states, ESS, parallel, count_DP_flag, count_DP, Gs)) {
                       Gall.remove_edge(node_x, node_y);
                       deletededges.at(node_x).at(node_y) = true;
                       deletededges.at(node_y).at(node_x) = true;
-                      cout<< "A1_removed:" <<node_x<<"-"<<node_y<< endl;
+                      //cout<< "A1_removed:" <<node_x<<"-"<<node_y<< endl;
                       //transive_cut();
                     }
                   }
@@ -1242,17 +1443,28 @@ void recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> G
   orientation_A2(Gall, Gs, deletededges);
 
   //stage B1: Do CI tests for nodes between Gs and Gs and remove edge
+
+  //make DP map if the number of nodes in GS is smaller than threshold_DP
+
+  if(threshold_DP > Gs.size() && threshold_DP != 0 && Gs.size() > 2){
+    count_DP = make_count_DP(data, Gs, n_states, parallel);
+    count_DP_flag = true;
+  }
+  vector<bool> Gs_flag(n_node, false);
+  for (auto& node : Gs) {
+    Gs_flag.at(node) = true;
+  }
   for (auto& node_y : Gs) {
     for (auto& node_x : Gs) {
       if (!deletededges.at(node_x).at(node_y) && node_x != node_y && (Gall.has_edge(node_x, node_y) || Gall.has_edge(node_y, node_x))) {
         if (N == 0) {
           vector<int> S;
-            if (ci_test(data, node_x, node_y, S, n_states, ESS, parallel)) {
+            if (ci_test(data, node_x, node_y, S, n_states, ESS, parallel, count_DP_flag, count_DP, Gs)) {
             Gall.remove_edge(node_x, node_y);
             Gall.remove_edge(node_y, node_x);
             deletededges.at(node_x).at(node_y) = true;
             deletededges.at(node_y).at(node_x) = true;
-            cout<< "B1_removed:" <<node_x<<"-"<<node_y<< endl;
+            //cout<< "B1_removed:" <<node_x<<"-"<<node_y<< endl;
             //transive_cut();
           }
         }else{
@@ -1262,17 +1474,22 @@ void recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> G
           if (S.size() >= N) {
             do {
               vector<int> selected_z;
+              bool store_flag = count_DP_flag;
               for (int j = 0; j < N; j++) {
                 selected_z.push_back(S.at(j));
+                if (!Gs_flag.at(selected_z.at(j))){
+                  count_DP_flag = false;// check if DP can be used for this CI test
+                }
               }
-              if (ci_test(data, node_x, node_y, selected_z, n_states, ESS, parallel)) {
+              if (ci_test(data, node_x, node_y, selected_z, n_states, ESS, parallel, count_DP_flag, count_DP, Gs)) {
                 Gall.remove_edge(node_x, node_y);
                 Gall.remove_edge(node_y, node_x);
                 deletededges.at(node_x).at(node_y) = true;
                 deletededges.at(node_y).at(node_x) = true;
-                cout<< "B1_removed:" <<node_x<<"-"<<node_y<< endl;
+                //cout<< "B1_removed:" <<node_x<<"-"<<node_y<< endl;
                 //transive_cut();
               }
+              count_DP_flag = store_flag;
             } while(next_combination(S.begin(), S.end(), N));
           }
         }
@@ -1281,18 +1498,20 @@ void recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> G
   }
   
   //stage B2: orient edges in Gs using orientation rules R1~R3
-  orientation_B2(Gall, Gs, deletededges, data, n_states, ESS, parallel);
+  orientation_B2(Gall, Gs, deletededges, data, n_states, ESS, parallel, count_DP_flag, count_DP);
   //stage B3: Group the nodes having the lowest topological order into a descendant substructure Gd
   vector<int> Gd;
   vector<vector<int>> g_ex_connection;
   order_grouping(Gall, Gs, Gd, g_ex_connection);
+
+
   //stage C: Ancestor sub-structure decomposition
   vector<int> Gexd;
   for (int i = 0; i < g_ex_connection.size(); i++) {
     for (int j = 0; j< g_ex_connection.at(i).size(); j++) {
       Gexd.push_back(g_ex_connection.at(i).at(j));
     }
-    recursive_search(data, Gall, g_ex_connection.at(i), Gex, N + 1, n_states, ESS);
+    recursive_search(data, Gall, g_ex_connection.at(i), Gex, N + 1, n_states, ESS, parallel, threshold_DP);
   }
   sort(Gexd.begin(), Gexd.end());
   for (int i = 0; i < Gexd.size(); i++) {
@@ -1310,11 +1529,11 @@ void recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> G
 
 
   //stage D:  Descendantsub-structure decomposition
-  recursive_search(data, Gall, Gd, Gex, N + 1, n_states, ESS);
+  recursive_search(data, Gall, Gd, Gex, N + 1, n_states, ESS, parallel, threshold_DP);
   return;
 }
 
-py::array_t<bool> RAI(py::array_t<int> data, py::array_t<int> n_states, float ESS, int parallel) {
+py::array_t<bool> RAI(py::array_t<int> data, py::array_t<int> n_states, float ESS, int parallel, int threshold_DP) {
   //translate imput data to c++ vector(this is not optimal but I don't know how to use pybind11::array_t) 
   py::buffer_info buf_data = data.request(), buf_states = n_states.request();
   const int* __restrict__ prt_data = static_cast<int*>(buf_data.ptr);
@@ -1348,7 +1567,7 @@ py::array_t<bool> RAI(py::array_t<int> data, py::array_t<int> n_states, float ES
   vector<int> Gex;// Gex is empty
   PDAG Gend;
   // vector<vector<string>> state_list = get_state_list(data);
-  recursive_search(data_vec, Gall, Gs, Gex, 0, n_states_vec, ESS, parallel);
+  recursive_search(data_vec, Gall, Gs, Gex, 0, n_states_vec, ESS, parallel, threshold_DP);
 
   //translate Gall to py::array_t (this is not optimal but I don't know how to use pybind11::array_t)
   for (size_t i = 0; i < n_node; i++) {

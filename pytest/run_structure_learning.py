@@ -46,6 +46,8 @@ def test_benchmark(
         structure_score,
         ess,
         max_iter,
+        parallel,
+        DP_threshold,
     ): 
     calc_time = 0
     ave_score = [0, 0, 0, 0, 0, 0, 0] 
@@ -58,7 +60,7 @@ def test_benchmark(
         score = SCORE[structure_score](data)
         t = time.time()
         if estimate_type == "RAI_cpp":
-            best_model = RAIEstimator_cpp(data = data, ESS = ess)
+            best_model = RAIEstimator_cpp(data = data, ESS = ess, parallel = parallel, threshold_DP = DP_threshold)
         elif estimate_type == "PC_cpp":
             best_model = PCEstimator_cpp(data = data, ESS = ess)
         elif estimate_type == "RAI":
@@ -101,11 +103,13 @@ def save_benchmark(estimate_type, data_type, size, structure_score, ave_score, c
 def arg_parser():
     parser = argparse.ArgumentParser(description="Benchmarking for Bayesian Network Structure Learning")
     parser.add_argument("--estimate_type", type=str, default="RAI_cpp", help="Estimator type")
-    parser.add_argument("--data_type", type=str, default="cancer", help="Data type")
+    parser.add_argument("--data_type", type=str, default="sachs", help="Data type")
     parser.add_argument("--sample_size", type=int, default=1000000, help="Sample size")
     parser.add_argument("--structure_score", type=str, default="BIC", help="Structure score")
     parser.add_argument("--ess", type=float, default=5, help="ESS")
     parser.add_argument("--max_iter", type=int, default=1, help="Number of iterations")
+    parser.add_argument("--parallel", type=int, default=1, help="parallel")
+    parser.add_argument("--DP_threshold", type=int, default=0, help="DP_threshold")
     return parser.parse_args()
 
 def main():
@@ -115,6 +119,8 @@ def main():
     max_iter = args.max_iter
     estimate_type = args.estimate_type
     ess = args.ess
+    parallel = args.parallel
+    DP_threshold = args.DP_threshold
     structure_score = args.structure_score
     file_path = f"{SAVE_DIR}/{estimate_type}_{data_type}_{sample_size}_{structure_score}"
     test_benchmark(estimate_type,
@@ -122,7 +128,9 @@ def main():
                    sample_size,
                    structure_score,
                    ess,
-                   max_iter)
+                   max_iter,
+                   parallel,
+                   DP_threshold)
 
 
 

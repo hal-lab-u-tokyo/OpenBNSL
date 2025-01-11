@@ -11,7 +11,7 @@ from modules.visualize_graph import display_graph_info as show
 
 
 
-def RAIEstimator_cpp(data, ESS):
+def RAIEstimator_cpp(data, ESS, parallel = 1, threshold_DP = 0):
     #translate data from pandas dataframe to numpy array and extract column names
     columns = np.array(data.columns.tolist())
     t_data = data.to_numpy()
@@ -37,7 +37,7 @@ def RAIEstimator_cpp(data, ESS):
         n_states[i] = len(statelist[i])
     #print(n_states)
 
-    ansmat = openbnsl.RAI(data_int, n_states, ESS)
+    ansmat = openbnsl.RAI(data_int, n_states, ESS, parallel, threshold_DP)
     #print(ansmat)
     G = PDAG()
     G.add_nodes_from(columns)
