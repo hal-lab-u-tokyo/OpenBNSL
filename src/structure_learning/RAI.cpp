@@ -23,7 +23,7 @@ using namespace std;
 
 
 void dfs(int now, vector<vector<int>> &G, vector<bool> &visited, vector<int> &order) {
-    ////////////cout<<now<<endl;
+    //////////////cout<<now<<endl;
     visited[now] = true;
     for (int i = 0; i < (int)G.at(now).size(); i++) {
         if (!visited[G.at(now).at(i)]) {
@@ -34,7 +34,7 @@ void dfs(int now, vector<vector<int>> &G, vector<bool> &visited, vector<int> &or
 }
 
 void rdfs(int now, vector<vector<int>> &rG, vector<bool> &visited, int k, vector<int> &comp) {
-    ////////////cout<<now<<endl;
+    //////////////cout<<now<<endl;
     visited[now] = true;
     comp[now] = k;
     for (int i = 0; i < (int)rG.at(now).size(); i++) {
@@ -133,11 +133,11 @@ struct PDAG {
   vector<vector<bool>> g;
   // コンストラクタ
   PDAG() {
-    ////////////cout << "normal constructor called" << endl;
+    //////////////cout << "normal constructor called" << endl;
   }
   // コピーコンストラクタ
   PDAG(const PDAG &old) {
-    ////////////cout << "copy constructor called" << endl;
+    //////////////cout << "copy constructor called" << endl;
     g = old.g;
   }
   // 代入演算子
@@ -306,11 +306,11 @@ void  order_grouping(PDAG &Gall, vector<int> &Gs, vector<int> &Gd, vector<vector
     }
     order = order + 1;
   }
-  //cout<< "comp:";
+  ////cout<< "comp:";
   for (int i = 0; i < comp.size(); i++){
-    //cout<< comp.at(i)<<", ";
+    ////cout<< comp.at(i)<<", ";
   }
-  //cout<<endl;
+  ////cout<<endl;
 
 
   //子孫部分集合の分離
@@ -550,19 +550,19 @@ float natori_independent_score(const vector<vector<int>> &data, int &node_x, int
     int q = count.at(0).size(); //number of states of parents
     int r = count.size(); //number of states of node_x
     vector<float> n_ij(q, 0.0);
-    //cout<<"independent_score_x"<<endl;
+    ////cout<<"independent_score_x"<<endl;
     for (int k = 0; k < r; k++) {
       for(int j = 0; j < q; j++) {
         n_ij.at(j) += count.at(k).at(j);
-        //cout<<count.at(k).at(j)<<", ";
+        ////cout<<count.at(k).at(j)<<", ";
       }
-      //cout<<endl;
+      ////cout<<endl;
     }
     for (int j = 0; j < q; j++) { //for each state of parents
       for (int k = 0; k < r; k++) { //for each state of node_x
         score += lgamma(alpha + count.at(k).at(j)) - lgamma(alpha);
         if (isnan(score)) {
-          //////////cout <<ESS / (r * q) + count.at(k).at(j)<< "score is nan" << endl;
+          ////////////cout <<ESS / (r * q) + count.at(k).at(j)<< "score is nan" << endl;
         }
       }
       score += lgamma(r * alpha) - lgamma(r * alpha + n_ij.at(j));
@@ -572,19 +572,19 @@ float natori_independent_score(const vector<vector<int>> &data, int &node_x, int
     q = count2.at(0).size(); //number of states of parents
     r = count2.size(); //number of states of node_x
     vector<float> n_ij2(q, 0.0);
-    //cout << "independent_score_y"<<endl;
+    ////cout << "independent_score_y"<<endl;
     for (int k = 0; k < r; k++) {
       for(int j = 0; j < q; j++) {
         n_ij2.at(j) += count2.at(k).at(j);
-        //cout<<count2.at(k).at(j)<<", ";
+        ////cout<<count2.at(k).at(j)<<", ";
       }
-      //cout<<endl;
+      ////cout<<endl;
     }
     for (int j = 0; j < q; j++) { //for each state of parents
       for (int k = 0; k < r; k++) { //for each state of node_x
         score += lgamma(alpha + count2.at(k).at(j)) - lgamma(alpha);
         if (isnan(score)) {
-          //////////cout <<ESS / (r * q) + count2.at(k).at(j)<< "score is nan" << endl;
+          ////////////cout <<ESS / (r * q) + count2.at(k).at(j)<< "score is nan" << endl;
         }
       }
       score += lgamma(r * alpha) - lgamma(r * alpha + n_ij2.at(j));
@@ -628,19 +628,19 @@ float natori_dependent_score(const vector<vector<int>> &data, int &node_x, int &
     alpha = ESS / (r * q);
     }
     vector<float> n_ij(q, 0.0);
-    //cout<<"dependent_score"<<endl;
+    ////cout<<"dependent_score"<<endl;
     for (int k = 0; k < r; k++) {
       for(int j = 0; j < q; j++) {
         n_ij.at(j) += count.at(k).at(j);
-        //cout<<count.at(k).at(j)<<", ";
+        ////cout<<count.at(k).at(j)<<", ";
       }
-      //cout<<endl;
+      ////cout<<endl;
     }
     for (int j = 0; j < q; j++) { //for each state of parents
       for (int k = 0; k < r; k++) { //for each state of node_x
         score += lgamma(alpha + count.at(k).at(j)) - lgamma(alpha);
         if (isnan(score)) {
-          //////////cout <<ESS / (r * q) + count.at(k).at(j)<< "score is nan" << endl;
+          ////////////cout <<ESS / (r * q) + count.at(k).at(j)<< "score is nan" << endl;
         }
       }
       score += lgamma(r * alpha) - lgamma(r * alpha + n_ij.at(j));
@@ -651,7 +651,7 @@ float natori_dependent_score(const vector<vector<int>> &data, int &node_x, int &
   return score;
 }
 
-bool ci_test(const vector<vector<int>> &data, int &node_x, int &node_y, vector<int> &Z, vector<int> &n_states, float &ESS) {
+bool ci_test(const vector<vector<int>> &data, int &node_x, int &node_y, vector<int> &Z, vector<int> &n_states, float &ESS, int &parallel) {
   //CI test for X _|_ Y | Z
   float independent_score = 0.0;
   float dependent_score = 0.0;
@@ -746,7 +746,7 @@ double qchi(double x2, int n)
 
 bool ci_test_for_vstructure_detect_by_Chi_squared_test(const vector<vector<int>> &data, int &node_x, int &node_y, int &node_z, vector<int> &n_states) {
   //CI test for X _|_ Y | Z using Chi-squared test; Test statistics G = 2 * sum_x,y,z(n_xyz * log(n_xyz / (n_xz n_yz / n))) ~ chi^2_{d.f= (|X| - 1) * (|Y| - 1) * |Z|} (from http://www.ai.lab.uec.ac.jp/wp-content/uploads/2019/04/41f06ccbd0ac30d15c7728117770b105.pdf)
-  float threthold = 0.2;
+  float threthold = 0.05;
   vector<int> children(2);
   children.at(0) = node_x;
   children.at(1) = node_y;
@@ -764,9 +764,9 @@ bool ci_test_for_vstructure_detect_by_Chi_squared_test(const vector<vector<int>>
       for (int k = 0; k < r_z; k++) {
         n_xz.at(i).at(k) += count.at(i * r_y + j).at(k);
         n_yz.at(j).at(k) += count.at(i * r_y + j).at(k);
-        ////cout << count.at(i * r_y + j).at(k)<< ", ";
+        //////cout << count.at(i * r_y + j).at(k)<< ", ";
       }
-      ////cout << endl;
+      //////cout << endl;
     }
   }
   vector<double> sum_x(r_z, 0);
@@ -789,44 +789,44 @@ bool ci_test_for_vstructure_detect_by_Chi_squared_test(const vector<vector<int>>
       }
     }
   }
-  ////cout<< "n_xz"<<endl;
+  //////cout<< "n_xz"<<endl;
   for (int i = 0; i < r_x; i++) {
     for (int k = 0; k < r_z; k++) {
-      ////cout << n_xz.at(i).at(k)/ sum_x.at(k)<< ", ";
+      //////cout << n_xz.at(i).at(k)/ sum_x.at(k)<< ", ";
     }
-    ////cout << endl;
+    //////cout << endl;
   }
-  ////cout<< "n_yz"<<endl;
+  //////cout<< "n_yz"<<endl;
   for (int j = 0; j < r_y; j++) {
     for (int k = 0; k < r_z; k++) {
-      ////cout << n_yz.at(j).at(k)/ sum_y.at(k)<< ", ";
+      //////cout << n_yz.at(j).at(k)/ sum_y.at(k)<< ", ";
     }
-    ////cout << endl;
+    //////cout << endl;
   }
   double G = 0.0;
   for (int i = 0; i < r_x; i++) {
     for (int j = 0; j < r_y; j++) {
       for (int k = 0; k < r_z; k++) {
-        ////cout << "ijk:" << (double)count.at(i * r_y + j).at(k) /(double)n << "xzyz:" <<((double)n_xz.at(i).at(k) * (double)n_yz.at(j).at(k) / (sum_x.at(k) * sum_y.at(k))) *sum_z.at(k)/(double)n << "ijk/xzyz:"<< ((double)count.at(i * r_y + j).at(k) / (double)n )/ (((double)n_xz.at(i).at(k) * (double)n_yz.at(j).at(k) / (sum_x.at(k) * sum_y.at(k)))*sum_z.at(k)/(double)n)<< endl;
+        //////cout << "ijk:" << (double)count.at(i * r_y + j).at(k) /(double)n << "xzyz:" <<((double)n_xz.at(i).at(k) * (double)n_yz.at(j).at(k) / (sum_x.at(k) * sum_y.at(k))) *sum_z.at(k)/(double)n << "ijk/xzyz:"<< ((double)count.at(i * r_y + j).at(k) / (double)n )/ (((double)n_xz.at(i).at(k) * (double)n_yz.at(j).at(k) / (sum_x.at(k) * sum_y.at(k)))*sum_z.at(k)/(double)n)<< endl;
         // G = G + 2 * (double)count.at(i * r_y + j).at(k) * log(((double)count.at(i * r_y + j).at(k) / (double)n )/ (((double)n_xz.at(i).at(k) * (double)n_yz.at(j).at(k) / (sum_x.at(k) * sum_y.at(k)))*sum_z.at(k)/(double)n));
         G = G + 2 * (double)count.at(i * r_y + j).at(k) * log((double)count.at(i * r_y + j).at(k) * (double)n / ((double)n_xz.at(i).at(k) * (double)n_yz.at(j).at(k)));
       }
     }
   }
-  ////cout<< "G:" <<G<< endl;
+  //////cout<< "G:" <<G<< endl;
   int dim = (r_x - 1) * (r_y - 1) * r_z;
   double p_value = qchi(G, dim);
-  cout<< "p_value:" <<p_value<< endl;
+  //cout<< "p_value:" <<p_value<< endl;
   bool flag = false;
   if (p_value <= threthold || 1 - p_value <= threthold){
     flag = true;
   }
   if (flag){
     return true;//dependent, reject null hypothesis, find V-structure
-    //cout<< "CI dependent:" <<node_x<<" _|_"<<node_y<<" | "<< node_z << endl;
+    ////cout<< "CI dependent:" <<node_x<<" _|_"<<node_y<<" | "<< node_z << endl;
   }
   else{
-    //cout<< "CI independent:" <<node_x<<" _|_"<<node_y<<" | "<< node_z << endl;
+    ////cout<< "CI independent:" <<node_x<<" _|_"<<node_y<<" | "<< node_z << endl;
     return false;
   }
 }
@@ -847,8 +847,8 @@ float localBDeuscore(const vector<vector<int>> &data, int &node_x, vector<int> &
     }
     for (int k = 0; k < r; k++) { //for each state of node_x
         score += lgamma(alpha + count.at(k).at(0)) - lgamma(alpha);
-        cout << count.at(k).at(0) << ", ";
-        cout << endl;
+        //cout << count.at(k).at(0) << ", ";
+        //cout << endl;
     }
     score += lgamma(alpha * r) - lgamma(alpha * r + n_i);
   }
@@ -869,12 +869,12 @@ float localBDeuscore(const vector<vector<int>> &data, int &node_x, vector<int> &
       for (int k = 0; k < r; k++) { //for each state of node_x
         score += lgamma(alpha + count.at(k).at(j)) - lgamma(alpha);
         if (isnan(score)) {
-          //cout <<ESS / (r * q) + count.at(k).at(j)<< "score is nan" << endl;
+          ////cout <<ESS / (r * q) + count.at(k).at(j)<< "score is nan" << endl;
         }
-        cout << count.at(k).at(j) << ", ";
+        //cout << count.at(k).at(j) << ", ";
       }
       score += lgamma(alpha * r) - lgamma(alpha * r + n_ij.at(j));
-      cout << endl;
+      //cout << endl;
     }
   }
     //calculate the score
@@ -910,16 +910,16 @@ bool ci_test_for_vstructure_detect_by_beyesfactor(const vector<vector<int>> &dat
   vector<int> zz = {node_z};
   dependent_score += localBDeuscore(data, node_z, parents_dependent_z, n_states);
   dependent_score += localBDeuscore(data, node_x, parents_dependent_x, n_states);
-  cout<< "xlocal"<<localBDeuscore(data, node_x, parents_dependent_x, n_states)<<endl;
+  //cout<< "xlocal"<<localBDeuscore(data, node_x, parents_dependent_x, n_states)<<endl;
   dependent_score += localBDeuscore(data, node_y, parents_dependent_y, n_states);
-  cout<< "ylocal"<<localBDeuscore(data, node_y, parents_dependent_y, n_states)<<endl;
+  //cout<< "ylocal"<<localBDeuscore(data, node_y, parents_dependent_y, n_states)<<endl;
   // float ess = -2.0;
   // dependent_score += natori_dependent_score(data, node_x, node_y, zz, n_states, ess);
   if(independent_score > dependent_score){
-    cout<< "CI independent:" <<node_x<<" _|_"<<node_y<<" | "<<independent_score<<">"<<dependent_score<< endl;
+    //cout<< "CI independent:" <<node_x<<" _|_"<<node_y<<" | "<<independent_score<<">"<<dependent_score<< endl;
     return false;
   }else{
-    cout<< "CI dependent:" <<node_x<<" _|_"<<node_y<<" | "<<independent_score<<"<"<<dependent_score<< endl;
+    //cout<< "CI dependent:" <<node_x<<" _|_"<<node_y<<" | "<<independent_score<<"<"<<dependent_score<< endl;
     return true;
   }
 }
@@ -945,9 +945,9 @@ bool ci_test_for_vstructure_detect_by_CMI(const vector<vector<int>> &data, int &
       for (int k = 0; k < r_z; k++) {
         n_xz.at(i).at(k) += count.at(i * r_y + j).at(k);
         n_yz.at(j).at(k) += count.at(i * r_y + j).at(k);
-        ////cout << count.at(i * r_y + j).at(k)<< ", ";
+        //////cout << count.at(i * r_y + j).at(k)<< ", ";
       }
-      ////cout << endl;
+      //////cout << endl;
     }
   }
   vector<double> sum_x(r_z, 0);
@@ -976,43 +976,107 @@ bool ci_test_for_vstructure_detect_by_CMI(const vector<vector<int>> &data, int &
   vector<vector<double>> p_xy_z(r_x * r_y, vector<double>(r_z, 0.0));
   vector<vector<double>> p_xz(r_x, vector<double>(r_z, 0.0));
   vector<vector<double>> p_yz(r_y, vector<double>(r_z, 0.0));
+  //cout << "p_xy_z" << endl;
   for (int i = 0; i < r_x; i++) {
     for (int j = 0; j < r_y; j++) {
       for (int k = 0; k < r_z; k++) {
         p_xyz.at(i * r_y + j).at(k) = (double)count.at(i * r_y + j).at(k) / (double)n; 
-        p_xy_z.at(i * r_y + j).at(k) = (double)count.at(i * r_y + j).at(k) / (double)sum_z.at(k); 
+        p_xy_z.at(i * r_y + j).at(k) = (double)count.at(i * r_y + j).at(k) / (double)sum_z.at(k);
+        //cout << p_xy_z.at(i * r_y + j).at(k) << ", "; 
       }
+      //cout << endl;
     }
   }
+  //cout << "p_xz" << endl;
   for (int i = 0; i < r_x; i++) {
     for (int k = 0; k < r_z; k++) {
       p_xz.at(i).at(k) = (double)n_xz.at(i).at(k) / (double)sum_x.at(k);
+      //cout << p_xz.at(i).at(k) << ", ";
     }
+    //cout << endl;
   }
+  //cout << "p_yz" << endl;
   for (int j = 0; j < r_y; j++) {
     for (int k = 0; k < r_z; k++) {
       p_yz.at(j).at(k) = (double)n_yz.at(j).at(k) / (double)sum_y.at(k);
+      //cout << p_yz.at(j).at(k) << ", ";
     }
+    //cout << endl;
   }
-
+  //cout << "log" << endl;
   double cmi = 0.0;
   for (int i = 0; i < r_x; i++) {
     for (int j = 0; j < r_y; j++) {
       for (int k = 0; k < r_z; k++) {
-        cmi = cmi + p_xyz.at(i * r_y + j).at(k) * log(p_xy_z.at(i * r_y + j).at(k) / (p_xz.at(i).at(k) * p_yz.at(j).at(k)));
+        double temp = 0;
+        temp = p_xyz.at(i * r_y + j).at(k) * log(p_xy_z.at(i * r_y + j).at(k) / (p_xz.at(i).at(k) * p_yz.at(j).at(k)));
+        cmi = cmi + temp;
+        ////cout <<"(" << p_xy_z.at(i * r_y + j).at(k) / (p_xz.at(i).at(k) * p_yz.at(j).at(k)) <<"," << log(p_xy_z.at(i * r_y + j).at(k) / (p_xz.at(i).at(k) * p_yz.at(j).at(k)))<<")";
+        ////cout << temp << ", ";
       }
+      ////cout << endl;
     }
   }
-  cout << "CMI: " << cmi << endl;
+
+
+  
+  //cout << "CMI: " << cmi << endl;
   if(cmi < threthold){
-    cout<< "CI independent:" <<node_x<<" _|_"<<node_y<<" | "<<node_z<< endl;
+    //cout<< "CI independent:" <<node_x<<" _|_"<<node_y<<" | "<<node_z<< endl;
     return false;
   }else{
-    cout<< "CI dependent:" <<node_x<<" _|_"<<node_y<<" | "<<node_z<< endl;
+    //cout<< "CI dependent:" <<node_x<<" _|_"<<node_y<<" | "<<node_z<< endl;
     return true;
   }
 }
 
+bool ci_test_for_vstructure_detect_by_MI(const vector<vector<int>> &data, int &node_x, int &node_y, vector<int> &n_states) {
+  //CI test for X _|_ Y using MI; Test statistics cmi(x,y) = sum_x,y,z p(x,y) * log(p(x,y)/p(x)p(y))
+  double threthold = 0.003;
+  vector<int> children(2);
+  children.at(0) = node_x;
+  children.at(1) = node_y;
+  vector<int> parents;
+  vector<vector<int>>count;
+  count = state_count(data, children, parents, n_states);
+  int r_x = n_states.at(node_x);
+  int r_y = n_states.at(node_y);
+  int n = data.size();
+
+  vector<double> p_xy(r_x * r_y, 0.0);
+  vector<double> p_x(r_x, 0.0);
+  vector<double> p_y(r_y, 0.0);
+  for (int i = 0; i < r_x; i++) {
+    for (int j = 0; j < r_y; j++) {
+      p_xy.at(i * r_y + j) = (double)count.at(i * r_y + j).at(0) / (double)n; 
+    }
+  }
+  cout << "p_xy" << endl;
+  for (int i = 0; i < r_x; i++) {
+    for (int j = 0; j < r_y; j++) {
+      p_x.at(i) += p_xy.at(i * r_y + j);
+      p_y.at(j) += p_xy.at(i * r_y + j);
+      cout << p_xy.at(i * r_y + j) << ", ";
+    }
+    cout << endl;
+  }
+  double cmi = 0.0;
+  for (int i = 0; i < r_x; i++) {
+    for (int j = 0; j < r_y; j++) {
+      double temp = 0;
+      temp = p_xy.at(i * r_y + j) * log(p_xy.at(i * r_y + j) / (p_x.at(i) * p_y.at(j)));
+      cmi = cmi + temp;
+    }
+  }
+
+  if(cmi < threthold){
+    cout<< "CI independent:" <<node_x<<" _|_"<<node_y << cmi<< endl;
+    return true;
+  }else{
+    cout<< "CI dependent:" <<node_x<<" _|_"<<node_y<< cmi<< endl;
+    return false;
+  }
+}
 
 void orientation_A2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deletededges) {
   /*
@@ -1029,7 +1093,7 @@ void orientation_A2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
         for (auto& Y : Gall.undirected_neighbors(Z)) {
           if (Gall.has_directed_edge(X, Y)) {
             Gall.remove_edge(Z, Y);
-            //////////cout<< "A2_removed:" <<Y<<"->"<<Z<< endl;
+            ////////////cout<< "A2_removed:" <<Y<<"->"<<Z<< endl;
           }
         }
       }
@@ -1038,7 +1102,7 @@ void orientation_A2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
   return;
 }
 
-void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deletededges, const vector<vector<int>> &data, vector<int> &n_states, float &ESS) {
+void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deletededges, const vector<vector<int>> &data, vector<int> &n_states, float &ESS, int &parallel) {
   /*
       orient edges in a PDAG to a maximally oriented graph.
       orient rules are based on rule 1~3 from Meek,C.:Causal Inference and Causal Explanation with Background Knowledge,Proc.Confon Uncertainty in Artificial Inteligence (UAl-95),p.403-410 (195)
@@ -1047,12 +1111,17 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
   for (auto& X : Gs) {
     for (auto& Z : Gall.undirected_neighbors(X)) {
       for (auto& Y : Gall.undirected_neighbors(Z)) {
-        if (X != Y && !Gall.has_edge(X, Y) && !Gall.has_edge(Y, X) && Gall.has_edge(X, Z) && Gall.has_edge(Z, X) && Gall.has_edge(Y, Z) && Gall.has_edge(Z, Y)) {
+        //if (X != Y && !Gall.has_edge(X, Y) && !Gall.has_edge(Y, X) && Gall.has_edge(X, Z) && Gall.has_edge(Z, X) && Gall.has_edge(Y, Z) && Gall.has_edge(Z, Y)) {
+        if (X != Y && !Gall.has_edge(X, Y) && !Gall.has_edge(Y, X) && Gall.has_edge(X, Z) && Gall.has_edge(Y, Z) && (Gall.has_edge(Z, Y) || Gall.has_edge(Z, X))) {
           vector<int> z = {Z};
+          vector<int> v;
           cout<< "V-structure think:" <<X<<"->"<<Z<<"<-"<<Y<< endl;
-          //if (!ci_test(data, X, Y, z, n_states, ESS)){
+          //if(!ci_test(data, X, Y, z, n_states, ESS)){
+          if(ci_test(data, X, Y, v, n_states, ESS, parallel)){
+          //if(ci_test_for_vstructure_detect_by_MI(data, X, Y, n_states)){
+          //if(ci_test_for_vstructure_detect_by_CMI(data, X, Y, v, n_states)){
           //if(ci_test_for_vstructure_detect_by_Chi_squared_test(data, X, Y, Z, n_states)){
-          if(ci_test_for_vstructure_detect_by_CMI(data, X, Y, Z, n_states)){ 
+          //if(ci_test_for_vstructure_detect_by_CMI(data, X, Y, Z, n_states)){ 
           //if(ci_test_for_vstructure_detect_by_beyesfactor(data, X, Y, Z, n_states)){
             Gall.remove_edge(Z, X);
             Gall.remove_edge(Z, Y);
@@ -1072,7 +1141,7 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
           for (auto& Z : Gall.undirected_neighbors(Y)) {
             if (!Gall.has_edge(X, Z) && !Gall.has_edge(Z, X) && Z != X) {
               Gall.remove_edge(Z, Y);
-              //cout<< "R1:" <<Y<<"->"<<Z<<"|"<<X<< endl;
+              cout<< "R1:" <<Y<<"->"<<Z<<"|"<<X<< endl;
               flag = true;
             }
           }
@@ -1084,7 +1153,7 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
       for (auto& Y : Gall.undirected_neighbors(X)) {
         if (Gall.has_directed_path(X, Y)) {
           Gall.remove_edge(Y, X);
-          //cout<< "R2:" <<X<<"->"<<Y<< endl;
+          cout<< "R2:" <<X<<"->"<<Y<< endl;
           flag = true;
         }
       }
@@ -1097,7 +1166,7 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
             for (auto &W : Gall.undirected_neighbors(Y)){
               if (W != X && W != Z && Gall.has_directed_edge(X, W) && Gall.has_directed_edge(Z, W)){
                 Gall.remove_edge(W, Y);
-                //cout<< "R3:" <<Y<<"->"<<W<<"|"<<"X="<<X<<"Z="<<Z<< endl;
+                cout<< "R3:" <<Y<<"->"<<W<<"|"<<"X="<<X<<"Z="<<Z<< endl;
                 flag = true;
               }
             }
@@ -1110,19 +1179,19 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
   return;
 }
 
-void recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> Gs, vector<int> &Gex, int N, vector<int> &n_states, float &ESS) {
+void recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> Gs, vector<int> &Gex, int N, vector<int> &n_states, float &ESS, int &parallel) {
   int n_node = data.at(0).size();
   //print
-  //cout<< "N=" <<N<< ", ";
-  //cout<< "Gs: ";
+  ////cout<< "N=" <<N<< ", ";
+  ////cout<< "Gs: ";
   for (auto& node : Gs) {
-    //cout<< node << ", ";
+    ////cout<< node << ", ";
   }
-  //cout<< "Gex: ";
+  ////cout<< "Gex: ";
   for (auto& node : Gex) {
-    //cout<< node << ", ";
+    ////cout<< node << ", ";
   }
-  //cout<< endl;
+  ////cout<< endl;
 
   //stage 0: exit condition
   bool exitcondition = true;
@@ -1155,11 +1224,11 @@ void recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> G
                     selected_z.push_back(Z.at(j));
                   }
                   if (!deletededges.at(node_x).at(node_y)){
-                    if (ci_test(data, node_x, node_y, selected_z, n_states, ESS)) {
+                    if (ci_test(data, node_x, node_y, selected_z, n_states, ESS, parallel)) {
                       Gall.remove_edge(node_x, node_y);
                       deletededges.at(node_x).at(node_y) = true;
                       deletededges.at(node_y).at(node_x) = true;
-                      //cout<< "A1_removed:" <<node_x<<"-"<<node_y<< endl;
+                      cout<< "A1_removed:" <<node_x<<"-"<<node_y<< endl;
                       //transive_cut();
                     }
                   }
@@ -1178,12 +1247,12 @@ void recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> G
       if (!deletededges.at(node_x).at(node_y) && node_x != node_y && (Gall.has_edge(node_x, node_y) || Gall.has_edge(node_y, node_x))) {
         if (N == 0) {
           vector<int> S;
-            if (ci_test(data, node_x, node_y, S, n_states, ESS)) {
+            if (ci_test(data, node_x, node_y, S, n_states, ESS, parallel)) {
             Gall.remove_edge(node_x, node_y);
             Gall.remove_edge(node_y, node_x);
             deletededges.at(node_x).at(node_y) = true;
             deletededges.at(node_y).at(node_x) = true;
-            //cout<< "B1_removed:" <<node_x<<"-"<<node_y<< endl;
+            cout<< "B1_removed:" <<node_x<<"-"<<node_y<< endl;
             //transive_cut();
           }
         }else{
@@ -1196,12 +1265,12 @@ void recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> G
               for (int j = 0; j < N; j++) {
                 selected_z.push_back(S.at(j));
               }
-              if (ci_test(data, node_x, node_y, selected_z, n_states, ESS)) {
+              if (ci_test(data, node_x, node_y, selected_z, n_states, ESS, parallel)) {
                 Gall.remove_edge(node_x, node_y);
                 Gall.remove_edge(node_y, node_x);
                 deletededges.at(node_x).at(node_y) = true;
                 deletededges.at(node_y).at(node_x) = true;
-                //cout<< "B1_removed:" <<node_x<<"-"<<node_y<< endl;
+                cout<< "B1_removed:" <<node_x<<"-"<<node_y<< endl;
                 //transive_cut();
               }
             } while(next_combination(S.begin(), S.end(), N));
@@ -1212,7 +1281,7 @@ void recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> G
   }
   
   //stage B2: orient edges in Gs using orientation rules R1~R3
-  orientation_B2(Gall, Gs, deletededges, data, n_states, ESS);
+  orientation_B2(Gall, Gs, deletededges, data, n_states, ESS, parallel);
   //stage B3: Group the nodes having the lowest topological order into a descendant substructure Gd
   vector<int> Gd;
   vector<vector<int>> g_ex_connection;
@@ -1245,7 +1314,7 @@ void recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> G
   return;
 }
 
-py::array_t<bool> RAI(py::array_t<int> data, py::array_t<int> n_states, float ESS) {
+py::array_t<bool> RAI(py::array_t<int> data, py::array_t<int> n_states, float ESS, int parallel) {
   //translate imput data to c++ vector(this is not optimal but I don't know how to use pybind11::array_t) 
   py::buffer_info buf_data = data.request(), buf_states = n_states.request();
   const int* __restrict__ prt_data = static_cast<int*>(buf_data.ptr);
@@ -1279,7 +1348,7 @@ py::array_t<bool> RAI(py::array_t<int> data, py::array_t<int> n_states, float ES
   vector<int> Gex;// Gex is empty
   PDAG Gend;
   // vector<vector<string>> state_list = get_state_list(data);
-  recursive_search(data_vec, Gall, Gs, Gex, 0, n_states_vec, ESS);
+  recursive_search(data_vec, Gall, Gs, Gex, 0, n_states_vec, ESS, parallel);
 
   //translate Gall to py::array_t (this is not optimal but I don't know how to use pybind11::array_t)
   for (size_t i = 0; i < n_node; i++) {
