@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.22)
 message(STATUS "CMake version: ${CMAKE_VERSION}")
 
 project(openbnsl_project LANGUAGES CXX)
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # https://pybind11.readthedocs.io/en/stable/faq.html#someclass-declared-with-greater-visibility-than-the-type-of-its-field-someclass-member-wattributes
@@ -14,7 +14,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
 # find required packages: Python3, OpenMP, GMP and pybind11
 find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
 find_package(OpenMP REQUIRED)
-find_library(GMP_LIB gmp REQUIRED)
+find_package(Boost REQUIRED)
 # find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
 add_subdirectory(external/pybind11)
@@ -48,7 +48,6 @@ target_link_libraries(
     openbnsl_lib 
     PUBLIC 
         OpenMP::OpenMP_CXX 
-        ${GMP_LIB} 
         pybind11::headers 
         Python3::Python 
 )
@@ -64,7 +63,6 @@ target_link_libraries(
     PUBLIC 
         openbnsl_lib 
         OpenMP::OpenMP_CXX 
-        ${GMP_LIB} 
         pybind11::headers 
 )
 set_target_properties(openbnsl PROPERTIES PREFIX "" SUFFIX ".so" LINK_FLAGS "-shared")
@@ -78,7 +76,6 @@ target_link_libraries(
     PUBLIC 
         openbnsl_lib 
         OpenMP::OpenMP_CXX 
-        ${GMP_LIB} 
         GTest::GTest 
         GTest::Main
 ) 
