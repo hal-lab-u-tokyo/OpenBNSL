@@ -2,6 +2,7 @@ import sys
 sys.path.append("/workspace/build")
 
 import openbnsl
+import time
 import numpy as np
 from pgmpy.base import PDAG
 sys.path.append('/workspace')
@@ -12,12 +13,13 @@ from modules.visualize_graph import display_graph_info as show
 
 
 def RAIEstimator_cpp(data, ESS, parallel = 1, threshold_DP = 0):
+
     #translate data from pandas dataframe to numpy array and extract column names
     columns = np.array(data.columns.tolist())
     t_data = data.to_numpy()
     #print(columns)
 
-    #get statelist
+    #get statelist //重い
     statelist = [[] for i in range(len(columns))]
     for i in range(len(columns)):
         for j in range(t_data.shape[0]):
@@ -25,19 +27,27 @@ def RAIEstimator_cpp(data, ESS, parallel = 1, threshold_DP = 0):
                 statelist[i].append(t_data[j][i])
     #print(statelist)
 
-    #translate str matrix into int matrix and list of column names into list of int
+    #translate str matrix into int matrix and list of column names into list of int //重い
     data_int = np.zeros(t_data.shape)
     for i in range(t_data.shape[0]):
         for j in range(len(columns)):
             data_int[i][j] = statelist[j].index(t_data[i][j])
-    #print(data_int)
+    #print(data_int) 
+
+    #data_int = openbnsl.str2int_numpy(t_data, statelist)
 
     n_states = np.zeros(len(columns))
     for i in range(len(columns)):
         n_states[i] = len(statelist[i])
     #print(n_states)
 
+
+    calc_time2 = 0
+    t2 = time.time()
     ansmat = openbnsl.RAI(data_int, n_states, ESS, parallel, threshold_DP)
+    calc_time2 += time.time() - t2
+    print(f"shorttime: {calc_time2}")
+
     #print(ansmat)
     G = PDAG()
     G.add_nodes_from(columns)
@@ -48,6 +58,6 @@ def RAIEstimator_cpp(data, ESS, parallel = 1, threshold_DP = 0):
                 edges.append((columns[i], columns[j])) #i -> j
     G.add_edges_from(edges)
     #show(G)
-    return G
+    return G, calc_time2
 
 

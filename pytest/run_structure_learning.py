@@ -75,7 +75,7 @@ def test_benchmark(
             raise ValueError("Invalid estimator type")
         calc_time += time.time() - t
         best_model_compare = PDAG2CPDAG(best_model)
-        show(best_model)
+        #show(best_model)
         #show(best_model_compare)
         #show(comparemodel)
         errors = structural_errors(comparemodel, best_model_compare)
@@ -103,13 +103,13 @@ def save_benchmark(estimate_type, data_type, size, structure_score, ave_score, c
 def arg_parser():
     parser = argparse.ArgumentParser(description="Benchmarking for Bayesian Network Structure Learning")
     parser.add_argument("--estimate_type", type=str, default="RAI_cpp", help="Estimator type")
-    parser.add_argument("--data_type", type=str, default="sachs", help="Data type")
+    parser.add_argument("--data_type", type=str, default="cancer", help="Data type")
     parser.add_argument("--sample_size", type=int, default=1000000, help="Sample size")
     parser.add_argument("--structure_score", type=str, default="BIC", help="Structure score")
     parser.add_argument("--ess", type=float, default=5, help="ESS")
     parser.add_argument("--max_iter", type=int, default=1, help="Number of iterations")
     parser.add_argument("--parallel", type=int, default=1, help="parallel")
-    parser.add_argument("--DP_threshold", type=int, default=0, help="DP_threshold")
+    parser.add_argument("--DP_threshold", type=int, default=10, help="DP_threshold")
     return parser.parse_args()
 
 def main():

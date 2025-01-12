@@ -117,7 +117,7 @@ states[1]=2
 states[3]=2
 states[2]=2
 ESS = 10
-endg = openbnsl.RAI(data, states, ESS)
+endg = openbnsl.RAI(data, states, ESS, 1, 10)
 print(endg)
 
 dependent_score = 0

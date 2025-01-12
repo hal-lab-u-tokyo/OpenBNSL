@@ -13,7 +13,7 @@ using namespace std;
 
 //for gamma function
 #include <cmath>
-
+#include <time.h>
 
 
 // input: data: np.ndarray,  shape: (n: number of variables, d: number of
@@ -21,6 +21,9 @@ using namespace std;
 // Gall.at(i).at(j)==1 means there is an edge i -> j
 // c++ 17 を仮定]
 
+int n_citest = 0;
+int n_citest_DP = 0;
+int n_DP = 0;
 
 void dfs(int now, vector<vector<int>> &G, vector<bool> &visited, vector<int> &order) {
     ////////////////cout<<now<<endl;
@@ -586,6 +589,12 @@ vector<vector<int>> state_count(const vector<vector<int>> &data, vector<int> &ch
 }
 
 vector<int> make_count_DP(const vector<vector<int>> &data, vector<int> &Gs, vector<int> &n_states, int &parallel) {
+  // vector<int> parents_empty;
+  // vector<vector<int>> count_DP_a = state_count(data, Gs, parents_empty, n_states, parallel);
+  // vector<int> count_DP;
+  // for (int i = 0; i < count_DP_a.size(); i++){
+  //   count_DP.push_back(count_DP_a.at(i).at(0));
+  // }
   // Gs全ノードの頻度表を計算
   int x_len = 1;
   for (int i = 0; i < Gs.size(); i++) {
@@ -613,10 +622,39 @@ vector<int> make_count_DP(const vector<vector<int>> &data, vector<int> &Gs, vect
         count_DP.at(j) += temp.at(j);
       }
     }
+
+  // x_len = 1;
+  // for (int i = 0; i < Gs.size(); i++) {
+  //   x_len = x_len * n_states.at(Gs.at(i));
+  // }
+  // for (int i= 0; i < x_len; i++){
+  //   count_DP.at(i) = 0;
+  // }
+  // yy = 0;
+  // #pragma omp parallel private(yy) 
+  //   {
+  //     vector<int> temp(x_len, 0);
+  //     #pragma omp for
+  //       for(int i = 0; i < data.size(); i++) {
+  //         for (int j = 0; j < Gs.size(); j++) {
+  //           if (j == 0) {
+  //             yy = data.at(i).at(Gs.at(j));
+  //           }
+  //           else {
+  //             yy = n_states.at(Gs.at(j)) * yy + data.at(i).at(Gs.at(j));
+  //           }
+  //         }
+  //         temp.at(yy) += 1;
+  //       }
+  //     for(int j = 0; j < x_len; j++){
+  //       #pragma omp atomic
+  //       count_DP.at(j) += temp.at(j);
+  //     }
+  //   }
   return count_DP;
 }
 
-vector<vector<int>> state_count_DP(const vector<vector<int>> &data, vector<int> &children, vector<int> &parents, vector<int> &n_states, vector<int> &count_DP, vector<int> & Gs) {
+vector<vector<int>> state_count_DP(vector<int> &children, vector<int> &parents, vector<int> &n_states, vector<int> &count_DP, vector<int> & Gs) {
   //count the number of each state using dynamic programming
   int xx = 1;
   int yy = 1;
@@ -646,34 +684,40 @@ vector<vector<int>> state_count_DP(const vector<vector<int>> &data, vector<int> 
       }
     }
   }
+  vector<int> Gs_val(size_Gs, 0);
   for(int i = 0; i < count_DP.size(); i++){
-    vector<int> Gs_val(size_Gs, 0);
     int val = i;
     for (int j = size_Gs - 1; j >= 0; j--){
       Gs_val.at(j) = val % n_states.at(Gs.at(j));
       val = val / n_states.at(Gs.at(j));
     } //calculate Gs_val from index of count_DP
-    int x_val = 0;
+    int x_val = Gs_val.at(children_Gs.at(0));
     int y_val = 0;
-    for (int j = 0; j < children.size(); j++) {
-      if (j == 0) {
-        x_val = Gs_val.at(children_Gs.at(j));
-      }
-      else {
-        x_val = n_states.at(children.at(j)) * x_val + Gs_val.at(children_Gs.at(j));
-      }
+
+    for (int j = 1; j < children.size(); j++) {
+      x_val = n_states.at(children.at(j)) * x_val + Gs_val.at(children_Gs.at(j));
     }
-    for (int j = 0; j < parents.size(); j++) {
-      if (j == 0) {
-        y_val = Gs_val.at(parents_Gs.at(j));
-      }
-      else {
-        y_val = n_states.at(parents.at(j)) * y_val + Gs_val.at(parents_Gs.at(j));
-      }
+    for (int j = 1; j < parents.size(); j++) {
+      y_val = n_states.at(parents.at(j)) * y_val + Gs_val.at(parents_Gs.at(j));
     }
-    // cout << "x_val: " << x_val << ", y_val: " << y_val << ", count: "<< counts.size() << ", " << counts.at(0).size() <<endl;
+    if (!parents.empty()){
+      y_val = Gs_val.at(parents_Gs.at(0));
+    }
+    // cout << "x_val:" << x_val << ", y_val: " << y_val << endl;
+    // cout << count_DP.at(i) << endl;
     counts.at(x_val).at(y_val) += count_DP.at(i);
   }
+  // cout << "count_DP: ";
+  // for (int i = 0; i<count_DP.size(); i++){
+  //   cout << count_DP.at(i) << ", ";
+  // }
+  // cout << endl;
+  // for (int i = 0;i<counts.size();i++){
+  //   for (int j = 0;j<counts.at(i).size();j++){
+  //     cout << counts.at(i).at(j) << ", ";
+  //   }
+  //  cout << endl;
+  // }
   return counts;
 }
 
@@ -687,7 +731,7 @@ float natori_independent_score(const vector<vector<int>> &data, int &node_x, int
     //no parents
     vector<vector<int>> count;
     if (count_DP_flag){
-      count = state_count_DP(data, node_x_vec, parents, n_states, count_DP, Gs);
+      count = state_count_DP(node_x_vec, parents, n_states, count_DP, Gs);
     }else{
       count = state_count(data, node_x_vec, parents, n_states, parallel);
     }
@@ -702,7 +746,7 @@ float natori_independent_score(const vector<vector<int>> &data, int &node_x, int
     score += lgamma(r * alpha) - lgamma(r * alpha + n_i);
     vector<vector<int>> count2;
     if (count_DP_flag){
-      count2 = state_count_DP(data, node_y_vec, parents, n_states, count_DP, Gs);
+      count2 = state_count_DP(node_y_vec, parents, n_states, count_DP, Gs);
     }else{
       count2 = state_count(data, node_y_vec, parents, n_states, parallel);
     }
@@ -720,7 +764,7 @@ float natori_independent_score(const vector<vector<int>> &data, int &node_x, int
     //have parents
     vector<vector<int>> count;
     if (count_DP_flag){
-      count = state_count_DP(data, node_x_vec, parents, n_states, count_DP, Gs);
+      count = state_count_DP(node_x_vec, parents, n_states, count_DP, Gs);
     }else{
       count = state_count(data, node_x_vec, parents, n_states, parallel);
     }
@@ -746,7 +790,7 @@ float natori_independent_score(const vector<vector<int>> &data, int &node_x, int
     }
     vector<vector<int>> count2;
     if (count_DP_flag){
-      count2 = state_count_DP(data, node_y_vec, parents, n_states, count_DP, Gs);
+      count2 = state_count_DP(node_y_vec, parents, n_states, count_DP, Gs);
     }else{
       count2 = state_count(data, node_y_vec, parents, n_states, parallel);
     }
@@ -786,7 +830,7 @@ float natori_dependent_score(const vector<vector<int>> &data, int &node_x, int &
     //no parents
     vector<vector<int>> count;
     if (count_DP_flag){
-      count = state_count_DP(data, children, parents, n_states, count_DP, Gs);
+      count = state_count_DP(children, parents, n_states, count_DP, Gs);
     }else{
       count = state_count(data, children, parents, n_states, parallel);
     }
@@ -807,7 +851,7 @@ float natori_dependent_score(const vector<vector<int>> &data, int &node_x, int &
     //have parents
     vector<vector<int>> count;
     if (count_DP_flag){
-      count = state_count_DP(data, children, parents, n_states, count_DP, Gs);
+      count = state_count_DP(children, parents, n_states, count_DP, Gs);
     }else{
       count = state_count(data, children, parents, n_states, parallel);
     }
@@ -846,6 +890,12 @@ bool ci_test(const vector<vector<int>> &data, int &node_x, int &node_y, vector<i
   float dependent_score = 0.0;
   independent_score += natori_independent_score(data, node_x, node_y, Z, n_states, ESS, parallel, count_DP_flag, count_DP, Gs);
   dependent_score += natori_dependent_score(data, node_x, node_y, Z, n_states, ESS, parallel, count_DP_flag, count_DP, Gs);
+
+  if (count_DP_flag){
+    n_citest_DP += 1;
+  }else{
+    n_citest += 1;
+  }
   if(independent_score > dependent_score){
     //cout<< "CI independent:" <<node_x<<" _|_"<<node_y<<" | "<<independent_score<<">"<<dependent_score<< endl;
     return true;
@@ -1324,7 +1374,7 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
             Gall.remove_edge(Z, Y);
             //cout<< "V-structure found:" <<X<<"->"<<Z<<"<-"<<Y<< endl;
           }
-          count_DP_flag = true;
+          count_DP_flag = store;
         }
       }
     }
@@ -1448,6 +1498,7 @@ void recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> G
 
   if(threshold_DP > Gs.size() && threshold_DP != 0 && Gs.size() > 2){
     count_DP = make_count_DP(data, Gs, n_states, parallel);
+    n_DP += 1;
     count_DP_flag = true;
   }
   vector<bool> Gs_flag(n_node, false);
@@ -1534,6 +1585,11 @@ void recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> G
 }
 
 py::array_t<bool> RAI(py::array_t<int> data, py::array_t<int> n_states, float ESS, int parallel, int threshold_DP) {
+
+  clock_t start = clock();
+
+    
+
   //translate imput data to c++ vector(this is not optimal but I don't know how to use pybind11::array_t) 
   py::buffer_info buf_data = data.request(), buf_states = n_states.request();
   const int* __restrict__ prt_data = static_cast<int*>(buf_data.ptr);
@@ -1567,6 +1623,11 @@ py::array_t<bool> RAI(py::array_t<int> data, py::array_t<int> n_states, float ES
   vector<int> Gex;// Gex is empty
   PDAG Gend;
   // vector<vector<string>> state_list = get_state_list(data);
+
+  clock_t end = clock();
+  const double time = static_cast<double>(end - start) / CLOCKS_PER_SEC * 1000.0;
+
+
   recursive_search(data_vec, Gall, Gs, Gex, 0, n_states_vec, ESS, parallel, threshold_DP);
 
   //translate Gall to py::array_t (this is not optimal but I don't know how to use pybind11::array_t)
@@ -1575,6 +1636,9 @@ py::array_t<bool> RAI(py::array_t<int> data, py::array_t<int> n_states, float ES
       prt_endg[i * n_node + j] = Gall.g.at(i).at(j);
     }
   }
+  cout <<"citest_count: " << n_citest <<", citest_DP_count: "<< n_citest_DP << ", DPmap_count: "<< n_DP<<endl;
+  printf("datatranslate_time %lf[ms]\n", time);
+  cout << endl;
   return endg;
 }
 
