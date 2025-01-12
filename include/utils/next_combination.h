@@ -1,5 +1,6 @@
-#pragma once
-#include <gmpxx.h>
+
+#include <boost/multiprecision/cpp_int.hpp>
+namespace mp = boost::multiprecision;
 
 /**
  * @brief Generates the next combination of t nodes from n nodes.
@@ -22,11 +23,22 @@
  * Example usage:
  * @code
  * int n = 5, t = 3;
- * mpz_class combination = (mpz_class(1) << t) - 1; // 00111
+ * mp::cpp_int combination = (mp::cpp_int(1) << t) - 1; // 00111
  * do {
  *     // Process the current combination
  * } while (next_combination(combination, n));
  * @endcode
  *
  */
-bool next_combination(mpz_class& combination, int n);
+template <typename T>
+bool next_combination(T& comb, int n) {
+  static_assert(
+      std::is_integral<T>::value || std::is_same<T, mp::cpp_int>::value,
+      "T must be an integral type or cpp_int");
+  if (comb == 0) return false;
+  T one = 1;
+  T x = comb & -comb;                   // get the rightmost bit
+  T y = comb + x;                       // move the rightmost bit to the left
+  comb = (((comb & ~y) / x) >> 1) | y;  // set right bits
+  return comb < (one << n);             // return false if we have done all
+}

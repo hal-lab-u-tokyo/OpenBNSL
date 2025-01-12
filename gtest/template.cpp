@@ -44,7 +44,7 @@ TEST(MatmulTest, correctness) {
   auto c_cuda_buf = c_cuda.request();
   double *c_cuda_ptr = static_cast<double *>(c_cuda_buf.ptr);
 
-  for (int i = 0; i < n * p; i++){
+  for (int i = 0; i < n * p; i++) {
     ASSERT_NEAR(c_naive_ptr[i], c_cuda_ptr[i], epsilon);
   }
   std::cout << "CUDA test passed" << std::endl;
