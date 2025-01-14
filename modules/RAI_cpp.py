@@ -25,16 +25,27 @@ def RAIEstimator_cpp(data, ESS, parallel = 1, threshold_DP = 0):
         for j in range(t_data.shape[0]):
             if t_data[j][i] not in statelist[i]:
                 statelist[i].append(t_data[j][i])
-    #print(statelist)
 
     #translate str matrix into int matrix and list of column names into list of int //重い
-    data_int = np.zeros(t_data.shape)
+    data_int = np.zeros(t_data.shape, dtype = int)
     for i in range(t_data.shape[0]):
         for j in range(len(columns)):
             data_int[i][j] = statelist[j].index(t_data[i][j])
-    #print(data_int) 
-
+    #print(data_int.dtype) 
+    #print (t_data.dtype)
     #data_int = openbnsl.str2int_numpy(t_data, statelist)
+
+    #テストコード
+    #t_data = data.to_numpy(dtype=int)
+    # for i in data.columns.tolist():
+    #     k = 0
+    #     for j in statelist[i]:
+    #         data.replace({i: j}, int(k), inplace=True)
+    #         k += 1
+    # print(data)
+    #data_int = data.to_numpy(dtype=int)
+    #テストコード終了
+
 
     n_states = np.zeros(len(columns))
     for i in range(len(columns)):
@@ -58,6 +69,6 @@ def RAIEstimator_cpp(data, ESS, parallel = 1, threshold_DP = 0):
                 edges.append((columns[i], columns[j])) #i -> j
     G.add_edges_from(edges)
     #show(G)
-    return G, calc_time2
+    return G
 
 

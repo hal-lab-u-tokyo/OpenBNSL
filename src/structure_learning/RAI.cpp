@@ -654,7 +654,7 @@ vector<int> make_count_DP(const vector<vector<int>> &data, vector<int> &Gs, vect
   return count_DP;
 }
 
-vector<vector<int>> state_count_DP(vector<int> &children, vector<int> &parents, vector<int> &n_states, vector<int> &count_DP, vector<int> & Gs) {
+vector<vector<int>> state_count_DP(vector<int> &children, vector<int> &parents, vector<int> &n_states, vector<int> &count_DP, vector<int> & Gs, int &parallel) {
   //count the number of each state using dynamic programming
   int xx = 1;
   int yy = 1;
@@ -685,39 +685,63 @@ vector<vector<int>> state_count_DP(vector<int> &children, vector<int> &parents, 
     }
   }
   vector<int> Gs_val(size_Gs, 0);
-  for(int i = 0; i < count_DP.size(); i++){
-    int val = i;
-    for (int j = size_Gs - 1; j >= 0; j--){
-      Gs_val.at(j) = val % n_states.at(Gs.at(j));
-      val = val / n_states.at(Gs.at(j));
-    } //calculate Gs_val from index of count_DP
-    int x_val = Gs_val.at(children_Gs.at(0));
-    int y_val = 0;
+  if(parallel == 1){
+    int val, j, k, x_val, y_val;
+    #pragma omp parallel private(Gs_val, j, k, val, x_val, y_val)
+    {
+      Gs_val = vector<int>(size_Gs, 0);
+      vector<vector<int>> temp(xx, vector<int>(yy, 0));
+      #pragma omp for
+        for(int i = 0; i < count_DP.size(); i++){
+          val = i;
+          for (j = size_Gs - 1; j >= 0; j--){
+            Gs_val.at(j) = val % n_states.at(Gs.at(j));
+            val = val / n_states.at(Gs.at(j));
+          } //calculate Gs_val from index of count_DP
+          x_val = Gs_val.at(children_Gs.at(0));
+          y_val = 0;
 
-    for (int j = 1; j < children.size(); j++) {
-      x_val = n_states.at(children.at(j)) * x_val + Gs_val.at(children_Gs.at(j));
+          for (j = 1; j < children.size(); j++) {
+            x_val = n_states.at(children.at(j)) * x_val + Gs_val.at(children_Gs.at(j));
+          }
+          if (!parents.empty()){
+            y_val = Gs_val.at(parents_Gs.at(0));
+          }
+          for (j = 1; j < parents.size(); j++) {
+            y_val = n_states.at(parents.at(j)) * y_val + Gs_val.at(parents_Gs.at(j));
+          }
+          temp.at(x_val).at(y_val) += count_DP.at(i);
+        }
+      for(j = 0; j < xx; j++){
+        for(k = 0; k < yy; k++){
+          #pragma omp atomic
+          counts.at(j).at(k) += temp.at(j).at(k);
+        }
+      }
     }
-    for (int j = 1; j < parents.size(); j++) {
-      y_val = n_states.at(parents.at(j)) * y_val + Gs_val.at(parents_Gs.at(j));
+  }else{
+    for(int i = 0; i < count_DP.size(); i++){
+      int val = i;
+      for (int j = size_Gs - 1; j >= 0; j--){
+        Gs_val.at(j) = val % n_states.at(Gs.at(j));
+        val = val / n_states.at(Gs.at(j));
+      } //calculate Gs_val from index of count_DP
+      int x_val = Gs_val.at(children_Gs.at(0));
+      int y_val = 0;
+
+      for (int j = 1; j < children.size(); j++) {
+        x_val = n_states.at(children.at(j)) * x_val + Gs_val.at(children_Gs.at(j));
+      }
+      if (!parents.empty()){
+        y_val = Gs_val.at(parents_Gs.at(0));
+      }
+      for (int j = 1; j < parents.size(); j++) {
+        y_val = n_states.at(parents.at(j)) * y_val + Gs_val.at(parents_Gs.at(j));
+      }
+      counts.at(x_val).at(y_val) += count_DP.at(i);
     }
-    if (!parents.empty()){
-      y_val = Gs_val.at(parents_Gs.at(0));
-    }
-    // cout << "x_val:" << x_val << ", y_val: " << y_val << endl;
-    // cout << count_DP.at(i) << endl;
-    counts.at(x_val).at(y_val) += count_DP.at(i);
   }
-  // cout << "count_DP: ";
-  // for (int i = 0; i<count_DP.size(); i++){
-  //   cout << count_DP.at(i) << ", ";
-  // }
-  // cout << endl;
-  // for (int i = 0;i<counts.size();i++){
-  //   for (int j = 0;j<counts.at(i).size();j++){
-  //     cout << counts.at(i).at(j) << ", ";
-  //   }
-  //  cout << endl;
-  // }
+
   return counts;
 }
 
@@ -731,7 +755,7 @@ float natori_independent_score(const vector<vector<int>> &data, int &node_x, int
     //no parents
     vector<vector<int>> count;
     if (count_DP_flag){
-      count = state_count_DP(node_x_vec, parents, n_states, count_DP, Gs);
+      count = state_count_DP(node_x_vec, parents, n_states, count_DP, Gs, parallel);
     }else{
       count = state_count(data, node_x_vec, parents, n_states, parallel);
     }
@@ -746,7 +770,7 @@ float natori_independent_score(const vector<vector<int>> &data, int &node_x, int
     score += lgamma(r * alpha) - lgamma(r * alpha + n_i);
     vector<vector<int>> count2;
     if (count_DP_flag){
-      count2 = state_count_DP(node_y_vec, parents, n_states, count_DP, Gs);
+      count2 = state_count_DP(node_y_vec, parents, n_states, count_DP, Gs, parallel);
     }else{
       count2 = state_count(data, node_y_vec, parents, n_states, parallel);
     }
@@ -764,7 +788,7 @@ float natori_independent_score(const vector<vector<int>> &data, int &node_x, int
     //have parents
     vector<vector<int>> count;
     if (count_DP_flag){
-      count = state_count_DP(node_x_vec, parents, n_states, count_DP, Gs);
+      count = state_count_DP(node_x_vec, parents, n_states, count_DP, Gs, parallel);
     }else{
       count = state_count(data, node_x_vec, parents, n_states, parallel);
     }
@@ -790,7 +814,7 @@ float natori_independent_score(const vector<vector<int>> &data, int &node_x, int
     }
     vector<vector<int>> count2;
     if (count_DP_flag){
-      count2 = state_count_DP(node_y_vec, parents, n_states, count_DP, Gs);
+      count2 = state_count_DP(node_y_vec, parents, n_states, count_DP, Gs, parallel);
     }else{
       count2 = state_count(data, node_y_vec, parents, n_states, parallel);
     }
@@ -830,7 +854,7 @@ float natori_dependent_score(const vector<vector<int>> &data, int &node_x, int &
     //no parents
     vector<vector<int>> count;
     if (count_DP_flag){
-      count = state_count_DP(children, parents, n_states, count_DP, Gs);
+      count = state_count_DP(children, parents, n_states, count_DP, Gs, parallel);
     }else{
       count = state_count(data, children, parents, n_states, parallel);
     }
@@ -851,7 +875,7 @@ float natori_dependent_score(const vector<vector<int>> &data, int &node_x, int &
     //have parents
     vector<vector<int>> count;
     if (count_DP_flag){
-      count = state_count_DP(children, parents, n_states, count_DP, Gs);
+      count = state_count_DP(children, parents, n_states, count_DP, Gs, parallel);
     }else{
       count = state_count(data, children, parents, n_states, parallel);
     }
