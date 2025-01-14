@@ -4,4 +4,5 @@
 #include <pybind11/stl.h>
 namespace py = pybind11;
 
-py::array_t<bool> RAI(py::array_t<int> data, py::array_t<int> n_states, float ESS, int parallel, int threshold_DP);
+py::array_t<bool> RAI(py::array_t<int> data, py::array_t<int> n_states,
+                      float ESS, int parallel, int threshold_DP);
