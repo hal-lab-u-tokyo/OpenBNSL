@@ -13,7 +13,6 @@ using namespace std;
 
 //for gamma function
 #include <cmath>
-#include <time.h>
 
 
 // input: data: np.ndarray,  shape: (n: number of variables, d: number of
@@ -24,6 +23,8 @@ using namespace std;
 int n_citest = 0;
 int n_citest_DP = 0;
 int n_DP = 0;
+bool sep[200][200][200] = {0};
+bool sep2[200][200] = {0};
 
 void dfs(int now, vector<vector<int>> &G, vector<bool> &visited, vector<int> &order) {
     ////////////////cout<<now<<endl;
@@ -99,8 +100,8 @@ vector<vector<int>> adjmat2listmat_reverse(vector<vector<bool>> &adjmat){//隣�
 
 vector<vector<bool>> make_gs_graph(vector<vector<bool>> &Gallgraph, vector<int> &gs){
     vector<vector<bool>> gsgraph(gs.size(), vector<bool>(gs.size(), false));
-    for (int i = 0; i < gs.size(); i++){
-        for (int j = 0; j < gs.size(); j++){
+    for (int i = 0; i < (int)gs.size(); i++){
+        for (int j = 0; j < (int)gs.size(); j++){
             gsgraph.at(i).at(j) = Gallgraph.at(gs.at(i)).at(gs.at(j));
         }
     }
@@ -154,7 +155,7 @@ struct PDAG {
   vector<int> successors(int i) {
     // return the list of successors of node i (include undirected edge)
     vector<int> succ;
-    for (int j = 0; j < g.size(); j++) {
+    for (int j = 0; j < (int)g.size(); j++) {
       if (g.at(i).at(j)) {
         succ.push_back(j);
       }
@@ -165,7 +166,7 @@ struct PDAG {
   vector<int> predecessors(int i) {
     // return the list of predecessors of node i (include undirected edge)
     vector<int> pred;
-    for (int j = 0; j < g.size(); j++) {
+    for (int j = 0; j < (int)g.size(); j++) {
       if (g.at(j).at(i)) {
         pred.push_back(j);
       }
@@ -176,7 +177,7 @@ struct PDAG {
   vector<int> neighbors(int i) { 
     //return the list of neighbors {j} of node i (j -> i or i -> j)
     vector<int> neigh;
-    for (int j = 0; j < g.size(); j++) {
+    for (int j = 0; j < (int)g.size(); j++) {
       if (g.at(j).at(i) || g.at(i).at(j)) {
         neigh.push_back(j);
       }
@@ -187,7 +188,7 @@ struct PDAG {
   vector<int> undirected_neighbors(int i) {
     // return the list of undirected neighbors of node i
     vector<int> neigh;
-    for (int j = 0; j < g.size(); j++) {
+    for (int j = 0; j < (int)g.size(); j++) {
       if (g.at(i).at(j) && g.at(j).at(i)) {
         neigh.push_back(j);
       }
@@ -298,7 +299,7 @@ void  order_grouping(PDAG &Gall, vector<int> &Gs, vector<int> &Gd, vector<vector
   vector<vector<int>> g_subs;
   while(flag){
     flag = false;
-    for (int i = 0; i < comp.size(); i++){
+    for (int i = 0; i < (int)comp.size(); i++){
       if (comp.at(i) == order){ // node Gs.at(i) is in the order-th group
         if (flag == false){
           g_subs.push_back(vector<int>());
@@ -310,7 +311,7 @@ void  order_grouping(PDAG &Gall, vector<int> &Gs, vector<int> &Gd, vector<vector
     order = order + 1;
   }
   //////cout<< "comp:";
-  for (int i = 0; i < comp.size(); i++){
+  for (int i = 0; i < (int)comp.size(); i++){
     //////cout<< comp.at(i)<<", ";
   }
   //////cout<<endl;
@@ -319,8 +320,8 @@ void  order_grouping(PDAG &Gall, vector<int> &Gs, vector<int> &Gd, vector<vector
   //子孫部分集合の分離
   //各クラスタについてその全てのノードが他のクラスタに子ノードを持たないもの(クラスタ内の一つのノードを持ってきたときに他のクラスタのどれか一つのノードへのpathがないもの)を判定
   vector<bool> is_Gd(g_subs.size(), true);
-  for (int i = 0; i < g_subs.size(); i++){
-    for (int j = 0; j < g_subs.size(); j++){
+  for (int i = 0; i < (int)g_subs.size(); i++){
+    for (int j = 0; j < (int)g_subs.size(); j++){
       if (i != j){
         if(Gss.has_path(g_subs.at(i).at(0), g_subs.at(j).at(0))){ //index gss と gall の不一致
           is_Gd.at(i) = false;
@@ -331,20 +332,20 @@ void  order_grouping(PDAG &Gall, vector<int> &Gs, vector<int> &Gd, vector<vector
   }
   //それら全てをG_dとする 
   vector<int> Gex;
-  for (int i = 0; i < g_subs.size(); i++){
+  for (int i = 0; i < (int)g_subs.size(); i++){
     if (is_Gd.at(i)){
-      for (int j = 0; j < g_subs.at(i).size(); j++){
+      for (int j = 0; j < (int)g_subs.at(i).size(); j++){
         Gd.push_back(g_subs.at(i).at(j));
       }
     }else{
-      for (int j = 0; j < g_subs.at(i).size(); j++){
+      for (int j = 0; j < (int)g_subs.at(i).size(); j++){
         Gex.push_back(g_subs.at(i).at(j));
       }
     }
   }
   //G_dが全てなら終了
   bool temp = true;
-  for (int i = 0; i < is_Gd.size(); i++){
+  for (int i = 0; i < (int)is_Gd.size(); i++){
     if (!is_Gd.at(i)){
       temp = false;
       break;
@@ -357,30 +358,30 @@ void  order_grouping(PDAG &Gall, vector<int> &Gs, vector<int> &Gd, vector<vector
   //G_d以外について，クラスタ0から連結しているクラスタをまとめていく
   PDAG Gss_ex;
   Gss_ex.g = make_gs_graph(Gss.g, Gex);
-  for (int i = 0; i < Gss_ex.g.size(); i++){
-    for (int j = 0; j < Gss_ex.g.size(); j++){
+  for (int i = 0; i < (int)Gss_ex.g.size(); i++){
+    for (int j = 0; j < (int)Gss_ex.g.size(); j++){
       if (Gss_ex.g.at(i).at(j)){
         Gss_ex.g.at(j).at(i) = true;
       }
     }
   } //adjmat_ex is undirected graph
   vector<int> Gex_reverseindexlist(Gss.g.size(), -1); //.at(Gs_node_index) = Gex_node_index
-  for (int i = 0; i < Gex.size(); i++){
+  for (int i = 0; i < (int)Gex.size(); i++){
     Gex_reverseindexlist.at(Gex.at(i)) = i;
   }
 
   vector<bool> flag_ex_vec(g_subs.size(), true);
-  for (int i = 0; i < g_subs.size(); i++){
+  for (int i = 0; i < (int)g_subs.size(); i++){
     if(flag_ex_vec.at(i) && !is_Gd.at(i)){
       flag_ex_vec.at(i) = false;
       g_ex_connection.push_back(vector<int>());
-      for (int l = 0; l < g_subs.at(i).size(); l++){
+      for (int l = 0; l < (int)g_subs.at(i).size(); l++){
         g_ex_connection.back().push_back(g_subs.at(i).at(l));
       }
-      for (int j = 0; j < g_subs.size(); j++){
+      for (int j = 0; j < (int)g_subs.size(); j++){
         if (i != j && !is_Gd.at(j) && !g_subs.at(i).empty() && !g_subs.at(j).empty()){
           if (Gss_ex.has_connection(Gex_reverseindexlist.at(g_subs.at(i).at(0)), Gex_reverseindexlist.at(g_subs.at(j).at(0)))){
-            for (int k = 0; k < g_subs.at(j).size(); k++){
+            for (int k = 0; k < (int)g_subs.at(j).size(); k++){
               g_ex_connection.back().push_back(g_subs.at(j).at(k));
             }
             flag_ex_vec.at(j) = false;
@@ -391,11 +392,11 @@ void  order_grouping(PDAG &Gall, vector<int> &Gs, vector<int> &Gd, vector<vector
     }
   }
   //Gs, g_ex_connectionのindexをGallのindexに変換
-  for (int i = 0; i < Gd.size(); i++){
+  for (int i = 0; i < (int)Gd.size(); i++){
     Gd.at(i) = Gs.at(Gd.at(i));
   }
-  for (int i = 0; i < g_ex_connection.size(); i++){
-    for (int j = 0; j < g_ex_connection.at(i).size(); j++){
+  for (int i = 0; i < (int)g_ex_connection.size(); i++){
+    for (int j = 0; j < (int)g_ex_connection.at(i).size(); j++){
       g_ex_connection.at(i).at(j) = Gs.at(g_ex_connection.at(i).at(j));
     }
   }
@@ -410,7 +411,7 @@ vector<vector<int>> state_count(const vector<vector<int>> &data, vector<int> &ch
       int x = n_states.at(node_x);
       vector<vector<int>> counts(x, vector<int>(1, 0));
       if (parallel == 0){
-        for(int i = 0; i < data.size(); i++) {
+        for(int i = 0; i < (int)data.size(); i++) {
             counts.at(data.at(i).at(node_x)).at(0) += 1;
           }
       }else if (parallel == 1){
@@ -418,7 +419,7 @@ vector<vector<int>> state_count(const vector<vector<int>> &data, vector<int> &ch
         {
           vector<int> temp(x, 0);
           #pragma omp for
-            for(int i = 0; i < data.size(); i++) {
+            for(int i = 0; i < (int)data.size(); i++) {
               temp.at(data.at(i).at(node_x)) += 1;
             }
           for(int j = 0; j < x; j++){
@@ -453,15 +454,15 @@ vector<vector<int>> state_count(const vector<vector<int>> &data, vector<int> &ch
       //return the state counts of X, Y | Z shape: countmap[state of child][state of parents]
       int x = n_states.at(node_x);
       int y = 1;
-      for (int i = 0; i < parents.size(); i++) {
+      for (int i = 0; i < (int)parents.size(); i++) {
         y = y * n_states.at(parents.at(i));
       }
       vector<vector<int>> counts(x, vector<int>(y, 0));
       //count the number of each state
       if (parallel == 0){
-        for(int i = 0; i < data.size(); i++) {
-          int yy;
-          for (int j = 0; j < parents.size(); j++) {
+        for(int i = 0; i < (int)data.size(); i++) {
+          int yy = 0;
+          for (int j = 0; j < (int)parents.size(); j++) {
             if (j == 0) {
               yy = data.at(i).at(parents.at(j));
             }
@@ -477,14 +478,10 @@ vector<vector<int>> state_count(const vector<vector<int>> &data, vector<int> &ch
           {
             vector<vector<int>> temp(x, vector<int>(y, 0));
             #pragma omp for
-              for(int i = 0; i < data.size(); i++) {
-                for (int j = 0; j < parents.size(); j++) {
-                  if (j == 0) {
-                    yy = data.at(i).at(parents.at(j));
-                  }
-                  else {
-                    yy = n_states.at(parents.at(j)) * yy + data.at(i).at(parents.at(j));
-                  }
+              for(int i = 0; i < (int)data.size(); i++) {
+                yy = data.at(i).at(parents.at(0));
+                for (int j = 1; j < (int)parents.size(); j++) {
+                  yy = n_states.at(parents.at(j)) * yy + data.at(i).at(parents.at(j));
                 }
                 temp.at(data.at(i).at(node_x)).at(yy) += 1;
               }
@@ -509,7 +506,7 @@ vector<vector<int>> state_count(const vector<vector<int>> &data, vector<int> &ch
       len = xc * yc;
       vector<vector<int>> counts(len, vector<int>(1, 0));
       if (parallel == 0){
-        for(int i = 0; i < data.size(); i++) {
+        for(int i = 0; i < (int)data.size(); i++) {
           counts.at(data.at(i).at(children.at(0)) * yc + data.at(i).at(children.at(1))).at(0) += 1;
         }
       }else if (parallel == 1){
@@ -517,7 +514,7 @@ vector<vector<int>> state_count(const vector<vector<int>> &data, vector<int> &ch
         {
           vector<int> temp(len, 0);
           #pragma omp for
-            for(int i = 0; i < data.size(); i++) {
+            for(int i = 0; i < (int)data.size(); i++) {
               temp.at(data.at(i).at(children.at(0)) * yc + data.at(i).at(children.at(1))) += 1;
             }
           for(int j = 0; j < len; j++){
@@ -537,15 +534,15 @@ vector<vector<int>> state_count(const vector<vector<int>> &data, vector<int> &ch
       int len;
       len = xc * yc;
       int y = 1;
-      for (int i = 0; i < parents.size(); i++) {
+      for (int i = 0; i < (int)parents.size(); i++) {
         y = y * n_states.at(parents.at(i));
       }
       vector<vector<int>> counts(len, vector<int>(y, 0));
       //count the number of each state
       if (parallel == 0){
-        for(int i = 0; i < data.size(); i++) {
-          int yy;
-          for (int j = 0; j < parents.size(); j++) {
+        for(int i = 0; i < (int)data.size(); i++) {
+          int yy = 0;
+          for (int j = 0; j < (int)parents.size(); j++) {
             if (j == 0) {
               yy = data.at(i).at(parents.at(j));
             }
@@ -561,14 +558,10 @@ vector<vector<int>> state_count(const vector<vector<int>> &data, vector<int> &ch
           {
             vector<vector<int>> temp(len, vector<int>(y, 0));
             #pragma omp for
-              for(int i = 0; i < data.size(); i++) {
-                for (int j = 0; j < parents.size(); j++) {
-                  if (j == 0) {
-                    yy = data.at(i).at(parents.at(j));
-                  }
-                  else {
-                    yy = n_states.at(parents.at(j)) * yy + data.at(i).at(parents.at(j));
-                  }
+              for(int i = 0; i < (int)data.size(); i++) {
+                yy = data.at(i).at(parents.at(0));
+                for (int j = 1; j < (int)parents.size(); j++) {
+                  yy = n_states.at(parents.at(j)) * yy + data.at(i).at(parents.at(j));
                 }
                 temp.at(data.at(i).at(children.at(0)) * yc + data.at(i).at(children.at(1))).at(yy) += 1;
               }
@@ -597,7 +590,7 @@ vector<int> make_count_DP(const vector<vector<int>> &data, vector<int> &Gs, vect
   // }
   // Gs全ノードの頻度表を計算
   int x_len = 1;
-  for (int i = 0; i < Gs.size(); i++) {
+  for (int i = 0; i < (int)Gs.size(); i++) {
     x_len = x_len * n_states.at(Gs.at(i));
   }
   vector<int> count_DP(x_len, 0);
@@ -606,12 +599,12 @@ vector<int> make_count_DP(const vector<vector<int>> &data, vector<int> &Gs, vect
     {
       vector<int> temp(x_len, 0);
       #pragma omp for
-        for(int i = 0; i < data.size(); i++) {
-          for (int j = 0; j < Gs.size(); j++) {
+        for(int i = 0; i < (int)data.size(); i++) {
+          yy = 0;
+          for (int j = 0; j < (int)Gs.size(); j++) {
             if (j == 0) {
-              yy = data.at(i).at(Gs.at(j));
-            }
-            else {
+              yy = data.at(i).at(Gs.at(0));
+            }else{
               yy = n_states.at(Gs.at(j)) * yy + data.at(i).at(Gs.at(j));
             }
           }
@@ -658,17 +651,17 @@ vector<vector<int>> state_count_DP(vector<int> &children, vector<int> &parents, 
   //count the number of each state using dynamic programming
   int xx = 1;
   int yy = 1;
-  for (int i = 0; i < children.size(); i++) {
+  for (int i = 0; i < (int)children.size(); i++) {
     xx = xx * n_states.at(children.at(i));
   }
-  for (int i = 0; i < parents.size(); i++) {
+  for (int i = 0; i < (int)parents.size(); i++) {
     yy = yy * n_states.at(parents.at(i));
   }
   vector<vector<int>> counts(xx, vector<int>(yy, 0));
   int size_Gs = Gs.size();
   vector<int> children_Gs;
   vector<int> parents_Gs;
-  for (int i = 0; i < children.size(); i++) {
+  for (int i = 0; i < (int)children.size(); i++) {
     for (int j = 0; j < size_Gs; j++) {
       if (children.at(i) == Gs.at(j)) {
         children_Gs.push_back(j);
@@ -676,7 +669,7 @@ vector<vector<int>> state_count_DP(vector<int> &children, vector<int> &parents, 
       }
     }
   }
-  for (int i = 0; i < parents.size(); i++) {
+  for (int i = 0; i < (int)parents.size(); i++) {
     for (int j = 0; j < size_Gs; j++) {
       if (parents.at(i) == Gs.at(j)) {
         parents_Gs.push_back(j);
@@ -692,7 +685,7 @@ vector<vector<int>> state_count_DP(vector<int> &children, vector<int> &parents, 
       Gs_val = vector<int>(size_Gs, 0);
       vector<vector<int>> temp(xx, vector<int>(yy, 0));
       #pragma omp for
-        for(int i = 0; i < count_DP.size(); i++){
+        for(int i = 0; i < (int)count_DP.size(); i++){
           val = i;
           for (j = size_Gs - 1; j >= 0; j--){
             Gs_val.at(j) = val % n_states.at(Gs.at(j));
@@ -701,13 +694,13 @@ vector<vector<int>> state_count_DP(vector<int> &children, vector<int> &parents, 
           x_val = Gs_val.at(children_Gs.at(0));
           y_val = 0;
 
-          for (j = 1; j < children.size(); j++) {
+          for (j = 1; j < (int)children.size(); j++) {
             x_val = n_states.at(children.at(j)) * x_val + Gs_val.at(children_Gs.at(j));
           }
           if (!parents.empty()){
             y_val = Gs_val.at(parents_Gs.at(0));
           }
-          for (j = 1; j < parents.size(); j++) {
+          for (j = 1; j < (int)parents.size(); j++) {
             y_val = n_states.at(parents.at(j)) * y_val + Gs_val.at(parents_Gs.at(j));
           }
           temp.at(x_val).at(y_val) += count_DP.at(i);
@@ -720,7 +713,7 @@ vector<vector<int>> state_count_DP(vector<int> &children, vector<int> &parents, 
       }
     }
   }else{
-    for(int i = 0; i < count_DP.size(); i++){
+    for(int i = 0; i < (int)count_DP.size(); i++){
       int val = i;
       for (int j = size_Gs - 1; j >= 0; j--){
         Gs_val.at(j) = val % n_states.at(Gs.at(j));
@@ -729,13 +722,13 @@ vector<vector<int>> state_count_DP(vector<int> &children, vector<int> &parents, 
       int x_val = Gs_val.at(children_Gs.at(0));
       int y_val = 0;
 
-      for (int j = 1; j < children.size(); j++) {
+      for (int j = 1; j < (int)children.size(); j++) {
         x_val = n_states.at(children.at(j)) * x_val + Gs_val.at(children_Gs.at(j));
       }
       if (!parents.empty()){
         y_val = Gs_val.at(parents_Gs.at(0));
       }
-      for (int j = 1; j < parents.size(); j++) {
+      for (int j = 1; j < (int)parents.size(); j++) {
         y_val = n_states.at(parents.at(j)) * y_val + Gs_val.at(parents_Gs.at(j));
       }
       counts.at(x_val).at(y_val) += count_DP.at(i);
@@ -921,6 +914,21 @@ bool ci_test(const vector<vector<int>> &data, int &node_x, int &node_y, vector<i
     n_citest += 1;
   }
   if(independent_score > dependent_score){
+    for(int i = 0; i < (int)data.size(); i++){
+      bool temp_flag = true;
+      for(int j = 0; j < (int)Z.size(); j++){
+        if(i == Z.at(j)){
+          temp_flag = false;
+          break;
+        }
+      }
+      if(temp_flag){
+        sep[node_x][node_y][i] = 1;
+        sep[node_y][node_x][i] = 1;
+      }
+    }
+    sep2[node_y][node_x] = 1;
+    sep2[node_x][node_y] = 1;
     //cout<< "CI independent:" <<node_x<<" _|_"<<node_y<<" | "<<independent_score<<">"<<dependent_score<< endl;
     return true;
   }else{
@@ -1348,8 +1356,8 @@ void orientation_A2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
       in this stage (stage A2 in Yehezkel and Lerner(2009)), only rule 1 is applied because only X -> Y - Z shape is created in stage A1 (X-Z removed).
   */
   //Rule 1: X -> Y - Z, no edge between X and Z then X -> Y -> Z
-  for (int i = 0; i < Gall.g.size(); i++){
-    for (int j = 0; j < Gall.g.size(); j++){
+  for (int i = 0; i < (int)Gall.g.size(); i++){
+    for (int j = 0; j < (int)Gall.g.size(); j++){
       if (deletededges.at(i).at(j) || deletededges.at(j).at(i)){
         int X = i;
         int Z = j;
@@ -1388,12 +1396,13 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs, vector<vector<bool>> &deleteded
           }
           //cout<< "V-structure think:" <<X<<"->"<<Z<<"<-"<<Y<< endl;
           //if(!ci_test(data, X, Y, z, n_states, ESS)){
-          if(ci_test(data, X, Y, v, n_states, ESS, parallel, count_DP_flag, count_DP, Gs)){
           //if(ci_test_for_vstructure_detect_by_MI(data, X, Y, n_states)){
           //if(ci_test_for_vstructure_detect_by_CMI(data, X, Y, v, n_states)){
           //if(ci_test_for_vstructure_detect_by_Chi_squared_test(data, X, Y, Z, n_states)){
           //if(ci_test_for_vstructure_detect_by_CMI(data, X, Y, Z, n_states)){ 
           //if(ci_test_for_vstructure_detect_by_beyesfactor(data, X, Y, Z, n_states)){
+          //if(ci_test(data, X, Y, v, n_states, ESS, parallel, count_DP_flag, count_DP, Gs)){
+          if(sep[X][Y][Z] && sep2[X][Y]){
             Gall.remove_edge(Z, X);
             Gall.remove_edge(Z, Y);
             //cout<< "V-structure found:" <<X<<"->"<<Z<<"<-"<<Y<< endl;
@@ -1457,21 +1466,21 @@ void recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> G
   vector<int> count_DP;
   bool count_DP_flag = false;
   //print
-  //////cout<< "N=" <<N<< ", ";
-  //////cout<< "Gs: ";
-  for (auto& node : Gs) {
-    //////cout<< node << ", ";
-  }
-  //////cout<< "Gex: ";
-  for (auto& node : Gex) {
-    //////cout<< node << ", ";
-  }
-  //////cout<< endl;
+  // //////cout<< "N=" <<N<< ", ";
+  // //////cout<< "Gs: ";
+  // for (auto& node : Gs) {
+  //   //////cout<< node << ", ";
+  // }
+  // //////cout<< "Gex: ";
+  // for (auto& node : Gex) {
+  //   //////cout<< node << ", ";
+  // }
+  // //////cout<< endl;
 
   //stage 0: exit condition
   bool exitcondition = true;
-  for (int i = 0; i < Gs.size(); i++) {
-    if (Gall.predecessors(Gs.at(i)).size() > N){
+  for (int i = 0; i < (int)Gs.size(); i++) {
+    if ((int)Gall.predecessors(Gs.at(i)).size() > N){
       exitcondition = false;
       break;
     }
@@ -1486,13 +1495,13 @@ void recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> G
       for (auto& node_x : Gex) {
         if (Gall.has_edge(node_x, node_y) && !(deletededges.at(node_x).at(node_y) || deletededges.at(node_y).at(node_x))) {
           vector<int> Z = Gall.predecessors(node_y);
-          for (int i = 0; i < Z.size(); i++) {
+          for (int i = 0; i < (int)Z.size(); i++) {
             if (Z.at(i) == node_x) {
               Z.erase(Z.begin() + i);
             }
           } //erase node_x from Z
           sort(Z.begin(), Z.end());
-          if (Z.size() >= N) {
+          if ((int)Z.size() >= N) {
             do {
                   vector<int> selected_z;
                   for (int j = 0; j < N; j++) {
@@ -1520,7 +1529,7 @@ void recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> G
 
   //make DP map if the number of nodes in GS is smaller than threshold_DP
 
-  if(threshold_DP > Gs.size() && threshold_DP != 0 && Gs.size() > 2){
+  if(threshold_DP > (int)Gs.size() && threshold_DP != 0 && Gs.size() > 2){
     count_DP = make_count_DP(data, Gs, n_states, parallel);
     n_DP += 1;
     count_DP_flag = true;
@@ -1543,10 +1552,11 @@ void recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> G
             //transive_cut();
           }
         }else{
-          vector<int> S = Gall.predecessors(node_y);
+          //vector<int> S = Gall.predecessors(node_y);
+          vector<int> S = Gall.neighbors(node_y);
           auto newEnd = remove(S.begin(), S.end(), node_x);
           S.erase(newEnd, S.end()); // remove node_x from S  正しい？
-          if (S.size() >= N) {
+          if ((int)S.size() >= N) {
             do {
               vector<int> selected_z;
               bool store_flag = count_DP_flag;
@@ -1582,16 +1592,16 @@ void recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> G
 
   //stage C: Ancestor sub-structure decomposition
   vector<int> Gexd;
-  for (int i = 0; i < g_ex_connection.size(); i++) {
-    for (int j = 0; j< g_ex_connection.at(i).size(); j++) {
+  for (int i = 0; i < (int)g_ex_connection.size(); i++) {
+    for (int j = 0; j< (int)g_ex_connection.at(i).size(); j++) {
       Gexd.push_back(g_ex_connection.at(i).at(j));
     }
     recursive_search(data, Gall, g_ex_connection.at(i), Gex, N + 1, n_states, ESS, parallel, threshold_DP);
   }
   sort(Gexd.begin(), Gexd.end());
-  for (int i = 0; i < Gexd.size(); i++) {
+  for (int i = 0; i < (int)Gexd.size(); i++) {
     bool check = true;
-    for(int j = 0; j < Gex.size(); j++){
+    for(int j = 0; j < (int)Gex.size(); j++){
       if (Gexd.at(i) == Gex.at(j)){
         check = false;
         break;
@@ -1610,23 +1620,20 @@ void recursive_search(const vector<vector<int>> &data, PDAG &Gall, vector<int> G
 
 py::array_t<bool> RAI(py::array_t<int> data, py::array_t<int> n_states, float ESS, int parallel, int threshold_DP) {
 
-  clock_t start = clock();
-
-    
 
   //translate imput data to c++ vector(this is not optimal but I don't know how to use pybind11::array_t) 
   py::buffer_info buf_data = data.request(), buf_states = n_states.request();
   const int* __restrict__ prt_data = static_cast<int*>(buf_data.ptr);
   const int* __restrict__ prt_states = static_cast<int*>(buf_states.ptr);
-  size_t n_data = buf_data.shape[0], n_node = buf_data.shape[1]; // number of nodes
+  int n_data = buf_data.shape[0], n_node = buf_data.shape[1]; // number of nodes
   vector<vector<int>> data_vec(n_data, vector<int>(n_node));
   vector<int> n_states_vec(n_node, 0);
-  for(size_t i = 0; i< n_data; i++){
-    for(size_t j = 0; j< n_node; j++){
+  for(int i = 0; i< n_data; i++){
+    for(int j = 0; j< n_node; j++){
       data_vec.at(i).at(j) = prt_data[i * n_node + j];
     }
   }
-  for (size_t i = 0; i < n_node; i++) {
+  for (int i = 0; i < n_node; i++) {
     n_states_vec.at(i) = prt_states[i];
   }
   auto endg = py::array_t<bool>({n_node, n_node});
@@ -1648,21 +1655,17 @@ py::array_t<bool> RAI(py::array_t<int> data, py::array_t<int> n_states, float ES
   PDAG Gend;
   // vector<vector<string>> state_list = get_state_list(data);
 
-  clock_t end = clock();
-  const double time = static_cast<double>(end - start) / CLOCKS_PER_SEC * 1000.0;
-
-
   recursive_search(data_vec, Gall, Gs, Gex, 0, n_states_vec, ESS, parallel, threshold_DP);
 
   //translate Gall to py::array_t (this is not optimal but I don't know how to use pybind11::array_t)
-  for (size_t i = 0; i < n_node; i++) {
-    for (size_t j = 0; j < n_node; j++) {
+  for (int i = 0; i < n_node; i++) {
+    for (int j = 0; j < n_node; j++) {
       prt_endg[i * n_node + j] = Gall.g.at(i).at(j);
     }
   }
   cout <<"citest_count: " << n_citest <<", citest_DP_count: "<< n_citest_DP << ", DPmap_count: "<< n_DP<<endl;
-  printf("datatranslate_time %lf[ms]\n", time);
-  cout << endl;
+  // printf("datatranslate_time %lf[ms]\n", time);
+  // cout << endl;
   return endg;
 }
 

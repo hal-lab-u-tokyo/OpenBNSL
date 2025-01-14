@@ -5,7 +5,7 @@ import argparse
 import os
 from pgmpy.utils import get_example_model
 
-from pgmpy.sampling import BayesianModelSampling
+from pgmpy.sampling import BayesianModelSampling, GibbsSampling
 from pgmpy.estimators import BicScore, HillClimbSearch
 from pgmpy.estimators import PC
 
@@ -35,7 +35,9 @@ SCORE={
 def load_data(type, sample_size):
     model = get_example_model(type)
     sampler = BayesianModelSampling(model)
+    #sampler = GibbsSampling(model)
     data = sampler.forward_sample(size=sample_size)
+    #data = model.simulate(sample_size)
     #print(data.head())
     return model, data
 
@@ -60,7 +62,7 @@ def test_benchmark(
         score = SCORE[structure_score](data)
         t = time.time()
         if estimate_type == "RAI_cpp":
-            best_model = RAIEstimator_cpp(data = data, ESS = ess, parallel = parallel, threshold_DP = DP_threshold)
+            best_model, shorttime = RAIEstimator_cpp(data = data, ESS = ess, parallel = parallel, threshold_DP = DP_threshold)
         elif estimate_type == "PC_cpp":
             best_model = PCEstimator_cpp(data = data, ESS = ess)
         elif estimate_type == "RAI":
@@ -73,10 +75,13 @@ def test_benchmark(
             best_model = estimator.estimate()
         else:
             raise ValueError("Invalid estimator type")
-        calc_time += time.time() - t
+        if estimate_type == "RAI_cpp":
+            calc_time += shorttime
+        else:
+            calc_time += time.time() - t
         best_model_compare = PDAG2CPDAG(best_model)
         #show(best_model)
-        show(best_model_compare)
+        #show(best_model_compare)
         #show(comparemodel)
         errors = structural_errors(comparemodel, best_model_compare)
         print(f"iteration {i}: [SHD, ME, EE, DE, ED, MD, RD]:{errors[0]}, {errors[1]}, {errors[2]}, {errors[3]}, {errors[4]}, {errors[5]}, {errors[6]}")
@@ -103,13 +108,13 @@ def save_benchmark(estimate_type, data_type, size, structure_score, ave_score, c
 def arg_parser():
     parser = argparse.ArgumentParser(description="Benchmarking for Bayesian Network Structure Learning")
     parser.add_argument("--estimate_type", type=str, default="RAI_cpp", help="Estimator type")
-    parser.add_argument("--data_type", type=str, default="survey", help="Data type")
-    parser.add_argument("--sample_size", type=int, default=50000, help="Sample size")
+    parser.add_argument("--data_type", type=str, default="alarm", help="Data type")
+    parser.add_argument("--sample_size", type=int, default=10000, help="Sample size")
     parser.add_argument("--structure_score", type=str, default="BIC", help="Structure score")
     parser.add_argument("--ess", type=float, default=5, help="ESS")
     parser.add_argument("--max_iter", type=int, default=1, help="Number of iterations")
     parser.add_argument("--parallel", type=int, default=1, help="parallel")
-    parser.add_argument("--DP_threshold", type=int, default=14, help="DP_threshold")
+    parser.add_argument("--DP_threshold", type=int, default=15, help="DP_threshold")
     return parser.parse_args()
 
 def main():

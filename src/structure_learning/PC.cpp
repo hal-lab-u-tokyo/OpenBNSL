@@ -70,7 +70,7 @@ struct PDAG {
   vector<int> successors(int i) {
     // return the list of successors of node i (include undirected edge)
     vector<int> succ;
-    for (int j = 0; j < g.size(); j++) {
+    for (int j = 0; j < (int)g.size(); j++) {
       if (g.at(i).at(j)) {
         succ.push_back(j);
       }
@@ -81,7 +81,7 @@ struct PDAG {
   vector<int> predecessors(int i) {
     // return the list of predecessors of node i (include undirected edge)
     vector<int> pred;
-    for (int j = 0; j < g.size(); j++) {
+    for (int j = 0; j < (int)g.size(); j++) {
       if (g.at(j).at(i)) {
         pred.push_back(j);
       }
@@ -92,7 +92,7 @@ struct PDAG {
   vector<int> neighbors(int i) { 
     //return the list of neighbors {j} of node i (j -> i or i -> j)
     vector<int> neigh;
-    for (int j = 0; j < g.size(); j++) {
+    for (int j = 0; j < (int)g.size(); j++) {
       if (g.at(j).at(i) || g.at(i).at(j)) {
         neigh.push_back(j);
       }
@@ -103,7 +103,7 @@ struct PDAG {
   vector<int> undirected_neighbors(int i) {
     // return the list of undirected neighbors of node i
     vector<int> neigh;
-    for (int j = 0; j < g.size(); j++) {
+    for (int j = 0; j < (int)g.size(); j++) {
       if (g.at(i).at(j) && g.at(j).at(i)) {
         neigh.push_back(j);
       }
@@ -171,7 +171,7 @@ vector<vector<int>> state_count_PC(const vector<vector<int>> &data, int &node_x,
       {
         vector<int> temp(x, 0);
         #pragma omp for
-          for(int i = 0; i < data.size(); i++) {
+          for(int i = 0; i < (int)data.size(); i++) {
             temp.at(data.at(i).at(node_x)) += 1;
           }
         for(int j = 0; j < x; j++){
@@ -184,7 +184,7 @@ vector<vector<int>> state_count_PC(const vector<vector<int>> &data, int &node_x,
     //return the state counts of X, Y | Z shape: countmap[state of child][state of parents]
     int x = n_states.at(node_x);
     int y = 1;
-    for (int i = 0; i < parents.size(); i++) {
+    for (int i = 0; i < (int)parents.size(); i++) {
       y = y * n_states.at(parents.at(i));
     }
     vector<vector<int>> counts(x, vector<int>(y, 0));
@@ -194,14 +194,10 @@ vector<vector<int>> state_count_PC(const vector<vector<int>> &data, int &node_x,
       {
         vector<vector<int>> temp(x, vector<int>(y, 0));
         #pragma omp for
-          for(int i = 0; i < data.size(); i++) {
-            for (int j = 0; j < parents.size(); j++) {
-              if (j == 0) {
-                yy = data.at(i).at(parents.at(j));
-              }
-              else {
-                yy = n_states.at(parents.at(j)) * yy + data.at(i).at(parents.at(j));
-              }
+          for(int i = 0; i < (int)data.size(); i++) {
+            yy = data.at(i).at(parents.at(0));
+            for (int j = 0; j < (int)parents.size(); j++) {
+              yy = n_states.at(parents.at(j)) * yy + data.at(i).at(parents.at(j));
             }
             temp.at(data.at(i).at(node_x)).at(yy) += 1;
           }
@@ -285,7 +281,7 @@ void orientation(PDAG &Gall, const vector<vector<int>> &data, double &ESS, vecto
       orient rules are based on rule 1~3 from Meek,C.:Causal Inference and Causal Explanation with Background Knowledge,Proc.Confon Uncertainty in Artificial Inteligence (UAl-95),p.403-410 (195)
   */
   //for each X-Z-Y (X and Y is not adjecent), find V-structure and orient as X -> Z <- Y
-  for (int X= 0; X < Gall.g.size(); X++) {
+  for (int X= 0; X < (int)Gall.g.size(); X++) {
     for (auto& Z : Gall.undirected_neighbors(X)) {
       for (auto& Y : Gall.undirected_neighbors(Z)) {
         if (X != Y && !Gall.has_edge(X, Y) && !Gall.has_edge(Y, X)) {
@@ -304,7 +300,7 @@ void orientation(PDAG &Gall, const vector<vector<int>> &data, double &ESS, vecto
   while (flag){
     flag = false;
     //Rule 1: X -> Y - Z, no edge between X and Z then X -> Y -> Z
-    for (int X= 0; X < Gall.g.size(); X++) {
+    for (int X= 0; X < (int)Gall.g.size(); X++) {
       for (auto& Y : Gall.successors(X)) {
         if (!Gall.has_edge(Y, X) && Gall.has_edge(X, Y)) {
           for (auto& Z : Gall.undirected_neighbors(Y)) {
@@ -318,7 +314,7 @@ void orientation(PDAG &Gall, const vector<vector<int>> &data, double &ESS, vecto
       }
     }
     //Rule 2: X - Y and if there is a directed path from X to Y, then X -> Y
-    for (int X= 0; X < Gall.g.size(); X++) {
+    for (int X= 0; X < (int)Gall.g.size(); X++) {
       for (auto& Y : Gall.undirected_neighbors(X)) {
         if (Gall.has_directed_path(X, Y)) {
           Gall.remove_edge(Y, X);
@@ -328,7 +324,7 @@ void orientation(PDAG &Gall, const vector<vector<int>> &data, double &ESS, vecto
       }
     }
     //Rule 3: for each X->W<-Z X-Y-Z Y-W, orient Y->W
-    for (int X= 0; X < Gall.g.size(); X++){
+    for (int X= 0; X < (int)Gall.g.size(); X++){
       for (auto &Y : Gall.undirected_neighbors(X)){
         for (auto &Z : Gall.undirected_neighbors(Y)){
           if (Z != X){ //X-Y-Z
@@ -369,7 +365,7 @@ PDAG PCsearch(const vector<vector<int>> &data, PDAG &Gall, double &ESS, vector<i
               S.push_back(node_z);
             }
           }
-          if (S.size() >= t) {
+          if ((int)S.size() >= t) {
             do {
               vector<int> selected_z;
               for (int j = 0; j < t; j++) {
@@ -416,7 +412,7 @@ py::array_t<bool> PC(py::array_t<int> data, py::array_t<int> n_states, double ES
   // initialize Gall (complete undirected graph)
   PDAG Gall;
   vector<vector<bool>> gall(n_node, vector<bool>(n_node, true));
-  for  (int i = 0; i < n_node; i++) {
+  for  (int i = 0; i < (int)n_node; i++) {
           gall.at(i).at(i) = false;
       }
   Gall.g = gall; //Gall is complete graph
