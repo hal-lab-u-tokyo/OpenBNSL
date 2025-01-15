@@ -1460,15 +1460,15 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs,
   for (auto &node : Gs) {
     Gs_flag.at(node) = true;
   }
+  vector<vector<bool>> vstructuredetected(Gall.g.size(),
+                                          vector<bool>(Gall.g.size(), false));
   for (auto &X : Gs) {
     for (auto &Z : Gall.undirected_neighbors(X)) {
       for (auto &Y : Gall.undirected_neighbors(Z)) {
         // if (X != Y && !Gall.has_edge(X, Y) && !Gall.has_edge(Y, X) &&
         // Gall.has_edge(X, Z) && Gall.has_edge(Z, X) && Gall.has_edge(Y, Z) &&
         // Gall.has_edge(Z, Y)) {
-        if (X != Y && !Gall.has_edge(X, Y) && !Gall.has_edge(Y, X) &&
-            Gall.has_edge(X, Z) && Gall.has_edge(Y, Z) &&
-            (Gall.has_edge(Z, Y) || Gall.has_edge(Z, X))) {
+        if (X != Y && (!vstructuredetected.at(X).at(Z) || !vstructuredetected.at(Y).at(Z))) {
           vector<int> z = {Z};
           vector<int> v;
           if (Gs_flag.at(Y) == false || Gs_flag.at(Z) == false) {
@@ -1484,12 +1484,21 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs,
           // X, Y, Z, n_states)){ if(ci_test(data, X, Y, v, n_states, ESS,
           // parallel, count_DP_flag, count_DP, Gs)){
           if (sep[X][Y][Z] && sep2[X][Y]) {
-            Gall.remove_edge(Z, X);
-            Gall.remove_edge(Z, Y);
-            // cout<< "V-structure found:" <<X<<"->"<<Z<<"<-"<<Y<< endl;
+            vstructuredetected.at(X).at(Z) = true;
+            vstructuredetected.at(Y).at(Z) = true;
           }
           count_DP_flag = store;
         }
+      }
+    }
+  }
+  for (int i = 0; i < (int)Gall.g.size(); i++) {
+    for (int j = 0; j < (int)Gall.g.size(); j++) {
+      if (vstructuredetected.at(i).at(j) && !vstructuredetected.at(j).at(i)) {
+        Gall.remove_edge(j, i);
+        // Gall.remove_edge(Z, X);
+        // Gall.remove_edge(Z, Y);
+        // cout<< "V-structure found:" <<X<<"->"<<Z<<"<-"<<Y<< endl;
       }
     }
   }
