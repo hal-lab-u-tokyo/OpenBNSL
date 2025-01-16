@@ -66,7 +66,7 @@ def do_benchmark(data_type, sample_size, max_iter, parallel, DP, search_neighbor
     return
 
 def macroinstruction(f):
-    max_iter = 1
+    max_iter = 30
     data_types = ["cancer","earthquake","survey","sachs","child","alarm"] # "win95"はやらない
     sample_sizes = [10000, 20000, 50000, 100000, 200000, 1000000, 2000000]
     parallel = 0
