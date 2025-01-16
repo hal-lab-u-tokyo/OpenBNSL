@@ -417,7 +417,7 @@ void order_grouping(PDAG &Gall, vector<int> &Gs, vector<int> &Gd,
   return;
 }
 
-vector<vector<int>> state_count(const vector<vector<int>> &data,
+vector<vector<int>> state_count(const vector<vector<uint8_t>> &data,
                                 vector<int> &children, vector<int> &parents,
                                 vector<int> &n_states, int &parallel) {
   // if parallel == 0 then use single thread, if parallel == 1 then use multi
@@ -613,7 +613,7 @@ vector<vector<int>> state_count(const vector<vector<int>> &data,
   }
 }
 
-vector<int> make_count_DP(const vector<vector<int>> &data, vector<int> &Gs,
+vector<int> make_count_DP(const vector<vector<uint8_t>> &data, vector<int> &Gs,
                           vector<int> &n_states, int &parallel) {
   // vector<int> parents_empty;
   // vector<vector<int>> count_DP_a = state_count(data, Gs, parents_empty,
@@ -777,7 +777,7 @@ vector<vector<int>> state_count_DP(vector<int> &children, vector<int> &parents,
   return counts;
 }
 
-float natori_independent_score(const vector<vector<int>> &data, int &node_x,
+float natori_independent_score(const vector<vector<uint8_t>> &data, int &node_x,
                                int &node_y, vector<int> &parents,
                                vector<int> &n_states, float &ESS, int &parallel,
                                bool &count_DP_flag, vector<int> &count_DP,
@@ -846,7 +846,7 @@ float natori_independent_score(const vector<vector<int>> &data, int &node_x,
         score += lgamma(alpha + count.at(k).at(j)) - lgamma(alpha);
         if (isnan(score)) {
           //////////////cout <<ESS / (r * q) + count.at(k).at(j)<< "score is
-          ///nan" << endl;
+          /// nan" << endl;
         }
       }
       score += lgamma(r * alpha) - lgamma(r * alpha + n_ij.at(j));
@@ -874,7 +874,7 @@ float natori_independent_score(const vector<vector<int>> &data, int &node_x,
         score += lgamma(alpha + count2.at(k).at(j)) - lgamma(alpha);
         if (isnan(score)) {
           //////////////cout <<ESS / (r * q) + count2.at(k).at(j)<< "score is
-          ///nan" << endl;
+          /// nan" << endl;
         }
       }
       score += lgamma(r * alpha) - lgamma(r * alpha + n_ij2.at(j));
@@ -884,7 +884,7 @@ float natori_independent_score(const vector<vector<int>> &data, int &node_x,
   return score;
 }
 
-float natori_dependent_score(const vector<vector<int>> &data, int &node_x,
+float natori_dependent_score(const vector<vector<uint8_t>> &data, int &node_x,
                              int &node_y, vector<int> &parents,
                              vector<int> &n_states, float &ESS, int &parallel,
                              bool &count_DP_flag, vector<int> &count_DP,
@@ -943,7 +943,7 @@ float natori_dependent_score(const vector<vector<int>> &data, int &node_x,
         score += lgamma(alpha + count.at(k).at(j)) - lgamma(alpha);
         if (isnan(score)) {
           //////////////cout <<ESS / (r * q) + count.at(k).at(j)<< "score is
-          ///nan" << endl;
+          /// nan" << endl;
         }
       }
       score += lgamma(r * alpha) - lgamma(r * alpha + n_ij.at(j));
@@ -954,7 +954,7 @@ float natori_dependent_score(const vector<vector<int>> &data, int &node_x,
   return score;
 }
 
-bool ci_test(const vector<vector<int>> &data, int &node_x, int &node_y,
+bool ci_test(const vector<vector<uint8_t>> &data, int &node_x, int &node_y,
              vector<int> &Z, vector<int> &n_states, float &ESS, int &parallel,
              bool &count_DP_flag, vector<int> &count_DP, vector<int> &Gs) {
   // CI test for X _|_ Y | Z
@@ -1065,8 +1065,8 @@ double qchi(double x2, int n) {
 }
 
 // bool ci_test_for_vstructure_detect_by_Chi_squared_test(const
-// vector<vector<int>> &data, int &node_x, int &node_y, int &node_z, vector<int>
-// &n_states) {
+// vector<vector<uint8_t>> &data, int &node_x, int &node_y, int &node_z,
+// vector<int> &n_states) {
 //   //CI test for X _|_ Y | Z using Chi-squared test; Test statistics G = 2 *
 //   sum_x,y,z(n_xyz * log(n_xyz / (n_xz n_yz / n))) ~ chi^2_{d.f= (|X| - 1) *
 //   (|Y| - 1) * |Z|} (from
@@ -1168,7 +1168,7 @@ double qchi(double x2, int n) {
 //   }
 // }
 
-// float localBDeuscore(const vector<vector<int>> &data, int &node_x,
+// float localBDeuscore(const vector<vector<uint8_t>> &data, int &node_x,
 // vector<int> &parents, vector<int> &n_states) {
 //   //return log of the BDeu score of X, Y | Z
 //   double score = 0.0;
@@ -1266,8 +1266,8 @@ double qchi(double x2, int n) {
 //   }
 // }
 
-// bool ci_test_for_vstructure_detect_by_CMI(const vector<vector<int>> &data,
-// int &node_x, int &node_y, int &node_z, vector<int> &n_states) {
+// bool ci_test_for_vstructure_detect_by_CMI(const vector<vector<uint8_t>>
+// &data, int &node_x, int &node_y, int &node_z, vector<int> &n_states) {
 //   //CI test for X _|_ Y | Z using CMI; Test statistics cmi(x,y|z) = sum_x,y,z
 //   p(x,y,z) * log(p(x,y|z)/p(x|z)p(y|z)) double threthold = 0.003; vector<int>
 //   children(2); children.at(0) = node_x; children.at(1) = node_y; vector<int>
@@ -1366,8 +1366,8 @@ double qchi(double x2, int n) {
 //   }
 // }
 
-// bool ci_test_for_vstructure_detect_by_MI(const vector<vector<int>> &data, int
-// &node_x, int &node_y, vector<int> &n_states) {
+// bool ci_test_for_vstructure_detect_by_MI(const vector<vector<uint8_t>> &data,
+// int &node_x, int &node_y, vector<int> &n_states) {
 //   //CI test for X _|_ Y using MI; Test statistics cmi(x,y) = sum_x,y,z p(x,y)
 //   * log(p(x,y)/p(x)p(y)) double threthold = 0.003; vector<int> children(2);
 //   children.at(0) = node_x;
@@ -1444,7 +1444,7 @@ void orientation_A2(PDAG &Gall, vector<int> &Gs,
 
 void orientation_B2(PDAG &Gall, vector<int> &Gs,
                     vector<vector<bool>> &deletededges,
-                    const vector<vector<int>> &data, vector<int> &n_states,
+                    const vector<vector<uint8_t>> &data, vector<int> &n_states,
                     float &ESS, int &parallel, bool &count_DP_flag,
                     vector<int> &count_DP) {
   /*
@@ -1468,7 +1468,9 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs,
         // if (X != Y && !Gall.has_edge(X, Y) && !Gall.has_edge(Y, X) &&
         // Gall.has_edge(X, Z) && Gall.has_edge(Z, X) && Gall.has_edge(Y, Z) &&
         // Gall.has_edge(Z, Y)) {
-        if (X != Y && (!vstructuredetected.at(X).at(Z) || !vstructuredetected.at(Y).at(Z))) {
+        if (X != Y && !Gall.has_edge(X, Y) && !Gall.has_edge(Y, X) &&
+            (!vstructuredetected.at(X).at(Z) ||
+             !vstructuredetected.at(Y).at(Z))) {
           vector<int> z = {Z};
           vector<int> v;
           if (Gs_flag.at(Y) == false || Gs_flag.at(Z) == false) {
@@ -1486,6 +1488,7 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs,
           if (sep[X][Y][Z] && sep2[X][Y]) {
             vstructuredetected.at(X).at(Z) = true;
             vstructuredetected.at(Y).at(Z) = true;
+            // cout<< "V-structure found:" <<X<<"->"<<Z<<"<-"<<Y<< endl;
           }
           count_DP_flag = store;
         }
@@ -1498,7 +1501,6 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs,
         Gall.remove_edge(j, i);
         // Gall.remove_edge(Z, X);
         // Gall.remove_edge(Z, Y);
-        // cout<< "V-structure found:" <<X<<"->"<<Z<<"<-"<<Y<< endl;
       }
     }
   }
@@ -1552,10 +1554,10 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs,
   return;
 }
 
-void recursive_search(const vector<vector<int>> &data, PDAG &Gall,
+void recursive_search(const vector<vector<uint8_t>> &data, PDAG &Gall,
                       vector<int> Gs, vector<int> &Gex, int N,
                       vector<int> &n_states, float &ESS, int &parallel,
-                      int &threshold_DP) {
+                      int &threshold_DP, bool &search_neighbor, bool &do_orientation_A2) {
   int n_node = data.at(0).size();
   vector<int> count_DP;
   bool count_DP_flag = false;
@@ -1620,7 +1622,9 @@ void recursive_search(const vector<vector<int>> &data, PDAG &Gall,
     }
   }
   // stage A2: orient edges in Gs using "smart" orientation rules R1
-  orientation_A2(Gall, Gs, deletededges);
+  if (do_orientation_A2){
+    orientation_A2(Gall, Gs, deletededges);
+  }
 
   // stage B1: Do CI tests for nodes between Gs and Gs and remove edge
 
@@ -1651,8 +1655,12 @@ void recursive_search(const vector<vector<int>> &data, PDAG &Gall,
             // transive_cut();
           }
         } else {
-          // vector<int> S = Gall.predecessors(node_y);
-          vector<int> S = Gall.neighbors(node_y);
+          vector<int> S;
+          if (search_neighbor){
+            S = Gall.neighbors(node_y);
+          }else{
+            S = Gall.predecessors(node_y);
+          }
           auto newEnd = remove(S.begin(), S.end(), node_x);
           S.erase(newEnd, S.end());  // remove node_x from S  正しい？
           if ((int)S.size() >= N) {
@@ -1699,7 +1707,7 @@ void recursive_search(const vector<vector<int>> &data, PDAG &Gall,
       Gexd.push_back(g_ex_connection.at(i).at(j));
     }
     recursive_search(data, Gall, g_ex_connection.at(i), Gex, N + 1, n_states,
-                     ESS, parallel, threshold_DP);
+                     ESS, parallel, threshold_DP, search_neighbor, do_orientation_A2);
   }
   sort(Gexd.begin(), Gexd.end());
   for (int i = 0; i < (int)Gexd.size(); i++) {
@@ -1717,20 +1725,21 @@ void recursive_search(const vector<vector<int>> &data, PDAG &Gall,
 
   // stage D:  Descendantsub-structure decomposition
   recursive_search(data, Gall, Gd, Gex, N + 1, n_states, ESS, parallel,
-                   threshold_DP);
+                   threshold_DP, search_neighbor, do_orientation_A2);
   return;
 }
 
-py::array_t<bool> RAI(py::array_t<int> data, py::array_t<int> n_states,
-                      float ESS, int parallel, int threshold_DP) {
+py::array_t<bool> RAI(py::array_t<uint8_t> data,
+                      py::array_t<int> n_states,  // uint8_t
+                      float ESS, int parallel, int threshold_DP, bool search_neighbor, bool do_orientation_A2) {
   // translate imput data to c++ vector(this is not optimal but I don't know how
   // to use pybind11::array_t)
   py::buffer_info buf_data = data.request(), buf_states = n_states.request();
-  const int *__restrict__ prt_data = static_cast<int *>(buf_data.ptr);
+  const uint8_t *__restrict__ prt_data = static_cast<uint8_t *>(buf_data.ptr);
   const int *__restrict__ prt_states = static_cast<int *>(buf_states.ptr);
   int n_data = buf_data.shape[0],
       n_node = buf_data.shape[1];  // number of nodes
-  vector<vector<int>> data_vec(n_data, vector<int>(n_node));
+  vector<vector<uint8_t>> data_vec(n_data, vector<uint8_t>(n_node));
   vector<int> n_states_vec(n_node, 0);
   for (int i = 0; i < n_data; i++) {
     for (int j = 0; j < n_node; j++) {
@@ -1760,7 +1769,7 @@ py::array_t<bool> RAI(py::array_t<int> data, py::array_t<int> n_states,
   // vector<vector<string>> state_list = get_state_list(data);
 
   recursive_search(data_vec, Gall, Gs, Gex, 0, n_states_vec, ESS, parallel,
-                   threshold_DP);
+                   threshold_DP, search_neighbor, do_orientation_A2);
 
   // translate Gall to py::array_t (this is not optimal but I don't know how to
   // use pybind11::array_t)

@@ -12,7 +12,7 @@ from modules.visualize_graph import display_graph_info as show
 
 
 
-def RAIEstimator_cpp(data, ESS, parallel = 1, threshold_DP = 0):
+def RAIEstimator_cpp(data, ESS, parallel = 1, threshold_DP = 0, search_neighbor = True, do_orientation_A2 = True):
 
     #translate data from pandas dataframe to numpy array and extract column names
     columns = np.array(data.columns.tolist())
@@ -55,7 +55,7 @@ def RAIEstimator_cpp(data, ESS, parallel = 1, threshold_DP = 0):
 
     calc_time2 = 0
     t2 = time.time()
-    ansmat = openbnsl.RAI(data_int, n_states, ESS, parallel, threshold_DP)
+    ansmat = openbnsl.RAI(data_int, n_states, ESS, parallel, threshold_DP, search_neighbor, do_orientation_A2)
     calc_time2 += time.time() - t2
     #print(f"shorttime: {calc_time2}")
 
