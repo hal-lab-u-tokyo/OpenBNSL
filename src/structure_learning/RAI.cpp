@@ -1557,7 +1557,8 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs,
 void recursive_search(const vector<vector<uint8_t>> &data, PDAG &Gall,
                       vector<int> Gs, vector<int> &Gex, int N,
                       vector<int> &n_states, float &ESS, int &parallel,
-                      int &threshold_DP, bool &search_neighbor, bool &do_orientation_A2) {
+                      int &threshold_DP, bool &search_neighbor,
+                      bool &do_orientation_A2) {
   int n_node = data.at(0).size();
   vector<int> count_DP;
   bool count_DP_flag = false;
@@ -1622,7 +1623,7 @@ void recursive_search(const vector<vector<uint8_t>> &data, PDAG &Gall,
     }
   }
   // stage A2: orient edges in Gs using "smart" orientation rules R1
-  if (do_orientation_A2){
+  if (do_orientation_A2) {
     orientation_A2(Gall, Gs, deletededges);
   }
 
@@ -1656,9 +1657,9 @@ void recursive_search(const vector<vector<uint8_t>> &data, PDAG &Gall,
           }
         } else {
           vector<int> S;
-          if (search_neighbor){
+          if (search_neighbor) {
             S = Gall.neighbors(node_y);
-          }else{
+          } else {
             S = Gall.predecessors(node_y);
           }
           auto newEnd = remove(S.begin(), S.end(), node_x);
@@ -1707,7 +1708,8 @@ void recursive_search(const vector<vector<uint8_t>> &data, PDAG &Gall,
       Gexd.push_back(g_ex_connection.at(i).at(j));
     }
     recursive_search(data, Gall, g_ex_connection.at(i), Gex, N + 1, n_states,
-                     ESS, parallel, threshold_DP, search_neighbor, do_orientation_A2);
+                     ESS, parallel, threshold_DP, search_neighbor,
+                     do_orientation_A2);
   }
   sort(Gexd.begin(), Gexd.end());
   for (int i = 0; i < (int)Gexd.size(); i++) {
@@ -1731,7 +1733,8 @@ void recursive_search(const vector<vector<uint8_t>> &data, PDAG &Gall,
 
 py::array_t<bool> RAI(py::array_t<uint8_t> data,
                       py::array_t<int> n_states,  // uint8_t
-                      float ESS, int parallel, int threshold_DP, bool search_neighbor, bool do_orientation_A2) {
+                      float ESS, int parallel, int threshold_DP,
+                      bool search_neighbor, bool do_orientation_A2) {
   n_citest = 0;
   n_citest_DP = 0;
   n_DP = 0;
