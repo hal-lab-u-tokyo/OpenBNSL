@@ -23,8 +23,8 @@ using namespace std;
 int n_citest = 0;
 int n_citest_DP = 0;
 int n_DP = 0;
-bool sep[200][200][200] = {0};
-bool sep2[200][200] = {0};
+bool sep[100][100][100] = {0};
+bool sep2[100][100] = {0};
 
 void dfs(int now, vector<vector<int>> &G, vector<bool> &visited,
          vector<int> &order) {
@@ -1732,6 +1732,17 @@ void recursive_search(const vector<vector<uint8_t>> &data, PDAG &Gall,
 py::array_t<bool> RAI(py::array_t<uint8_t> data,
                       py::array_t<int> n_states,  // uint8_t
                       float ESS, int parallel, int threshold_DP, bool search_neighbor, bool do_orientation_A2) {
+  n_citest = 0;
+  n_citest_DP = 0;
+  n_DP = 0;
+  for (int i = 0; i < 100; i++) {
+    for (int j = 0; j < 100; j++) {
+      for (int k = 0; k < 100; k++) {
+        sep[i][j][k] = false;
+      }
+      sep2[i][j] = false;
+    }
+  }
   // translate imput data to c++ vector(this is not optimal but I don't know how
   // to use pybind11::array_t)
   py::buffer_info buf_data = data.request(), buf_states = n_states.request();
