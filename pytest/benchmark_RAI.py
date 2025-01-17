@@ -178,6 +178,7 @@ def macroinstruction(f):
     #         )  # C++ RAI + search neighbor
     do_orientation_A2 = True
     DP = 15
+    print("do C++ RAI + orientation A2 + DP + search_neighbor")
     f.write("\n")
     for data_type in data_types:
         for sample_size in sample_sizes:
@@ -206,6 +207,7 @@ def macroinstruction(f):
             )  # C++ RAI + orientation A2 + DP + search_neighbor
     DP = 0
     parallel = 1
+    print("do C++ RAI + orientation A2 + parallel + search_neighbor")
     f.write("\n")
     for data_type in data_types:
         for sample_size in sample_sizes:
@@ -233,6 +235,7 @@ def macroinstruction(f):
                 f,
             )  # C++ RAI + orientation A2 + parallel + search_neighbor
     DP = 15
+    print("do C++ RAI + orientation A2 + DP + parallel + search_neighbor")
     f.write("\n")
     for data_type in data_types:
         for sample_size in sample_sizes:
