@@ -5,6 +5,7 @@ FROM ${BASE_IMAGE}
 RUN apt update && apt install -y \
     build-essential \
     cmake \
+    ccache \
     git \
     clang-format \
     doxygen \
