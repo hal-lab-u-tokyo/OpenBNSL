@@ -31,6 +31,7 @@ class DataframeWrapper {
   std::vector<std::vector<std::string>> val_idx2str;
   std::vector<std::map<std::string, dtype>> val_str2idx;
 
+  std::vector<size_t> num_of_values;
   std::vector<std::vector<dtype>>
       data_col_idx;  // [num_of_column][num_of_datapoint]
   std::vector<std::vector<dtype>>

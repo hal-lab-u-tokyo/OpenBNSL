@@ -1,4 +1,4 @@
-
+#pragma once
 #include <boost/multiprecision/cpp_int.hpp>
 namespace mp = boost::multiprecision;
 
