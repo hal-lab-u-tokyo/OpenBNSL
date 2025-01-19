@@ -50,6 +50,12 @@ DataframeWrapper::DataframeWrapper(const py::object& dataframe) {
     }
   }
 
+  // manage the num_of_values
+  num_of_values.resize(num_of_vars);
+  for (size_t i = 0; i < num_of_vars; i++) {
+    num_of_values[i] = val_idx2str[i].size();
+  }
+
   // manage the data_col_idx
   data_col_idx.resize(num_of_vars);
   for (size_t i = 0; i < num_of_vars; i++) {

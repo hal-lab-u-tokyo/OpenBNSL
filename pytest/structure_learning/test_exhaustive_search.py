@@ -12,21 +12,21 @@ from modules.structural_distance import structural_errors, PDAG2CPDAG
 
 
 @pytest.mark.parametrize(
-    "model_name, sample_size, seed",
+    "model_name, score_type, sample_size, seed",
     [
-        ("cancer", int(1e5), 0),  # 5 nodes
-        ("asia", int(1e5), 0),  # 8 nodes
-        ("child", int(1e5), 0),  # 20 nodes
+        ("cancer", openbnsl.score.BDeu(1.0), int(1e5), 0),  # 5 nodes
+        ("asia", openbnsl.score.BDeu(1.0), int(1e5), 0),  # 8 nodes
+        ("child", openbnsl.score.BDeu(1.0), int(1e5), 0),  # 20 nodes
     ],
 )
-def test_exhaustive_search(model_name, sample_size, seed):
+def test_exhaustive_search(model_name, score_type, sample_size, seed):
 
     model_original = get_example_model(model_name)
     samples = model_original.simulate(sample_size, seed=seed)
     samples = samples[sorted(samples.columns)]
 
-    df_wrapper = openbnsl.DataframeWrapper(samples)
-    ndarray = openbnsl.exhaustive_search(df_wrapper, max_parents=3)
+    df_wrapper = openbnsl.base.DataframeWrapper(samples)
+    ndarray = openbnsl.exhaustive_search(df_wrapper, score_type, max_parents=3)
 
     # Convert ndarray to PDAG
     model_estimated = PDAG()

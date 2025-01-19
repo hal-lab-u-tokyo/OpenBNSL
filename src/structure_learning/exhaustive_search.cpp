@@ -3,12 +3,14 @@
 #include <iostream>
 
 #include "base/all_dims_cache.h"
+#include "score/local_score.h"
 #include "utils/comb2vec.h"
 #include "utils/next_combination.h"
 
 #define varset_t uint64_t  // number of variables <= 64
 
 py::array_t<bool> exhaustive_search(const DataframeWrapper& df,
+                                    const ScoreType& score_type,
                                     int max_parents) {
   if (max_parents < 0 || max_parents > (int)df.num_of_vars - 1)
     throw std::invalid_argument("max_parents must be in [0, num_of_vars-1]");
@@ -56,42 +58,10 @@ py::array_t<bool> exhaustive_search(const DataframeWrapper& df,
         auto child_var = varset_vec[child_idx];
         auto parents_varset_int = varset_int - bit_masks[child_var];
 
-        double ls = 0;
-        if (calc_ls) {
-          size_t outer_size = 1, child_size = 1, inner_size = 1;
-          for (const auto& var : varset_vec) {
-            if (var < child_var) {
-              outer_size *= df.val_idx2str[var].size();
-            } else if (var == child_var) {
-              child_size = df.val_idx2str[var].size();
-            } else {  // var > child_var
-              inner_size *= df.val_idx2str[var].size();
-            }
-          }
-          assert(outer_size * child_size * inner_size == freq_tbl.size());
-
-          double alpha = 1.0;
-          double a_ij = alpha / (outer_size * inner_size);
-          double a_ijk = alpha / (outer_size * child_size * inner_size);
-          // size_t inner_idx = 0, outer_idx = 0;
-          size_t inner_idx = 0;
-          for (size_t i = 0; i < outer_size; i++) {
-            std::vector<int> N_ij(inner_size, 0);
-            for (size_t j = 0; j < child_size; j++) {
-              for (size_t k = 0; k < inner_size; k++) {
-                auto N_ijk = freq_tbl[inner_idx++];
-                ls -= std::lgamma(a_ijk) - std::lgamma(N_ijk + a_ijk);
-                N_ij[k] += N_ijk;
-              }
-            }
-            for (size_t k = 0; k < inner_size; k++) {
-              ls += std::lgamma(a_ij) - std::lgamma(N_ij[k] + a_ij);
-            }
-          }
-
-        } else {
-          ls = -std::numeric_limits<double>::infinity();
-        }
+        double ls = calc_ls ? calculate_local_score<double>(
+                                  child_var, varset_vec, df.num_of_values,
+                                  freq_tbl, score_type)
+                            : -std::numeric_limits<double>::infinity();
 
         double best_ls = ls;
         varset_t best_ps = parents_varset_int;

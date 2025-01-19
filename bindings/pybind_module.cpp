@@ -3,9 +3,11 @@
 
 #include "base/PDAG.h"
 #include "base/dataframe_wrapper.h"
+#include "score/score_type.h"
 #include "structure_learning/PC.h"
 #include "structure_learning/RAI.h"
 #include "structure_learning/exhaustive_search.h"
+#include "structure_learning/simulated_annealing.h"
 #include "template.h"
 namespace py = pybind11;
 
@@ -19,11 +21,27 @@ PYBIND11_MODULE(openbnsl, m) {
   m.def("RAI", &RAI, "Run RAI algorithm");
   m.def("PC", &PC, "Run PC algorithm");
 
-  py::class_<DataframeWrapper>(m, "DataframeWrapper")
-      .def(py::init<const py::object&>());
   m.def("exhaustive_search", &exhaustive_search,
-        "Run exhaustive search algorithm", py::arg("df"),
+        "Run exhaustive search algorithm", py::arg("df"), py::arg("score_type"),
         py::arg("max_parents"));
+
+  auto submodule_score = m.def_submodule("score", "Score submodule");
+  py::class_<BDeu>(submodule_score, "BDeu")
+      .def(py::init<double>(), py::arg("ess") = 1.0)
+      .def("__repr__", [](const BDeu& bdeu) {
+        return "BDeu(" + std::to_string(bdeu.ess) + ")";
+      });
+  py::class_<K2>(submodule_score, "K2")
+      .def(py::init<>())
+      .def("__repr__", [](const K2& k2) { return "K2()"; });
+
+  auto submodule_base = m.def_submodule("base", "Base submodule");
+  py::class_<DataframeWrapper>(submodule_base, "DataframeWrapper")
+      .def(py::init<const py::object&>())
+      .def("__repr__", [](const DataframeWrapper& df) {
+        return "DataframeWrapper with " + std::to_string(df.num_of_datapoints) +
+               " samples of " + std::to_string(df.num_of_vars) + " variables";
+      });
 
 #ifdef USE_CUDA
   m.attr("cuda_enabled") = true;
