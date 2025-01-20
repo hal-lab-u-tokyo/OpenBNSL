@@ -110,7 +110,7 @@ def macroinstruction(f):
         "sachs",
         "child",
         "alarm",
-        # "win95pts",
+        #  "win95pts",
     ]  # "win95"はやらない
     sample_sizes = [10000, 20000, 50000, 100000, 200000, 1000000, 2000000, 10000000]
     parallel = 0
