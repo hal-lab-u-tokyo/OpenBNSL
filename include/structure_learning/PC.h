@@ -4,4 +4,5 @@
 #include <pybind11/stl.h>
 namespace py = pybind11;
 
-py::array_t<bool> PC(py::array_t<int> data, py::array_t<int> n_states, double ESS);
+py::array_t<bool> PC(py::array_t<int> data, py::array_t<int> n_states,
+                     double ESS);

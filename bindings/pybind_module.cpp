@@ -19,6 +19,8 @@ PYBIND11_MODULE(openbnsl, m) {
   m.def("matmul_openmp", &matmul_openmp,
         "Multiply two NumPy arrays with OpenMP");
   m.def("RAI", &RAI, "Run RAI algorithm");
+  // m.def("str2int_numpy", &str2int_numpy, "translate each string element of
+  // numpy array into int element");
   m.def("PC", &PC, "Run PC algorithm");
 
   m.def("exhaustive_search", &exhaustive_search,
