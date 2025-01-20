@@ -110,7 +110,7 @@ def macroinstruction(f):
         "sachs",
         "child",
         "alarm",
-        "win95pts",
+        # "win95pts",
     ]  # "win95"はやらない
     sample_sizes = [10000, 20000, 50000, 100000, 200000, 1000000, 2000000, 10000000]
     parallel = 0
@@ -129,9 +129,9 @@ def macroinstruction(f):
                 or (data_type == "alarm" and sample_size == 1000000)
                 or (data_type == "alarm" and sample_size == 10000000)
                 or (data_type == "survey" and sample_size == 2000000)
+                or (data_type == "sachs" and sample_size == 20000)
+                or (data_type == "sachs" and sample_size == 100000)
                 or (data_type == "sachs" and sample_size == 2000000)
-                or (data_type == "sachs" and sample_size == 1000000)
-                or (data_type == "sachs" and sample_size == 10000000)
                 or (data_type == "child" and sample_size == 1000000)
                 or (data_type == "child" and sample_size == 10000000)
                 or (data_type == "win95pts" and sample_size == 20000)
