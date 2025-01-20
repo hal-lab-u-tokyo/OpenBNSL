@@ -102,7 +102,7 @@ def compare_algorithm(data_type, sample_size, max_iter, f):
 
 
 def macroinstruction(f):
-    max_iter = 1
+    max_iter = 10
     data_types = [
         "cancer",
         "earthquake",
