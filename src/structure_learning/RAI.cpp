@@ -20,11 +20,6 @@ using namespace std;
 // Gall.at(i).at(j)==1 means there is an edge i -> j
 // c++ 17 を仮定]
 
-int n_citest = 0;
-int n_citest_DP = 0;
-int n_DP = 0;
-bool sep[200][200][200] = {0};
-bool sep2[200][200] = {0};
 
 void dfs(int now, vector<vector<int>> &G, vector<bool> &visited,
          vector<int> &order) {
@@ -956,7 +951,7 @@ float natori_dependent_score(const vector<vector<uint8_t>> &data, int &node_x,
 
 bool ci_test(const vector<vector<uint8_t>> &data, int &node_x, int &node_y,
              vector<int> &Z, vector<int> &n_states, float &ESS, int &parallel,
-             bool &count_DP_flag, vector<int> &count_DP, vector<int> &Gs) {
+             bool &count_DP_flag, vector<int> &count_DP, vector<int> &Gs, int &n_citest, int &n_citest_DP, vector<vector<vector<bool>>> &sep, vector<vector<bool>> &sep2) {
   // CI test for X _|_ Y | Z
   float independent_score = 0.0;
   float dependent_score = 0.0;
@@ -973,7 +968,7 @@ bool ci_test(const vector<vector<uint8_t>> &data, int &node_x, int &node_y,
     n_citest += 1;
   }
   if (independent_score > dependent_score) {
-    for (int i = 0; i < (int)data.size(); i++) {
+    for (int i = 0; i < (int)data.at(0).size(); i++) {
       bool temp_flag = true;
       for (int j = 0; j < (int)Z.size(); j++) {
         if (i == Z.at(j)) {
@@ -982,12 +977,12 @@ bool ci_test(const vector<vector<uint8_t>> &data, int &node_x, int &node_y,
         }
       }
       if (temp_flag) {
-        sep[node_x][node_y][i] = 1;
-        sep[node_y][node_x][i] = 1;
+        sep.at(node_x).at(node_y).at(i) = 1;
+        sep.at(node_y).at(node_x).at(i) = 1;
       }
     }
-    sep2[node_y][node_x] = 1;
-    sep2[node_x][node_y] = 1;
+    sep2.at(node_y).at(node_x) = 1;
+    sep2.at(node_x).at(node_y) = 1;
     // cout<< "CI independent:" <<node_x<<" _|_"<<node_y<<" |
     // "<<independent_score<<">"<<dependent_score<< endl;
     return true;
@@ -1446,7 +1441,7 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs,
                     vector<vector<bool>> &deletededges,
                     const vector<vector<uint8_t>> &data, vector<int> &n_states,
                     float &ESS, int &parallel, bool &count_DP_flag,
-                    vector<int> &count_DP) {
+                    vector<int> &count_DP, vector<vector<vector<bool>>> &sep, vector<vector<bool>> &sep2) {
   /*
       orient edges in a PDAG to a maximally oriented graph.
       orient rules are based on rule 1~3 from Meek,C.:Causal Inference and
@@ -1485,7 +1480,7 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs,
           // n_states)){ if(ci_test_for_vstructure_detect_by_beyesfactor(data,
           // X, Y, Z, n_states)){ if(ci_test(data, X, Y, v, n_states, ESS,
           // parallel, count_DP_flag, count_DP, Gs)){
-          if (sep[X][Y][Z] && sep2[X][Y]) {
+          if (sep.at(X).at(Y).at(Z) && sep2.at(X).at(Y)) {
             vstructuredetected.at(X).at(Z) = true;
             vstructuredetected.at(Y).at(Z) = true;
             // cout<< "V-structure found:" <<X<<"->"<<Z<<"<-"<<Y<< endl;
@@ -1558,7 +1553,7 @@ void recursive_search(const vector<vector<uint8_t>> &data, PDAG &Gall,
                       vector<int> Gs, vector<int> &Gex, int N,
                       vector<int> &n_states, float &ESS, int &parallel,
                       int &threshold_DP, bool &search_neighbor,
-                      bool &do_orientation_A2) {
+                      bool &do_orientation_A2, vector<vector<vector<bool>>> &sep, vector<vector<bool>> &sep2, int &n_citest, int &n_citest_DP, int &n_DP) {
   int n_node = data.at(0).size();
   vector<int> count_DP;
   bool count_DP_flag = false;
@@ -1608,7 +1603,7 @@ void recursive_search(const vector<vector<uint8_t>> &data, PDAG &Gall,
               }
               if (!deletededges.at(node_x).at(node_y)) {
                 if (ci_test(data, node_x, node_y, selected_z, n_states, ESS,
-                            parallel, count_DP_flag, count_DP, Gs)) {
+                            parallel, count_DP_flag, count_DP, Gs, n_citest, n_citest_DP, sep, sep2)) {
                   Gall.remove_edge(node_x, node_y);
                   deletededges.at(node_x).at(node_y) = true;
                   deletededges.at(node_y).at(node_x) = true;
@@ -1647,7 +1642,7 @@ void recursive_search(const vector<vector<uint8_t>> &data, PDAG &Gall,
         if (N == 0) {
           vector<int> S;
           if (ci_test(data, node_x, node_y, S, n_states, ESS, parallel,
-                      count_DP_flag, count_DP, Gs)) {
+                      count_DP_flag, count_DP, Gs, n_citest, n_citest_DP, sep, sep2)) {
             Gall.remove_edge(node_x, node_y);
             Gall.remove_edge(node_y, node_x);
             deletededges.at(node_x).at(node_y) = true;
@@ -1676,7 +1671,7 @@ void recursive_search(const vector<vector<uint8_t>> &data, PDAG &Gall,
                 }
               }
               if (ci_test(data, node_x, node_y, selected_z, n_states, ESS,
-                          parallel, count_DP_flag, count_DP, Gs)) {
+                          parallel, count_DP_flag, count_DP, Gs, n_citest, n_citest_DP, sep, sep2)) {
                 Gall.remove_edge(node_x, node_y);
                 Gall.remove_edge(node_y, node_x);
                 deletededges.at(node_x).at(node_y) = true;
@@ -1694,7 +1689,7 @@ void recursive_search(const vector<vector<uint8_t>> &data, PDAG &Gall,
 
   // stage B2: orient edges in Gs using orientation rules R1~R3
   orientation_B2(Gall, Gs, deletededges, data, n_states, ESS, parallel,
-                 count_DP_flag, count_DP);
+                 count_DP_flag, count_DP, sep, sep2);
   // stage B3: Group the nodes having the lowest topological order into a
   // descendant substructure Gd
   vector<int> Gd;
@@ -1709,7 +1704,7 @@ void recursive_search(const vector<vector<uint8_t>> &data, PDAG &Gall,
     }
     recursive_search(data, Gall, g_ex_connection.at(i), Gex, N + 1, n_states,
                      ESS, parallel, threshold_DP, search_neighbor,
-                     do_orientation_A2);
+                     do_orientation_A2, sep, sep2, n_citest, n_citest_DP, n_DP);
   }
   sort(Gexd.begin(), Gexd.end());
   for (int i = 0; i < (int)Gexd.size(); i++) {
@@ -1727,7 +1722,7 @@ void recursive_search(const vector<vector<uint8_t>> &data, PDAG &Gall,
 
   // stage D:  Descendantsub-structure decomposition
   recursive_search(data, Gall, Gd, Gex, N + 1, n_states, ESS, parallel,
-                   threshold_DP, search_neighbor, do_orientation_A2);
+                   threshold_DP, search_neighbor, do_orientation_A2, sep, sep2, n_citest, n_citest_DP, n_DP);
   return;
 }
 
@@ -1735,17 +1730,13 @@ py::array_t<bool> RAI(py::array_t<uint8_t> data,
                       py::array_t<int> n_states,  // uint8_t
                       float ESS, int parallel, int threshold_DP,
                       bool search_neighbor, bool do_orientation_A2) {
-  n_citest = 0;
-  n_citest_DP = 0;
-  n_DP = 0;
-  for (int i = 0; i < 100; i++) {
-    for (int j = 0; j < 100; j++) {
-      for (int k = 0; k < 100; k++) {
-        sep[i][j][k] = false;
-      }
-      sep2[i][j] = false;
-    }
-  }
+  int n_citest = 0;
+  int n_citest_DP = 0;
+  int n_DP = 0;
+  int sep_size = 200;
+  vector<vector<vector<bool>>> sep(sep_size, vector<vector<bool>>(sep_size, vector<bool>(sep_size, false)));
+  vector<vector<bool>> sep2(sep_size, vector<bool>(sep_size, false));
+  
   // translate imput data to c++ vector(this is not optimal but I don't know how
   // to use pybind11::array_t)
   py::buffer_info buf_data = data.request(), buf_states = n_states.request();
@@ -1783,7 +1774,7 @@ py::array_t<bool> RAI(py::array_t<uint8_t> data,
   // vector<vector<string>> state_list = get_state_list(data);
 
   recursive_search(data_vec, Gall, Gs, Gex, 0, n_states_vec, ESS, parallel,
-                   threshold_DP, search_neighbor, do_orientation_A2);
+                   threshold_DP, search_neighbor, do_orientation_A2, sep, sep2, n_citest, n_citest_DP, n_DP);
 
   // translate Gall to py::array_t (this is not optimal but I don't know how to
   // use pybind11::array_t)

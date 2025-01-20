@@ -27,7 +27,7 @@ def RAIEstimator_cpp(data, ESS, parallel = 1, threshold_DP = 0, search_neighbor 
                 statelist[i].append(t_data[j][i])
 
     #translate str matrix into int matrix and list of column names into list of int //重い
-    data_int = np.zeros(t_data.shape, dtype = np.int8)
+    data_int = np.zeros(t_data.shape, dtype = np.uint8)
     for i in range(t_data.shape[0]):
         for j in range(len(columns)):
             data_int[i][j] = statelist[j].index(t_data[i][j])
@@ -58,7 +58,6 @@ def RAIEstimator_cpp(data, ESS, parallel = 1, threshold_DP = 0, search_neighbor 
     ansmat = openbnsl.RAI(data_int, n_states, ESS, parallel, threshold_DP, search_neighbor, do_orientation_A2)
     calc_time2 += time.perf_counter() - t2
     #print(f"shorttime: {calc_time2}")
-
     #print(ansmat)
     G = PDAG()
     G.add_nodes_from(columns)
