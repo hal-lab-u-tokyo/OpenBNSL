@@ -86,7 +86,7 @@ def test_benchmark(
             calc_time += time.time() - t
         best_model_compare = PDAG2CPDAG(best_model)
         # show(best_model)
-        show(best_model_compare)
+        #show(best_model_compare)
         # show(comparemodel)
         errors = structural_errors(comparemodel, best_model_compare)
         print(
@@ -133,16 +133,16 @@ def arg_parser():
     parser.add_argument(
         "--estimate_type", type=str, default="RAI_cpp", help="Estimator type"
     )
-    parser.add_argument("--data_type", type=str, default="alarm", help="Data type")
-    parser.add_argument("--sample_size", type=int, default=20000, help="Sample size")
+    parser.add_argument("--data_type", type=str, default="sachs", help="Data type")
+    parser.add_argument("--sample_size", type=int, default=5000000, help="Sample size")
     parser.add_argument(
         "--structure_score", type=str, default="BIC", help="Structure score"
     )
     parser.add_argument("--ess", type=float, default=5, help="ESS")
-    parser.add_argument("--max_iter", type=int, default=1, help="Number of iterations")
+    parser.add_argument("--max_iter", type=int, default=10, help="Number of iterations")
     parser.add_argument("--parallel", type=int, default=1, help="parallel")
     parser.add_argument("--DP_threshold", type=int, default=15, help="DP_threshold")
-    parser.add_argument("--search_neighbor", type=bool, default=False, help="search_neighbor")
+    parser.add_argument("--search_neighbor", type=bool, default=True, help="search_neighbor")
     return parser.parse_args()
 
 

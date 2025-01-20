@@ -77,9 +77,32 @@ def do_benchmark(
     f.write(f", time: {calc_time}\n")
     return
 
+def compare_algorithm(data_type, sample_size, max_iter, f):
+    parallel = 0
+    DP = 0
+    search_neighbor = False
+    do_orientation_A2 = False
+    do_benchmark(data_type, sample_size, max_iter, parallel, DP, search_neighbor, do_orientation_A2, f) # C++ RAI
+    do_orientation_A2 = True
+    do_benchmark(data_type, sample_size, max_iter, parallel, DP, search_neighbor, do_orientation_A2, f) # C++ RAI + orientation A2
+    do_orientation_A2 = False
+    search_neighbor = True
+    do_benchmark(data_type, sample_size, max_iter, parallel, DP, search_neighbor, do_orientation_A2, f) # C++ RAI + search neighbor
+    do_orientation_A2 = True
+    do_benchmark(data_type, sample_size, max_iter, parallel, DP, search_neighbor, do_orientation_A2, f) # C++ RAI + orientation A2 + search neighbor
+    DP = 1
+    do_benchmark(data_type, sample_size, max_iter, parallel, DP, search_neighbor, do_orientation_A2, f) # C++ RAI + orientation A2 + search neighbor + DP
+    DP = 0
+    parallel = 1
+    do_benchmark(data_type, sample_size, max_iter, parallel, DP, search_neighbor, do_orientation_A2, f) # C++ RAI + orientation A2 + search neighbor + parallel
+    DP = 1
+    do_benchmark(data_type, sample_size, max_iter, parallel, DP, search_neighbor, do_orientation_A2, f) # C++ RAI + orientation A2 + search neighbor + DP + parallel
+    return
+
+
 
 def macroinstruction(f):
-    max_iter = 30
+    max_iter = 1
     data_types = [
         "cancer",
         "earthquake",
@@ -87,181 +110,39 @@ def macroinstruction(f):
         "sachs",
         "child",
         "alarm",
+        "win95pts",
     ]  # "win95"はやらない
-    sample_sizes = [10000, 20000, 50000, 100000, 200000, 1000000, 2000000]
+    sample_sizes = [10000, 20000, 50000, 100000, 200000, 1000000, 2000000, 10000000]
     parallel = 0
     DP = 0
     search_neighbor = False
     do_orientation_A2 = True
     f.write("\n")
-    # for data_type in data_types:
-    #     for sample_size in sample_sizes:
-    #         if (
-    #             (data_type == "cancer" and sample_size == 50000)
-    #             or (data_type == "cancer" and sample_size == 100000)
-    #             or (data_type == "alarm" and sample_size == 50000)
-    #             or (data_type == "alarm" and sample_size == 100000)
-    #             or (data_type == "alarm" and sample_size == 200000)
-    #             or (data_type == "alarm" and sample_size == 1000000)
-    #             or (data_type == "survey" and sample_size == 2000000)
-    #             or (data_type == "survey" and sample_size == 1000000)
-    #             or (data_type == "sachs" and sample_size == 2000000)
-    #             or (data_type == "sachs" and sample_size == 1000000)
-    #         ):
-    #             continue
-    #         do_benchmark(
-    #             data_type,
-    #             sample_size,
-    #             max_iter,
-    #             parallel,
-    #             DP,
-    #             search_neighbor,
-    #             do_orientation_A2,
-    #             f,
-    #         )  # C++ RAI
+    for data_type in data_types:
+        for sample_size in sample_sizes:
+            if (
+                (data_type == "cancer" and sample_size == 50000)
+                or (data_type == "cancer" and sample_size == 100000)
+                or (data_type == "alarm" and sample_size == 50000)
+                or (data_type == "alarm" and sample_size == 100000)
+                or (data_type == "alarm" and sample_size == 20000)
+                or (data_type == "alarm" and sample_size == 1000000)
+                or (data_type == "alarm" and sample_size == 10000000)
+                or (data_type == "survey" and sample_size == 2000000)
+                or (data_type == "sachs" and sample_size == 2000000)
+                or (data_type == "sachs" and sample_size == 1000000)
+                or (data_type == "sachs" and sample_size == 10000000)
+                or (data_type == "child" and sample_size == 1000000)
+                or (data_type == "child" and sample_size == 10000000)
+                or (data_type == "win95pts" and sample_size == 20000)
+                or (data_type == "win95pts" and sample_size == 100000)
+                or (data_type == "win95pts" and sample_size == 1000000)
+                or (data_type == "win95pts" and sample_size == 2000000)
+                or (data_type == "win95pts" and sample_size == 10000000)
+            ):
+                continue
+            compare_algorithm(data_type, sample_size, max_iter, f)
 
-    do_orientation_A2 = True
-    # f.write("\n")
-    # for data_type in data_types:
-    #     for sample_size in sample_sizes:
-    #         if (
-    #             (data_type == "cancer" and sample_size == 50000)
-    #             or (data_type == "cancer" and sample_size == 100000)
-    #             or (data_type == "alarm" and sample_size == 50000)
-    #             or (data_type == "alarm" and sample_size == 100000)
-    #             or (data_type == "alarm" and sample_size == 200000)
-    #             or (data_type == "alarm" and sample_size == 1000000)
-    #             or (data_type == "survey" and sample_size == 2000000)
-    #             or (data_type == "survey" and sample_size == 1000000)
-    #             or (data_type == "sachs" and sample_size == 2000000)
-    #             or (data_type == "sachs" and sample_size == 1000000)
-    #         ):
-    #             continue
-    #         do_benchmark(
-    #             data_type,
-    #             sample_size,
-    #             max_iter,
-    #             parallel,
-    #             DP,
-    #             search_neighbor,
-    #             do_orientation_A2,
-    #             f,
-    #         )  # C++ RAI + orientation A2
-
-    do_orientation_A2 = False
-    search_neighbor = True
-    # f.write("\n")
-    # for data_type in data_types:
-    #     for sample_size in sample_sizes:
-    #         if (
-    #             (data_type == "cancer" and sample_size == 50000)
-    #             or (data_type == "cancer" and sample_size == 100000)
-    #             or (data_type == "alarm" and sample_size == 50000)
-    #             or (data_type == "alarm" and sample_size == 100000)
-    #             or (data_type == "alarm" and sample_size == 200000)
-    #             or (data_type == "alarm" and sample_size == 1000000)
-    #             or (data_type == "survey" and sample_size == 2000000)
-    #             or (data_type == "survey" and sample_size == 1000000)
-    #             or (data_type == "sachs" and sample_size == 2000000)
-    #             or (data_type == "sachs" and sample_size == 1000000)
-    #         ):
-    #             continue
-    #         do_benchmark(
-    #             data_type,
-    #             sample_size,
-    #             max_iter,
-    #             parallel,
-    #             DP,
-    #             search_neighbor,
-    #             do_orientation_A2,
-    #             f,
-    #         )  # C++ RAI + search neighbor
-    do_orientation_A2 = True
-    DP = 15
-    print("do C++ RAI + orientation A2 + DP + search_neighbor")
-    f.write("\n")
-    for data_type in data_types:
-        for sample_size in sample_sizes:
-            if (
-                (data_type == "cancer" and sample_size == 50000)
-                or (data_type == "cancer" and sample_size == 100000)
-                or (data_type == "alarm" and sample_size == 50000)
-                or (data_type == "alarm" and sample_size == 100000)
-                or (data_type == "alarm" and sample_size == 200000)
-                or (data_type == "alarm" and sample_size == 1000000)
-                or (data_type == "survey" and sample_size == 2000000)
-                or (data_type == "survey" and sample_size == 1000000)
-                or (data_type == "sachs" and sample_size == 2000000)
-                or (data_type == "sachs" and sample_size == 1000000)
-            ):
-                continue
-            do_benchmark(
-                data_type,
-                sample_size,
-                max_iter,
-                parallel,
-                DP,
-                search_neighbor,
-                do_orientation_A2,
-                f,
-            )  # C++ RAI + orientation A2 + DP + search_neighbor
-    DP = 0
-    parallel = 1
-    print("do C++ RAI + orientation A2 + parallel + search_neighbor")
-    f.write("\n")
-    for data_type in data_types:
-        for sample_size in sample_sizes:
-            if (
-                (data_type == "cancer" and sample_size == 50000)
-                or (data_type == "cancer" and sample_size == 100000)
-                or (data_type == "alarm" and sample_size == 50000)
-                or (data_type == "alarm" and sample_size == 100000)
-                or (data_type == "alarm" and sample_size == 200000)
-                or (data_type == "alarm" and sample_size == 1000000)
-                or (data_type == "survey" and sample_size == 2000000)
-                or (data_type == "survey" and sample_size == 1000000)
-                or (data_type == "sachs" and sample_size == 2000000)
-                or (data_type == "sachs" and sample_size == 1000000)
-            ):
-                continue
-            do_benchmark(
-                data_type,
-                sample_size,
-                max_iter,
-                parallel,
-                DP,
-                search_neighbor,
-                do_orientation_A2,
-                f,
-            )  # C++ RAI + orientation A2 + parallel + search_neighbor
-    DP = 15
-    print("do C++ RAI + orientation A2 + DP + parallel + search_neighbor")
-    f.write("\n")
-    for data_type in data_types:
-        for sample_size in sample_sizes:
-            if (
-                (data_type == "cancer" and sample_size == 50000)
-                or (data_type == "cancer" and sample_size == 100000)
-                or (data_type == "alarm" and sample_size == 50000)
-                or (data_type == "alarm" and sample_size == 100000)
-                or (data_type == "alarm" and sample_size == 200000)
-                or (data_type == "alarm" and sample_size == 1000000)
-                or (data_type == "survey" and sample_size == 2000000)
-                or (data_type == "survey" and sample_size == 1000000)
-                or (data_type == "sachs" and sample_size == 2000000)
-                or (data_type == "sachs" and sample_size == 1000000)
-            ):
-                continue
-            do_benchmark(
-                data_type,
-                sample_size,
-                max_iter,
-                parallel,
-                DP,
-                search_neighbor,
-                do_orientation_A2,
-                f,
-            )  # C++ RAI + orientation A2 + DP + parallel + search_neighbor
 
     return
 
