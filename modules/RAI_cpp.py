@@ -54,9 +54,9 @@ def RAIEstimator_cpp(data, ESS, parallel = 1, threshold_DP = 0, search_neighbor 
 
 
     calc_time2 = 0
-    t2 = time.time()
+    t2 = time.perf_counter()
     ansmat = openbnsl.RAI(data_int, n_states, ESS, parallel, threshold_DP, search_neighbor, do_orientation_A2)
-    calc_time2 += time.time() - t2
+    calc_time2 += time.perf_counter() - t2
     #print(f"shorttime: {calc_time2}")
 
     #print(ansmat)
