@@ -3,7 +3,7 @@
 TARGET_DIRS=("src" "include" "gtest" "bindings")
 FILE_EXTENSIONS=("*.c" "*.cpp" "*.cu" "*.h" "*.hpp")
 
-PYTHON_TARGET_DIRS=("scripts" "pytest")
+PYTHON_TARGET_DIRS=("scripts" "pytest" "modules")
 PYTHON_EXTENSION="*.py"
 
 CHECK_MODE=false
