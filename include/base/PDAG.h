@@ -36,7 +36,7 @@ class PDAGwithAdjMat {
    * This method checks the adjacency matrix to determine if there
    * is a directed edge from `from` to `to`.
    */
-  bool has_edge(int from, int to);
+  bool has_edge(size_t from, size_t to);
 
   /**
    * @brief Adds a directed edge between two nodes.
@@ -47,7 +47,7 @@ class PDAGwithAdjMat {
    * This method sets the corresponding bit in the adjacency matrix
    * to indicate the presence of a directed edge from `from` to `to`.
    */
-  void add_edge(int from, int to);
+  void add_edge(size_t from, size_t to);
 
   /**
    * @brief Removes a directed edge between two nodes.
@@ -58,7 +58,7 @@ class PDAGwithAdjMat {
    * This method clears the corresponding bit in the adjacency matrix
    * to indicate the removal of a directed edge from `from` to `to`.
    */
-  void remove_edge(int from, int to);
+  void remove_edge(size_t from, size_t to);
 
   /**
    * @brief Converts the graph into an adjacency list representation.

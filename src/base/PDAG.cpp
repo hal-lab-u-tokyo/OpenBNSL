@@ -26,20 +26,20 @@ PDAGwithAdjMat::PDAGwithAdjMat(size_t n) {
   this->adj_mat.resize((n * n + 63) / 64, 1);
 }
 
-bool PDAGwithAdjMat::has_edge(int from, int to) {
-  int idx = from * this->n + to;
+bool PDAGwithAdjMat::has_edge(size_t from, size_t to) {
+  size_t idx = from * this->n + to;
   return (this->adj_mat[idx / 64] >> (idx % 64)) & 1;
 }
 
-void PDAGwithAdjMat::add_edge(int from, int to) {
-  int idx = from * this->n + to;
+void PDAGwithAdjMat::add_edge(size_t from, size_t to) {
+  size_t idx = from * this->n + to;
   if (this->adj_mat[idx / 64] >> (idx % 64) & 1)
     throw std::runtime_error("Edge already exists");
   this->adj_mat[idx / 64] |= 1 << (idx % 64);
 }
 
-void PDAGwithAdjMat::remove_edge(int from, int to) {
-  int idx = from * this->n + to;
+void PDAGwithAdjMat::remove_edge(size_t from, size_t to) {
+  size_t idx = from * this->n + to;
   if (!(this->adj_mat[idx / 64] >> (idx % 64) & 1))
     throw std::runtime_error("Edge does not exist");
   this->adj_mat[idx / 64] &= ~(1 << (idx % 64));
@@ -47,9 +47,9 @@ void PDAGwithAdjMat::remove_edge(int from, int to) {
 
 std::unordered_map<int, std::vector<int>> PDAGwithAdjMat::get_adj_list() {
   std::unordered_map<int, std::vector<int>> _adj_list;
-  for (int i = 0; i < this->n; i++) {
+  for (size_t i = 0; i < this->n; i++) {
     std::vector<int> adj;
-    for (int j = 0; j < this->n; j++) {
+    for (size_t j = 0; j < this->n; j++) {
       if (this->has_edge(i, j)) {
         adj.push_back(j);
       }
