@@ -1730,12 +1730,7 @@ py::array_t<bool> RAI(py::array_t<uint8_t> data,
                       py::array_t<int> n_states,  // uint8_t
                       float ESS, int parallel, int threshold_DP,
                       bool search_neighbor, bool do_orientation_A2) {
-  int n_citest = 0;
-  int n_citest_DP = 0;
-  int n_DP = 0;
-  int sep_size = 200;
-  vector<vector<vector<bool>>> sep(sep_size, vector<vector<bool>>(sep_size, vector<bool>(sep_size, false)));
-  vector<vector<bool>> sep2(sep_size, vector<bool>(sep_size, false));
+
   
   // translate imput data to c++ vector(this is not optimal but I don't know how
   // to use pybind11::array_t)
@@ -1757,6 +1752,14 @@ py::array_t<bool> RAI(py::array_t<uint8_t> data,
   auto endg = py::array_t<bool>({n_node, n_node});
   py::buffer_info buf_endg = endg.request();
   bool *__restrict__ prt_endg = static_cast<bool *>(buf_endg.ptr);
+
+  int n_citest = 0;
+  int n_citest_DP = 0;
+  int n_DP = 0;
+  int sep_size = n_node;
+  vector<vector<vector<bool>>> sep(sep_size, vector<vector<bool>>(sep_size, vector<bool>(sep_size, false)));
+  vector<vector<bool>> sep2(sep_size, vector<bool>(sep_size, false));
+
 
   // initialize Gall, Gs, Gex
   PDAG Gall;
