@@ -204,7 +204,12 @@ def DAG2CPDAG(dag):
     for X in dag.nodes:
         if dag.in_degree(X) > 1:
             for Y in dag.predecessors(X): #for every parent of V-structure fix it
-                cpdag.remove_edge(X, Y)
+                for Z in dag.predecessors(X):
+                    if Y != Z and not dag.has_edge(Y, Z) and not dag.has_edge(Z, Y):
+                        if cpdag.has_edge(Y, X) and cpdag.has_edge(X, Y):
+                            cpdag.remove_edge(X, Y)
+                        if cpdag.has_edge(Z, X) and cpdag.has_edge(X, Z):
+                            cpdag.remove_edge(X, Z)
                 # vstructuredag.add_edge(Y, X)
     
     # for X in dag.nodes:
