@@ -161,7 +161,15 @@ def PDAG2CPDAG(pdag):
     for X in pdag_removed.nodes:
         if pdag_removed.in_degree(X) > 1:
             for Y in pdag_removed.predecessors(X): #for every parent of V-structure fix it
-                cpdag.remove_edge(X, Y)
+                for Z in pdag_removed.predecessors(X):
+                    if Y != Z and not pdag.has_edge(Y, Z) and not pdag.has_edge(Z, Y):
+                        if cpdag.has_edge(Y, X) and cpdag.has_edge(X, Y):
+                            cpdag.remove_edge(X, Y)
+                        if cpdag.has_edge(Z, X) and cpdag.has_edge(X, Z):
+                            cpdag.remove_edge(X, Z)
+                #cpdag.remove_edge(X, Y)
+
+
     #             vstructuredag.add_edge(Y, X)
     
     # for X in pdag.nodes:
