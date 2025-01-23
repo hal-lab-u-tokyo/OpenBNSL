@@ -105,40 +105,23 @@ def macroinstruction(f):
     max_iter = 10
     data_types = [
         "cancer",
-        "earthquake",
         "survey",
         "sachs",
         "child",
         "alarm",
-        #  "win95pts",
-    ]  # "win95"はやらない
+        #  "andes",
+    ] 
     sample_sizes = [10000, 20000, 50000, 100000, 200000, 1000000, 2000000, 10000000]
-    parallel = 0
-    DP = 0
-    search_neighbor = False
-    do_orientation_A2 = True
     f.write("\n")
     for data_type in data_types:
         for sample_size in sample_sizes:
             if (
-                (data_type == "cancer" and sample_size == 50000)
-                or (data_type == "cancer" and sample_size == 100000)
-                or (data_type == "alarm" and sample_size == 50000)
-                or (data_type == "alarm" and sample_size == 100000)
-                or (data_type == "alarm" and sample_size == 20000)
-                or (data_type == "alarm" and sample_size == 1000000)
-                or (data_type == "alarm" and sample_size == 10000000)
-                or (data_type == "survey" and sample_size == 2000000)
-                or (data_type == "sachs" and sample_size == 20000)
-                or (data_type == "sachs" and sample_size == 100000)
-                or (data_type == "sachs" and sample_size == 2000000)
-                or (data_type == "child" and sample_size == 1000000)
-                or (data_type == "child" and sample_size == 10000000)
-                or (data_type == "win95pts" and sample_size == 20000)
-                or (data_type == "win95pts" and sample_size == 100000)
-                or (data_type == "win95pts" and sample_size == 1000000)
-                or (data_type == "win95pts" and sample_size == 2000000)
-                or (data_type == "win95pts" and sample_size == 10000000)
+                (data_type == "cancer" and (sample_size == 50000 or sample_size == 20000 or sample_size == 100000 or sample_size == 1000000))
+                or (data_type == "survey" and (sample_size == 20000 or sample_size == 100000 or sample_size == 200000 or sample_size == 2000000))
+                or (data_type == "sachs" and (sample_size == 20000 or sample_size == 50000 or sample_size == 100000 or sample_size == 1000000 or sample_size == 2000000))
+                or (data_type == "child" and (sample_size == 20000 or sample_size == 50000 or sample_size == 100000 or sample_size == 1000000 or sample_size == 10000000))
+                or (data_type == "alarm" and (sample_size == 20000 or sample_size == 50000 or sample_size == 100000 or sample_size == 1000000 or sample_size == 10000000))
+                or (data_type == "andes" and (sample_size == 20000 or sample_size == 2000000 or sample_size == 100000 or sample_size == 1000000 or sample_size == 10000000))
             ):
                 continue
             compare_algorithm(data_type, sample_size, max_iter, f)
