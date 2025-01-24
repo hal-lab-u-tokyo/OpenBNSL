@@ -25,7 +25,7 @@ from modules.CITests_fixed import NatoriScore
 @pytest.mark.parametrize(
     "data_type, sample_size, ess, max_iter, parallel, DP_threshold, search_neighbor, do_orientation_a2",
     [
-        ("cancer", 1000000, -1, 1, 1, 1, True, True),  # 5 nodes
+        ("earthquake", 100000, -1, 1, 1, 1, True, True),  # 5 nodes
     ],
 )
 
@@ -47,7 +47,7 @@ def test_RAI_cpp(
         model = get_example_model(data_type)
         sampler = BayesianModelSampling(model)
         # sampler = GibbsSampling(model)
-        data = sampler.forward_sample(size=sample_size)
+        data = sampler.forward_sample(size=sample_size, seed = 111)
         # data = model.simulate(sample_size)
         # print(data.head())
         best_model, raitime = RAIEstimator_cpp(
