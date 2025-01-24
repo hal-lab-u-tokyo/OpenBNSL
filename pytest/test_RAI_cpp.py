@@ -29,7 +29,6 @@ from modules.CITests_fixed import NatoriScore
         ("sachs", 500000, -1, 1, 1, 1, True, True),  # 11 nodes
     ],
 )
-
 def test_RAI_cpp(
     data_type,
     sample_size,
@@ -48,7 +47,7 @@ def test_RAI_cpp(
         model = get_example_model(data_type)
         sampler = BayesianModelSampling(model)
         # sampler = GibbsSampling(model)
-        data = sampler.forward_sample(size=sample_size, seed = 111)
+        data = sampler.forward_sample(size=sample_size, seed=111)
         # data = model.simulate(sample_size)
         # print(data.head())
         best_model, raitime = RAIEstimator_cpp(
@@ -57,7 +56,7 @@ def test_RAI_cpp(
             parallel=parallel,
             threshold_DP=DP_threshold,
             search_neighbor=search_neighbor,
-            do_orientation_A2= do_orientation_a2,
+            do_orientation_A2=do_orientation_a2,
         )
         best_model_compare = PDAG2CPDAG(best_model)
         calc_time += raitime
@@ -77,6 +76,3 @@ def test_RAI_cpp(
     if ave_score[0] > 0:
         print(f"Model: {data_type}, [SHD, ME, EE, DE, ED, MD, RD]: {ave_score}")
     assert ave_score[0] == 0, f"SHD too high for {data_type}: {ave_score[0]}"
-
-
-
