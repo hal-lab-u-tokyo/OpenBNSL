@@ -26,6 +26,7 @@ from modules.CITests_fixed import NatoriScore
     "data_type, sample_size, ess, max_iter, parallel, DP_threshold, search_neighbor, do_orientation_a2",
     [
         ("earthquake", 100000, -1, 1, 1, 1, True, True),  # 5 nodes
+        ("sachs", 500000, -1, 1, 1, 1, True, True),  # 11 nodes
     ],
 )
 
