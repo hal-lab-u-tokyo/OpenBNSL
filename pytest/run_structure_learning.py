@@ -52,7 +52,7 @@ def test_benchmark(
     max_iter,
     parallel,
     DP_threshold,
-    search_neighbor
+    search_neighbor,
 ):
     calc_time = 0
     ave_score = [0, 0, 0, 0, 0, 0, 0]
@@ -66,7 +66,11 @@ def test_benchmark(
         t = time.time()
         if estimate_type == "RAI_cpp":
             best_model, shorttime = RAIEstimator_cpp(
-                data=data, ESS=ess, parallel=parallel, threshold_DP=DP_threshold, search_neighbor = search_neighbor
+                data=data,
+                ESS=ess,
+                parallel=parallel,
+                threshold_DP=DP_threshold,
+                search_neighbor=search_neighbor,
             )
         elif estimate_type == "PC_cpp":
             best_model = PCEstimator_cpp(data=data, ESS=ess)
@@ -86,7 +90,7 @@ def test_benchmark(
             calc_time += time.time() - t
         best_model_compare = PDAG2CPDAG(best_model)
         # show(best_model)
-        #show(best_model_compare)
+        # show(best_model_compare)
         # show(comparemodel)
         errors = structural_errors(comparemodel, best_model_compare)
         print(
@@ -133,16 +137,18 @@ def arg_parser():
     parser.add_argument(
         "--estimate_type", type=str, default="RAI_cpp", help="Estimator type"
     )
-    parser.add_argument("--data_type", type=str, default="sachs", help="Data type")
-    parser.add_argument("--sample_size", type=int, default=5000000, help="Sample size")
+    parser.add_argument("--data_type", type=str, default="child", help="Data type")
+    parser.add_argument("--sample_size", type=int, default=10000000, help="Sample size")
     parser.add_argument(
         "--structure_score", type=str, default="BIC", help="Structure score"
     )
     parser.add_argument("--ess", type=float, default=5, help="ESS")
-    parser.add_argument("--max_iter", type=int, default=10, help="Number of iterations")
+    parser.add_argument("--max_iter", type=int, default=1, help="Number of iterations")
     parser.add_argument("--parallel", type=int, default=1, help="parallel")
     parser.add_argument("--DP_threshold", type=int, default=15, help="DP_threshold")
-    parser.add_argument("--search_neighbor", type=bool, default=True, help="search_neighbor")
+    parser.add_argument(
+        "--search_neighbor", type=bool, default=True, help="search_neighbor"
+    )
     return parser.parse_args()
 
 
@@ -169,7 +175,7 @@ def main():
         max_iter,
         parallel,
         DP_threshold,
-        search_neighbor
+        search_neighbor,
     )
 
 
