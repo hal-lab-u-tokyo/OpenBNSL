@@ -6,6 +6,7 @@ using namespace std;
 #include <set>
 #include <stack>
 #include <string>
+#include <unordered_map>
 #include <vector>
 // the following includes are for permutation and combination algorithms
 #include <algorithm>
@@ -18,12 +19,9 @@ using namespace std;
 // input: data: np.ndarray,  shape: (n: number of variables, d: number of
 // samples) output: leard PDAG
 // Gall.at(i).at(j)==1 means there is an edge i -> j
-// c++ 17 を仮定]
-
 
 void dfs(int now, vector<vector<int>> &G, vector<bool> &visited,
          vector<int> &order) {
-  ////////////////cout<<now<<endl;
   visited[now] = true;
   for (int i = 0; i < (int)G.at(now).size(); i++) {
     if (!visited[G.at(now).at(i)]) {
@@ -35,7 +33,6 @@ void dfs(int now, vector<vector<int>> &G, vector<bool> &visited,
 
 void rdfs(int now, vector<vector<int>> &rG, vector<bool> &visited, int k,
           vector<int> &comp) {
-  ////////////////cout<<now<<endl;
   visited[now] = true;
   comp[now] = k;
   for (int i = 0; i < (int)rG.at(now).size(); i++) {
@@ -70,7 +67,7 @@ vector<int> SCC(vector<vector<int>> &G, vector<vector<int>> &rG) {
 }  // lowest topological order -> highest number in comp
 
 vector<vector<int>> adjmat2listmat(
-    vector<vector<bool>> &adjmat) {  //隣接行列表現2隣接リスト表現
+    vector<vector<bool>> &adjmat) {  //隣接行列表現to隣接リスト表現
   int n_node = adjmat.size();
   vector<vector<int>> listmat(n_node);
   for (int i = 0; i < n_node; i++) {
@@ -84,7 +81,7 @@ vector<vector<int>> adjmat2listmat(
 }
 
 vector<vector<int>> adjmat2listmat_reverse(
-    vector<vector<bool>> &adjmat) {  //隣接行列表現2隣接リスト表現(reversed)
+    vector<vector<bool>> &adjmat) {  //隣接行列表現to隣接リスト表現(reversed)
   int n_node = adjmat.size();
   vector<vector<int>> listmat(n_node);
   for (int i = 0; i < n_node; i++) {
@@ -138,14 +135,9 @@ bool next_combination(const T first, const T last,
 struct PDAG {
   vector<vector<bool>> g;
   // コンストラクタ
-  PDAG() {
-    ////////////////cout << "normal constructor called" << endl;
-  }
+  PDAG() {}
   // コピーコンストラクタ
-  PDAG(const PDAG &old) {
-    ////////////////cout << "copy constructor called" << endl;
-    g = old.g;
-  }
+  PDAG(const PDAG &old) { g = old.g; }
   // 代入演算子
   PDAG &operator=(const PDAG &a) {
     if (this != &a) g = a.g;
@@ -315,11 +307,8 @@ void order_grouping(PDAG &Gall, vector<int> &Gs, vector<int> &Gd,
     }
     order = order + 1;
   }
-  //////cout<< "comp:";
   for (int i = 0; i < (int)comp.size(); i++) {
-    //////cout<< comp.at(i)<<", ";
   }
-  //////cout<<endl;
 
   //子孫部分集合の分離
   //各クラスタについてその全てのノードが他のクラスタに子ノードを持たないもの(クラスタ内の一つのノードを持ってきたときに他のクラスタのどれか一つのノードへのpathがないもの)を判定
@@ -416,7 +405,7 @@ vector<vector<int>> state_count(const vector<vector<uint8_t>> &data,
                                 vector<int> &children, vector<int> &parents,
                                 vector<int> &n_states, int &parallel) {
   // if parallel == 0 then use single thread, if parallel == 1 then use multi
-  // thread(CPU), if parallel == 2 then use GPU
+  // thread(CPU), if parallel == 2 then use GPU (unimplemented)
   if (children.size() == 1) {
     int node_x = children.at(0);
     if (parents.empty()) {
@@ -610,12 +599,6 @@ vector<vector<int>> state_count(const vector<vector<uint8_t>> &data,
 
 vector<int> make_count_DP(const vector<vector<uint8_t>> &data, vector<int> &Gs,
                           vector<int> &n_states, int &parallel) {
-  // vector<int> parents_empty;
-  // vector<vector<int>> count_DP_a = state_count(data, Gs, parents_empty,
-  // n_states, parallel); vector<int> count_DP; for (int i = 0; i <
-  // count_DP_a.size(); i++){
-  //   count_DP.push_back(count_DP_a.at(i).at(0));
-  // }
   // Gs全ノードの頻度表を計算
   int x_len = 1;
   for (int i = 0; i < (int)Gs.size(); i++) {
@@ -643,35 +626,6 @@ vector<int> make_count_DP(const vector<vector<uint8_t>> &data, vector<int> &Gs,
       count_DP.at(j) += temp.at(j);
     }
   }
-
-  // x_len = 1;
-  // for (int i = 0; i < Gs.size(); i++) {
-  //   x_len = x_len * n_states.at(Gs.at(i));
-  // }
-  // for (int i= 0; i < x_len; i++){
-  //   count_DP.at(i) = 0;
-  // }
-  // yy = 0;
-  // #pragma omp parallel private(yy)
-  //   {
-  //     vector<int> temp(x_len, 0);
-  //     #pragma omp for
-  //       for(int i = 0; i < data.size(); i++) {
-  //         for (int j = 0; j < Gs.size(); j++) {
-  //           if (j == 0) {
-  //             yy = data.at(i).at(Gs.at(j));
-  //           }
-  //           else {
-  //             yy = n_states.at(Gs.at(j)) * yy + data.at(i).at(Gs.at(j));
-  //           }
-  //         }
-  //         temp.at(yy) += 1;
-  //       }
-  //     for(int j = 0; j < x_len; j++){
-  //       #pragma omp atomic
-  //       count_DP.at(j) += temp.at(j);
-  //     }
-  //   }
   return count_DP;
 }
 
@@ -828,20 +782,16 @@ float natori_independent_score(const vector<vector<uint8_t>> &data, int &node_x,
     int q = count.at(0).size();  // number of states of parents
     int r = count.size();        // number of states of node_x
     vector<float> n_ij(q, 0.0);
-    //////cout<<"independent_score_x"<<endl;
     for (int k = 0; k < r; k++) {
       for (int j = 0; j < q; j++) {
         n_ij.at(j) += count.at(k).at(j);
-        //////cout<<count.at(k).at(j)<<", ";
       }
-      //////cout<<endl;
     }
     for (int j = 0; j < q; j++) {    // for each state of parents
       for (int k = 0; k < r; k++) {  // for each state of node_x
         score += lgamma(alpha + count.at(k).at(j)) - lgamma(alpha);
         if (isnan(score)) {
-          //////////////cout <<ESS / (r * q) + count.at(k).at(j)<< "score is
-          /// nan" << endl;
+          cout << ESS / (r * q) + count.at(k).at(j) << "score is nan" << endl;
         }
       }
       score += lgamma(r * alpha) - lgamma(r * alpha + n_ij.at(j));
@@ -856,20 +806,16 @@ float natori_independent_score(const vector<vector<uint8_t>> &data, int &node_x,
     q = count2.at(0).size();  // number of states of parents
     r = count2.size();        // number of states of node_x
     vector<float> n_ij2(q, 0.0);
-    //////cout << "independent_score_y"<<endl;
     for (int k = 0; k < r; k++) {
       for (int j = 0; j < q; j++) {
         n_ij2.at(j) += count2.at(k).at(j);
-        //////cout<<count2.at(k).at(j)<<", ";
       }
-      //////cout<<endl;
     }
     for (int j = 0; j < q; j++) {    // for each state of parents
       for (int k = 0; k < r; k++) {  // for each state of node_x
         score += lgamma(alpha + count2.at(k).at(j)) - lgamma(alpha);
         if (isnan(score)) {
-          //////////////cout <<ESS / (r * q) + count2.at(k).at(j)<< "score is
-          /// nan" << endl;
+          cout << ESS / (r * q) + count2.at(k).at(j) << "score is nan" << endl;
         }
       }
       score += lgamma(r * alpha) - lgamma(r * alpha + n_ij2.at(j));
@@ -925,33 +871,29 @@ float natori_dependent_score(const vector<vector<uint8_t>> &data, int &node_x,
       alpha = ESS / (r * q);
     }
     vector<float> n_ij(q, 0.0);
-    //////cout<<"dependent_score"<<endl;
     for (int k = 0; k < r; k++) {
       for (int j = 0; j < q; j++) {
         n_ij.at(j) += count.at(k).at(j);
-        //////cout<<count.at(k).at(j)<<", ";
       }
-      //////cout<<endl;
     }
     for (int j = 0; j < q; j++) {    // for each state of parents
       for (int k = 0; k < r; k++) {  // for each state of node_x
         score += lgamma(alpha + count.at(k).at(j)) - lgamma(alpha);
         if (isnan(score)) {
-          //////////////cout <<ESS / (r * q) + count.at(k).at(j)<< "score is
-          /// nan" << endl;
+          cout << ESS / (r * q) + count.at(k).at(j) << "score is nan" << endl;
         }
       }
       score += lgamma(r * alpha) - lgamma(r * alpha + n_ij.at(j));
     }
   }
-  // calculate the score
-  // score = score * 1.000001;
   return score;
 }
 
 bool ci_test(const vector<vector<uint8_t>> &data, int &node_x, int &node_y,
              vector<int> &Z, vector<int> &n_states, float &ESS, int &parallel,
-             bool &count_DP_flag, vector<int> &count_DP, vector<int> &Gs, int &n_citest, int &n_citest_DP, vector<vector<vector<bool>>> &sep, vector<vector<bool>> &sep2) {
+             bool &count_DP_flag, vector<int> &count_DP, vector<int> &Gs,
+             int &n_citest, int &n_citest_DP, vector<vector<vector<bool>>> &sep,
+             vector<vector<bool>> &sep2) {
   // CI test for X _|_ Y | Z
   float independent_score = 0.0;
   float dependent_score = 0.0;
@@ -983,12 +925,12 @@ bool ci_test(const vector<vector<uint8_t>> &data, int &node_x, int &node_y,
     }
     sep2.at(node_y).at(node_x) = 1;
     sep2.at(node_x).at(node_y) = 1;
-    // cout<< "CI independent:" <<node_x<<" _|_"<<node_y<<" |
-    // "<<independent_score<<">"<<dependent_score<< endl;
+    // cout<< "CI independent:" <<node_x<<" _|_"<<node_y<<"
+    // |"<<independent_score<<">"<<dependent_score<< endl;
     return true;
   } else {
-    // cout<< "CI dependent:" <<node_x<<" _|_"<<node_y<<" |
-    // "<<independent_score<<"<"<<dependent_score<< endl;
+    // cout<< "CI dependent:" <<node_x<<" _|_"<<node_y<<"
+    // |"<<independent_score<<"<"<<dependent_score<< endl;
     return false;
   }
 }
@@ -1428,7 +1370,7 @@ void orientation_A2(PDAG &Gall, vector<int> &Gs,
         for (auto &Y : Gall.undirected_neighbors(Z)) {
           if (Gall.has_directed_edge(X, Y)) {
             Gall.remove_edge(Z, Y);
-            //////////////cout<< "A2_removed:" <<Y<<"->"<<Z<< endl;
+            // cout<< "A2_oriented:" <<Y<<"->"<<Z<< endl;
           }
         }
       }
@@ -1441,7 +1383,8 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs,
                     vector<vector<bool>> &deletededges,
                     const vector<vector<uint8_t>> &data, vector<int> &n_states,
                     float &ESS, int &parallel, bool &count_DP_flag,
-                    vector<int> &count_DP, vector<vector<vector<bool>>> &sep, vector<vector<bool>> &sep2) {
+                    vector<int> &count_DP, vector<vector<vector<bool>>> &sep,
+                    vector<vector<bool>> &sep2) {
   /*
       orient edges in a PDAG to a maximally oriented graph.
       orient rules are based on rule 1~3 from Meek,C.:Causal Inference and
@@ -1472,14 +1415,6 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs,
             count_DP_flag = false;
           }
           // cout<< "V-structure think:" <<X<<"->"<<Z<<"<-"<<Y<< endl;
-          // if(!ci_test(data, X, Y, z, n_states, ESS)){
-          // if(ci_test_for_vstructure_detect_by_MI(data, X, Y, n_states)){
-          // if(ci_test_for_vstructure_detect_by_CMI(data, X, Y, v, n_states)){
-          // if(ci_test_for_vstructure_detect_by_Chi_squared_test(data, X, Y, Z,
-          // n_states)){ if(ci_test_for_vstructure_detect_by_CMI(data, X, Y, Z,
-          // n_states)){ if(ci_test_for_vstructure_detect_by_beyesfactor(data,
-          // X, Y, Z, n_states)){ if(ci_test(data, X, Y, v, n_states, ESS,
-          // parallel, count_DP_flag, count_DP, Gs)){
           if (sep.at(X).at(Y).at(Z) && sep2.at(X).at(Y)) {
             vstructuredetected.at(X).at(Z) = true;
             vstructuredetected.at(Y).at(Z) = true;
@@ -1494,8 +1429,6 @@ void orientation_B2(PDAG &Gall, vector<int> &Gs,
     for (int j = 0; j < (int)Gall.g.size(); j++) {
       if (vstructuredetected.at(i).at(j) && !vstructuredetected.at(j).at(i)) {
         Gall.remove_edge(j, i);
-        // Gall.remove_edge(Z, X);
-        // Gall.remove_edge(Z, Y);
       }
     }
   }
@@ -1553,21 +1486,13 @@ void recursive_search(const vector<vector<uint8_t>> &data, PDAG &Gall,
                       vector<int> Gs, vector<int> &Gex, int N,
                       vector<int> &n_states, float &ESS, int &parallel,
                       int &threshold_DP, bool &search_neighbor,
-                      bool &do_orientation_A2, vector<vector<vector<bool>>> &sep, vector<vector<bool>> &sep2, int &n_citest, int &n_citest_DP, int &n_DP) {
+                      bool &do_orientation_A2,
+                      vector<vector<vector<bool>>> &sep,
+                      vector<vector<bool>> &sep2, int &n_citest,
+                      int &n_citest_DP, int &n_DP) {
   int n_node = data.at(0).size();
   vector<int> count_DP;
   bool count_DP_flag = false;
-  // print
-  //  //////cout<< "N=" <<N<< ", ";
-  //  //////cout<< "Gs: ";
-  //  for (auto& node : Gs) {
-  //    //////cout<< node << ", ";
-  //  }
-  //  //////cout<< "Gex: ";
-  //  for (auto& node : Gex) {
-  //    //////cout<< node << ", ";
-  //  }
-  //  //////cout<< endl;
 
   // stage 0: exit condition
   bool exitcondition = true;
@@ -1603,7 +1528,8 @@ void recursive_search(const vector<vector<uint8_t>> &data, PDAG &Gall,
               }
               if (!deletededges.at(node_x).at(node_y)) {
                 if (ci_test(data, node_x, node_y, selected_z, n_states, ESS,
-                            parallel, count_DP_flag, count_DP, Gs, n_citest, n_citest_DP, sep, sep2)) {
+                            parallel, count_DP_flag, count_DP, Gs, n_citest,
+                            n_citest_DP, sep, sep2)) {
                   Gall.remove_edge(node_x, node_y);
                   deletededges.at(node_x).at(node_y) = true;
                   deletededges.at(node_y).at(node_x) = true;
@@ -1628,6 +1554,11 @@ void recursive_search(const vector<vector<uint8_t>> &data, PDAG &Gall,
 
   if (threshold_DP > (int)Gs.size() && threshold_DP != 0 && Gs.size() > 2) {
     count_DP = make_count_DP(data, Gs, n_states, parallel);
+    unordered_map<string, int> um{
+        {"1st", 1},
+        {"2nd", 2},
+        {"3rd", 3},
+    };
     n_DP += 1;
     count_DP_flag = true;
   }
@@ -1642,7 +1573,8 @@ void recursive_search(const vector<vector<uint8_t>> &data, PDAG &Gall,
         if (N == 0) {
           vector<int> S;
           if (ci_test(data, node_x, node_y, S, n_states, ESS, parallel,
-                      count_DP_flag, count_DP, Gs, n_citest, n_citest_DP, sep, sep2)) {
+                      count_DP_flag, count_DP, Gs, n_citest, n_citest_DP, sep,
+                      sep2)) {
             Gall.remove_edge(node_x, node_y);
             Gall.remove_edge(node_y, node_x);
             deletededges.at(node_x).at(node_y) = true;
@@ -1671,7 +1603,8 @@ void recursive_search(const vector<vector<uint8_t>> &data, PDAG &Gall,
                 }
               }
               if (ci_test(data, node_x, node_y, selected_z, n_states, ESS,
-                          parallel, count_DP_flag, count_DP, Gs, n_citest, n_citest_DP, sep, sep2)) {
+                          parallel, count_DP_flag, count_DP, Gs, n_citest,
+                          n_citest_DP, sep, sep2)) {
                 Gall.remove_edge(node_x, node_y);
                 Gall.remove_edge(node_y, node_x);
                 deletededges.at(node_x).at(node_y) = true;
@@ -1722,7 +1655,8 @@ void recursive_search(const vector<vector<uint8_t>> &data, PDAG &Gall,
 
   // stage D:  Descendantsub-structure decomposition
   recursive_search(data, Gall, Gd, Gex, N + 1, n_states, ESS, parallel,
-                   threshold_DP, search_neighbor, do_orientation_A2, sep, sep2, n_citest, n_citest_DP, n_DP);
+                   threshold_DP, search_neighbor, do_orientation_A2, sep, sep2,
+                   n_citest, n_citest_DP, n_DP);
   return;
 }
 
@@ -1730,8 +1664,6 @@ py::array_t<bool> RAI(py::array_t<uint8_t> data,
                       py::array_t<int> n_states,  // uint8_t
                       float ESS, int parallel, int threshold_DP,
                       bool search_neighbor, bool do_orientation_A2) {
-
-  
   // translate imput data to c++ vector(this is not optimal but I don't know how
   // to use pybind11::array_t)
   py::buffer_info buf_data = data.request(), buf_states = n_states.request();
@@ -1757,9 +1689,9 @@ py::array_t<bool> RAI(py::array_t<uint8_t> data,
   int n_citest_DP = 0;
   int n_DP = 0;
   int sep_size = n_node;
-  vector<vector<vector<bool>>> sep(sep_size, vector<vector<bool>>(sep_size, vector<bool>(sep_size, false)));
+  vector<vector<vector<bool>>> sep(
+      sep_size, vector<vector<bool>>(sep_size, vector<bool>(sep_size, false)));
   vector<vector<bool>> sep2(sep_size, vector<bool>(sep_size, false));
-
 
   // initialize Gall, Gs, Gex
   PDAG Gall;
@@ -1774,10 +1706,10 @@ py::array_t<bool> RAI(py::array_t<uint8_t> data,
   }                 // Gs contains all nodes 0 ~ n_node - 1
   vector<int> Gex;  // Gex is empty
   PDAG Gend;
-  // vector<vector<string>> state_list = get_state_list(data);
 
   recursive_search(data_vec, Gall, Gs, Gex, 0, n_states_vec, ESS, parallel,
-                   threshold_DP, search_neighbor, do_orientation_A2, sep, sep2, n_citest, n_citest_DP, n_DP);
+                   threshold_DP, search_neighbor, do_orientation_A2, sep, sep2,
+                   n_citest, n_citest_DP, n_DP);
 
   // translate Gall to py::array_t (this is not optimal but I don't know how to
   // use pybind11::array_t)
@@ -1788,7 +1720,5 @@ py::array_t<bool> RAI(py::array_t<uint8_t> data,
   }
   cout << "citest_count: " << n_citest << ", citest_DP_count: " << n_citest_DP
        << ", DPmap_count: " << n_DP << endl;
-  // printf("datatranslate_time %lf[ms]\n", time);
-  // cout << endl;
   return endg;
 }
