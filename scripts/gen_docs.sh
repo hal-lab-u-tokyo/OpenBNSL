@@ -1,35 +1,36 @@
 #!/bin/bash
 
+RED='\033[31m'
+GREEN='\033[32m'
+YELLOW='\033[33m'
+BLUE='\033[34m'
+RESET='\033[0m'
+
 SCRIPT_DIR=$(dirname "$(realpath "$0")")
 PROJECT_ROOT=$(realpath "$SCRIPT_DIR/..")
+DOCS_DIR="$PROJECT_ROOT/docs"
 
-DOXYGEN_DIR="$PROJECT_ROOT/doxygen"
-if [ -d "$DOXYGEN_DIR" ]; then
-    echo "Moving to Doxygen directory: $DOXYGEN_DIR"
-    cd "$DOXYGEN_DIR" || { echo "Error: Failed to enter $DOXYGEN_DIR"; exit 1; }
-    if [ -f "Doxyfile" ]; then
-        echo "Generating Doxygen documentation..."
-        doxygen Doxyfile
-    else
-        echo "Error: Doxyfile not found in $DOXYGEN_DIR"
-        exit 1
-    fi
+echo -e "${BLUE}Starting documentation generation...${RESET}"
+
+DOXYGEN_DIR="$DOCS_DIR/doxygen"
+if [ -d "$DOXYGEN_DIR" ] && [ -f "$DOXYGEN_DIR/Doxyfile" ]; then
+    echo -e "${BLUE}Generating Doxygen documentation...${RESET}"
+    (cd "$DOXYGEN_DIR" && doxygen Doxyfile) \
+        && echo -e "${GREEN}Doxygen documentation generated successfully!${RESET}" \
+        || echo -e "${RED}Failed to generate Doxygen documentation.${RESET}"
 else
-    echo "Error: Doxygen directory not found at $DOXYGEN_DIR"
-    exit 1
+    echo -e "${RED}Error: Doxygen directory or Doxyfile not found.${RESET}"
 fi
 
-cd "$PROJECT_ROOT" || { echo "Error: Failed to return to $PROJECT_ROOT"; exit 1; }
-
-SPHINX_DIR="$PROJECT_ROOT/sphinx"
+SPHINX_DIR="$DOCS_DIR/sphinx"
 if [ -d "$SPHINX_DIR" ]; then
-    echo "Moving to Sphinx directory: $SPHINX_DIR"
-    cd "$SPHINX_DIR" || { echo "Error: Failed to enter $SPHINX_DIR"; exit 1; }
-    echo "Generating Sphinx HTML documentation..."
-    make html
+    echo -e "${BLUE}Generating Sphinx HTML documentation...${RESET}"
+    (cd "$SPHINX_DIR" && make html) \
+        && echo -e "${GREEN}Sphinx HTML documentation generated successfully!${RESET}" \
+        || echo -e "${RED}Failed to generate Sphinx documentation.${RESET}"
 else
-    echo "Error: Sphinx directory not found at $SPHINX_DIR"
-    exit 1
+    echo -e "${RED}Error: Sphinx directory not found.${RESET}"
 fi
 
-echo "Documentation generation completed."
+echo -e "${BLUE}Documentation generation process completed.${RESET}"
+

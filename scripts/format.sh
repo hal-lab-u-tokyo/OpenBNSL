@@ -1,5 +1,11 @@
 #!/bin/bash
 
+RED='\033[31m'
+GREEN='\033[32m'
+YELLOW='\033[33m'
+BLUE='\033[34m'
+RESET='\033[0m'
+
 SCRIPT_DIR=$(dirname "$(realpath "$0")")
 PROJECT_ROOT=$(realpath "$SCRIPT_DIR/..")
 
@@ -15,52 +21,52 @@ if [[ "$1" == "--check" ]]; then
 fi
 
 if [ ! -f "$PROJECT_ROOT/.clang-format" ]; then
-  echo "Error: .clang-format file not found in the project root."
+  echo -e "${RED}Error: .clang-format file not found in the project root.${RESET}"
   exit 1
 fi
 
 for dir in "${TARGET_DIRS[@]}"; do
   TARGET_PATH="$PROJECT_ROOT/$dir"
   if [ -d "$TARGET_PATH" ]; then
-    echo "Processing C/C++ files in directory: $TARGET_PATH"
+    echo -e "${BLUE}Processing C/C++ files in: $TARGET_PATH${RESET}"
     for ext in "${FILE_EXTENSIONS[@]}"; do
       if $CHECK_MODE; then
-        find "$TARGET_PATH" -type f -name "$ext" -exec clang-format --dry-run --Werror {} +
+        find "$TARGET_PATH" -type f -name "$ext" -exec clang-format --dry-run --Werror {} + 2>/dev/null
       else
-        find "$TARGET_PATH" -type f -name "$ext" -exec clang-format -i {} +
+        find "$TARGET_PATH" -type f -name "$ext" -exec clang-format -i {} + 2>/dev/null
       fi
     done
   else
-    echo "Warning: Directory '$TARGET_PATH' does not exist. Skipping."
+    echo -e "${YELLOW}  Warning: Directory '$TARGET_PATH' does not exist. Skipping.${RESET}"
   fi
 done
 
 if ! command -v black &> /dev/null; then
-  echo "Error: black is not installed. Install it using 'pip install black'."
+  echo -e "${RED}Error: black is not installed. Install it using 'pip install black'.${RESET}"
   exit 1
 fi
 
 if [ ! -f "$PROJECT_ROOT/pyproject.toml" ]; then
-  echo "Error: pyproject.toml file not found in the project root for Black: $PROJECT_ROOT"
+  echo -e "${RED}Error: pyproject.toml file not found in the project root.${RESET}"
   exit 1
 fi
 
 for dir in "${PYTHON_TARGET_DIRS[@]}"; do
   TARGET_PATH="$PROJECT_ROOT/$dir"
   if [ -d "$TARGET_PATH" ]; then
-    echo "Processing Python files in directory: $TARGET_PATH"
+    echo -e "${BLUE}Processing Python files in: $TARGET_PATH${RESET}"
     if $CHECK_MODE; then
-      find "$TARGET_PATH" -type f -name "$PYTHON_EXTENSION" -exec black --check {} +
+      black --check "$TARGET_PATH"
     else
-      find "$TARGET_PATH" -type f -name "$PYTHON_EXTENSION" -exec black {} +
+      black "$TARGET_PATH"
     fi
   else
-    echo "Warning: Directory '$TARGET_PATH' does not exist. Skipping."
+    echo -e "${YELLOW}  Warning: Directory '$TARGET_PATH' does not exist. Skipping.${RESET}"
   fi
 done
 
 if $CHECK_MODE; then
-  echo "Format check complete. No issues found."
+  echo -e "${GREEN}Format check complete.${RESET}"
 else
-  echo "Formatting complete."
+  echo -e "${GREEN}Formatting complete.${RESET}"
 fi
