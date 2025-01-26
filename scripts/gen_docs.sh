@@ -1,6 +1,7 @@
 #!/bin/bash
 
-PROJECT_ROOT=$(dirname "$(realpath "$0")")
+SCRIPT_DIR=$(dirname "$(realpath "$0")")
+PROJECT_ROOT=$(realpath "$SCRIPT_DIR/..")
 
 DOXYGEN_DIR="$PROJECT_ROOT/doxygen"
 if [ -d "$DOXYGEN_DIR" ]; then

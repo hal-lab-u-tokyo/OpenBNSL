@@ -1,6 +1,7 @@
 #!/bin/bash
 
-PROJECT_ROOT=$(dirname "$(realpath "$0")")
+SCRIPT_DIR=$(dirname "$(realpath "$0")")
+PROJECT_ROOT=$(realpath "$SCRIPT_DIR/..")
 BUILD_DIR="$PROJECT_ROOT/build"
 GTEST_EXEC="$BUILD_DIR/openbnsl_test"
 

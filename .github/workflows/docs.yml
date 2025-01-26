@@ -27,10 +27,10 @@ jobs:
           submodules: recursive
 
       - name: Set execute permissions for bash scripts
-        run: chmod +x ./gen_docs.sh
+        run: chmod +x ./scripts/gen_docs.sh
 
       - name: Generate Documentation
-        run: docker run --rm -v "$(pwd):/workspace" $IMAGE_NAME:$IMAGE_TAG ./gen_docs.sh
+        run: docker run --rm -v "$(pwd):/workspace" $IMAGE_NAME:$IMAGE_TAG ./scripts/gen_docs.sh
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v1
