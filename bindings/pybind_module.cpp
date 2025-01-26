@@ -7,7 +7,6 @@
 #include "structure_learning/PC.h"
 #include "structure_learning/RAI.h"
 #include "structure_learning/exhaustive_search.h"
-#include "structure_learning/simulated_annealing.h"
 #include "template.h"
 namespace py = pybind11;
 
