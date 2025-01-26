@@ -1,5 +1,17 @@
+# Cmake
 build/
-doxygen/build/
-sphinx/build/
+*.so
 
+# Python
+*.pyc
+*.pyo
 **/__pycache__/
+
+# Python packaging
+*.egg-info/
+
+# Doxygen
+doxygen/build/
+
+# Sphinx
+sphinx/build/
