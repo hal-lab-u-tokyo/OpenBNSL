@@ -32,24 +32,31 @@ Branch naming examples:
 
 ```plaintext
 .
+├── .github/            # Github actions (build, test, format, etc.)
 ├── benchmarks/         # Benchmarking code
-├── bindings/           # Python binding code (Pybind11) for the backend code
+├── bindings/           # Python binding code (Pybind11) for the backend code]
+├── docs/               # Documentation (Doxygen, Sphinx)
 ├── examples/           # Jupyter notebook examples
 ├── external/           # External libraries (only pybind11 for now)
 ├── gtest/              # gtest test code for the backend code
+├── images/             # Images for the README
 ├── include/            # Header files for the backend code
+├── modules/            # Python modules
 ├── pytest/             # Pytest test code for the frontend code (test_*.py)
+├── scripts/            # Scripts (format.sh, gen_docs.sh, etc.)
 ├── src/                # Source code for the backend code
+├── .clang-format       # Clang format file
 ├── .gitignore          # Git ignore file
 ├── .gitmodules         # Git submodules file
 ├── CMakeLists.txt      # CMake build file (Compile backend code, bindings, and tests)
 ├── CONTRIBUTING.md     # Contributing guidelines
-├── do_build.sh         # run CMake, make, and publish the Python package
-├── do_test.sh          # run the backend tests (Google Test) and the Python tests (Pytest)
 ├── docker-compose.yml  # Docker compose file
 ├── Dockerfile          # Docker file
+├── LICENSE             # License file
+├── pyproject.toml      # Python project file
 ├── pytest.ini          # Pytest configuration file
-└── README.md           # Project README
+├── README.md           # Project README
+└── setup.py            # Python setup file
 ```
 
 ## Coding Style
@@ -57,7 +64,7 @@ Branch naming examples:
 For C++ code, we use clang-format with Google's C++ style guide [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html).
 Before submitting a pull request, please run the following command to format your code:
 ```bash
-./format.sh
+./scripts/format.sh
 ```
 
 | **Element** | **Naming Rule** | **Example** |
@@ -69,6 +76,28 @@ Before submitting a pull request, please run the following command to format you
 | **Variable** | snake_case | `my_variable` |
 | **Constant** | UPPERCASE_SNAKE_CASE | `MY_CONSTANT` |
 | **Namespace** | snake_case | `my_namespace` | `my_namespace::my_function()` |
+
+
+## Data exchange between Python and C++
+<!-- 
+using pybind11 to create bindings for the C++ code
+since expected data types is pandas DataFrame, 
+we set dataframe wrapper class
+all bnsl functions has df_wrapper as input
+expected output is pgmpy graph object
+the detail is TBD
+ -->
+
+
+## Data exchange between R and C++
+<!--
+using Rcpp to create bindings for the C++ code
+since expected data types is data.frame,
+we set dataframe wrapper class
+all bnsl functions has df_wrapper as input
+expected output is bnlearn graph object
+the detail is TBD
+-->
 
 ## Discussion
 <!-- TBD --> 
