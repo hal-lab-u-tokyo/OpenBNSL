@@ -2,7 +2,7 @@
 
 # OpenBNSL: Open BNSL Framework
 Bayesian Network Structure Learning (BNSL) is the task of learning the graph structure of a Bayesian Network from data.
-It is widely recognized as a challenging problem due to its computational complexity, and the difficulties associated with handling high-dimensional data.
+<!-- It is widely recognized as a challenging problem due to its computational complexity, and the difficulties associated with handling high-dimensional data.
 To address these challenges, various methods have been proposed.
 
 OpenBNSL is a unified, open-source, and comprehensive framework for evaluating BNSL methods.
@@ -51,7 +51,7 @@ Note: When cloning this repository, please make sure to clone the repository wit
         - [ ] Bayesian Dirichlet equivalent uniform (BDeu) 
     - [ ] Structural Hamming Distance
     - [ ] Inference Accuracy
-- Benchmarking 
+- Benchmarking  -->
 
 ## Table of Contents
 - [Installation](#installation)
@@ -66,55 +66,44 @@ Note: When cloning this repository, please make sure to clone the repository wit
 
     
 ## Set Up
-
 ```bash
-docker-compose build
-docker-compose up
+docker compose build
+docker compose up
 ```
 
 ### Optional: Nvidia GPU Support
 If you have an Nvidia GPU, you can use the following command to build the image with GPU support.
 ```bash
-docker-compose build --build-arg BASE_IMAGE=nvidia/cuda:12.6.2-devel-ubuntu22.04
+docker compose build --build-arg BASE_IMAGE=nvidia/cuda:12.6.2-devel-ubuntu22.04
 ```
 
 ### Optional: Gurobi License
 If you want to use gurobi, you need to get a license file (gurobi.lic) and put it in the same directory as the Dockerfile.
 Gurobi provides free licenses for academic use.
 ```bash
-docker-compose build --build-arg INSTALL_GUROBI=true
+docker compose build --build-arg INSTALL_GUROBI=true
 ```
 
-## Build the project
+## Build and Install
 ```bash
-./build.sh
+pip install . # install the package
+python3 setup.py build_ext --inplace # build the backend
 ```
-compile shared library, python bindings, and backend tests.
 
-## Run Tests
+## Scripts
 ```bash
-./test.sh
+pytest # run the frontend test
+./build_test.sh # build the backend test
+./run_test.sh # run the backend test
+./format.sh # format the code
+./gen_docs.sh # generate the documentation
 ```
-backend tests (Google Test) and frontend tests (pytest) will be run.
-
-## Gen Docs
-The documentation is generated using Doxygen for the backend and Sphinx for the frontend.
-To generate the documentation, run the following command:
-```bash
-./gen_docs.sh
-```
-The generated documentation will be available in the `sphinx/build/html` directory.
 
 ## Tutorial and Examples
 TBD
 
-
-
 ## Contributing
 Please feel free to create a new issue for any bugs, questions etc. 
-It is very helpful if you gives us enough information to reproduce the problem. 
-Github's guide on [about issues](https://guides.github.com/features/issues/) is also useful.
-
 If you want to contribute code, please follow the instructions in [Contributing](CONTRIBUTING.md)
 
 ## License
