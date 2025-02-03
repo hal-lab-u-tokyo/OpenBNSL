@@ -16,6 +16,13 @@
 # More About OpenBNSL
 OpenBNSL is a framework for Benchmarking Bayesian Network Structure Learning (BNSL) methods.
 
+| Component                | Description                                                 |
+|--------------------------|-------------------------------------------------------------|
+| openbnsl lib             | library for BNSL methods in C++ with OpenMP, CUDA support   |
+| openbnsl benchmark suite | Benchmarking scripts for for openbnsl lib                   |
+| openbnsl python package  | Python package for openbnsl lib                             |
+| openbnsl docker image    | Docker image for all components above                       |
+
 ⚠️ Under construction ⚠️
 
 # Set Up
@@ -23,7 +30,7 @@ OpenBNSL is a framework for Benchmarking Bayesian Network Structure Learning (BN
 ## (Recommended) Using Docker
 
 ```bash
-git clone --recurse-submodules
+git clone --recurse-submodules # for pybind11 submodule
 cd openbnsl
 docker compose build
 docker compose up
