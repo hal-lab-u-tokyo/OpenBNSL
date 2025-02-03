@@ -1,72 +1,30 @@
-*Note: This repository is a mock-up, and the content within is currently under active development. Please be aware that functionalities and features are still being finalized.*
+*Note: This repository is currently under active development. Please be aware that functionalities and features are still being finalized.*
 
-# OpenBNSL: Open BNSL Framework
-Bayesian Network Structure Learning (BNSL) is the task of learning the graph structure of a Bayesian Network from data.
-<!-- It is widely recognized as a challenging problem due to its computational complexity, and the difficulties associated with handling high-dimensional data.
-To address these challenges, various methods have been proposed.
+1. [More About OpenBNSL](#more-about-openbnsl)
+2. [Set Up](#set-up)
+    1. [Using Docker](#using-docker)
+        1. [Optional: Nvidia GPU Support](#optional-nvidia-gpu-support)
+        2. [Optional: Gurobi License](#optional-gurobi-license)
+    2. [Local Installation](#local-installation)
+3. [Build and Install](#build-and-install)
+4. [Features](#features)
+5. [Tutorial and Examples](#tutorial-and-examples)
+6. [Contributing](#contributing)
+7. [License](#license)
+8. [Acknowledgments](#acknowledgments)
 
-OpenBNSL is a unified, open-source, and comprehensive framework for evaluating BNSL methods.
-Researchers can leverage this framework to demonstrate the advantages of their algorithms, while general users can utilize BNSL techniques without requiring specialized expertise.
+# More About OpenBNSL
+OpenBNSL is a framework for Benchmarking Bayesian Network Structure Learning (BNSL) methods.
 
-To fulfill its purpose, the framework is designed with the following requirements in mind:
-1. Performance: The provided algorithms should be fast enough for effective benchmarking.
-2. Scalability: The framework should handle large datasets and a significant number of random variables (e.g., over 1,000 variables), except where limited by algorithmic constraints.
-3. Reproducibility: The framework should facilitate the easy reproduction of experiments.
+⚠️ Under construction ⚠️
 
-To meet these requirements, OpenBNSL is designed as follows:
-1. Backend: Written in C/C++ with OpenMP for high performance and scalability, with plans for further acceleration in the future.
-2. Frontend: Implemented in Python to provide a user-friendly interface and leverage powerful libraries for:
-    - Data manipulation (`Pandas`)
-    - Visualization (`Matplotlib`, `NetworkX`)
-    - Interactive prototyping (`Jupyter Notebook`)
-    - Documentation (`Sphinx`, `breathe`)
-    - Utilizing learned models (`pgmpy`). (including exporting the learned model to `pgmpy`).
-3. Integration: The backend and frontend are connected using pybind11, enabling seamless and high-performance communication between Python and C++.
-4. Containerization: The project is containerized using Docker, ensuring a reproducible environment, objective benchmarking, and ease of contribution from the community.
+# Set Up
 
-This framework is offered as an open-source project, and we actively welcome contributions from the community. We hope OpenBNSL becomes a valuable tool for researchers and practitioners working in the field of Bayesian Networks.
+## (Recommended) Using Docker
 
-Note: When cloning this repository, please make sure to clone the repository with `--recurse-submodules` to include the pybind11 submodule.
-
-<div style="display: flex; align-items: center; gap: 10px;">
-  <img src="images/software_stack.png" alt="Software Stack" style="width: 60%;" />
-  <img src="images/workflow.png" alt="Workflow" style="width: 40%;" />
-</div>
-
-## Features
-- Structure Learning from data
-    - [ ] Hill Climbing
-    - [ ] Tabu Search
-    - [ ] Simulated Annealing 
-    - [ ] Integer Programming (IP)
-    - [ ] Greedy Equivalent Search (GES)
-    - [ ] Peter-Clark algorithm (PC)
-    - [ ] Min-Max Hill Climbing (MMHC)
-    - [ ] Recursive Autonomy Identification (RAI)
-- Evaluation Metrics
-    - Structural Likelihood
-        - [ ] Akaike Information Criterion (AIC)
-        - [ ] Bayesian Information Criterion (BIC)
-        - [ ] Minimum Description Length (MDL)
-        - [ ] Bayesian Dirichlet equivalent uniform (BDeu) 
-    - [ ] Structural Hamming Distance
-    - [ ] Inference Accuracy
-- Benchmarking  -->
-
-## Table of Contents
-- [Installation](#installation)
-- [Planed Features](#planed-features)
-- [Set Up Docker Environment (Recommended)](#set-up-docker-environment)
-- [Set Up Bare Metal Environment (Not Recommended)](#set-up-bare-metal-environment)
-- [Build the project](#build-the-project)
-- [Run Tests](#run-tests)
-- [Examples](#examples)
-- [Contributing](#contributing)
-- [License](#license)
-
-    
-## Set Up
 ```bash
+git clone --recurse-submodules
+cd openbnsl
 docker compose build
 docker compose up
 ```
@@ -77,34 +35,42 @@ If you have an Nvidia GPU, you can use the following command to build the image 
 docker compose build --build-arg BASE_IMAGE=nvidia/cuda:12.6.2-devel-ubuntu22.04
 ```
 
-### Optional: Gurobi License
+### Optional: Gurobi License 
 If you want to use gurobi, you need to get a license file (gurobi.lic) and put it in the same directory as the Dockerfile.
 Gurobi provides free licenses for academic use.
 ```bash
 docker compose build --build-arg INSTALL_GUROBI=true
 ```
 
+## (Not Recommended) Local Installation
+⚠️ Under construction ⚠️
+
 ## Build and Install
 ```bash
-pip install . # install the package
-python3 setup.py build_ext --inplace # build the backend
+pip install . # build and install the package
+python3 setup.py build_ext --inplace # build in place
 ```
 
-## Scripts
-```bash
-pytest # run the frontend test
-./build_test.sh # build the backend test
-./run_test.sh # run the backend test
-./format.sh # format the code
-./gen_docs.sh # generate the documentation
-```
+# Features
+- Structure Learning
+    - [x] Exhaustive Search
+    - [x] Peter-Clark algorithm (PC)
+    - [x] Recursive Autonomy Identification (RAI)
+- Evaluation Metrics
+    - [x] Structural Hamming Distance
+    - [ ] Marginal Likelihood
+        - [x] Bayesian Dirichlet equivalent uniform (BDeu) 
+        - []
+    - [ ] Inference Accuracy
+- Benchmarking 
+    - [ ] ⚠️ Under construction ⚠️
 
-## Tutorial and Examples
-TBD
+# Tutorial and Examples
+⚠️ Under construction ⚠️
 
 ## Contributing
 Please feel free to create a new issue for any bugs, questions etc. 
-If you want to contribute code, please follow the instructions in [Contributing](CONTRIBUTING.md)
+If you want to contribute code, please follow the instructions in [CONTRIBUTING](CONTRIBUTING.md)
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
