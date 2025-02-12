@@ -4,14 +4,7 @@ OpenBNSL is an open framework designed to enable fair and highly reproducible co
 A Bayesian network is a powerful probabilistic model that represents conditional independence relationships among variables using directed acyclic graphs (DAGs).
 Learning the structure of a large Bayesian Network from data is computationally intensive, and optimization techniques, including parallelization, can significantly improve performance.
 
-This framework provides an environment where various BNSL techniques can be systematically and fairly compared, thus supporting the further advancement of Bayesian Network research.
-
-OpenBNSL offers:
-1. Core Library: Flexible implementations with multi-core and many-core parallelization
-2. Evaluation Suite: A standardized evaluation process for fair and reproducible comparison
-3. Experiment Environment: A Docker-based reproducible experimental environment
-
-Our framework ensures transparency by distributing the source code and evaluation procedures under the MIT License, demonstrating a strong commitment to the Open Science principle.
+This framework provides an environment for systematically and fairly comparing various BNSL techniques, supporting the further advancement of Bayesian Network research.
 
 | Component                       | Description                                                 |
 |---------------------------------|-------------------------------------------------------------|
@@ -19,6 +12,7 @@ Our framework ensures transparency by distributing the source code and evaluatio
 | OpenBNSL Evaluation Suite       | Python scripts for evaluating the OpenBNSL core library     |
 | OpenBNSL Experiment Environment | Docker-based environment for reproducible experiments       |
 
+OpenBNSL ensures transparency by adopting the MIT License and maintaining a strong commitment to the Open Science principle.
 
 1. [Set Up](#set-up)
     1. [Using Docker](#using-docker)
