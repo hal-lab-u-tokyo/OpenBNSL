@@ -86,27 +86,9 @@ Before submitting a pull request, please run the following command to format you
 | **Constant** | UPPERCASE_SNAKE_CASE | `MY_CONSTANT` |
 | **Namespace** | snake_case | `my_namespace` | `my_namespace::my_function()` |
 
+## Data exchange between Python/R and C/C++
 
-## Data exchange between Python and C++
-<!-- 
-using pybind11 to create bindings for the C++ code
-since expected data types is pandas DataFrame, 
-we set dataframe wrapper class
-all bnsl functions has df_wrapper as input
-expected output is pgmpy graph object
-the detail is TBD
- -->
-
-
-## Data exchange between R and C++
-<!--
-using Rcpp to create bindings for the C++ code
-since expected data types is data.frame,
-we set dataframe wrapper class
-all bnsl functions has df_wrapper as input
-expected output is bnlearn graph object
-the detail is TBD
--->
+![Interface Diagram](images/interface.png)
 
 ## Discussion
 <!-- TBD --> 

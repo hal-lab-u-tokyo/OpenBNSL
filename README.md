@@ -12,6 +12,8 @@ This framework provides an environment for systematically and fairly comparing v
 | OpenBNSL Evaluation Suite       | Python scripts for evaluating the OpenBNSL core library     |
 | OpenBNSL Experiment Environment | Docker-based environment for reproducible experiments       |
 
+![OpenBNSL Architecture](images/architecture.png)
+
 OpenBNSL ensures transparency by adopting the MIT License and maintaining a strong commitment to the Open Science principle.
 
 1. [Set Up](#set-up)
