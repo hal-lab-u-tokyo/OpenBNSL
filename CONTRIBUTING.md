@@ -17,6 +17,15 @@ Github's guide on [about issues](https://guides.github.com/features/issues/) is 
 4. Push your changes to your fork
 5. Create a pull request
 
+# Scripts
+```bash
+pytest # run the frontend test
+./build_test.sh # build the backend test
+./run_test.sh # run the backend test
+./format.sh # format the code
+./gen_docs.sh # generate the documentation
+```
+
 ## Branches
 
 Branch naming examples:
@@ -34,7 +43,7 @@ Branch naming examples:
 .
 ├── .github/            # Github actions (build, test, format, etc.)
 ├── benchmarks/         # Benchmarking code
-├── bindings/           # Python binding code (Pybind11) for the backend code]
+├── bindings/           # Python binding code (Pybind11) for the backend code
 ├── docs/               # Documentation (Doxygen, Sphinx)
 ├── examples/           # Jupyter notebook examples
 ├── external/           # External libraries (only pybind11 for now)

@@ -1,34 +1,42 @@
-*Note: This repository is currently under active development. Please be aware that functionalities and features are still being finalized.*
+Note: This repository is currently under active development. Please be aware that functionalities and features are still being finalized.
 
-1. [More About OpenBNSL](#more-about-openbnsl)
-2. [Set Up](#set-up)
+OpenBNSL is an open framework designed to enable fair and highly reproducible comparisons of Bayesian Network Structure Learning (BNSL) algorithms.
+A Bayesian network is a powerful probabilistic model that represents conditional independence relationships among variables using directed acyclic graphs (DAGs).
+Learning the structure of a large Bayesian Network from data is computationally intensive, and optimization techniques, including parallelization, can significantly improve performance.
+
+This framework provides an environment where various BNSL techniques can be systematically and fairly compared, thus supporting the further advancement of Bayesian Network research.
+
+OpenBNSL offers:
+1. Core Library: Flexible implementations with multi-core and many-core parallelization
+2. Evaluation Suite: A standardized evaluation process for fair and reproducible comparison
+3. Experiment Environment: A Docker-based reproducible experimental environment
+
+Our framework ensures transparency by distributing the source code and evaluation procedures under the MIT License, demonstrating a strong commitment to the Open Science principle.
+
+| Component                       | Description                                                 |
+|---------------------------------|-------------------------------------------------------------|
+| OpenBNSL Core Library           | C++ library for BNSL methods with OpenMP and CUDA support   |
+| OpenBNSL Evaluation Suite       | Python scripts for evaluating the OpenBNSL core library     |
+| OpenBNSL Experiment Environment | Docker-based environment for reproducible experiments       |
+
+
+1. [Set Up](#set-up)
     1. [Using Docker](#using-docker)
         1. [Optional: Nvidia GPU Support](#optional-nvidia-gpu-support)
         2. [Optional: Gurobi License](#optional-gurobi-license)
     2. [Local Installation](#local-installation)
-3. [Build and Install](#build-and-install)
-4. [Features](#features)
-5. [Tutorial and Examples](#tutorial-and-examples)
-6. [Contributing](#contributing)
-7. [License](#license)
-8. [Acknowledgments](#acknowledgments)
+2. [Build and Install](#build-and-install)
+3. [Features](#features)
+4. [Tutorial and Examples](#tutorial-and-examples)
+5. [Contributing](#contributing)
+6. [License](#license)
+7. [Acknowledgments](#acknowledgments)
 
-# More About OpenBNSL
-OpenBNSL is a framework for Benchmarking Bayesian Network Structure Learning (BNSL) methods.
 
-| Component                | Description                                                 |
-|--------------------------|-------------------------------------------------------------|
-| openbnsl lib             | library for BNSL methods in C++ with OpenMP, CUDA support   |
-| openbnsl benchmark suite | Benchmarking scripts for for openbnsl lib                   |
-| openbnsl python package  | Python package for openbnsl lib                             |
-| openbnsl docker image    | Docker image for all components above                       |
-
-⚠️ Under construction ⚠️
-
+---
 # Set Up
 
 ## (Recommended) Using Docker
-
 ```bash
 git clone --recurse-submodules # for pybind11 submodule
 cd openbnsl
@@ -49,40 +57,64 @@ Gurobi provides free licenses for academic use.
 docker compose build --build-arg INSTALL_GUROBI=true
 ```
 
-## (Not Recommended) Local Installation
+## (Not Recommended) Using Bare Metal
 ⚠️ Under construction ⚠️
 
-## Build and Install
+
+---
+# Build and Install
 ```bash
 pip install . # build and install the package
 python3 setup.py build_ext --inplace # build in place
 ```
 
-# Features
-- Structure Learning
-    - [x] Exhaustive Search
-    - [x] Peter-Clark algorithm (PC)
-    - [x] Recursive Autonomy Identification (RAI)
-- Evaluation Metrics
-    - [x] Structural Hamming Distance
-    - [ ] Marginal Likelihood
-        - [x] Bayesian Dirichlet equivalent uniform (BDeu) 
-        - []
-    - [ ] Inference Accuracy
-- Benchmarking 
-    - [ ] ⚠️ Under construction ⚠️
+---
+# Features Tracker
+- Core Library (C++)
+    - Score-based Structure Learning
+        - [x] Exhaustive Search
+    - Constraint-based Structure Learning
+        - [x] Peter-Clark algorithm (PC) 
+        - [x] Recursive Autonomy Identification (RAI) [[paper]](https://www.sciencedirect.com/science/article/pii/S0957417419306824)
+    - local-to-global learning
+        - [ ] 
+- Evaluation Suite (Python)
+    - Evaluation Metrics
+        - [x] Structural Hamming Distance
+        - [ ] Marginal Likelihood
+            - [x] Bayesian Dirichlet equivalent uniform (BDeu) score
+        - [ ] Inference accuracy
+        - [ ] memory usage
+        - [ ] runtime
+    - Benchmarking Senarios
+        - [ ] scalability for number of variables
+        - [ ] scalability for number of samples
+    - [ ] Generate Synthetic Data
+- Experiment Environment (Docker)
+    - [x] OpenMP support (default)
+    - [x] Nvidia GPU and CUDA toolkit support
+    - [x] Gurobi support
+    - [ ] MPI?
 
+⚠️ Under construction ⚠️
+
+
+--- 
 # Tutorial and Examples
 ⚠️ Under construction ⚠️
 
-## Contributing
+
+--- 
+# Contributing
 Please feel free to create a new issue for any bugs, questions etc. 
 If you want to contribute code, please follow the instructions in [CONTRIBUTING](CONTRIBUTING.md)
 
-## License
+--- 
+# License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Acknowledgments
+---
+# Acknowledgments
 This work was supported by
 JSPS KAKENHI, Grant Number 24KJ0578,
 JST CREST, Grant Number JPMJCR21D2, and
