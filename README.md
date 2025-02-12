@@ -71,7 +71,7 @@ python3 setup.py build_ext --inplace # build in place
         - [x] Exhaustive Search
     - Constraint-based Structure Learning
         - [x] Peter-Clark algorithm (PC) 
-        - [x] Recursive Autonomy Identification (RAI) [[paper]](https://www.sciencedirect.com/science/article/pii/S0957417419306824)
+        - [x] Recursive Autonomy Identification (RAI) [[paper]](https://dl.acm.org/doi/10.5555/1577069.1755836)
     - local-to-global learning
         - [ ] 
 - Evaluation Suite (Python)
