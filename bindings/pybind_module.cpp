@@ -4,6 +4,7 @@
 #include "submodules/base.cpp"
 #include "submodules/score.cpp"
 #include "submodules/structure_learning.cpp"
+#include "submodules/type_inspection.cpp"
 #include "template.h"
 
 namespace py = pybind11;
@@ -15,6 +16,7 @@ PYBIND11_MODULE(openbnsl, m) {
   bind_structure_learning(m);
   bind_score(m);
   bind_base(m);
+  bind_type_inspection(m);
 
   m.def("matmul_naive", &matmul_naive, "Multiply two NumPy arrays");
   m.def("matmul_openmp", &matmul_openmp,
