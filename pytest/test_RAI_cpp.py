@@ -17,7 +17,7 @@ sys.path.append("/workspace")
 from modules.RAIEstimator_fixed import RAIEstimator, RAIEstimator_transitivity
 from modules.RAI_cpp import RAIEstimator_cpp
 from modules.PC_cpp import PCEstimator_cpp
-from modules.structural_distance import structural_errors, DAG2CPDAG, PDAG2CPDAG
+from modules.structural_distance import structural_errors, PDAG2CPDAG
 from modules.visualize_graph import display_graph_info as show
 from modules.CITests_fixed import NatoriScore
 
@@ -42,7 +42,7 @@ def test_RAI_cpp(
     calc_time = 0
     ave_score = [0, 0, 0, 0, 0, 0, 0]
     comparemodel = get_example_model(data_type)
-    comparemodel = DAG2CPDAG(comparemodel)
+    comparemodel = PDAG2CPDAG(comparemodel)
     for i in range(max_iter):
         model = get_example_model(data_type)
         sampler = BayesianModelSampling(model)

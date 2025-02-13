@@ -16,7 +16,7 @@ sys.path.append("/workspace")
 from modules.RAIEstimator_fixed import RAIEstimator, RAIEstimator_transitivity
 from modules.RAI_cpp import RAIEstimator_cpp
 from modules.PC_cpp import PCEstimator_cpp
-from modules.structural_distance import structural_errors, DAG2CPDAG, PDAG2CPDAG
+from modules.structural_distance import structural_errors, PDAG2CPDAG
 from modules.visualize_graph import display_graph_info as show
 from modules.CITests_fixed import NatoriScore
 
@@ -46,7 +46,7 @@ def do_benchmark(
     calc_time = 0
     ave_score = [0, 0, 0, 0, 0, 0, 0]
     comparemodel = get_example_model(data_type)
-    comparemodel = DAG2CPDAG(comparemodel)
+    comparemodel = PDAG2CPDAG(comparemodel)
     DP_threshold = 0
     if DP == 1:
         DP_threshold = 15

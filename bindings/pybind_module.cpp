@@ -1,7 +1,9 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
+#include "base/CItest.h"
 #include "base/PDAG.h"
+#include "base/PDAG2.h"
 #include "structure_learning/PC.h"
 #include "structure_learning/RAI.h"
 #include "template.h"
