@@ -177,8 +177,7 @@ vector<vector<int>> state_count(const vector<vector<uint8_t>> &data,
 
 float natori_independent_score(const vector<vector<uint8_t>> &data, int &node_x,
                                int &node_y, vector<int> &parents,
-                               vector<int> &n_states, float &ESS,
-                               int &parallel) {
+                               vector<int> &n_states, int &parallel) {
   // return log of the BDeu score of X, Y | Z
   double score = 0.0;
   double alpha = 0.5;  // hyperparameter
@@ -223,9 +222,6 @@ float natori_independent_score(const vector<vector<uint8_t>> &data, int &node_x,
     for (int j = 0; j < q; j++) {    // for each state of parents
       for (int k = 0; k < r; k++) {  // for each state of node_x
         score += lgamma(alpha + count.at(k).at(j)) - lgamma(alpha);
-        if (isnan(score)) {
-          cout << ESS / (r * q) + count.at(k).at(j) << "score is nan" << endl;
-        }
       }
       score += lgamma(r * alpha) - lgamma(r * alpha + n_ij.at(j));
     }
@@ -242,9 +238,6 @@ float natori_independent_score(const vector<vector<uint8_t>> &data, int &node_x,
     for (int j = 0; j < q; j++) {    // for each state of parents
       for (int k = 0; k < r; k++) {  // for each state of node_x
         score += lgamma(alpha + count2.at(k).at(j)) - lgamma(alpha);
-        if (isnan(score)) {
-          cout << ESS / (r * q) + count2.at(k).at(j) << "score is nan" << endl;
-        }
       }
       score += lgamma(r * alpha) - lgamma(r * alpha + n_ij2.at(j));
     }
@@ -255,7 +248,7 @@ float natori_independent_score(const vector<vector<uint8_t>> &data, int &node_x,
 
 float natori_dependent_score(const vector<vector<uint8_t>> &data, int &node_x,
                              int &node_y, vector<int> &parents,
-                             vector<int> &n_states, float &ESS, int &parallel) {
+                             vector<int> &n_states, int &parallel) {
   // return log of the BDeu score of X, Y | Z
   double score = 0.0;
   double alpha = 0.5;
@@ -266,9 +259,6 @@ float natori_dependent_score(const vector<vector<uint8_t>> &data, int &node_x,
     vector<vector<int>> count;
     count = state_count(data, children, parents, n_states, parallel);
     int r = count.size();  // number of states of node_x]
-    if (ESS > 0) {
-      alpha = ESS / r;
-    }
     int n_i = 0;
     for (int k = 0; k < r; k++) {
       n_i += count.at(k).at(0);
@@ -283,9 +273,6 @@ float natori_dependent_score(const vector<vector<uint8_t>> &data, int &node_x,
     count = state_count(data, children, parents, n_states, parallel);
     int q = count.at(0).size();  // number of states of parents
     int r = count.size();        // number of states of node_x
-    if (ESS > 0) {
-      alpha = ESS / (r * q);
-    }
     vector<float> n_ij(q, 0.0);
     for (int k = 0; k < r; k++) {
       for (int j = 0; j < q; j++) {
@@ -295,9 +282,6 @@ float natori_dependent_score(const vector<vector<uint8_t>> &data, int &node_x,
     for (int j = 0; j < q; j++) {    // for each state of parents
       for (int k = 0; k < r; k++) {  // for each state of node_x
         score += lgamma(alpha + count.at(k).at(j)) - lgamma(alpha);
-        if (isnan(score)) {
-          cout << ESS / (r * q) + count.at(k).at(j) << "score is nan" << endl;
-        }
       }
       score += lgamma(r * alpha) - lgamma(r * alpha + n_ij.at(j));
     }
@@ -306,15 +290,14 @@ float natori_dependent_score(const vector<vector<uint8_t>> &data, int &node_x,
 }
 
 bool ci_test_by_Bayesfactor(const vector<vector<uint8_t>> &data, int &node_x,
-                            int &node_y, vector<int> &Z, vector<int> &n_states,
-                            float &ESS, int &parallel) {
+                            int &node_y, vector<int> &Z, vector<int> &n_states, int &parallel) {
   // CI test for X _|_ Y | Z
   float independent_score = 0.0;
   float dependent_score = 0.0;
   independent_score += natori_independent_score(data, node_x, node_y, Z,
-                                                n_states, ESS, parallel);
+                                                n_states, parallel);
   dependent_score +=
-      natori_dependent_score(data, node_x, node_y, Z, n_states, ESS, parallel);
+      natori_dependent_score(data, node_x, node_y, Z, n_states, parallel);
 
   if (independent_score > dependent_score) {
     // cout<< "CI independent:" <<node_x<<" _|_"<<node_y<<"
