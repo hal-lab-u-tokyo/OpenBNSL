@@ -1,4 +1,4 @@
-#define _GLIBCXX_DEBUG
+// #define _GLIBCXX_DEBUG
 using namespace std;
 #include "structure_learning/PC.h"
 
