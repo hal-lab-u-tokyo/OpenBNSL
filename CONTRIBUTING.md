@@ -128,6 +128,7 @@ class PDAG {
 With this design, the learned PDAG can be easily converted to a pgmpy `PDAG` object as follows:
 
 ``` Python
+import pandas as pd
 from pgmpy.base import PDAG
 
 # Read a dataframe
