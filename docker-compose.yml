@@ -3,7 +3,8 @@ services:
     build:
       context: .
       args:
-        INSTALL_GUROBI: "false"  # skip gurobi installation
+        INSTALL_R: false
+        INSTALL_GUROBI: false
     image: openbnsl-image
     container_name: openbnsl-container
     ports:
