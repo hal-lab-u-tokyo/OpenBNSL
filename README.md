@@ -46,7 +46,13 @@ If you have an Nvidia GPU, you can use the following command to build the image 
 docker compose build --build-arg BASE_IMAGE=nvidia/cuda:12.6.2-devel-ubuntu22.04
 ```
 
-### Optional: Gurobi License 
+### Optional: R and `bnlearn` Support 
+If you want to use R and `bnlearn`, you can use the following command to build the image with R and `bnlearn` support.
+```bash
+docker compose build --build-arg INSTALL_R=true
+```
+
+### Optional: Gurobi Support
 If you want to use gurobi, you need to get a license file (gurobi.lic) and put it in the same directory as the Dockerfile.
 Gurobi provides free licenses for academic use.
 ```bash
@@ -89,6 +95,7 @@ python3 setup.py build_ext --inplace # build in place
 - Experiment Environment (Docker)
     - [x] OpenMP support (default)
     - [x] Nvidia GPU and CUDA toolkit support
+    - [x] R and `bnlearn` support
     - [x] Gurobi support
     - [ ] MPI?
 
