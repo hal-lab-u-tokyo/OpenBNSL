@@ -266,7 +266,7 @@ float natori_dependent_score(const vector<vector<uint8_t>> &data, int &node_x,
     vector<vector<int>> count;
     count = state_count(data, children, parents, n_states, parallel);
     int r = count.size();  // number of states of node_x]
-    if (ESS > -1) {
+    if (ESS > 0) {
       alpha = ESS / r;
     }
     int n_i = 0;
@@ -283,7 +283,7 @@ float natori_dependent_score(const vector<vector<uint8_t>> &data, int &node_x,
     count = state_count(data, children, parents, n_states, parallel);
     int q = count.at(0).size();  // number of states of parents
     int r = count.size();        // number of states of node_x
-    if (ESS > -1) {
+    if (ESS > 0) {
       alpha = ESS / (r * q);
     }
     vector<float> n_ij(q, 0.0);
