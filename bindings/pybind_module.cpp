@@ -9,7 +9,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(openbnsl, m) {
+PYBIND11_MODULE(openbnsllib, m) {
   m.doc() = "OpenBNSL Python bindings";
   m.attr("cuda_enabled") = false;
 

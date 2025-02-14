@@ -35,13 +35,19 @@ class CMakeExtension(Extension):
         super().__init__(name, sources=[])
         self.sourcedir = os.path.abspath(sourcedir)
 
+description = "A Python package for the OpenBNSL core library."
+try:
+    long_description = open("README.md").read()
+except FileNotFoundError:
+    long_description = description
+
 setup(
-    name="openbnsl",
+    name="openbnsllib",
     version="0.1.0",
-    description="A Python package for Bayesian Network Structure Learning",
-    long_description=open("README.md").read(),
+    description=description,
+    long_description=long_description,
     long_description_content_type="text/markdown",
-    ext_modules=[CMakeExtension("openbnsl")],
+    ext_modules=[CMakeExtension("openbnsl_lib")],
     cmdclass={"build_ext": CMakeBuildExtension},
     install_requires=[], # TODO: Add dependencies
     extras_require={},
