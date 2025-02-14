@@ -164,15 +164,15 @@ vector<vector<int>> state_count_PC(const vector<vector<int>> &data, int &node_x,
   if (parents.empty()) {
     int x = n_states.at(node_x);
     vector<vector<int>> counts(x, vector<int>(1, 0));
-#pragma omp parallel
+    // #pragma omp parallel
     {
       vector<int> temp(x, 0);
-#pragma omp for
+      // #pragma omp for
       for (int i = 0; i < (int)data.size(); i++) {
         temp.at(data.at(i).at(node_x)) += 1;
       }
       for (int j = 0; j < x; j++) {
-#pragma omp atomic
+        // #pragma omp atomic
         counts.at(j).at(0) += temp.at(j);
       }
     }
@@ -188,12 +188,12 @@ vector<vector<int>> state_count_PC(const vector<vector<int>> &data, int &node_x,
     vector<vector<int>> counts(x, vector<int>(y, 0));
     // count the number of each state
     int yy;
-#pragma omp parallel private(yy)
+    // #pragma omp parallel private(yy)
     {
       vector<vector<int>> temp(x, vector<int>(y, 0));
-#pragma omp for
+      // #pragma omp for
       for (int i = 0; i < (int)data.size(); i++) {
-        yy = data.at(i).at(parents.at(0));
+        yy = 0;
         for (int j = 0; j < (int)parents.size(); j++) {
           yy = n_states.at(parents.at(j)) * yy + data.at(i).at(parents.at(j));
         }
@@ -201,7 +201,7 @@ vector<vector<int>> state_count_PC(const vector<vector<int>> &data, int &node_x,
       }
       for (int j = 0; j < x; j++) {
         for (int k = 0; k < y; k++) {
-#pragma omp atomic
+          // #pragma omp atomic
           counts.at(j).at(k) += temp.at(j).at(k);
         }
       }
@@ -268,12 +268,12 @@ bool ci_test_PC(const vector<vector<int>> &data, int &node_x, int &node_y,
   zplusx.push_back(node_x);
   dependent_score += localBDeuscore_PC(data, node_y, zplusx, ESS, n_states);
   if (independent_score > dependent_score) {
-    // cout<< "CI independent:" <<node_x<<" _|_"<<node_y<<" |
-    // "<<independent_score<<">"<<dependent_score<< endl;
+    // cout<< "CI independent:" <<node_x<<" _|_"<<node_y<<"
+    // |"<<independent_score<<">"<<dependent_score<< endl;
     return true;
   } else {
-    // cout<< "CI dependent:" <<node_x<<" _|_"<<node_y<<" |
-    // "<<independent_score<<"<"<<dependent_score<< endl;
+    // cout<< "CI dependent:" <<node_x<<" _|_"<<node_y<<"
+    // |"<<independent_score<<"<"<<dependent_score<< endl;
     return false;
   }
 }
@@ -407,6 +407,8 @@ py::array_t<bool> PC(py::array_t<int> data, py::array_t<int> n_states,
   const int *__restrict__ prt_states = static_cast<int *>(buf_states.ptr);
   size_t n_data = buf_data.shape[0],
          n_node = buf_data.shape[1];  // number of nodes
+  cout << "n_data, n_node, ESS: " << n_data << ' ' << n_node << ' ' << ESS
+       << endl;
   vector<vector<int>> data_vec(n_data, vector<int>(n_node));
   vector<int> n_states_vec(n_node, 0);
   for (size_t i = 0; i < n_data; i++) {
@@ -416,6 +418,11 @@ py::array_t<bool> PC(py::array_t<int> data, py::array_t<int> n_states,
   }
   for (size_t i = 0; i < n_node; i++) {
     n_states_vec.at(i) = prt_states[i];
+  }
+  for (size_t i = 0; i < n_data; i++) {
+    for (size_t j = 0; j < n_node; j++) {
+      assert(data_vec.at(i).at(j) < n_states_vec.at(j));
+    }
   }
   auto endg = py::array_t<bool>({n_node, n_node});
   py::buffer_info buf_endg = endg.request();

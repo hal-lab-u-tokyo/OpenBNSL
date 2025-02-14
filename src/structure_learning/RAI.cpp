@@ -1753,6 +1753,9 @@ py::array_t<bool> RAI(py::array_t<uint8_t> data,
   const int *__restrict__ prt_states = static_cast<int *>(buf_states.ptr);
   int n_data = buf_data.shape[0],
       n_node = buf_data.shape[1];  // number of nodes
+  cout << "n_data, n_node, ESS: " << n_data << ' ' << n_node << ' ' << ESS
+       << endl;
+
   vector<vector<uint8_t>> data_vec(n_data, vector<uint8_t>(n_node));
   vector<int> n_states_vec(n_node, 0);
   for (int i = 0; i < n_data; i++) {
