@@ -34,8 +34,8 @@ OpenBNSL ensures transparency by adopting the MIT License and maintaining a stro
 
 ## (Recommended) Using Docker
 ```bash
-git clone --recurse-submodules # for pybind11 submodule
-cd openbnsl
+git clone --recurse-submodules git@github.com:hal-lab-u-tokyo/OpenBNSL.git # for pybind11 submodule
+cd OpenBNSL
 docker compose build
 docker compose up
 ```

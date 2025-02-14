@@ -47,7 +47,7 @@ setup(
     description=description,
     long_description=long_description,
     long_description_content_type="text/markdown",
-    ext_modules=[CMakeExtension("openbnsl_lib")],
+    ext_modules=[CMakeExtension("openbnsllib")],
     cmdclass={"build_ext": CMakeBuildExtension},
     install_requires=[], # TODO: Add dependencies
     extras_require={},
