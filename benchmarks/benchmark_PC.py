@@ -17,13 +17,23 @@ def load_data(data_type, sample_size):
 
 
 def main():
-    model, data = load_data("cancer", 10000)
-    print(data)
-    best_model = PCEstimator_cpp(data=data, ESS=5.0)
-    print(model)
-    print(best_model)
-    errors = structural_errors(DAG2CPDAG(model), PDAG2CPDAG(best_model))
-    print(errors)
+    dataset = ["andes", "cancer", "earthquake", "survey", "sachs", "child", "alarm"]
+    for data_type in dataset:
+        print("\n" * 3)
+        max_iter = 1
+        ave_score = [0 for _ in range(7)]
+        for i in range(max_iter):
+            model_original, data = load_data(data_type, 10000)
+            model_estimated = PCEstimator_cpp(data=data, ESS=5.0)
+            errors = structural_errors(
+                DAG2CPDAG(model_original), PDAG2CPDAG(model_estimated)
+            )
+            ave_score = [x + y for x, y in zip(ave_score, errors)]
+            print(model_original, model_estimated)
+        ave_score = [x / max_iter for x in ave_score]
+        print(data_type)
+        print(ave_score)
+        break
 
 
 if __name__ == "__main__":

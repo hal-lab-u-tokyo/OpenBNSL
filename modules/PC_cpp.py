@@ -14,7 +14,7 @@ def PCEstimator_cpp(data, ESS):
     # translate data from pandas dataframe to numpy array and extract column names
     columns = np.array(data.columns.tolist())
     t_data = data.to_numpy()
-    # print(columns)
+    print(columns)
 
     # get statelist
     statelist = [[] for i in range(len(columns))]
@@ -22,7 +22,8 @@ def PCEstimator_cpp(data, ESS):
         for j in range(t_data.shape[0]):
             if t_data[j][i] not in statelist[i]:
                 statelist[i].append(t_data[j][i])
-    # print(statelist)
+    print(statelist)
+    print("max_dim: {}".format(max([len(x) for x in statelist])))
 
     # translate str matrix into int matrix and list of column names into list of int
     data_int = np.zeros(t_data.shape, dtype=np.int32)
@@ -36,16 +37,11 @@ def PCEstimator_cpp(data, ESS):
         n_states[i] = len(statelist[i])
     # print(n_states)
 
-    print(data_int.dtype)
-    print(n_states.dtype)
-    print(data_int.shape)
-    print(data_int.flags)
-    print(n_states.flags)
     for i in range(data_int.shape[0]):
         for j in range(data_int.shape[1]):
             if data_int[i][j] >= n_states[j]:
                 print("index error in python")
-    ansmat = openbnsl.structure_learning.PC(data_int, n_states, ESS)
+    ansmat = openbnsl.structure_learning.gpuPC(data_int, n_states)
     print("ansmat = ", ansmat)
 
     G = PDAG()

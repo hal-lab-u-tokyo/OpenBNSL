@@ -4,6 +4,8 @@ message(STATUS "CMake version: ${CMAKE_VERSION}")
 project(openbnsl_project LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS on)
+set(CMAKE_CUDA_ARCHITECTURES 50)
 
 # https://pybind11.readthedocs.io/en/stable/faq.html#someclass-declared-with-greater-visibility-than-the-type-of-its-field-someclass-member-wattributes
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden") 
@@ -73,6 +75,9 @@ target_link_libraries(
         Python3::Python 
 )
 if (USE_CUDA)
+    target_compile_options(openbnsl_lib PUBLIC $<$<COMPILE_LANGUAGE:CUDA>:
+                        --generate-line-info
+                        >)
     target_link_libraries(openbnsl_lib PUBLIC CUDA::cudart)
 endif()
 message(STATUS "✅ Backend library configuration completed")

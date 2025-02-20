@@ -364,6 +364,7 @@ PDAG PCsearch(const vector<vector<int>> &data, PDAG &Gall, double &ESS,
         if (t == 0) {
           vector<int> S;
           if (ci_test_PC(data, node_x, node_y, S, ESS, n_states)) {
+            printf("remove edge %d -> %d\n", node_x, node_y);
             Gall.remove_edge(node_x, node_y);
             Gall.remove_edge(node_y, node_x);
           }

@@ -3,6 +3,7 @@
 #include "structure_learning/PC.h"
 #include "structure_learning/RAI.h"
 #include "structure_learning/exhaustive_search.h"
+#include "structure_learning/gpuPC.h"
 
 void bind_structure_learning(py::module& m) {
   auto submodule =
@@ -13,4 +14,7 @@ void bind_structure_learning(py::module& m) {
   submodule.def("exhaustive_search", &exhaustive_search,
                 "Run exhaustive search algorithm", py::arg("df"),
                 py::arg("score_type"), py::arg("max_parents"));
+#ifdef USE_CUDA
+  submodule.def("gpuPC", &cuda::gpuPC, "Run gpuPC algorithm");
+#endif
 }

@@ -15,3 +15,5 @@ doxygen/build/
 
 # Sphinx
 sphinx/build/
+
+.cache/
