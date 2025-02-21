@@ -381,14 +381,9 @@ __global__ void PC_level_0(int n_node, int n_data, int *data, int *G,
 
 __global__ void PC_level_n(int level, int n_node, int n_data, int *data, int *G,
                            int *n_states, int *working_memory, int *sepsets) {
-  int memory_reduction_factor = (n_node + gridDim.x - 1) / gridDim.x;
   extern __shared__ int smem[];
-  for (int i_offset = 0; i_offset < memory_reduction_factor; i_offset++) {
+  for (int i = blockIdx.x; i < n_node; i += gridDim.x) {
     __syncthreads();
-    int i = blockIdx.x * memory_reduction_factor + i_offset;
-    if (i >= n_node) {
-      return;
-    }
     int *G_compacted = smem;
     if (threadIdx.x == 0 && threadIdx.y == 0 && threadIdx.z == 0) {
       int cnt = 0;
@@ -431,10 +426,6 @@ __global__ void PC_level_n(int level, int n_node, int n_data, int *data, int *G,
       if (threadIdx.x == 0) {
         comb(n_adj - 1, level, sepset_idx, idx_j, sepset);
         for (int k = 0; k < level; k++) {
-          assert(0 <= sepset[k]);
-          assert(sepset[k] < n_adj);
-          assert(0 <= G_compacted[sepset[k] + 1]);
-          assert(G_compacted[sepset[k] + 1] < n_node);
           sepset[k] = G_compacted[sepset[k] + 1];
         }
       }
