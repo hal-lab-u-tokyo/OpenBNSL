@@ -401,7 +401,7 @@ __global__ void PC_level_n(int level, int n_node, int n_data, int *data, int *G,
       continue;
     }
     if (level > max_level) {
-      printf("level: %d (> max_level)", level);
+      printf("level: %d (> max_level)\n", level);
       return;
     }
     int max_dim_s = pow(static_cast<double>(max_dim), level);
@@ -648,20 +648,18 @@ PDAG PCsearch(int n_node, int n_data, const vector<int> &data,
                                                    data_d, G_d, n_states_d,
                                                    working_memory_d, sepsets_d);
     }
+    CUDA_CHECK(cudaDeviceSynchronize());
     level++;
   }
   cout << "structure learning end" << endl;
   CUDA_CHECK(cudaMemcpy(G.data(), G_d, size_G, cudaMemcpyDeviceToHost));
-  cout << "G copy end" << endl;
   CUDA_CHECK(cudaMemcpy(sepsets.data(), sepsets_d, size_sepsets,
                         cudaMemcpyDeviceToHost));
-  cout << "sepsets copy end" << endl;
   CUDA_CHECK(cudaFree(G_d));
   CUDA_CHECK(cudaFree(data_d));
   CUDA_CHECK(cudaFree(n_states_d));
   CUDA_CHECK(cudaFree(working_memory_d));
   CUDA_CHECK(cudaFree(sepsets_d));
-  cout << "orientation start" << endl;
   // stage 2: orient edges
   PDAG G_pdag;
   G_pdag.g = vector<vector<bool>>(n_node, vector<bool>(n_node));
