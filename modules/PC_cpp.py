@@ -26,7 +26,7 @@ def PCEstimator_cpp(data, ESS):
     print("max_dim: {}".format(max([len(x) for x in statelist])))
 
     # translate str matrix into int matrix and list of column names into list of int
-    data_int = np.zeros(t_data.shape, dtype=np.int32)
+    data_int = np.zeros(t_data.shape, dtype=np.uint8)
     for i in range(t_data.shape[0]):
         for j in range(len(columns)):
             data_int[i][j] = statelist[j].index(t_data[i][j])

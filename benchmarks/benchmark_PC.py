@@ -17,7 +17,7 @@ def load_data(data_type, sample_size):
 
 
 def main():
-    dataset = ["andes", "cancer", "earthquake", "survey", "sachs", "child", "alarm"]
+    dataset = ["link", "cancer", "earthquake", "survey", "sachs", "child", "alarm"]
     for data_type in dataset:
         print("\n" * 3)
         max_iter = 1

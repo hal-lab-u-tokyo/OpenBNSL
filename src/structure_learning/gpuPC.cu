@@ -325,7 +325,7 @@ __device__ void comb(int n, int l, int t, int p, int *idset) {
 const int max_level = 20;
 const int max_dim = 4;
 
-__global__ void PC_level_0(int n_node, int n_data, int *data, int *G,
+__global__ void PC_level_0(int n_node, int n_data, uint8_t *data, int *G,
                            int *n_states) {
   int i = blockIdx.x;
   int j = blockIdx.y;
@@ -379,13 +379,14 @@ __global__ void PC_level_0(int n_node, int n_data, int *data, int *G,
   }
 }
 
-__global__ void PC_level_n(int level, int n_node, int n_data, int *data, int *G,
-                           int *n_states, int *working_memory, int *sepsets) {
+__global__ void PC_level_n(int level, int n_node, int n_data, uint8_t *data,
+                           int *G, int *n_states, int *working_memory,
+                           int *sepsets) {
   extern __shared__ int smem[];
   for (int i = blockIdx.x; i < n_node; i += gridDim.x) {
     __syncthreads();
     int *G_compacted = smem;
-    if (threadIdx.x == 0 && threadIdx.y == 0 && threadIdx.z == 0) {
+    if (threadIdx.x == 0 && threadIdx.y == 0) {
       int cnt = 0;
       for (int j = 0; j < n_node; j++) {
         if (G[i * n_node + j] == 1) {
@@ -395,7 +396,7 @@ __global__ void PC_level_n(int level, int n_node, int n_data, int *data, int *G,
       G_compacted[0] = cnt;
     }
     __syncthreads();
-    int idx_j = blockIdx.y * blockDim.z + threadIdx.z;
+    int idx_j = blockIdx.y;
     int n_adj = G_compacted[0];
     if (idx_j >= n_adj || n_adj - 1 < level) {
       continue;
@@ -411,10 +412,9 @@ __global__ void PC_level_n(int level, int n_node, int n_data, int *data, int *G,
     int n_i = n_states[i];
     int n_j = n_states[j];
     int sepset_cnt = binom(n_adj - 1, level);
-    int ci_test_idx = blockDim.y * threadIdx.z + threadIdx.y;
-    int thread_memory_index =
-        (gridDim.y * blockDim.y * blockDim.z) * blockIdx.x +
-        (blockDim.y * blockDim.z) * blockIdx.y + ci_test_idx;
+    int ci_test_idx = threadIdx.y;
+    int thread_memory_index = (gridDim.y * blockDim.y) * blockIdx.x +
+                              blockDim.y * blockIdx.y + ci_test_idx;
     int *thread_memory =
         working_memory + thread_memory_index * reserved_size_per_ci_test;
     int *sepset = smem + n_adj + 1 + level * ci_test_idx;
@@ -464,7 +464,7 @@ __global__ void PC_level_n(int level, int n_node, int n_data, int *data, int *G,
           }
         }
       }
-      int chi_squared_addr = n_adj + 1 + level * blockDim.y * blockDim.z;
+      int chi_squared_addr = n_adj + 1 + level * blockDim.y;
       chi_squared_addr = (chi_squared_addr + 1) / 2 * 2;
       double *chi_squared =
           reinterpret_cast<double *>(smem + chi_squared_addr) + ci_test_idx;
@@ -528,9 +528,10 @@ void orientation(PDAG &G, const vector<int> &sepsets) {
   // for each X-Z-Y (X and Y is not adjecent), find V-structure and orient as X
   // -> Z <- Y
   int n_node = G.g.size();
+  auto v_structure = vector<vector<bool>>(n_node, vector<bool>(n_node));
   for (int X = 0; X < n_node; X++) {
-    for (auto &Z : G.undirected_neighbors(X)) {
-      for (auto &Y : G.undirected_neighbors(Z)) {
+    for (int Z : G.undirected_neighbors(X)) {
+      for (int Y : G.undirected_neighbors(Z)) {
         if (X == Y || G.has_edge(X, Y) || G.has_edge(Y, X)) continue;
         bool in_sepset = false;
         for (int i = 0; i < max_level; i++) {
@@ -544,11 +545,18 @@ void orientation(PDAG &G, const vector<int> &sepsets) {
           }
         }
         if (!in_sepset) {
-          G.remove_edge(Z, X);
-          G.remove_edge(Z, Y);
+          v_structure[X][Z] = true;
+          v_structure[Y][Z] = true;
           // cout << "V-structure found:" << X << "->" << Z << "<-" << Y <<
           // endl;
         }
+      }
+    }
+  }
+  for (int i = 0; i < n_node; i++) {
+    for (int j = 0; j < n_node; j++) {
+      if (v_structure[i][j] && !v_structure[j][i]) {
+        G.remove_edge(j, i);
       }
     }
   }
@@ -557,9 +565,9 @@ void orientation(PDAG &G, const vector<int> &sepsets) {
     flag = false;
     // Rule 1: X -> Y - Z, no edge between X and Z then X -> Y -> Z
     for (int X = 0; X < n_node; X++) {
-      for (auto &Y : G.successors(X)) {
+      for (int Y : G.successors(X)) {
         if (!G.has_directed_edge(X, Y)) continue;
-        for (auto &Z : G.undirected_neighbors(Y)) {
+        for (int Z : G.undirected_neighbors(Y)) {
           if (!G.has_edge(X, Z) && !G.has_edge(Z, X) && Z != X) {
             G.remove_edge(Z, Y);
             // cout << "R1:" << Y << "->" << Z << endl;
@@ -569,8 +577,8 @@ void orientation(PDAG &G, const vector<int> &sepsets) {
       }
     }
     // Rule 2: X - Y and if there is a directed path from X to Y, then X -> Y
-    for (int X = 0; X < (int)G.g.size(); X++) {
-      for (auto &Y : G.undirected_neighbors(X)) {
+    for (int X = 0; X < n_node; X++) {
+      for (int Y : G.undirected_neighbors(X)) {
         if (G.has_directed_path(X, Y)) {
           G.remove_edge(Y, X);
           // cout << "R2:" << X << "->" << Y << endl;
@@ -579,12 +587,12 @@ void orientation(PDAG &G, const vector<int> &sepsets) {
       }
     }
     // Rule 3: for each X->W<-Z X-Y-Z Y-W, orient Y->W
-    for (int X = 0; X < (int)G.g.size(); X++) {
-      for (auto &Y : G.undirected_neighbors(X)) {
-        for (auto &Z : G.undirected_neighbors(Y)) {
+    for (int X = 0; X < n_node; X++) {
+      for (int Y : G.undirected_neighbors(X)) {
+        for (int Z : G.undirected_neighbors(Y)) {
           if (Z == X || G.has_edge(X, Z) || G.has_edge(Z, X)) continue;
           // X-Y-Z
-          for (auto &W : G.undirected_neighbors(Y)) {
+          for (int W : G.undirected_neighbors(Y)) {
             if (W != X && W != Z && G.has_directed_edge(X, W) &&
                 G.has_directed_edge(Z, W)) {
               G.remove_edge(W, Y);
@@ -599,7 +607,7 @@ void orientation(PDAG &G, const vector<int> &sepsets) {
   return;
 }
 
-PDAG PCsearch(int n_node, int n_data, const vector<int> &data,
+PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
               const vector<int> &n_states) {
   vector<int> G(n_node * n_node);
   for (int i = 0; i < n_node; i++) {
@@ -608,9 +616,10 @@ PDAG PCsearch(int n_node, int n_data, const vector<int> &data,
     }
   }
   vector<int> sepsets(n_node * n_node * max_level, -1);
-  int *G_d, *data_d, *n_states_d, *working_memory_d, *sepsets_d;
+  uint8_t *data_d;
+  int *G_d, *n_states_d, *working_memory_d, *sepsets_d;
   int size_G = sizeof(int) * n_node * n_node;
-  int size_data = sizeof(int) * n_data * n_node;
+  int size_data = sizeof(uint8_t) * n_data * n_node;
   int size_n_states = sizeof(int) * n_node;
   int size_working_memory = sizeof(int) * 300'000'000;
   int size_sepsets = sizeof(int) * n_node * n_node * max_level;
@@ -629,30 +638,42 @@ PDAG PCsearch(int n_node, int n_data, const vector<int> &data,
 
   // stage 1: Do CI tests between nodes and remove edge (undirected graph)
   int level = 0;
+  int max_n_adj = n_node - 1;
   while (level <= n_node - 2) {
-    cout << "level: " << level << endl;
+    cout << "level: " << level << ", max_n_adj: " << max_n_adj << endl;
     if (level == 0) {
       dim3 threadsPerBlock(64);
       dim3 numBlocks(n_node, n_node);
       PC_level_0<<<numBlocks, threadsPerBlock>>>(n_node, n_data, data_d, G_d,
                                                  n_states_d);
     } else {
-      dim3 threadsPerBlock(64, 2, 1);
-      dim3 numBlocks(n_node, n_node);
-      if (n_node > 1) {
-        numBlocks.x = 1;
-      }
+      dim3 threadsPerBlock(64, 2);
+      dim3 numBlocks(n_node, max_n_adj);
+      int max_dim_s = pow(static_cast<double>(max_dim), level);
+      int reserved_size_per_ci_test =
+          max_dim_s * max_dim * max_dim + 2 * max_dim_s * max_dim + max_dim_s;
+      int reserved_size_per_row = reserved_size_per_ci_test * 2 * max_n_adj;
+      int max_rows = size_working_memory / sizeof(int) / reserved_size_per_row;
+      if (numBlocks.x > max_rows) numBlocks.x = max_rows;
+      cout << "numBlocks.x: " << numBlocks.x << endl;
       PC_level_n<<<numBlocks, threadsPerBlock,
                    sizeof(int) * (n_node + level * 2) +
                        sizeof(double) * (2 + 1)>>>(level, n_node, n_data,
                                                    data_d, G_d, n_states_d,
                                                    working_memory_d, sepsets_d);
     }
-    CUDA_CHECK(cudaDeviceSynchronize());
+    CUDA_CHECK(cudaMemcpy(G.data(), G_d, size_G, cudaMemcpyDeviceToHost));
+    max_n_adj = 0;
+    for (int i = 0; i < n_node; i++) {
+      int n_adj = 0;
+      for (int j = 0; j < n_node; j++) {
+        if (G[i * n_node + j]) n_adj++;
+      }
+      max_n_adj = max(max_n_adj, n_adj);
+    }
+    if (max_n_adj - 1 <= level) break;
     level++;
   }
-  cout << "structure learning end" << endl;
-  CUDA_CHECK(cudaMemcpy(G.data(), G_d, size_G, cudaMemcpyDeviceToHost));
   CUDA_CHECK(cudaMemcpy(sepsets.data(), sepsets_d, size_sepsets,
                         cudaMemcpyDeviceToHost));
   CUDA_CHECK(cudaFree(G_d));
@@ -672,16 +693,16 @@ PDAG PCsearch(int n_node, int n_data, const vector<int> &data,
   return G_pdag;
 }
 
-py::array_t<bool> gpuPC(py::array_t<int> data, py::array_t<int> n_states) {
-  // translate imput data to c++ vector(this is not optimal but I don't know how
+py::array_t<bool> gpuPC(py::array_t<uint8_t> data, py::array_t<int> n_states) {
+  // translate input data to c++ vector(this is not optimal but I don't know how
   // to use pybind11::array_t)
   py::buffer_info buf_data = data.request(), buf_states = n_states.request();
-  const int *__restrict__ prt_data = static_cast<int *>(buf_data.ptr);
+  const uint8_t *__restrict__ prt_data = static_cast<uint8_t *>(buf_data.ptr);
   const int *__restrict__ prt_states = static_cast<int *>(buf_states.ptr);
   size_t n_data = buf_data.shape[0],
          n_node = buf_data.shape[1];  // number of nodes
   cout << "n_data, n_node: " << n_data << ' ' << n_node << endl;
-  vector<int> data_vec(n_data * n_node);
+  vector<uint8_t> data_vec(n_data * n_node);
   vector<int> n_states_vec(n_node);
   for (size_t i = 0; i < n_data; i++) {
     for (size_t j = 0; j < n_node; j++) {
