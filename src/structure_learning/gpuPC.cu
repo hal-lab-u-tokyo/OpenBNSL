@@ -325,6 +325,25 @@ __device__ void comb(int n, int l, int t, int p, int *idset) {
 const int max_level = 20;
 const int max_dim = 21;
 
+__device__ bool ci_test_chi_squared_level_0(int n_data, int n_i, int n_j,
+                                            int *contingency_matrix,
+                                            int *marginals_i,
+                                            int *marginals_j) {
+  double chi_squared = 0;
+  for (int k = 0; k < n_i; k++) {
+    for (int l = 0; l < n_j; l++) {
+      double expected =
+          static_cast<double>(marginals_i[k] * marginals_j[l]) / n_data;
+      if (expected != 0) {
+        double observed = contingency_matrix[k * n_j + l];
+        chi_squared += (observed - expected) * (observed - expected) / expected;
+      }
+    }
+  }
+  double pval = pchisq(chi_squared, (n_i - 1) * (n_j - 1));
+  return pval >= 0.01;
+}
+
 __global__ void PC_level_0(int n_node, int n_data, uint8_t *data, int *G,
                            int *n_states) {
   int i = blockIdx.x;
@@ -358,24 +377,49 @@ __global__ void PC_level_0(int n_node, int n_data, uint8_t *data, int *G,
         marginals_j[l] += entry;
       }
     }
-    double chi_squared = 0;
-    for (int k = 0; k < n_i; k++) {
-      for (int l = 0; l < n_j; l++) {
-        double expected =
-            static_cast<double>(marginals_i[k] * marginals_j[l]) / n_data;
-        if (expected != 0) {
-          double observed = contingency_matrix[k * n_j + l];
-          chi_squared +=
-              (observed - expected) * (observed - expected) / expected;
-        }
-      }
-    }
-    double pval = pchisq(chi_squared, (n_i - 1) * (n_j - 1));
-    if (pval >= 0.01) {
-      // printf("test_level 0: %d %d %lf\n", i, j, pval);
+    if (ci_test_chi_squared_level_0(n_data, n_i, n_j, contingency_matrix,
+                                    marginals_i, marginals_j)) {
       G[i * n_node + j] = 0;
       G[j * n_node + i] = 0;
     }
+  }
+}
+
+__device__ void ci_test_chi_squared_level_n(double *chi_squared, int dim_s,
+                                            int n_i, int n_j, int *N_i_j_s,
+                                            int *N_i_s, int *N_j_s, int *N_s,
+                                            bool *result) {
+  if (threadIdx.x == 0) {
+    *chi_squared = 0;
+  }
+  __syncthreads();
+  for (int g = threadIdx.x; g < dim_s; g += blockDim.x) {
+    if (N_s[g] == 0) continue;
+    for (int k = 0; k < n_i; k++) {
+      for (int l = 0; l < n_j; l++) {
+        double expected =
+            static_cast<double>(N_i_s[g * n_i + k] * N_j_s[g * n_j + l]) /
+            N_s[g];
+        if (expected == 0) continue;
+        double observed = N_i_j_s[g * n_i * n_j + k * n_j + l];
+        double sum_term =
+            (observed - expected) * (observed - expected) / expected;
+        unsigned long long *address_as_ull =
+            reinterpret_cast<unsigned long long *>(chi_squared);
+        unsigned long long old = *address_as_ull, assumed;
+        do {
+          assumed = old;
+          old = atomicCAS(
+              address_as_ull, assumed,
+              __double_as_longlong(sum_term + __longlong_as_double(assumed)));
+        } while (assumed != old);
+      }
+    }
+  }
+  __syncthreads();
+  if (threadIdx.x == 0) {
+    double pval = pchisq(*chi_squared, (n_i - 1) * (n_j - 1) * dim_s);
+    *result = (pval >= 0.01);
   }
 }
 
@@ -465,52 +509,20 @@ __global__ void PC_level_n(int level, int n_node, int n_data, uint8_t *data,
             }
           }
         }
-        int chi_squared_addr = n_adj + 1 + level * blockDim.y;
-        chi_squared_addr = (chi_squared_addr + 1) / 2 * 2;
-        double *chi_squared =
-            reinterpret_cast<double *>(smem + chi_squared_addr) + ci_test_idx;
-        if (threadIdx.x == 0) {
-          *chi_squared = 0;
-        }
-        __syncthreads();
-
-        for (int g = threadIdx.x; g < dim_s; g += blockDim.x) {
-          if (N_s[g] == 0) continue;
-          for (int k = 0; k < n_i; k++) {
-            for (int l = 0; l < n_j; l++) {
-              double expected =
-                  static_cast<double>(N_i_s[g * n_i + k] * N_j_s[g * n_j + l]) /
-                  N_s[g];
-              if (expected == 0) continue;
-              double observed = N_i_j_s[g * n_i * n_j + k * n_j + l];
-              double sum_term =
-                  (observed - expected) * (observed - expected) / expected;
-              unsigned long long *address_as_ull =
-                  reinterpret_cast<unsigned long long *>(chi_squared);
-              unsigned long long old = *address_as_ull, assumed;
-              do {
-                assumed = old;
-                old = atomicCAS(address_as_ull, assumed,
-                                __double_as_longlong(
-                                    sum_term + __longlong_as_double(assumed)));
-              } while (assumed != old);
-            }
-          }
-        }
-        __syncthreads();
-        if (threadIdx.x == 0) {
-          double pval = pchisq(*chi_squared, (n_i - 1) * (n_j - 1) * dim_s);
-          if (pval >= 0.01) {
-            // printf("test_level %d: %d %d %d %lf %lf\n", level, i, j,
-            // sepset_idx,
-            //        *chi_squared, pval);
-            if (atomicCAS(G + i * n_node + j, 1, 0) == 1) {
-              G[j * n_node + i] = 0;
-              int ij_min = (i < j ? i : j);
-              int ij_max = (i < j ? j : i);
-              for (int k = 0; k < level; k++) {
-                sepsets[(ij_min * n_node + ij_max) * max_level + k] = sepset[k];
-              }
+        int scratch_addr = n_adj + 1 + level * blockDim.y;
+        scratch_addr = (scratch_addr + 1) / 2 * 2;
+        double *scratch_ptr =
+            reinterpret_cast<double *>(smem + scratch_addr) + ci_test_idx;
+        bool result;
+        ci_test_chi_squared_level_n(scratch_ptr, dim_s, n_i, n_j, N_i_j_s,
+                                    N_i_s, N_j_s, N_s, &result);
+        if (threadIdx.x == 0 && result) {
+          if (atomicCAS(G + i * n_node + j, 1, 0) == 1) {
+            G[j * n_node + i] = 0;
+            int ij_min = (i < j ? i : j);
+            int ij_max = (i < j ? j : i);
+            for (int k = 0; k < level; k++) {
+              sepsets[(ij_min * n_node + ij_max) * max_level + k] = sepset[k];
             }
           }
         }
