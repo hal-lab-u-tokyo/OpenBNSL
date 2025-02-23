@@ -323,7 +323,7 @@ __device__ void comb(int n, int l, int t, int p, int *idset) {
 }
 
 const int max_level = 20;
-const int max_dim = 21;
+const int max_dim = 4;
 
 __device__ bool ci_test_chi_squared_level_0(int n_data, int n_i, int n_j,
                                             int *contingency_matrix,
@@ -342,6 +342,59 @@ __device__ bool ci_test_chi_squared_level_0(int n_data, int n_i, int n_j,
   }
   double pval = pchisq(chi_squared, (n_i - 1) * (n_j - 1));
   return pval >= 0.01;
+}
+
+__device__ bool ci_test_mi_level_0(int n_data, int n_i, int n_j,
+                                   int *contingency_matrix, int *marginals_i,
+                                   int *marginals_j) {
+  double mi = 0;
+  for (int k = 0; k < n_i; k++) {
+    for (int l = 0; l < n_j; l++) {
+      if (!contingency_matrix[k * n_j + l]) continue;
+      mi += static_cast<double>(contingency_matrix[k * n_j + l]) / n_data *
+            log2(static_cast<double>(n_data) * contingency_matrix[k * n_j + l] /
+                 (marginals_i[k] * marginals_j[l]));
+    }
+  }
+  return mi < 0.003;
+}
+
+__device__ bool ci_test_bayes_factor_level_0(int n_data, int n_i, int n_j,
+                                             int *contingency_matrix,
+                                             int *marginals_i,
+                                             int *marginals_j) {
+  double independent_score = 0;
+  double dependent_score = 0;
+  const double alpha = 0.5;
+  for (int k = 0; k < n_i; k++) {
+    independent_score += lgamma(marginals_i[k] + alpha) - lgamma(alpha);
+    // independent_score += lgamma(marginals_i[k] + 1. / n_i) - lgamma(1. /
+    // n_i);
+  }
+  independent_score += lgamma(n_i * alpha) - lgamma(n_i * alpha + n_data);
+  // independent_score += -lgamma(1. + n_data);
+  for (int l = 0; l < n_j; l++) {
+    independent_score += lgamma(marginals_j[l] + alpha) - lgamma(alpha);
+    // independent_score += lgamma(marginals_j[l] + 1. / n_j) - lgamma(1. /
+    // n_j);
+  }
+  independent_score += lgamma(n_j * alpha) - lgamma(n_j * alpha + n_data);
+  // independent_score += -lgamma(1. + n_data);
+  for (int k = 0; k < n_i; k++) {
+    for (int l = 0; l < n_j; l++) {
+      dependent_score +=
+          lgamma(contingency_matrix[k * n_j + l] + alpha) - lgamma(alpha);
+      // dependent_score +=
+      //     lgamma(contingency_matrix[k * n_j + l] + 1. / (n_i * n_j)) -
+      //     lgamma(1. / (n_i * n_j));
+    }
+  }
+  dependent_score +=
+      lgamma(n_i * n_j * alpha) - lgamma(n_i * n_j * alpha + n_data);
+  // dependent_score += -lgamma(1. + n_data);
+  // printf("independent_score: %.7lf, dependent_score: %.7lf\n",
+  //  independent_score, dependent_score);
+  return independent_score > dependent_score;
 }
 
 __global__ void PC_level_0(int n_node, int n_data, uint8_t *data, int *G,
@@ -377,17 +430,18 @@ __global__ void PC_level_0(int n_node, int n_data, uint8_t *data, int *G,
         marginals_j[l] += entry;
       }
     }
-    if (ci_test_chi_squared_level_0(n_data, n_i, n_j, contingency_matrix,
-                                    marginals_i, marginals_j)) {
+    if (ci_test_mi_level_0(n_data, n_i, n_j, contingency_matrix, marginals_i,
+                           marginals_j)) {
       G[i * n_node + j] = 0;
       G[j * n_node + i] = 0;
     }
   }
 }
 
-__device__ void ci_test_chi_squared_level_n(double *chi_squared, int dim_s,
-                                            int n_i, int n_j, int *N_i_j_s,
-                                            int *N_i_s, int *N_j_s, int *N_s,
+__device__ void ci_test_chi_squared_level_n(double *chi_squared, int n_data,
+                                            int dim_s, int n_i, int n_j,
+                                            int *N_i_j_s, int *N_i_s,
+                                            int *N_j_s, int *N_s,
                                             bool *result) {
   if (threadIdx.x == 0) {
     *chi_squared = 0;
@@ -420,6 +474,119 @@ __device__ void ci_test_chi_squared_level_n(double *chi_squared, int dim_s,
   if (threadIdx.x == 0) {
     double pval = pchisq(*chi_squared, (n_i - 1) * (n_j - 1) * dim_s);
     *result = (pval >= 0.01);
+  }
+}
+
+__device__ void ci_test_mi_level_n(double *mi, int n_data, int dim_s, int n_i,
+                                   int n_j, int *N_i_j_s, int *N_i_s,
+                                   int *N_j_s, int *N_s, bool *result) {
+  if (threadIdx.x == 0) {
+    *mi = 0;
+  }
+  __syncthreads();
+  for (int g = threadIdx.x; g < dim_s; g += blockDim.x) {
+    if (N_s[g] == 0) continue;
+    for (int k = 0; k < n_i; k++) {
+      for (int l = 0; l < n_j; l++) {
+        if (!N_i_j_s[g * n_i * n_j + k * n_j + l]) continue;
+        double sum_term =
+            static_cast<double>(N_i_j_s[g * n_i * n_j + k * n_j + l]) / n_data *
+            log2(static_cast<double>(N_s[g]) *
+                 N_i_j_s[g * n_i * n_j + k * n_j + l] /
+                 (N_i_s[g * n_i + k] * N_j_s[g * n_j + l]));
+        unsigned long long *address_as_ull =
+            reinterpret_cast<unsigned long long *>(mi);
+        unsigned long long old = *address_as_ull, assumed;
+        do {
+          assumed = old;
+          old = atomicCAS(
+              address_as_ull, assumed,
+              __double_as_longlong(sum_term + __longlong_as_double(assumed)));
+        } while (assumed != old);
+      }
+    }
+  }
+  __syncthreads();
+  if (threadIdx.x == 0) {
+    *result = (*mi < 0.003);
+  }
+}
+
+__device__ void ci_test_bayes_factor_level_n(double *scratch_ptr, int n_data,
+                                             int dim_s, int n_i, int n_j,
+                                             int *N_i_j_s, int *N_i_s,
+                                             int *N_j_s, int *N_s,
+                                             bool *result) {
+  if (threadIdx.x == 0) {
+    *scratch_ptr = 0;
+  }
+  __syncthreads();
+  const double alpha = 0.5;
+  // independent score
+  for (int g = threadIdx.x; g < dim_s; g += blockDim.x) {
+    if (N_s[g] == 0) continue;
+    double sum_term = 0;
+    for (int k = 0; k < n_i; k++) {
+      sum_term += lgamma(N_i_s[g * n_i + k] + alpha) - lgamma(alpha);
+      // sum_term += lgamma(N_i_s[g * n_i + k] + 1. / n_i / dim_s) -
+      //             lgamma(1. / n_i / dim_s);
+    }
+    sum_term += lgamma(n_i * alpha) - lgamma(n_i * alpha + N_s[g]);
+    // sum_term += lgamma(1. / dim_s) - lgamma(1. / dim_s + N_s[g]);
+    for (int l = 0; l < n_j; l++) {
+      sum_term += lgamma(N_j_s[g * n_j + l] + alpha) - lgamma(alpha);
+      // sum_term += lgamma(N_j_s[g * n_j + l] + 1. / n_j / dim_s) -
+      //             lgamma(1. / n_j / dim_s);
+    }
+    sum_term += lgamma(n_j * alpha) - lgamma(n_j * alpha + N_s[g]);
+    // sum_term += lgamma(1. / dim_s) - lgamma(1. / dim_s + N_s[g]);
+    unsigned long long *address_as_ull =
+        reinterpret_cast<unsigned long long *>(scratch_ptr);
+    unsigned long long old = *address_as_ull, assumed;
+    do {
+      assumed = old;
+      old = atomicCAS(
+          address_as_ull, assumed,
+          __double_as_longlong(sum_term + __longlong_as_double(assumed)));
+    } while (assumed != old);
+  }
+  __syncthreads();
+  double independent_score = *scratch_ptr;
+  // dependent score
+  if (threadIdx.x == 0) {
+    *scratch_ptr = 0;
+  }
+  __syncthreads();
+  for (int g = threadIdx.x; g < dim_s; g += blockDim.x) {
+    if (N_s[g] == 0) continue;
+    double sum_term = 0;
+    for (int k = 0; k < n_i; k++) {
+      for (int l = 0; l < n_j; l++) {
+        sum_term += lgamma(N_i_j_s[g * n_i * n_j + k * n_j + l] + alpha) -
+                    lgamma(alpha);
+        // sum_term += lgamma(N_i_j_s[g * n_i * n_j + k * n_j + l] +
+        //                    1. / (n_i * n_j * dim_s)) -
+        //             lgamma(1. / (n_i * n_j * dim_s));
+      }
+    }
+    sum_term += lgamma(n_i * n_j * alpha) - lgamma(n_i * n_j * alpha + N_s[g]);
+    // sum_term += lgamma(1. / dim_s) - lgamma(1. / dim_s + N_s[g]);
+    unsigned long long *address_as_ull =
+        reinterpret_cast<unsigned long long *>(scratch_ptr);
+    unsigned long long old = *address_as_ull, assumed;
+    do {
+      assumed = old;
+      old = atomicCAS(
+          address_as_ull, assumed,
+          __double_as_longlong(sum_term + __longlong_as_double(assumed)));
+    } while (assumed != old);
+  }
+  __syncthreads();
+  double dependent_score = *scratch_ptr;
+  if (threadIdx.x == 0) {
+    // printf("independent_score: %.7lf, dependent_score: %.7lf\n",
+    //        independent_score, dependent_score);
+    *result = (independent_score > dependent_score);
   }
 }
 
@@ -514,8 +681,8 @@ __global__ void PC_level_n(int level, int n_node, int n_data, uint8_t *data,
         double *scratch_ptr =
             reinterpret_cast<double *>(smem + scratch_addr) + ci_test_idx;
         bool result;
-        ci_test_chi_squared_level_n(scratch_ptr, dim_s, n_i, n_j, N_i_j_s,
-                                    N_i_s, N_j_s, N_s, &result);
+        ci_test_mi_level_n(scratch_ptr, n_data, dim_s, n_i, n_j, N_i_j_s, N_i_s,
+                           N_j_s, N_s, &result);
         if (threadIdx.x == 0 && result) {
           if (atomicCAS(G + i * n_node + j, 1, 0) == 1) {
             G[j * n_node + i] = 0;
@@ -539,7 +706,8 @@ void orientation(PDAG &G, const vector<int> &sepsets) {
      Causal Explanation with Background Knowledge,Proc.Confon Uncertainty in
      Artificial Inteligence (UAl-95),p.403-410 (195)
   */
-  // for each X-Z-Y (X and Y is not adjecent), find V-structure and orient as X
+  // for each X-Z-Y (X and Y is not adjecent), find V-structure and orient as
+  // X
   // -> Z <- Y
   int n_node = G.g.size();
   auto v_structure = vector<vector<bool>>(n_node, vector<bool>(n_node));
@@ -686,6 +854,7 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
     CUDA_CHECK(cudaMemcpy(G.data(), G_d, size_G, cudaMemcpyDeviceToHost));
     max_n_adj = 0;
     int next_node_cnt = 0;
+    int next_edge_cnt = 0;
     for (int i = 0; i < n_node; i++) {
       int n_adj = 0;
       for (int j = 0; j < n_node; j++) {
@@ -695,8 +864,10 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
         next_node_cnt++;
       }
       max_n_adj = max(max_n_adj, n_adj);
+      next_edge_cnt += n_adj;
     }
-    cout << "next_node_cnt: " << next_node_cnt << endl;
+    cout << "next_node_cnt, next_edge_cnt: " << next_node_cnt << ", "
+         << next_edge_cnt << endl;
     if (max_n_adj - 1 <= level) break;
     level++;
   }
@@ -720,8 +891,8 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
 }
 
 py::array_t<bool> gpuPC(py::array_t<uint8_t> data, py::array_t<int> n_states) {
-  // translate input data to c++ vector(this is not optimal but I don't know how
-  // to use pybind11::array_t)
+  // translate input data to c++ vector(this is not optimal but I don't know
+  // how to use pybind11::array_t)
   py::buffer_info buf_data = data.request(), buf_states = n_states.request();
   const uint8_t *__restrict__ prt_data = static_cast<uint8_t *>(buf_data.ptr);
   const int *__restrict__ prt_states = static_cast<int *>(buf_states.ptr);
@@ -749,8 +920,8 @@ py::array_t<bool> gpuPC(py::array_t<uint8_t> data, py::array_t<int> n_states) {
 
   PDAG Gend = PCsearch(n_node, n_data, data_vec, n_states_vec);
 
-  // translate Gend to py::array_t (this is not optimal but I don't know how to
-  // use pybind11::array_t)
+  // translate Gend to py::array_t (this is not optimal but I don't know how
+  // to use pybind11::array_t)
   for (size_t i = 0; i < n_node; i++) {
     for (size_t j = 0; j < n_node; j++) {
       prt_endg[i * n_node + j] = Gend.g.at(i).at(j);
