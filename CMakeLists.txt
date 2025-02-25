@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.22)
 message(STATUS "CMake version: ${CMAKE_VERSION}")
 
-project(openbnsl_project LANGUAGES CXX)
+project(openbnsl_lib LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS on)
@@ -49,9 +49,9 @@ else()
     set(USE_CUDA FALSE)
 endif()
 
-#############################
-# Compile backend libraries #
-#############################
+##########################
+# Compile core libraries #
+##########################
 file(GLOB_RECURSE CPP_SOURCES src/*.cpp)
 list(APPEND SOURCES ${CPP_SOURCES})
 if (USE_CUDA)
@@ -64,37 +64,38 @@ if (VERBOSE_OUTPUT)
         message(STATUS "  - ${SRC_FILE}")
     endforeach()
 endif()
-add_library(openbnsl_lib STATIC ${SOURCES})
-set_target_properties(openbnsl_lib PROPERTIES POSITION_INDEPENDENT_CODE ON)
-target_include_directories(openbnsl_lib PUBLIC include)
+add_library(openbnsl_core STATIC ${SOURCES})
+set_target_properties(openbnsl_core PROPERTIES POSITION_INDEPENDENT_CODE ON)
+target_include_directories(openbnsl_core PUBLIC include)
 target_link_libraries(
-    openbnsl_lib 
+    openbnsl_core 
     PUBLIC 
         OpenMP::OpenMP_CXX 
         pybind11::headers 
         Python3::Python 
 )
 if (USE_CUDA)
-    target_compile_options(openbnsl_lib PUBLIC $<$<COMPILE_LANGUAGE:CUDA>:
+    target_compile_options(openbnsl_core PUBLIC $<$<COMPILE_LANGUAGE:CUDA>:
                         --generate-line-info
                         >)
-    target_link_libraries(openbnsl_lib PUBLIC CUDA::cudart)
+    target_link_libraries(openbnsl_core PUBLIC CUDA::cudart)
 endif()
 message(STATUS "✅ Backend library configuration completed")
 
 ###########################
 # Compile python bindings #
 ###########################
-pybind11_add_module(openbnsl bindings/pybind_module.cpp)
-target_include_directories(openbnsl PUBLIC include)
+set(PYTHON_PACKAGE_NAME "openbnsllib")
+pybind11_add_module(openbnsl_lib bindings/pybind_module.cpp)
+set_target_properties(openbnsl_lib PROPERTIES OUTPUT_NAME ${PYTHON_PACKAGE_NAME})
+target_include_directories(openbnsl_lib PUBLIC include)
 target_link_libraries(
-    openbnsl 
+    openbnsl_lib 
     PUBLIC 
-        openbnsl_lib 
+        openbnsl_core 
         OpenMP::OpenMP_CXX 
         pybind11::headers 
 )
-# set_target_properties(openbnsl PROPERTIES PREFIX "" SUFFIX ".so" LINK_FLAGS "-shared")
 message(STATUS "✅ Python bindings configuration completed")
 
 ###########################
@@ -112,7 +113,7 @@ if (BUILD_TESTS)
     target_link_libraries(
         openbnsl_test 
         PUBLIC 
-            openbnsl_lib 
+            openbnsl_core 
             OpenMP::OpenMP_CXX 
             GTest::GTest 
             GTest::Main

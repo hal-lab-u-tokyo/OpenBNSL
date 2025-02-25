@@ -2,7 +2,7 @@ import sys
 
 sys.path.append("/workspace/build")
 
-import openbnsl
+import openbnsllib
 import numpy as np
 from pgmpy.base import PDAG
 
@@ -41,7 +41,7 @@ def PCEstimator_cpp(data, ESS):
         for j in range(data_int.shape[1]):
             if data_int[i][j] >= n_states[j]:
                 print("index error in python")
-    ansmat = openbnsl.structure_learning.gpuPC(data_int, n_states)
+    ansmat = openbnsllib.structure_learning.gpuPC(data_int, n_states)
     print("ansmat = ", ansmat)
 
     G = PDAG()
