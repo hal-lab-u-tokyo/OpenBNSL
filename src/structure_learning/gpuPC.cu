@@ -323,7 +323,7 @@ __device__ void comb(int n, int l, int t, int p, int *idset) {
 }
 
 const int max_level = 20;
-const int max_dim = 4;
+const int max_dim = 21;
 
 __device__ bool ci_test_chi_squared_level_0(int n_data, int n_i, int n_j,
                                             int *contingency_matrix,
@@ -333,7 +333,7 @@ __device__ bool ci_test_chi_squared_level_0(int n_data, int n_i, int n_j,
   for (int k = 0; k < n_i; k++) {
     for (int l = 0; l < n_j; l++) {
       double expected =
-          static_cast<double>(marginals_i[k] * marginals_j[l]) / n_data;
+          static_cast<double>(marginals_i[k]) * marginals_j[l] / n_data;
       if (expected != 0) {
         double observed = contingency_matrix[k * n_j + l];
         chi_squared += (observed - expected) * (observed - expected) / expected;
@@ -353,7 +353,7 @@ __device__ bool ci_test_mi_level_0(int n_data, int n_i, int n_j,
       if (!contingency_matrix[k * n_j + l]) continue;
       mi += static_cast<double>(contingency_matrix[k * n_j + l]) / n_data *
             log2(static_cast<double>(n_data) * contingency_matrix[k * n_j + l] /
-                 (marginals_i[k] * marginals_j[l]));
+                 (static_cast<double>(marginals_i[k]) * marginals_j[l]));
     }
   }
   return mi < 0.003;
@@ -368,32 +368,20 @@ __device__ bool ci_test_bayes_factor_level_0(int n_data, int n_i, int n_j,
   const double alpha = 0.5;
   for (int k = 0; k < n_i; k++) {
     independent_score += lgamma(marginals_i[k] + alpha) - lgamma(alpha);
-    // independent_score += lgamma(marginals_i[k] + 1. / n_i) - lgamma(1. /
-    // n_i);
   }
   independent_score += lgamma(n_i * alpha) - lgamma(n_i * alpha + n_data);
-  // independent_score += -lgamma(1. + n_data);
   for (int l = 0; l < n_j; l++) {
     independent_score += lgamma(marginals_j[l] + alpha) - lgamma(alpha);
-    // independent_score += lgamma(marginals_j[l] + 1. / n_j) - lgamma(1. /
-    // n_j);
   }
   independent_score += lgamma(n_j * alpha) - lgamma(n_j * alpha + n_data);
-  // independent_score += -lgamma(1. + n_data);
   for (int k = 0; k < n_i; k++) {
     for (int l = 0; l < n_j; l++) {
       dependent_score +=
           lgamma(contingency_matrix[k * n_j + l] + alpha) - lgamma(alpha);
-      // dependent_score +=
-      //     lgamma(contingency_matrix[k * n_j + l] + 1. / (n_i * n_j)) -
-      //     lgamma(1. / (n_i * n_j));
     }
   }
   dependent_score +=
       lgamma(n_i * n_j * alpha) - lgamma(n_i * n_j * alpha + n_data);
-  // dependent_score += -lgamma(1. + n_data);
-  // printf("independent_score: %.7lf, dependent_score: %.7lf\n",
-  //  independent_score, dependent_score);
   return independent_score > dependent_score;
 }
 
@@ -430,8 +418,8 @@ __global__ void PC_level_0(int n_node, int n_data, uint8_t *data, int *G,
         marginals_j[l] += entry;
       }
     }
-    if (ci_test_mi_level_0(n_data, n_i, n_j, contingency_matrix, marginals_i,
-                           marginals_j)) {
+    if (ci_test_chi_squared_level_0(n_data, n_i, n_j, contingency_matrix,
+                                    marginals_i, marginals_j)) {
       G[i * n_node + j] = 0;
       G[j * n_node + i] = 0;
     }
@@ -451,9 +439,8 @@ __device__ void ci_test_chi_squared_level_n(double *chi_squared, int n_data,
     if (N_s[g] == 0) continue;
     for (int k = 0; k < n_i; k++) {
       for (int l = 0; l < n_j; l++) {
-        double expected =
-            static_cast<double>(N_i_s[g * n_i + k] * N_j_s[g * n_j + l]) /
-            N_s[g];
+        double expected = static_cast<double>(N_i_s[g * n_i + k]) *
+                          N_j_s[g * n_j + l] / N_s[g];
         if (expected == 0) continue;
         double observed = N_i_j_s[g * n_i * n_j + k * n_j + l];
         double sum_term =
@@ -491,9 +478,10 @@ __device__ void ci_test_mi_level_n(double *mi, int n_data, int dim_s, int n_i,
         if (!N_i_j_s[g * n_i * n_j + k * n_j + l]) continue;
         double sum_term =
             static_cast<double>(N_i_j_s[g * n_i * n_j + k * n_j + l]) / n_data *
-            log2(static_cast<double>(N_s[g]) *
-                 N_i_j_s[g * n_i * n_j + k * n_j + l] /
-                 (N_i_s[g * n_i + k] * N_j_s[g * n_j + l]));
+            log2(
+                static_cast<double>(N_s[g]) *
+                N_i_j_s[g * n_i * n_j + k * n_j + l] /
+                (static_cast<double>(N_i_s[g * n_i + k]) * N_j_s[g * n_j + l]));
         unsigned long long *address_as_ull =
             reinterpret_cast<unsigned long long *>(mi);
         unsigned long long old = *address_as_ull, assumed;
@@ -528,18 +516,12 @@ __device__ void ci_test_bayes_factor_level_n(double *scratch_ptr, int n_data,
     double sum_term = 0;
     for (int k = 0; k < n_i; k++) {
       sum_term += lgamma(N_i_s[g * n_i + k] + alpha) - lgamma(alpha);
-      // sum_term += lgamma(N_i_s[g * n_i + k] + 1. / n_i / dim_s) -
-      //             lgamma(1. / n_i / dim_s);
     }
     sum_term += lgamma(n_i * alpha) - lgamma(n_i * alpha + N_s[g]);
-    // sum_term += lgamma(1. / dim_s) - lgamma(1. / dim_s + N_s[g]);
     for (int l = 0; l < n_j; l++) {
       sum_term += lgamma(N_j_s[g * n_j + l] + alpha) - lgamma(alpha);
-      // sum_term += lgamma(N_j_s[g * n_j + l] + 1. / n_j / dim_s) -
-      //             lgamma(1. / n_j / dim_s);
     }
     sum_term += lgamma(n_j * alpha) - lgamma(n_j * alpha + N_s[g]);
-    // sum_term += lgamma(1. / dim_s) - lgamma(1. / dim_s + N_s[g]);
     unsigned long long *address_as_ull =
         reinterpret_cast<unsigned long long *>(scratch_ptr);
     unsigned long long old = *address_as_ull, assumed;
@@ -564,13 +546,9 @@ __device__ void ci_test_bayes_factor_level_n(double *scratch_ptr, int n_data,
       for (int l = 0; l < n_j; l++) {
         sum_term += lgamma(N_i_j_s[g * n_i * n_j + k * n_j + l] + alpha) -
                     lgamma(alpha);
-        // sum_term += lgamma(N_i_j_s[g * n_i * n_j + k * n_j + l] +
-        //                    1. / (n_i * n_j * dim_s)) -
-        //             lgamma(1. / (n_i * n_j * dim_s));
       }
     }
     sum_term += lgamma(n_i * n_j * alpha) - lgamma(n_i * n_j * alpha + N_s[g]);
-    // sum_term += lgamma(1. / dim_s) - lgamma(1. / dim_s + N_s[g]);
     unsigned long long *address_as_ull =
         reinterpret_cast<unsigned long long *>(scratch_ptr);
     unsigned long long old = *address_as_ull, assumed;
@@ -681,8 +659,8 @@ __global__ void PC_level_n(int level, int n_node, int n_data, uint8_t *data,
         double *scratch_ptr =
             reinterpret_cast<double *>(smem + scratch_addr) + ci_test_idx;
         bool result;
-        ci_test_mi_level_n(scratch_ptr, n_data, dim_s, n_i, n_j, N_i_j_s, N_i_s,
-                           N_j_s, N_s, &result);
+        ci_test_chi_squared_level_n(scratch_ptr, n_data, dim_s, n_i, n_j,
+                                    N_i_j_s, N_i_s, N_j_s, N_s, &result);
         if (threadIdx.x == 0 && result) {
           if (atomicCAS(G + i * n_node + j, 1, 0) == 1) {
             G[j * n_node + i] = 0;
@@ -821,6 +799,7 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
   // stage 1: Do CI tests between nodes and remove edge (undirected graph)
   int level = 0;
   int max_n_adj = n_node - 1;
+  uint64_t max_dim_s = 1;
   while (level <= n_node - 2) {
     cout << "level: " << level << ", max_n_adj: " << max_n_adj << endl;
     if (level == 0) {
@@ -831,10 +810,14 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
     } else {
       dim3 threadsPerBlock(64, 2);
       dim3 numBlocks(n_node, max_n_adj);
-      int max_dim_s = pow(static_cast<double>(max_dim), level);
-      int reserved_size_per_ci_test =
+      uint64_t reserved_size_per_ci_test =
           max_dim_s * max_dim * max_dim + 2 * max_dim_s * max_dim + max_dim_s;
-      int reserved_size_per_row = reserved_size_per_ci_test * 2 * max_n_adj;
+      if (reserved_size_per_ci_test * 2 > size_working_memory / sizeof(int)) {
+        cout << "working memory is not enough" << endl;
+        break;
+      }
+      uint64_t reserved_size_per_row =
+          reserved_size_per_ci_test * 2 * max_n_adj;
       int max_rows = size_working_memory / sizeof(int) / reserved_size_per_row;
       if (max_rows == 0) {
         int max_columns =
@@ -870,6 +853,7 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
          << next_edge_cnt << endl;
     if (max_n_adj - 1 <= level) break;
     level++;
+    max_dim_s *= max_dim;
   }
   CUDA_CHECK(cudaMemcpy(sepsets.data(), sepsets_d, size_sepsets,
                         cudaMemcpyDeviceToHost));
