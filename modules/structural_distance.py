@@ -124,10 +124,10 @@ def structural_errors(target, pred):
     return errors
 
 
-def PDAG2CPDAG(pdag): 
+def PDAG2CPDAG(pdag):
     """
     Compute the completed partially directed acyclic graph (CPDAG) of a given PDAG.
-    
+
     Parameters
     ----------
     pdag : nx.DiGraph
@@ -140,81 +140,27 @@ def PDAG2CPDAG(pdag):
     """
     cpdag = PDAG()
     cpdag.add_nodes_from(pdag.nodes)
-    
-    #make skeleton
     cpdag.add_edges_from(pdag.edges)
-    reversedag = pdag.reverse(copy = True)
+    reversedag = pdag.reverse(copy=True)
     cpdag.add_edges_from(reversedag.edges)
 
-    # vstructuredag = PDAG()
-    # vstructuredag.add_nodes_from(pdag.nodes)
-
-    #pdag_removed = pdag.copy() #remove all undirected edges
     pdag_removed = PDAG()
     pdag_removed.add_nodes_from(pdag.nodes)
     pdag_removed.add_edges_from(pdag.edges)
     for pair in list(combinations(pdag.nodes(), 2)):
-            X, Y = pair
-            if pdag_removed.has_edge(X, Y) and pdag_removed.has_edge(Y, X): 
-                pdag_removed.remove_edge(Y, X)
-                pdag_removed.remove_edge(X, Y)
+        X, Y = pair
+        if pdag_removed.has_edge(X, Y) and pdag_removed.has_edge(Y, X):
+            pdag_removed.remove_edge(Y, X)
+            pdag_removed.remove_edge(X, Y)
     for X in pdag_removed.nodes:
         if pdag_removed.in_degree(X) > 1:
-            for Y in pdag_removed.predecessors(X): #for every parent of V-structure fix it
-                cpdag.remove_edge(X, Y)
-    #             vstructuredag.add_edge(Y, X)
-    
-    # for X in pdag.nodes:
-    #     for Y in pdag.nodes:
-    #         if cpdag.has_edge(X, Y) and cpdag.has_edge(Y, X):
-    #             if vstructuredag.in_degree(X) > 0 and vstructuredag.in_degree(Y) == 0:
-    #                 vstructuredag.add_edge(X, Y)
-    #                 cpdag.remove_edge(Y, X)
-    #             elif vstructuredag.in_degree(Y) > 0 and vstructuredag.in_degree(X) == 0:
-    #                 vstructuredag.add_edge(Y, X)
-    #                 cpdag.remove_edge(X, Y)
-
-    return cpdag
-
-def DAG2CPDAG(dag): 
-    """
-    Compute the completed partially directed acyclic graph (CPDAG) of a given DAG.
-    
-    Parameters
-    ----------
-    dag : nx.DiGraph
-        input DAG
-
-    Returns
-    -------
-    cpdag : nx.DiGraph
-        output CPDAG
-    """
-    cpdag = PDAG()
-    cpdag.add_nodes_from(dag.nodes)
-    
-    #make skeleton
-    cpdag.add_edges_from(dag.edges)
-    reversedag = dag.reverse(copy = True)
-    cpdag.add_edges_from(reversedag.edges)
-
-    # vstructuredag = PDAG()
-    # vstructuredag.add_nodes_from(dag.nodes)
-
-    for X in dag.nodes:
-        if dag.in_degree(X) > 1:
-            for Y in dag.predecessors(X): #for every parent of V-structure fix it
-                cpdag.remove_edge(X, Y)
-                # vstructuredag.add_edge(Y, X)
-    
-    # for X in dag.nodes:
-    #     for Y in dag.nodes:
-    #         if cpdag.has_edge(X, Y) and cpdag.has_edge(Y, X):
-    #             if vstructuredag.in_degree(X) > 0 and vstructuredag.in_degree(Y) == 0:
-    #                 vstructuredag.add_edge(X, Y)
-    #                 cpdag.remove_edge(Y, X)
-    #             elif vstructuredag.in_degree(Y) > 0 and vstructuredag.in_degree(X) == 0:
-    #                 vstructuredag.add_edge(Y, X)
-    #                 cpdag.remove_edge(X, Y)
-
+            for Y in pdag_removed.predecessors(
+                X
+            ):  # for every parent of V-structure fix it
+                for Z in pdag_removed.predecessors(X):
+                    if Y != Z and not pdag.has_edge(Y, Z) and not pdag.has_edge(Z, Y):
+                        if cpdag.has_edge(Y, X) and cpdag.has_edge(X, Y):
+                            cpdag.remove_edge(X, Y)
+                        if cpdag.has_edge(Z, X) and cpdag.has_edge(X, Z):
+                            cpdag.remove_edge(X, Z)
     return cpdag

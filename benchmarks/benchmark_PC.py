@@ -6,7 +6,7 @@ import sys
 sys.path.append("/workspace")
 
 from modules.PC_cpp import PCEstimator_cpp
-from modules.structural_distance import structural_errors, DAG2CPDAG, PDAG2CPDAG
+from modules.structural_distance import structural_errors, PDAG2CPDAG
 
 
 def load_data(data_type, sample_size):
@@ -26,7 +26,7 @@ def main():
             model_original, data = load_data(data_type, 10000)
             model_estimated = PCEstimator_cpp(data=data, ESS=5.0)
             errors = structural_errors(
-                DAG2CPDAG(model_original), PDAG2CPDAG(model_estimated)
+                PDAG2CPDAG(model_original), PDAG2CPDAG(model_estimated)
             )
             ave_score = [x + y for x, y in zip(ave_score, errors)]
             print(model_original, model_estimated)
