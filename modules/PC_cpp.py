@@ -5,6 +5,7 @@ sys.path.append("/workspace/build")
 import openbnsllib
 import numpy as np
 from pgmpy.base import PDAG
+import time
 
 sys.path.append("/workspace")
 from modules.visualize_graph import display_graph_info as show
@@ -41,8 +42,12 @@ def PCEstimator_cpp(data, ESS):
         for j in range(data_int.shape[1]):
             if data_int[i][j] >= n_states[j]:
                 print("index error in python")
+    print("timer start")
+    start_time = time.perf_counter()
     ansmat = openbnsllib.structure_learning.gpuPC(data_int, n_states)
+    calc_time = time.perf_counter() - start_time
     print("ansmat = ", ansmat)
+    print("calc_time = ", calc_time)
 
     G = PDAG()
     G.add_nodes_from(columns)
