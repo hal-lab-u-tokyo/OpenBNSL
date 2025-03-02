@@ -44,7 +44,7 @@ def PCEstimator_cpp(data, ESS):
                 print("index error in python")
     print("timer start")
     start_time = time.perf_counter()
-    ansmat = openbnsllib.structure_learning.gpuPC(data_int, n_states)
+    ansmat = openbnsllib.structure_learning.gpuPC2(data_int, n_states)
     calc_time = time.perf_counter() - start_time
     print("ansmat = ", ansmat)
     print("calc_time = ", calc_time)

@@ -23,8 +23,8 @@ using namespace std;
 int n_citest = 0;
 int n_citest_DP = 0;
 int n_DP = 0;
-bool sep[200][200][200] = {0};
-bool sep2[200][200] = {0};
+bool sep[250][250][250] = {0};
+bool sep2[250][250] = {0};
 
 void dfs(int now, vector<vector<int>> &G, vector<bool> &visited,
          vector<int> &order) {

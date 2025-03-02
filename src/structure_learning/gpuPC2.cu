@@ -6,7 +6,7 @@
 #include <vector>
 using namespace std;
 
-#include "structure_learning/gpuPC.h"
+#include "structure_learning/gpuPC2.h"
 // the following includes are for permutation and combination algorithms
 #include <algorithm>
 #include <functional>
@@ -19,7 +19,7 @@ using namespace std;
 // samples) output: leard PDAG
 // Gall.at(i).at(j)==1 means there is an edge i -> j
 
-namespace cuda {
+namespace cuda2 {
 #define CUDA_CHECK(call)                               \
   do {                                                 \
     cudaError_t e = call;                              \
@@ -323,7 +323,7 @@ __device__ void comb(int n, int l, int t, int p, int *idset) {
 }
 
 const int max_level = 20;
-const int max_dim = 21;
+const int max_dim = 6;
 
 __device__ bool ci_test_chi_squared_level_0(int n_data, int n_i, int n_j,
                                             int *contingency_matrix,
@@ -418,8 +418,8 @@ __global__ void PC_level_0(int n_node, int n_data, uint8_t *data, int *G,
         marginals_j[l] += entry;
       }
     }
-    if (ci_test_chi_squared_level_0(n_data, n_i, n_j, contingency_matrix,
-                                    marginals_i, marginals_j)) {
+    if (ci_test_bayes_factor_level_0(n_data, n_i, n_j, contingency_matrix,
+                                     marginals_i, marginals_j)) {
       G[i * n_node + j] = 0;
       G[j * n_node + i] = 0;
     }
@@ -579,7 +579,7 @@ __global__ void PC_level_n(int level, int n_node, int n_data, uint8_t *data,
       if (threadIdx.x == 0 && threadIdx.y == 0) {
         int cnt = 0;
         for (int j = 0; j < n_node; j++) {
-          if (G[i * n_node + j] == 1) {
+          if (G[j * n_node + i] == 1) {
             G_compacted[++cnt] = j;
           }
         }
@@ -611,7 +611,7 @@ __global__ void PC_level_n(int level, int n_node, int n_data, uint8_t *data,
           (sepset_cnt + blockDim.y - 1) / blockDim.y * blockDim.y;
       for (int sepset_idx = threadIdx.y; sepset_idx < sepset_cnt_loop;
            sepset_idx += blockDim.y) {
-        if (G[i * n_node + j] == 0) break;
+        if (G[j * n_node + i] == 0) break;
         if (threadIdx.x == 0) {
           comb(n_adj - 1, level, sepset_idx, idx_j, sepset);
           for (int k = 0; k < level; k++) {
@@ -659,11 +659,11 @@ __global__ void PC_level_n(int level, int n_node, int n_data, uint8_t *data,
         double *scratch_ptr =
             reinterpret_cast<double *>(smem + scratch_addr) + ci_test_idx;
         bool result;
-        ci_test_chi_squared_level_n(scratch_ptr, n_data, dim_s, n_i, n_j,
-                                    N_i_j_s, N_i_s, N_j_s, N_s, &result);
+        ci_test_bayes_factor_level_n(scratch_ptr, n_data, dim_s, n_i, n_j,
+                                     N_i_j_s, N_i_s, N_j_s, N_s, &result);
         if (threadIdx.x == 0 && result) {
-          if (atomicCAS(G + i * n_node + j, 1, 0) == 1) {
-            G[j * n_node + i] = 0;
+          if (atomicCAS(G + j * n_node + i, 1, 0) == 1) {
+            G[i * n_node + j] = 0;
             int ij_min = (i < j ? i : j);
             int ij_max = (i < j ? j : i);
             for (int k = 0; k < level; k++) {
@@ -677,7 +677,7 @@ __global__ void PC_level_n(int level, int n_node, int n_data, uint8_t *data,
   }
 }
 
-void orientation(PDAG &G, const vector<int> &sepsets) {
+void orientation(int level, PDAG &G, const vector<int> &sepsets) {
   /*
       orient edges in a PDAG to a maximally oriented graph.
       orient rules are based on rule 1~3 from Meek,C.:Causal Inference and
@@ -690,15 +690,20 @@ void orientation(PDAG &G, const vector<int> &sepsets) {
   int n_node = G.g.size();
   auto v_structure = vector<vector<bool>>(n_node, vector<bool>(n_node));
   for (int X = 0; X < n_node; X++) {
-    for (int Z : G.undirected_neighbors(X)) {
-      for (int Y : G.undirected_neighbors(Z)) {
-        if (X == Y || G.has_edge(X, Y) || G.has_edge(Y, X)) continue;
+    for (int Y = X + 1; Y < n_node; Y++) {
+      if (G.has_edge(X, Y) || G.has_edge(Y, X)) continue;
+      int sepset_level = 0;
+      for (int i = 0; i < max_level; i++) {
+        int id = sepsets[(X * n_node + Y) * max_level + i];
+        if (id == -1) break;
+        sepset_level++;
+      }
+      if (sepset_level != level) continue;
+      for (int Z : G.undirected_neighbors(X)) {
+        if (!G.has_undirected_edge(Y, Z)) continue;
         bool in_sepset = false;
-        for (int i = 0; i < max_level; i++) {
-          int XYmin = (X < Y ? X : Y);
-          int XYmax = (X < Y ? Y : X);
-          int id = sepsets[(XYmin * n_node + XYmax) * max_level + i];
-          if (id == -1) break;
+        for (int i = 0; i < level; i++) {
+          int id = sepsets[(X * n_node + Y) * max_level + i];
           if (id == Z) {
             in_sepset = true;
             break;
@@ -788,7 +793,6 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
   CUDA_CHECK(cudaMalloc(&n_states_d, size_n_states));
   CUDA_CHECK(cudaMalloc(&working_memory_d, size_working_memory));
   CUDA_CHECK(cudaMalloc(&sepsets_d, size_sepsets));
-  CUDA_CHECK(cudaMemcpy(G_d, G.data(), size_G, cudaMemcpyHostToDevice));
   CUDA_CHECK(
       cudaMemcpy(data_d, data.data(), size_data, cudaMemcpyHostToDevice));
   CUDA_CHECK(cudaMemcpy(n_states_d, n_states.data(), size_n_states,
@@ -800,7 +804,10 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
   int level = 0;
   int max_n_adj = n_node - 1;
   uint64_t max_dim_s = 1;
+  PDAG G_pdag;
   while (level <= n_node - 2) {
+    if (level > max_level) break;
+    CUDA_CHECK(cudaMemcpy(G_d, G.data(), size_G, cudaMemcpyHostToDevice));
     cout << "level: " << level << ", max_n_adj: " << max_n_adj << endl;
     if (level == 0) {
       dim3 threadsPerBlock(64);
@@ -835,13 +842,31 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
                                                    working_memory_d, sepsets_d);
     }
     CUDA_CHECK(cudaMemcpy(G.data(), G_d, size_G, cudaMemcpyDeviceToHost));
+    CUDA_CHECK(cudaMemcpy(sepsets.data(), sepsets_d, size_sepsets,
+                          cudaMemcpyDeviceToHost));
+    // stage 2: orient edges
+    G_pdag.g = vector<vector<bool>>(n_node, vector<bool>(n_node));
+    for (int i = 0; i < n_node; i++) {
+      for (int j = 0; j < n_node; j++) {
+        G_pdag.g.at(i).at(j) = G[i * n_node + j];
+      }
+    }
+    std::cout << "orient edges" << std::endl;
+    orientation(level, G_pdag, sepsets);
+    std::cout << "orient edges done" << std::endl;
+    for (int i = 0; i < n_node; i++) {
+      for (int j = 0; j < n_node; j++) {
+        G[i * n_node + j] = G_pdag.g.at(i).at(j);
+      }
+    }
+
     max_n_adj = 0;
     int next_node_cnt = 0;
     int next_edge_cnt = 0;
     for (int i = 0; i < n_node; i++) {
       int n_adj = 0;
       for (int j = 0; j < n_node; j++) {
-        if (G[i * n_node + j]) n_adj++;
+        if (G[j * n_node + i]) n_adj++;
       }
       if (n_adj - 1 > level) {
         next_node_cnt++;
@@ -855,26 +880,15 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
     level++;
     max_dim_s *= max_dim;
   }
-  CUDA_CHECK(cudaMemcpy(sepsets.data(), sepsets_d, size_sepsets,
-                        cudaMemcpyDeviceToHost));
   CUDA_CHECK(cudaFree(G_d));
   CUDA_CHECK(cudaFree(data_d));
   CUDA_CHECK(cudaFree(n_states_d));
   CUDA_CHECK(cudaFree(working_memory_d));
   CUDA_CHECK(cudaFree(sepsets_d));
-  // stage 2: orient edges
-  PDAG G_pdag;
-  G_pdag.g = vector<vector<bool>>(n_node, vector<bool>(n_node));
-  for (int i = 0; i < n_node; i++) {
-    for (int j = 0; j < n_node; j++) {
-      G_pdag.g.at(i).at(j) = G[i * n_node + j];
-    }
-  }
-  orientation(G_pdag, sepsets);
   return G_pdag;
 }
 
-py::array_t<bool> gpuPC(py::array_t<uint8_t> data, py::array_t<int> n_states) {
+py::array_t<bool> gpuPC2(py::array_t<uint8_t> data, py::array_t<int> n_states) {
   // translate input data to c++ vector(this is not optimal but I don't know
   // how to use pybind11::array_t)
   py::buffer_info buf_data = data.request(), buf_states = n_states.request();
@@ -913,4 +927,4 @@ py::array_t<bool> gpuPC(py::array_t<uint8_t> data, py::array_t<int> n_states) {
   }
   return endg;
 }
-}  // namespace cuda
+}  // namespace cuda2
