@@ -18,34 +18,34 @@ def load_data(data_type, sample_size):
 
 
 def main():
-    dataset = ["andes", "cancer", "earthquake", "survey", "sachs", "child", "alarm"]
+    dataset = ["munin", "cancer", "earthquake", "survey", "sachs", "child", "alarm"]
     for data_type in dataset:
         print("\n" * 3)
         max_iter = 1
         ave_score = [0 for _ in range(7)]
         for i in range(max_iter):
-            model_original, data = load_data(data_type, 100000)
+            model_original, data = load_data(data_type, 10000)
             model_estimated = PCEstimator_cpp(data=data, ESS=5.0)
-            model_estimated2, _ = RAIEstimator_cpp(
-                data=data,
-                ESS=5.0,
-                parallel=1,
-                threshold_DP=0,
-                search_neighbor=False,
-                do_orientation_A2=True,
-            )
+            # model_estimated2, _ = RAIEstimator_cpp(
+            #     data=data,
+            #     ESS=5.0,
+            #     parallel=1,
+            #     threshold_DP=0,
+            #     search_neighbor=False,
+            #     do_orientation_A2=True,
+            # )
             errors = structural_errors(
                 PDAG2CPDAG(model_original), PDAG2CPDAG(model_estimated)
             )
-            erros2 = structural_errors(
-                PDAG2CPDAG(model_original), PDAG2CPDAG(model_estimated2)
-            )
+            # erros2 = structural_errors(
+            #     PDAG2CPDAG(model_original), PDAG2CPDAG(model_estimated2)
+            # )
             print("errors:", errors)
-            print("errors2:", erros2)
-            diff = structural_errors(
-                PDAG2CPDAG(model_estimated), PDAG2CPDAG(model_estimated2)
-            )
-            print("diff:", diff)
+            # print("errors2:", erros2)
+            # diff = structural_errors(
+            #     PDAG2CPDAG(model_estimated), PDAG2CPDAG(model_estimated2)
+            # )
+            # print("diff:", diff)
             ave_score = [x + y for x, y in zip(ave_score, errors)]
             print(model_original, model_estimated)
         ave_score = [x / max_iter for x in ave_score]

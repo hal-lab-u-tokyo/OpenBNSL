@@ -23,7 +23,10 @@ def PCEstimator_cpp(data, ESS):
         for j in range(t_data.shape[0]):
             if t_data[j][i] not in statelist[i]:
                 statelist[i].append(t_data[j][i])
+    for i in range(len(columns)):
+        statelist[i].sort()
     print(statelist)
+    
     print("max_dim: {}".format(max([len(x) for x in statelist])))
 
     # translate str matrix into int matrix and list of column names into list of int
@@ -44,7 +47,7 @@ def PCEstimator_cpp(data, ESS):
                 print("index error in python")
     print("timer start")
     start_time = time.perf_counter()
-    ansmat = openbnsllib.structure_learning.gpuPC2(data_int, n_states)
+    ansmat = openbnsllib.structure_learning.cuPC(data_int, n_states)
     calc_time = time.perf_counter() - start_time
     print("ansmat = ", ansmat)
     print("calc_time = ", calc_time)
