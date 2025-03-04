@@ -425,8 +425,15 @@ __device__ void comb(int n, int l, int t, int p, int *idset) {
 
 __global__ void calc_correlation_matrix(int n_node, int n_data, uint8_t *data,
                                         double *C) {
-  int i = blockIdx.x;
-  int j = blockIdx.y;
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  int j = blockIdx.y * blockDim.y + threadIdx.y;
+  if (i >= n_node || j >= n_node) return;
+  if (i >= j) {
+    if (i == j) {
+      C[i * n_node + j] = 1;
+    }
+    return;
+  }
   double mean_i = 0, mean_j = 0, mean_i2 = 0, mean_j2 = 0, mean_ij = 0;
   for (int k = 0; k < n_data; k++) {
     double data_i = data[i * n_data + k];
@@ -445,16 +452,17 @@ __global__ void calc_correlation_matrix(int n_node, int n_data, uint8_t *data,
   double sigma_i = sqrt(mean_i2 - mean_i * mean_i);
   double sigma_j = sqrt(mean_j2 - mean_j * mean_j);
   if (sigma_i == 0 || sigma_j == 0) {
-    C[i * n_node + j] = 0;
+    C[i * n_node + j] = C[j * n_node + i] = 0;
   } else {
-    C[i * n_node + j] = (mean_ij - mean_i * mean_j) / (sigma_i * sigma_j);
+    C[i * n_node + j] = C[j * n_node + i] =
+        (mean_ij - mean_i * mean_j) / (sigma_i * sigma_j);
   }
 }
 
 __global__ void PC_level_0(int n_node, int n_data, int *G, double *C) {
-  int i = blockIdx.x;
-  int j = blockIdx.y;
-  if (i >= j) {
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  int j = blockIdx.y * blockDim.y + threadIdx.y;
+  if (i >= n_node || j >= n_node || i >= j) {
     return;
   }
   double rho = C[i * n_node + j];
@@ -673,8 +681,11 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
   CUDA_CHECK(cudaMemcpy(C_d, C.data(), size_C, cudaMemcpyHostToDevice));
   CUDA_CHECK(cudaMemcpy(sepsets_d, sepsets.data(), size_sepsets,
                         cudaMemcpyHostToDevice));
-  calc_correlation_matrix<<<dim3(n_node, n_node), 1>>>(n_node, n_data, data_d,
-                                                       C_d);
+  dim3 threadsPerBlock(32, 32);
+  dim3 numBlocks((n_node + threadsPerBlock.x - 1) / threadsPerBlock.x,
+                 (n_node + threadsPerBlock.y - 1) / threadsPerBlock.y);
+  calc_correlation_matrix<<<numBlocks, threadsPerBlock>>>(n_node, n_data,
+                                                          data_d, C_d);
   CUDA_CHECK(cudaMemcpy(C.data(), C_d, size_C, cudaMemcpyDeviceToHost));
   // cout << "correlation matrix:" << endl;
   // for (int i = 0; i < n_node; i++) {
@@ -690,8 +701,9 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
   while (level <= n_node - 2) {
     cout << "level: " << level << ", max_n_adj: " << max_n_adj << endl;
     if (level == 0) {
-      dim3 threadsPerBlock(1);
-      dim3 numBlocks(n_node, n_node);
+      dim3 threadsPerBlock(32, 32);
+      dim3 numBlocks((n_node + threadsPerBlock.x - 1) / threadsPerBlock.x,
+                     (n_node + threadsPerBlock.y - 1) / threadsPerBlock.y);
       PC_level_0<<<numBlocks, threadsPerBlock>>>(n_node, n_data, G_d, C_d);
     } else {
       dim3 threadsPerBlock(64);
