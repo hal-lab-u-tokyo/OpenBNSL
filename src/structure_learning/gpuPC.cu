@@ -382,7 +382,7 @@ __device__ bool ci_test_bayes_factor_level_0(int n_data, int n_i, int n_j,
   }
   dependent_score +=
       lgamma(n_i * n_j * alpha) - lgamma(n_i * n_j * alpha + n_data);
-  return independent_score > dependent_score;
+  return independent_score > dependent_score - 1e-10;
 }
 
 __global__ void PC_level_0(int n_node, int n_data, uint8_t *data, int *G,
@@ -564,7 +564,7 @@ __device__ void ci_test_bayes_factor_level_n(double *scratch_ptr, int n_data,
   if (threadIdx.x == 0) {
     // printf("independent_score: %.7lf, dependent_score: %.7lf\n",
     //        independent_score, dependent_score);
-    *result = (independent_score > dependent_score);
+    *result = (independent_score > dependent_score - 1e-10);
   }
 }
 
@@ -579,7 +579,7 @@ __global__ void PC_level_n(int level, int n_node, int n_data, uint8_t *data,
       if (threadIdx.x == 0 && threadIdx.y == 0) {
         int cnt = 0;
         for (int j = 0; j < n_node; j++) {
-          if (G[i * n_node + j] == 1) {
+          if (G[i * n_node + j]) {
             G_compacted[++cnt] = j;
           }
         }
@@ -611,7 +611,7 @@ __global__ void PC_level_n(int level, int n_node, int n_data, uint8_t *data,
           (sepset_cnt + blockDim.y - 1) / blockDim.y * blockDim.y;
       for (int sepset_idx = threadIdx.y; sepset_idx < sepset_cnt_loop;
            sepset_idx += blockDim.y) {
-        if (G[i * n_node + j] == 0) break;
+        if (G[i * n_node + j] != 1) break;
         if (threadIdx.x == 0) {
           comb(n_adj - 1, level, sepset_idx, idx_j, sepset);
           for (int k = 0; k < level; k++) {
@@ -662,8 +662,8 @@ __global__ void PC_level_n(int level, int n_node, int n_data, uint8_t *data,
         ci_test_chi_squared_level_n(scratch_ptr, n_data, dim_s, n_i, n_j,
                                     N_i_j_s, N_i_s, N_j_s, N_s, &result);
         if (threadIdx.x == 0 && result) {
-          if (atomicCAS(G + i * n_node + j, 1, 0) == 1) {
-            G[j * n_node + i] = 0;
+          if (atomicCAS(G + i * n_node + j, 1, -1) == 1) {
+            G[j * n_node + i] = -1;
             int ij_min = (i < j ? i : j);
             int ij_max = (i < j ? j : i);
             for (int k = 0; k < level; k++) {
@@ -788,7 +788,6 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
   CUDA_CHECK(cudaMalloc(&n_states_d, size_n_states));
   CUDA_CHECK(cudaMalloc(&working_memory_d, size_working_memory));
   CUDA_CHECK(cudaMalloc(&sepsets_d, size_sepsets));
-  CUDA_CHECK(cudaMemcpy(G_d, G.data(), size_G, cudaMemcpyHostToDevice));
   CUDA_CHECK(
       cudaMemcpy(data_d, data.data(), size_data, cudaMemcpyHostToDevice));
   CUDA_CHECK(cudaMemcpy(n_states_d, n_states.data(), size_n_states,
@@ -801,6 +800,7 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
   int max_n_adj = n_node - 1;
   uint64_t max_dim_s = 1;
   while (level <= n_node - 2) {
+    CUDA_CHECK(cudaMemcpy(G_d, G.data(), size_G, cudaMemcpyHostToDevice));
     cout << "level: " << level << ", max_n_adj: " << max_n_adj << endl;
     if (level == 0) {
       dim3 threadsPerBlock(64);
@@ -841,6 +841,9 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
     for (int i = 0; i < n_node; i++) {
       int n_adj = 0;
       for (int j = 0; j < n_node; j++) {
+        if (G[i * n_node + j] == -1) {
+          G[i * n_node + j] = 0;
+        }
         if (G[i * n_node + j]) n_adj++;
       }
       if (n_adj - 1 > level) {

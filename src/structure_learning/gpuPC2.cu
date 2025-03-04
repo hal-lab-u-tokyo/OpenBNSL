@@ -323,7 +323,7 @@ __device__ void comb(int n, int l, int t, int p, int *idset) {
 }
 
 const int max_level = 20;
-const int max_dim = 6;
+const int max_dim = 21;
 
 __device__ bool ci_test_chi_squared_level_0(int n_data, int n_i, int n_j,
                                             int *contingency_matrix,
@@ -382,7 +382,7 @@ __device__ bool ci_test_bayes_factor_level_0(int n_data, int n_i, int n_j,
   }
   dependent_score +=
       lgamma(n_i * n_j * alpha) - lgamma(n_i * n_j * alpha + n_data);
-  return independent_score > dependent_score;
+  return independent_score > dependent_score - 1e-10;
 }
 
 __global__ void PC_level_0(int n_node, int n_data, uint8_t *data, int *G,
@@ -564,7 +564,7 @@ __device__ void ci_test_bayes_factor_level_n(double *scratch_ptr, int n_data,
   if (threadIdx.x == 0) {
     // printf("independent_score: %.7lf, dependent_score: %.7lf\n",
     //        independent_score, dependent_score);
-    *result = (independent_score > dependent_score);
+    *result = (independent_score > dependent_score - 1e-10);
   }
 }
 
@@ -579,7 +579,7 @@ __global__ void PC_level_n(int level, int n_node, int n_data, uint8_t *data,
       if (threadIdx.x == 0 && threadIdx.y == 0) {
         int cnt = 0;
         for (int j = 0; j < n_node; j++) {
-          if (G[j * n_node + i] == 1) {
+          if (G[j * n_node + i]) {
             G_compacted[++cnt] = j;
           }
         }
@@ -611,7 +611,7 @@ __global__ void PC_level_n(int level, int n_node, int n_data, uint8_t *data,
           (sepset_cnt + blockDim.y - 1) / blockDim.y * blockDim.y;
       for (int sepset_idx = threadIdx.y; sepset_idx < sepset_cnt_loop;
            sepset_idx += blockDim.y) {
-        if (G[j * n_node + i] == 0) break;
+        if (G[j * n_node + i] != 1) break;
         if (threadIdx.x == 0) {
           comb(n_adj - 1, level, sepset_idx, idx_j, sepset);
           for (int k = 0; k < level; k++) {
@@ -662,8 +662,8 @@ __global__ void PC_level_n(int level, int n_node, int n_data, uint8_t *data,
         ci_test_bayes_factor_level_n(scratch_ptr, n_data, dim_s, n_i, n_j,
                                      N_i_j_s, N_i_s, N_j_s, N_s, &result);
         if (threadIdx.x == 0 && result) {
-          if (atomicCAS(G + j * n_node + i, 1, 0) == 1) {
-            G[i * n_node + j] = 0;
+          if (atomicCAS(G + j * n_node + i, 1, -1) == 1) {
+            G[i * n_node + j] = -1;
             int ij_min = (i < j ? i : j);
             int ij_max = (i < j ? j : i);
             for (int k = 0; k < level; k++) {
@@ -848,6 +848,7 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
     G_pdag.g = vector<vector<bool>>(n_node, vector<bool>(n_node));
     for (int i = 0; i < n_node; i++) {
       for (int j = 0; j < n_node; j++) {
+        if (G[i * n_node + j] == -1) G[i * n_node + j] = 0;
         G_pdag.g.at(i).at(j) = G[i * n_node + j];
       }
     }
