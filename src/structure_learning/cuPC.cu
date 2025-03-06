@@ -483,7 +483,7 @@ __global__ void PC_level_n(int level, int n_node, int n_data, int *G, double *C,
   if (threadIdx.x == 0) {
     int cnt = 0;
     for (int j = 0; j < n_node; j++) {
-      if (G[i * n_node + j] == 1) {
+      if (G[i * n_node + j]) {
         G_compacted[++cnt] = j;
       }
     }
@@ -494,7 +494,7 @@ __global__ void PC_level_n(int level, int n_node, int n_data, int *G, double *C,
   if (n_adj - 1 < level) {
     return;
   }
-  int sepset_cnt = binom(n_adj - 1, level);
+  int sepset_cnt = binom(n_adj, level);
   int step = gridDim.y * blockDim.x;
   int sepset_cnt_loop = (sepset_cnt + step - 1) / step * step;
   int sepset[max_level];
@@ -514,7 +514,7 @@ __global__ void PC_level_n(int level, int n_node, int n_data, int *G, double *C,
     pseudoinverse(level, M2, M2Inv);
     for (int idx_j = 0; idx_j < n_adj; idx_j++) {
       int j = G_compacted[idx_j + 1];
-      if (!G[i * n_node + j]) continue;
+      if (G[i * n_node + j] != 1) continue;
       bool in_sepset = false;
       for (int k = 0; k < level; k++) {
         if (j == sepset[k]) {
@@ -553,8 +553,8 @@ __global__ void PC_level_n(int level, int n_node, int n_data, int *G, double *C,
       if (z <= tau) {
         int ij_min = (i < j ? i : j);
         int ij_max = (i < j ? j : i);
-        if (atomicCAS(G + ij_min * n_node + ij_max, 1, 0) == 1) {
-          G[ij_max * n_node + ij_min] = 0;
+        if (atomicCAS(G + ij_min * n_node + ij_max, 1, -1) == 1) {
+          G[ij_max * n_node + ij_min] = -1;
           for (int k = 0; k < level; k++) {
             sepsets[(ij_min * n_node + ij_max) * max_level + k] = sepset[k];
           }
@@ -675,7 +675,6 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
   CUDA_CHECK(cudaMalloc(&data_d, size_data));
   CUDA_CHECK(cudaMalloc(&C_d, size_C));
   CUDA_CHECK(cudaMalloc(&sepsets_d, size_sepsets));
-  CUDA_CHECK(cudaMemcpy(G_d, G.data(), size_G, cudaMemcpyHostToDevice));
   CUDA_CHECK(
       cudaMemcpy(data_d, data.data(), size_data, cudaMemcpyHostToDevice));
   CUDA_CHECK(cudaMemcpy(C_d, C.data(), size_C, cudaMemcpyHostToDevice));
@@ -700,6 +699,7 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
   uint64_t max_dim_s = 1;
   while (level <= n_node - 2) {
     cout << "level: " << level << ", max_n_adj: " << max_n_adj << endl;
+    CUDA_CHECK(cudaMemcpy(G_d, G.data(), size_G, cudaMemcpyHostToDevice));
     if (level == 0) {
       dim3 threadsPerBlock(32, 32);
       dim3 numBlocks((n_node + threadsPerBlock.x - 1) / threadsPerBlock.x,
@@ -718,6 +718,7 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
     for (int i = 0; i < n_node; i++) {
       int n_adj = 0;
       for (int j = 0; j < n_node; j++) {
+        if (G[i * n_node + j] == -1) G[i * n_node + j] = 0;
         if (G[i * n_node + j]) n_adj++;
       }
       if (n_adj - 1 > level) {
