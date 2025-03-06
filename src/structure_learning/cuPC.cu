@@ -19,7 +19,7 @@ using namespace std;
 // samples) output: leard PDAG
 // Gall.at(i).at(j)==1 means there is an edge i -> j
 
-namespace cuda3 {
+namespace cuda_cupc {
 #define CUDA_CHECK(call)                               \
   do {                                                 \
     cudaError_t e = call;                              \
@@ -788,4 +788,4 @@ py::array_t<bool> cuPC(py::array_t<uint8_t> data, py::array_t<int> n_states) {
   }
   return endg;
 }
-}  // namespace cuda3
+}  // namespace cuda_cupc
