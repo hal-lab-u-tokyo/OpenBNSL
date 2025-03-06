@@ -323,7 +323,7 @@ __device__ void comb(int n, int l, int t, int p, int *idset) {
 }
 
 const int max_level = 20;
-const int max_dim = 4;
+const int max_dim = 21;
 
 __device__ bool ci_test_chi_squared_level_0(int n_data, int n_i, int n_j,
                                             int *contingency_matrix,
@@ -436,9 +436,10 @@ __device__ void ci_test_chi_squared_level_n(double *chi_squared, int n_data,
   }
   __syncthreads();
   for (int g = threadIdx.x; g < dim_s; g += blockDim.x) {
+    int h = g / dim_mul / n_j * dim_mul + g % dim_mul;
+    if (N_s[h] == 0) continue;
+    int l = (g / dim_mul) % n_j;
     for (int k = 0; k < n_i; k++) {
-      int l = (g / dim_mul) % n_j;
-      int h = g / dim_mul / n_j * dim_mul + g % dim_mul;
       double expected =
           static_cast<double>(N_i_s[h * n_i + k]) * N_j_s[h * n_j + l] / N_s[h];
       if (expected == 0) continue;
@@ -632,6 +633,9 @@ __global__ void PC_level_n(int level, int i_offset, int n_node, int n_data,
     }
     for (int idx_j = 0; idx_j < level + 1; idx_j++) {
       int j = sepset[idx_j];
+      if (G[i * n_node + j] != 1) {
+        continue;
+      }
       int n_j = n_states[j];
       int dim_mul_j = dim_mul[idx_j];
       int *N_i_s = N_i_j_s + dim_s * n_i;
@@ -808,8 +812,8 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
       PC_level_0<<<numBlocks, threadsPerBlock>>>(n_node, n_data, data_d, G_d,
                                                  n_states_d);
     } else {
-      dim3 threadsPerBlock(64, 8);
-      dim3 numBlocks(n_node, 2);
+      dim3 threadsPerBlock(64, 1);
+      dim3 numBlocks(n_node, max_n_adj * 2);
       uint64_t reserved_size_per_ci_test =
           max_dim_s * max_dim * max_dim + 2 * max_dim_s * max_dim + max_dim_s;
       if (reserved_size_per_ci_test > size_working_memory / sizeof(int)) {
@@ -839,7 +843,7 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
                          sizeof(double) * (threadsPerBlock.y + 1)>>>(
             level, i_offset, n_node, n_data, data_d, G_d, n_states_d,
             working_memory_d, sepsets_d);
-        cudaDeviceSynchronize();
+        // cudaDeviceSynchronize();
       }
     }
     CUDA_CHECK(cudaMemcpy(G.data(), G_d, size_G, cudaMemcpyDeviceToHost));
