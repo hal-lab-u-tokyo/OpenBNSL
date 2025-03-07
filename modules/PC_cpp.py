@@ -41,10 +41,6 @@ def PCEstimator_cpp(data, ESS):
         n_states[i] = len(statelist[i])
     # print(n_states)
 
-    for i in range(data_int.shape[0]):
-        for j in range(data_int.shape[1]):
-            if data_int[i][j] >= n_states[j]:
-                print("index error in python")
     print("timer start")
     start_time = time.perf_counter()
     ansmat = openbnsllib.structure_learning.gpuPC3(data_int, n_states)
