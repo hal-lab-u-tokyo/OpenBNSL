@@ -428,40 +428,35 @@ __global__ void PC_level_0(int n_node, int n_data, uint8_t *data, int *G,
 
 __device__ void ci_test_chi_squared_level_n(double *chi_squared, int n_data,
                                             int dim_s, int dim_mul, int n_i,
-                                            int n_j, int *N_i_j_s, int *N_j_s,
+                                            int n_j, int *N_i_j_s, int *N_i_s,
+                                            int *N_j_s, int *N_s,
                                             bool *result) {
   if (threadIdx.x == 0) {
     *chi_squared = 0;
   }
   __syncthreads();
-  double sum_term = 0;
-  for (int f = threadIdx.x; f < dim_s / n_j * n_i; f += blockDim.x) {
-    int g = f / n_i;
-    int k = f % n_i;
-    int N_s = 0, N_i_s = 0;
-    for (int l = 0; l < n_j; l++) {
-      int h = g / dim_mul * dim_mul * n_j + l * dim_mul + g % dim_mul;
-      N_s += N_j_s[h];
-      N_i_s += N_i_j_s[h * n_i + k];
-    }
-    if (N_i_s == 0) continue;
-    for (int l = 0; l < n_j; l++) {
-      int h = g / dim_mul * dim_mul * n_j + l * dim_mul + g % dim_mul;
-      double expected = static_cast<double>(N_i_s) * N_j_s[h] / N_s;
+  for (int g = threadIdx.x; g < dim_s; g += blockDim.x) {
+    int h = g / dim_mul / n_j * dim_mul + g % dim_mul;
+    if (N_s[h] == 0) continue;
+    int l = (g / dim_mul) % n_j;
+    for (int k = 0; k < n_i; k++) {
+      double expected =
+          static_cast<double>(N_i_s[h * n_i + k]) * N_j_s[h * n_j + l] / N_s[h];
       if (expected == 0) continue;
-      double observed = N_i_j_s[h * n_i + k];
-      sum_term += (observed - expected) * (observed - expected) / expected;
+      double observed = N_i_j_s[g * n_i + k];
+      double sum_term =
+          (observed - expected) * (observed - expected) / expected;
+      unsigned long long *address_as_ull =
+          reinterpret_cast<unsigned long long *>(chi_squared);
+      unsigned long long old = *address_as_ull, assumed;
+      do {
+        assumed = old;
+        old = atomicCAS(
+            address_as_ull, assumed,
+            __double_as_longlong(sum_term + __longlong_as_double(assumed)));
+      } while (assumed != old);
     }
   }
-  unsigned long long *address_as_ull =
-      reinterpret_cast<unsigned long long *>(chi_squared);
-  unsigned long long old = *address_as_ull, assumed;
-  do {
-    assumed = old;
-    old = atomicCAS(
-        address_as_ull, assumed,
-        __double_as_longlong(sum_term + __longlong_as_double(assumed)));
-  } while (assumed != old);
   __syncthreads();
   if (threadIdx.x == 0) {
     double pval = pchisq(*chi_squared, (n_i - 1) * (n_j - 1) * dim_s / n_j);
@@ -596,7 +591,7 @@ __global__ void PC_level_n(int level, int i_offset, int n_node, int n_data,
   }
   int max_dim_s = pow(static_cast<double>(max_dim), level);
   int reserved_size_per_ci_test =
-      max_dim_s * max_dim * max_dim + max_dim_s * max_dim;
+      max_dim_s * max_dim * max_dim + 2 * max_dim_s * max_dim + max_dim_s;
   int sepset_cnt = binom(n_adj, level + 1);
   int step = gridDim.y * blockDim.y;
   int sepset[max_level + 1];
@@ -621,14 +616,11 @@ __global__ void PC_level_n(int level, int i_offset, int n_node, int n_data,
     for (int k = level - 1; k >= 0; k--) {
       dim_mul[k] = dim_mul[k + 1] * n_states[sepset[k + 1]];
     }
-    int n_i = n_states[i];
     int *N_i_j_s = thread_memory;
-    int *N_j_s = N_i_j_s + dim_s * n_i;
-    {
-      int malloc_size = dim_s * n_i + dim_s;
-      for (int k = threadIdx.x; k < malloc_size; k += blockDim.x) {
-        N_i_j_s[k] = 0;
-      }
+    int n_i = n_states[i];
+    if (threadIdx.x == 0) {
+      int malloc_size = dim_s * n_i;
+      memset(N_i_j_s, 0, malloc_size * sizeof(int));
     }
     __syncthreads();
     for (int k = threadIdx.x; k < n_data; k += blockDim.x) {
@@ -638,7 +630,6 @@ __global__ void PC_level_n(int level, int i_offset, int n_node, int n_data,
         s_idx = s_idx * n_states[sepset[l]] + data[sepset[l] * n_data + k];
       }
       atomicAdd(N_i_j_s + s_idx * n_i + val_i, 1);
-      atomicAdd(N_j_s + s_idx, 1);
     }
     for (int idx_j = 0; idx_j < level + 1; idx_j++) {
       int j = sepset[idx_j];
@@ -647,12 +638,31 @@ __global__ void PC_level_n(int level, int i_offset, int n_node, int n_data,
       }
       int n_j = n_states[j];
       int dim_mul_j = dim_mul[idx_j];
+      int *N_i_s = N_i_j_s + dim_s * n_i;
+      int *N_j_s = N_i_s + dim_s * n_i / n_j;
+      int *N_s = N_j_s + dim_s;
+      if (threadIdx.x == 0) {
+        int malloc_size = dim_s * n_i / n_j + dim_s + dim_s / n_j;
+        memset(N_i_s, 0, malloc_size * sizeof(int));
+      }
+      __syncthreads();
+      for (int g = threadIdx.x; g < dim_s; g += blockDim.x) {
+        for (int k = 0; k < n_i; k++) {
+          int l = (g / dim_mul_j) % n_j;
+          int h = g / dim_mul_j / n_j * dim_mul_j + g % dim_mul_j;
+          int entry = N_i_j_s[g * n_i + k];
+          atomicAdd(N_i_s + h * n_i + k, entry);
+          atomicAdd(N_j_s + h * n_j + l, entry);
+          atomicAdd(N_s + h, entry);
+        }
+      }
+      __syncthreads();
       int scratch_addr = n_adj + 1 + threadIdx.y;
       scratch_addr = (scratch_addr + 1) / 2 * 2;
       double *scratch_ptr = reinterpret_cast<double *>(smem + scratch_addr);
       bool result;
       ci_test_chi_squared_level_n(scratch_ptr, n_data, dim_s, dim_mul_j, n_i,
-                                  n_j, N_i_j_s, N_j_s, &result);
+                                  n_j, N_i_j_s, N_i_s, N_j_s, N_s, &result);
       if (threadIdx.x == 0 && result) {
         if (atomicCAS(G + i * n_node + j, 1, -1) == 1) {
           G[j * n_node + i] = -1;
@@ -805,7 +815,7 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
       dim3 threadsPerBlock(64, 1);
       dim3 numBlocks(n_node, max_n_adj * 2);
       uint64_t reserved_size_per_ci_test =
-          max_dim_s * max_dim * max_dim + max_dim_s * max_dim;
+          max_dim_s * max_dim * max_dim + 2 * max_dim_s * max_dim + max_dim_s;
       if (reserved_size_per_ci_test > size_working_memory / sizeof(int)) {
         cout << "working memory is not enough" << endl;
         break;
