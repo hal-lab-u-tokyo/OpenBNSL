@@ -322,8 +322,8 @@ __device__ void comb(int n, int l, int t, int p, int *idset) {
   }
 }
 
-const int max_level = 20;
-const int max_dim = 21;
+const int max_level = 5;
+const int max_dim = 4;
 
 __device__ bool ci_test_chi_squared_level_0(int n_data, int n_i, int n_j,
                                             int *contingency_matrix,
@@ -570,7 +570,8 @@ __device__ void ci_test_bayes_factor_level_n(double *scratch_ptr, int n_data,
 
 __global__ void PC_level_n(int level, int i_offset, int n_node, int n_data,
                            uint8_t *data, int *G, int *n_states,
-                           int *working_memory, int *sepsets) {
+                           bool use_working_memory, int *working_memory,
+                           int *sepsets) {
   extern __shared__ int smem[];
   int i = i_offset + blockIdx.x;
   if (i >= n_node) return;
@@ -598,8 +599,13 @@ __global__ void PC_level_n(int level, int i_offset, int n_node, int n_data,
   int dim_mul[max_level + 1];
   int ci_test_idx = blockIdx.y * blockDim.y + threadIdx.y;
   int thread_memory_index = step * blockIdx.x + ci_test_idx;
-  int *thread_memory =
-      working_memory + thread_memory_index * reserved_size_per_ci_test;
+  int *thread_memory;
+  if (use_working_memory) {
+    thread_memory =
+        working_memory + thread_memory_index * reserved_size_per_ci_test;
+  } else {
+    thread_memory = smem + n_adj + 1 + reserved_size_per_ci_test * threadIdx.y;
+  }
   for (int sepset_idx = ci_test_idx; sepset_idx < sepset_cnt;
        sepset_idx += step) {
     comb(n_adj, level + 1, sepset_idx, -1, sepset);
@@ -657,7 +663,10 @@ __global__ void PC_level_n(int level, int i_offset, int n_node, int n_data,
         }
       }
       __syncthreads();
-      int scratch_addr = n_adj + 1 + threadIdx.y;
+      int scratch_addr =
+          n_adj + 1 +
+          (use_working_memory ? 0 : reserved_size_per_ci_test * blockDim.y) +
+          threadIdx.y;
       scratch_addr = (scratch_addr + 1) / 2 * 2;
       double *scratch_ptr = reinterpret_cast<double *>(smem + scratch_addr);
       bool result;
@@ -820,30 +829,43 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
         cout << "working memory is not enough" << endl;
         break;
       }
-      uint64_t reserved_size_per_row =
-          reserved_size_per_ci_test * threadsPerBlock.y * numBlocks.y;
-      int max_rows = size_working_memory / sizeof(int) / reserved_size_per_row;
-      if (max_rows == 0) {
-        int max_columns =
-            size_working_memory / sizeof(int) / reserved_size_per_ci_test;
-        numBlocks.x = 1;
-        numBlocks.y = max_columns;
-        threadsPerBlock.y = 1;
-      } else if (numBlocks.x > max_rows) {
-        numBlocks.x = max_rows;
-      }
-      cout << "numBlocks: " << numBlocks.x << ", " << numBlocks.y << endl;
-      cout << "threadsPerBlock: " << threadsPerBlock.x << ", "
-           << threadsPerBlock.y << endl;
-      int loop = (n_node + numBlocks.x - 1) / numBlocks.x;
-      for (int l = 0; l < loop; l++) {
-        int i_offset = l * numBlocks.x;
-        PC_level_n<<<numBlocks, threadsPerBlock,
-                     sizeof(int) * (max_n_adj) +
-                         sizeof(double) * (threadsPerBlock.y + 1)>>>(
-            level, i_offset, n_node, n_data, data_d, G_d, n_states_d,
-            working_memory_d, sepsets_d);
-        // cudaDeviceSynchronize();
+      if (reserved_size_per_ci_test < 1000) {
+        int loop = (n_node + numBlocks.x - 1) / numBlocks.x;
+        for (int l = 0; l < loop; l++) {
+          int i_offset = l * numBlocks.x;
+          PC_level_n<<<numBlocks, threadsPerBlock,
+                       sizeof(int) *
+                               (max_n_adj + 1 + reserved_size_per_ci_test) +
+                           sizeof(double) * (threadsPerBlock.y + 1)>>>(
+              level, i_offset, n_node, n_data, data_d, G_d, n_states_d, false,
+              nullptr, sepsets_d);
+        }
+      } else {
+        uint64_t reserved_size_per_row =
+            reserved_size_per_ci_test * threadsPerBlock.y * numBlocks.y;
+        int max_rows =
+            size_working_memory / sizeof(int) / reserved_size_per_row;
+        if (max_rows == 0) {
+          int max_columns =
+              size_working_memory / sizeof(int) / reserved_size_per_ci_test;
+          numBlocks.x = 1;
+          numBlocks.y = max_columns;
+          threadsPerBlock.y = 1;
+        } else if (numBlocks.x > max_rows) {
+          numBlocks.x = max_rows;
+        }
+        cout << "numBlocks: " << numBlocks.x << ", " << numBlocks.y << endl;
+        cout << "threadsPerBlock: " << threadsPerBlock.x << ", "
+             << threadsPerBlock.y << endl;
+        int loop = (n_node + numBlocks.x - 1) / numBlocks.x;
+        for (int l = 0; l < loop; l++) {
+          int i_offset = l * numBlocks.x;
+          PC_level_n<<<numBlocks, threadsPerBlock,
+                       sizeof(int) * (max_n_adj + 1) +
+                           sizeof(double) * (threadsPerBlock.y + 1)>>>(
+              level, i_offset, n_node, n_data, data_d, G_d, n_states_d, true,
+              working_memory_d, sepsets_d);
+        }
       }
     }
     CUDA_CHECK(cudaMemcpy(G.data(), G_d, size_G, cudaMemcpyDeviceToHost));
