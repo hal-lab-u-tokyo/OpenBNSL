@@ -395,7 +395,13 @@ __device__ bool ci_test_sc_level_0(int n_data, int n_i, int n_j,
   for (int l = 0; l < n_j; l++) {
     r_ij += log2(max(1.0, regret[marginals_j[l] * max_dim + n_i - 1]));
   }
-  double threshold = (r_ij - r_i) / n_data;
+  // R(X_j)
+  double r_j = log2(max(1.0, regret[n_data * max_dim + n_j - 1]));
+  double r_ji = 0;
+  for (int l = 0; l < n_i; l++) {
+    r_ji += log2(max(1.0, regret[marginals_i[l] * max_dim + n_j - 1]));
+  }
+  double threshold = (r_ij - r_i + r_ji - r_j) / 2 / n_data;
   // printf("threshold: %.7lf\n", threshold);
   return mi <= threshold;
 }
@@ -557,8 +563,10 @@ __device__ void ci_test_sc_level_n(double *mi, int n_data, int dim_s,
                                    bool *result, double *regret) {
   double *r_i = mi + 1;
   double *r_ij = mi + 2;
+  double *r_j = mi + 3;
+  double *r_ji = mi + 4;
   if (threadIdx.x == 0) {
-    *mi = *r_i = *r_ij = 0;
+    *mi = *r_i = *r_ij = *r_j = *r_ji = 0;
   }
   __syncthreads();
 
@@ -567,17 +575,15 @@ __device__ void ci_test_sc_level_n(double *mi, int n_data, int dim_s,
     int l = (g / dim_mul) % n_j;
     if (N_j_s[h * n_j + l] == 0) continue;
     if (l == 0) {
-      if (N_s[h] * max_dim + n_i - 1 >= (n_data + 1) * max_dim) {
-        printf("h: %d, N_s[h]: %d, max_dim: %d, n_i: %d, n_data: %d\n", h,
-               N_s[h], max_dim, n_i, n_data);
-      }
-      assert(N_s[h] * max_dim + n_i - 1 < (n_data + 1) * max_dim);
-      // int K = min(N_s[h], n_data);
       myAtomicAdd(r_i, log2(regret[N_s[h] * max_dim + n_i - 1]));
+      myAtomicAdd(r_j, log2(regret[N_s[h] * max_dim + n_j - 1]));
     }
     myAtomicAdd(r_ij, log2(regret[N_j_s[h * n_j + l] * max_dim + n_i - 1]));
     for (int k = 0; k < n_i; k++) {
       if (!N_i_j_s[g * n_i + k]) continue;
+      if (l == 0) {
+        myAtomicAdd(r_ji, log2(regret[N_i_s[h * n_i + k] * max_dim + n_j - 1]));
+      }
       double sum_term =
           static_cast<double>(N_i_j_s[g * n_i + k]) / n_data *
           log2(static_cast<double>(N_s[h]) * N_i_j_s[g * n_i + k] /
@@ -587,7 +593,7 @@ __device__ void ci_test_sc_level_n(double *mi, int n_data, int dim_s,
   }
   __syncthreads();
   if (threadIdx.x == 0) {
-    double threshold = (*r_ij - *r_i) / n_data;
+    double threshold = (*r_ij - *r_i + *r_ji - *r_j) / 2 / n_data;
     if (threshold > 0) {
       // printf("threshold: %.7lf\n", threshold);
     } else {
@@ -938,6 +944,7 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
   while (level <= n_node - 2) {
     CUDA_CHECK(cudaMemcpy(G_d, G.data(), size_G, cudaMemcpyHostToDevice));
     cout << "level: " << level << ", max_n_adj: " << max_n_adj << endl;
+    if (level == 4) break;
     if (level == 0) {
       dim3 threadsPerBlock(64);
       dim3 numBlocks(n_node, n_node);
@@ -955,7 +962,7 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
       if (reserved_size_per_ci_test < 1000) {
         PC_level_n<<<numBlocks, threadsPerBlock,
                      sizeof(int) * (max_n_adj + 2 + reserved_size_per_ci_test) +
-                         sizeof(double) * (3 + 1)>>>(
+                         sizeof(double) * (5 + 1)>>>(
             level, n_node, n_data, data_d, G_d, n_states_d, false, nullptr,
             sepsets_d, regret_d);
       } else {
@@ -975,7 +982,7 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
         cout << "threadsPerBlock: " << threadsPerBlock.x << endl;
         PC_level_n<<<numBlocks, threadsPerBlock,
                      sizeof(int) * (max_n_adj + 2) +
-                         sizeof(double) * (3 + 1)>>>(
+                         sizeof(double) * (5 + 1)>>>(
             level, n_node, n_data, data_d, G_d, n_states_d, true,
             working_memory_d, sepsets_d, regret_d);
       }
