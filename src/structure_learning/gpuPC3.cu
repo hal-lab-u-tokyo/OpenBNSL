@@ -323,7 +323,7 @@ __device__ void comb(int n, int l, int t, int p, int *idset) {
 }
 
 const int max_level = 5;
-const int max_dim = 21;
+const int max_dim = 4;
 
 __device__ bool ci_test_chi_squared_level_0(int n_data, int n_i, int n_j,
                                             int *contingency_matrix,
@@ -465,8 +465,8 @@ __global__ void PC_level_0(int n_node, int n_data, uint8_t *data, int *G,
         marginals_j[l] += entry;
       }
     }
-    if (ci_test_sc_level_0(n_data, n_i, n_j, contingency_matrix, marginals_i,
-                           marginals_j, regret)) {
+    if (ci_test_chi_squared_level_0(n_data, n_i, n_j, contingency_matrix,
+                                    marginals_i, marginals_j /*, regret*/)) {
       G[i * n_node + j] = 0;
       G[j * n_node + i] = 0;
     }
@@ -783,8 +783,9 @@ __global__ void PC_level_n(int level, int n_node, int n_data, uint8_t *data,
         scratch_addr = (scratch_addr + 1) / 2 * 2;
         double *scratch_ptr = reinterpret_cast<double *>(smem + scratch_addr);
         bool result;
-        ci_test_sc_level_n(scratch_ptr, n_data, dim_s, dim_mul_j, n_i, n_j,
-                           N_i_j_s, N_i_s, N_j_s, N_s, &result, regret);
+        ci_test_chi_squared_level_n(scratch_ptr, n_data, dim_s, dim_mul_j, n_i,
+                                    n_j, N_i_j_s, N_i_s, N_j_s, N_s,
+                                    &result /*, regret*/);
         if (threadIdx.x == 0 && result) {
           if (atomicCAS(G + i * n_node + j, 1, -1) == 1) {
             G[j * n_node + i] = -1;

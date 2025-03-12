@@ -8,8 +8,10 @@ services:
     image: openbnsl-image
     container_name: openbnsl-container
     ports:
-      - "8888:8888" # expose jupyter notebook port host:container
+      - "8889:8888" # expose jupyter notebook port host:container
     shm_size: "4g" # shared memory size
+    cap_add:
+      - CAP_SYS_ADMIN
     deploy:
       resources:
         limits:
