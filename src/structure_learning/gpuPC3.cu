@@ -1,329 +1,15 @@
-#include <cassert>
-#include <cstddef>
-#include <set>
-#include <stack>
-#include <string>
+#include <cmath>
+#include <iostream>
 #include <vector>
 using namespace std;
 
+#include "base/PDAG2.h"
+#include "structure_learning/constants.h"
 #include "structure_learning/gpuPC3.h"
-// the following includes are for permutation and combination algorithms
-#include <algorithm>
-#include <functional>
-#include <iostream>
-
-// for gamma function
-#include <cmath>
-
-// input: data: np.ndarray,  shape: (n: number of variables, d: number of
-// samples) output: leard PDAG
-// Gall.at(i).at(j)==1 means there is an edge i -> j
+#include "structure_learning/orientation.h"
 
 namespace cuda3 {
-#define CUDA_CHECK(call)                               \
-  do {                                                 \
-    cudaError_t e = call;                              \
-    if (e != cudaSuccess) {                            \
-      throw std::runtime_error(cudaGetErrorString(e)); \
-    }                                                  \
-  } while (0)
-
-struct PDAG {
-  vector<vector<bool>> g;
-  // コンストラクタ
-  PDAG() {
-    // cout << "normal constructor called" << endl;
-  }
-  // コピーコンストラクタ
-  PDAG(const PDAG &old) {
-    // cout << "copy constructor called" << endl;
-    g = old.g;
-  }
-  // 代入演算子
-  PDAG &operator=(const PDAG &a) {
-    if (this != &a) g = a.g;
-    return *this;
-  }
-  // デストラクタ
-  ~PDAG() = default;
-
-  vector<int> successors(int i) {
-    // return the list of successors of node i (include undirected edge)
-    vector<int> succ;
-    for (int j = 0; j < (int)g.size(); j++) {
-      if (g.at(i).at(j)) {
-        succ.push_back(j);
-      }
-    }
-    return succ;
-  }
-
-  vector<int> predecessors(int i) {
-    // return the list of predecessors of node i (include undirected edge)
-    vector<int> pred;
-    for (int j = 0; j < (int)g.size(); j++) {
-      if (g.at(j).at(i)) {
-        pred.push_back(j);
-      }
-    }
-    return pred;
-  }
-
-  vector<int> neighbors(int i) {
-    // return the list of neighbors {j} of node i (j -> i or i -> j)
-    vector<int> neigh;
-    for (int j = 0; j < (int)g.size(); j++) {
-      if (g.at(j).at(i) || g.at(i).at(j)) {
-        neigh.push_back(j);
-      }
-    }
-    return neigh;
-  }
-
-  vector<int> undirected_neighbors(int i) {
-    // return the list of undirected neighbors of node i
-    vector<int> neigh;
-    for (int j = 0; j < (int)g.size(); j++) {
-      if (g.at(i).at(j) && g.at(j).at(i)) {
-        neigh.push_back(j);
-      }
-    }
-    return neigh;
-  }
-
-  void remove_edge(int i, int j) {
-    // remove the edge i -> j
-    g.at(i).at(j) = false;
-  }
-
-  void remove_edge_completedly(int i, int j) {
-    // remove edge between i and j
-    g.at(i).at(j) = false;
-    g.at(j).at(i) = false;
-  }
-
-  void add_edge(int i, int j) { g.at(i).at(j) = true; }
-
-  bool has_edge(int i, int j) { return g.at(i).at(j); }
-
-  bool has_directed_edge(int i, int j) {
-    if (g.at(i).at(j) && !g.at(j).at(i)) {
-      return true;
-    }
-    return false;
-  }
-
-  bool has_undirected_edge(int i, int j) {
-    return g.at(i).at(j) && g.at(j).at(i);
-  }
-
-  bool has_directed_path(
-      int X,
-      int Y) {  // check if there is a directed path from X to Y using DFS
-    vector<int> visited(g.size(), 0);
-    vector<int> stack;
-    stack.push_back(X);
-    while (!stack.empty()) {
-      int node = stack.back();
-      visited.at(node) = 1;
-      stack.pop_back();
-      if (node == Y) {
-        return true;
-      }
-      for (auto &succ : successors(node)) {
-        if (visited.at(succ) == 0 && has_directed_edge(node, succ)) {
-          stack.push_back(succ);
-        }
-      }
-    }
-    return false;
-  }
-};
-// Based on: "GPU-Accelerated Constraint-Based Causal Structure Learning for
-// Discrete Data.", 2021
-//   authors: Hagedorn, Christopher, and Johannes Huegle
-//   journal: Proceedings of the 2021 SIAM International Conference on Data
-//   Mining (SDM)
-
-// poz is a helper function for the afterwards defined pchisq
-// It calculates the probability of a normal z score
-// Implementation of the following function is adapted from Gary Perlman,
-// source retrievable at
-// https://www.netlib.org/a/perlman
-//    Module:       z.c
-//    Purpose:      compute approximations to normal z distribution
-//    probabilities Programmer:   Gary Perlman Organization: Wang Institute,
-//    Tyngsboro, MA 01879 Tester:       compile with -DZTEST to include main
-//    program Copyright:    none Tabstops:     4
-//
-// z: z-score
-#define Z_MAX 6.0                               /* maximum meaningful z value */
-#define LOG_SQRT_PI 0.5723649429247000870717135 /* log (sqrt (pi)) */
-#define I_SQRT_PI 0.5641895835477562869480795   /* 1 / sqrt (pi) */
-#define BIGX 20.0 /* max value to represent exp (x) */
-#define ex(x) (((x) < -BIGX) ? 0.0 : exp(x))
-__device__ double poz(double z) {
-  double y;
-  double x;
-  double w;
-
-  if (z == 0.0) {
-    x = 0.0;
-  } else {
-    y = 0.5 * fabs(z);
-    if (y >= (Z_MAX * 0.5)) {
-      x = 1.0;
-    } else if (y < 1.0) {
-      w = y * y;
-      x = ((((((((0.000124818987 * w - 0.001075204047) * w + 0.005198775019) *
-                    w -
-                0.019198292004) *
-                   w +
-               0.059054035642) *
-                  w -
-              0.151968751364) *
-                 w +
-             0.319152932694) *
-                w -
-            0.531923007300) *
-               w +
-           0.797884560593) *
-          y * 2.0;
-    } else {
-      y -= 2.0;
-      x = (((((((((((((-0.000045255659 * y + 0.000152529290) * y -
-                      0.000019538132) *
-                         y -
-                     0.000676904986) *
-                        y +
-                    0.001390604284) *
-                       y -
-                   0.000794620820) *
-                      y -
-                  0.002034254874) *
-                     y +
-                 0.006549791214) *
-                    y -
-                0.010557625006) *
-                   y +
-               0.011630447319) *
-                  y -
-              0.009279453341) *
-                 y +
-             0.005353579108) *
-                y -
-            0.002141268741) *
-               y +
-           0.000535310849) *
-              y +
-          0.999936657524;
-    }
-  }
-  return (z > 0.0 ? ((x + 1.0) * 0.5) : ((1.0 - x) * 0.5));
-}
-
-// Calculates the probability of a given chi-squared value
-// x: obtained chi-squared value
-// df: degrees of freedom
-
-// Implementation of the following function
-// is adapted from Gary Perlman, source retrievable at
-// https://www.netlib.org/a/perlman
-//    Module:       chisq.c
-//    Purpose:      compute approximations to chisquare distribution
-//    probabilities Contents:     pochisq(), critchi() Uses:         poz() in
-//    z.c (Algorithm 209) Programmer:   Gary Perlman Organization: Wang
-//    Institute, Tyngsboro, MA 01879 Tester:       compile with -DCHISQTEST to
-//    include main program Copyright:    none Tabstops:     4
-// which itself adapted from:
-//            Hill, I. D. and Pike, M. C.  Algorithm 299
-//            Collected Algorithms for the CACM 1967 p. 243
-//    Updated for rounding errors based on remark in
-//            ACM TOMS June 1985, page 185
-__device__ double pchisq(double x, int df) {
-  double a;
-  double y = 0.0;
-  double s;
-
-  double e;
-  double c;
-  double z;
-
-  bool even; /* true if df is an even number */
-
-  if (x <= 0.0 || df < 1) {
-    return (1.0);
-  }
-
-  a = 0.5 * x;
-  even = (2 * (df / 2)) == df;
-  if (df > 1) {
-    y = ex(-a);
-  }
-  s = (even ? y : (2.0 * poz(-sqrt(x))));
-
-  if (df <= 2) {
-    return (s);
-  }
-
-  x = 0.5 * (df - 1.0);
-  z = (even ? 1.0 : 0.5);
-  if (a > BIGX) {
-    e = (even ? 0.0 : LOG_SQRT_PI);
-    c = log(a);
-    while (z <= x) {
-      e = log(z) + e;
-      s += ex(c * z - a - e);
-      z += 1.0;
-    }
-    return (s);
-  }
-
-  e = (even ? 1.0 : (I_SQRT_PI / sqrt(a)));
-  c = 0.0;
-  while (z <= x) {
-    e = e * (a / z);
-    c = c + e;
-    z += 1.0;
-  }
-  return (c * y + s);
-}
-
-__device__ int binom(int n, int k) {
-  if (k > n - k) k = n - k;
-  int res = 1;
-  for (int i = 0; i < k; i++) {
-    res *= n - i;
-    res /= i + 1;
-  }
-  return res;
-}
-
-__device__ void comb(int n, int l, int t, int p, int *idset) {
-  int sum = 0;
-  int max_t = binom(n, l) - 1;
-  if (t > max_t) t = max_t;
-  for (int i = 0; i < l; i++) {
-    int x = (i == 0 ? 0 : idset[i - 1] + 1);
-    while (true) {
-      int d = binom(n - x - 1, l - i - 1);
-      if (sum + d > t) break;
-      x++;
-      sum += d;
-    }
-    idset[i] = x;
-  }
-  if (p >= 0) {
-    for (int i = 0; i < l; i++) {
-      if (idset[i] >= p) {
-        idset[i]++;
-      }
-    }
-  }
-}
-
-const int max_level = 5;
-const int max_dim = 4;
+#include "structure_learning/utils.cuh"
 
 __device__ bool ci_test_chi_squared_level_0(int n_data, int n_i, int n_j,
                                             int *contingency_matrix,
@@ -493,15 +179,7 @@ __device__ void ci_test_chi_squared_level_n(double *chi_squared, int n_data,
       double observed = N_i_j_s[g * n_i + k];
       double sum_term =
           (observed - expected) * (observed - expected) / expected;
-      unsigned long long *address_as_ull =
-          reinterpret_cast<unsigned long long *>(chi_squared);
-      unsigned long long old = *address_as_ull, assumed;
-      do {
-        assumed = old;
-        old = atomicCAS(
-            address_as_ull, assumed,
-            __double_as_longlong(sum_term + __longlong_as_double(assumed)));
-      } while (assumed != old);
+      myAtomicAdd(chi_squared, sum_term);
     }
   }
   __syncthreads();
@@ -529,32 +207,13 @@ __device__ void ci_test_mi_level_n(double *mi, int n_data, int dim_s,
           static_cast<double>(N_i_j_s[g * n_i + k]) / n_data *
           log2(static_cast<double>(N_s[h]) * N_i_j_s[g * n_i + k] /
                (static_cast<double>(N_i_s[h * n_i + k]) * N_j_s[h * n_j + l]));
-      unsigned long long *address_as_ull =
-          reinterpret_cast<unsigned long long *>(mi);
-      unsigned long long old = *address_as_ull, assumed;
-      do {
-        assumed = old;
-        old = atomicCAS(
-            address_as_ull, assumed,
-            __double_as_longlong(sum_term + __longlong_as_double(assumed)));
-      } while (assumed != old);
+      myAtomicAdd(mi, sum_term);
     }
   }
   __syncthreads();
   if (threadIdx.x == 0) {
     *result = (*mi < 0.003);
   }
-}
-
-__device__ void myAtomicAdd(double *a, double b) {
-  unsigned long long *address_as_ull =
-      reinterpret_cast<unsigned long long *>(a);
-  unsigned long long old = *address_as_ull, assumed;
-  do {
-    assumed = old;
-    old = atomicCAS(address_as_ull, assumed,
-                    __double_as_longlong(b + __longlong_as_double(assumed)));
-  } while (assumed != old);
 }
 
 __device__ void ci_test_sc_level_n(double *mi, int n_data, int dim_s,
@@ -625,15 +284,7 @@ __device__ void ci_test_bayes_factor_level_n(double *scratch_ptr, int n_data,
       sum_term += lgamma(N_j_s[g * n_j + l] + alpha) - lgamma(alpha);
     }
     sum_term += lgamma(n_j * alpha) - lgamma(n_j * alpha + N_s[g]);
-    unsigned long long *address_as_ull =
-        reinterpret_cast<unsigned long long *>(scratch_ptr);
-    unsigned long long old = *address_as_ull, assumed;
-    do {
-      assumed = old;
-      old = atomicCAS(
-          address_as_ull, assumed,
-          __double_as_longlong(sum_term + __longlong_as_double(assumed)));
-    } while (assumed != old);
+    myAtomicAdd(scratch_ptr, sum_term);
   }
   __syncthreads();
   double independent_score = *scratch_ptr;
@@ -652,15 +303,7 @@ __device__ void ci_test_bayes_factor_level_n(double *scratch_ptr, int n_data,
       }
     }
     sum_term += lgamma(n_i * n_j * alpha) - lgamma(n_i * n_j * alpha + N_s[g]);
-    unsigned long long *address_as_ull =
-        reinterpret_cast<unsigned long long *>(scratch_ptr);
-    unsigned long long old = *address_as_ull, assumed;
-    do {
-      assumed = old;
-      old = atomicCAS(
-          address_as_ull, assumed,
-          __double_as_longlong(sum_term + __longlong_as_double(assumed)));
-    } while (assumed != old);
+    myAtomicAdd(scratch_ptr, sum_term);
   }
   __syncthreads();
   double dependent_score = *scratch_ptr;
@@ -803,96 +446,6 @@ __global__ void PC_level_n(int level, int n_node, int n_data, uint8_t *data,
       }
     }
   }
-}
-
-void orientation(PDAG &G, const vector<int> &sepsets) {
-  /*
-      orient edges in a PDAG to a maximally oriented graph.
-      orient rules are based on rule 1~3 from Meek,C.:Causal Inference and
-     Causal Explanation with Background Knowledge,Proc.Confon Uncertainty in
-     Artificial Inteligence (UAl-95),p.403-410 (195)
-  */
-  // for each X-Z-Y (X and Y is not adjecent), find V-structure and orient as
-  // X
-  // -> Z <- Y
-  int n_node = G.g.size();
-  auto v_structure = vector<vector<bool>>(n_node, vector<bool>(n_node));
-  for (int X = 0; X < n_node; X++) {
-    for (int Z : G.undirected_neighbors(X)) {
-      for (int Y : G.undirected_neighbors(Z)) {
-        if (X == Y || G.has_edge(X, Y) || G.has_edge(Y, X)) continue;
-        bool in_sepset = false;
-        for (int i = 0; i < max_level; i++) {
-          int XYmin = (X < Y ? X : Y);
-          int XYmax = (X < Y ? Y : X);
-          int id = sepsets[(XYmin * n_node + XYmax) * max_level + i];
-          if (id == -1) break;
-          if (id == Z) {
-            in_sepset = true;
-            break;
-          }
-        }
-        if (!in_sepset) {
-          v_structure[X][Z] = true;
-          v_structure[Y][Z] = true;
-          // cout << "V-structure found:" << X << "->" << Z << "<-" << Y <<
-          // endl;
-        }
-      }
-    }
-  }
-  for (int i = 0; i < n_node; i++) {
-    for (int j = 0; j < n_node; j++) {
-      if (v_structure[i][j] && !v_structure[j][i]) {
-        G.remove_edge(j, i);
-      }
-    }
-  }
-  bool flag = true;
-  while (flag) {
-    flag = false;
-    // Rule 1: X -> Y - Z, no edge between X and Z then X -> Y -> Z
-    for (int X = 0; X < n_node; X++) {
-      for (int Y : G.successors(X)) {
-        if (!G.has_directed_edge(X, Y)) continue;
-        for (int Z : G.undirected_neighbors(Y)) {
-          if (!G.has_edge(X, Z) && !G.has_edge(Z, X) && Z != X) {
-            G.remove_edge(Z, Y);
-            // cout << "R1:" << Y << "->" << Z << endl;
-            flag = true;
-          }
-        }
-      }
-    }
-    // Rule 2: X - Y and if there is a directed path from X to Y, then X -> Y
-    for (int X = 0; X < n_node; X++) {
-      for (int Y : G.undirected_neighbors(X)) {
-        if (G.has_directed_path(X, Y)) {
-          G.remove_edge(Y, X);
-          // cout << "R2:" << X << "->" << Y << endl;
-          flag = true;
-        }
-      }
-    }
-    // Rule 3: for each X->W<-Z X-Y-Z Y-W, orient Y->W
-    for (int X = 0; X < n_node; X++) {
-      for (int Y : G.undirected_neighbors(X)) {
-        for (int Z : G.undirected_neighbors(Y)) {
-          if (Z == X || G.has_edge(X, Z) || G.has_edge(Z, X)) continue;
-          // X-Y-Z
-          for (int W : G.undirected_neighbors(Y)) {
-            if (W != X && W != Z && G.has_directed_edge(X, W) &&
-                G.has_directed_edge(Z, W)) {
-              G.remove_edge(W, Y);
-              // cout << "R3:" << Y << "->" << W << endl;
-              flag = true;
-            }
-          }
-        }
-      }
-    }
-  }
-  return;
 }
 
 PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,

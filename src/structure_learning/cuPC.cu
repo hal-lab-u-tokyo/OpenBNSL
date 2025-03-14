@@ -1,147 +1,15 @@
-#include <cassert>
-#include <cstddef>
-#include <set>
-#include <stack>
-#include <string>
+#include <cmath>
+#include <iostream>
 #include <vector>
 using namespace std;
 
+#include "base/PDAG2.h"
+#include "structure_learning/constants.h"
 #include "structure_learning/cuPC.h"
-// the following includes are for permutation and combination algorithms
-#include <algorithm>
-#include <functional>
-#include <iostream>
-
-// for gamma function
-#include <cmath>
-
-// input: data: np.ndarray,  shape: (n: number of variables, d: number of
-// samples) output: leard PDAG
-// Gall.at(i).at(j)==1 means there is an edge i -> j
+#include "structure_learning/orientation.h"
 
 namespace cuda_cupc {
-#define CUDA_CHECK(call)                               \
-  do {                                                 \
-    cudaError_t e = call;                              \
-    if (e != cudaSuccess) {                            \
-      throw std::runtime_error(cudaGetErrorString(e)); \
-    }                                                  \
-  } while (0)
-
-struct PDAG {
-  vector<vector<bool>> g;
-  // コンストラクタ
-  PDAG() {
-    // cout << "normal constructor called" << endl;
-  }
-  // コピーコンストラクタ
-  PDAG(const PDAG &old) {
-    // cout << "copy constructor called" << endl;
-    g = old.g;
-  }
-  // 代入演算子
-  PDAG &operator=(const PDAG &a) {
-    if (this != &a) g = a.g;
-    return *this;
-  }
-  // デストラクタ
-  ~PDAG() = default;
-
-  vector<int> successors(int i) {
-    // return the list of successors of node i (include undirected edge)
-    vector<int> succ;
-    for (int j = 0; j < (int)g.size(); j++) {
-      if (g.at(i).at(j)) {
-        succ.push_back(j);
-      }
-    }
-    return succ;
-  }
-
-  vector<int> predecessors(int i) {
-    // return the list of predecessors of node i (include undirected edge)
-    vector<int> pred;
-    for (int j = 0; j < (int)g.size(); j++) {
-      if (g.at(j).at(i)) {
-        pred.push_back(j);
-      }
-    }
-    return pred;
-  }
-
-  vector<int> neighbors(int i) {
-    // return the list of neighbors {j} of node i (j -> i or i -> j)
-    vector<int> neigh;
-    for (int j = 0; j < (int)g.size(); j++) {
-      if (g.at(j).at(i) || g.at(i).at(j)) {
-        neigh.push_back(j);
-      }
-    }
-    return neigh;
-  }
-
-  vector<int> undirected_neighbors(int i) {
-    // return the list of undirected neighbors of node i
-    vector<int> neigh;
-    for (int j = 0; j < (int)g.size(); j++) {
-      if (g.at(i).at(j) && g.at(j).at(i)) {
-        neigh.push_back(j);
-      }
-    }
-    return neigh;
-  }
-
-  void remove_edge(int i, int j) {
-    // remove the edge i -> j
-    g.at(i).at(j) = false;
-  }
-
-  void remove_edge_completedly(int i, int j) {
-    // remove edge between i and j
-    g.at(i).at(j) = false;
-    g.at(j).at(i) = false;
-  }
-
-  void add_edge(int i, int j) { g.at(i).at(j) = true; }
-
-  bool has_edge(int i, int j) { return g.at(i).at(j); }
-
-  bool has_directed_edge(int i, int j) {
-    if (g.at(i).at(j) && !g.at(j).at(i)) {
-      return true;
-    }
-    return false;
-  }
-
-  bool has_undirected_edge(int i, int j) {
-    return g.at(i).at(j) && g.at(j).at(i);
-  }
-
-  bool has_directed_path(
-      int X,
-      int Y) {  // check if there is a directed path from X to Y using DFS
-    vector<int> visited(g.size(), 0);
-    vector<int> stack;
-    stack.push_back(X);
-    while (!stack.empty()) {
-      int node = stack.back();
-      visited.at(node) = 1;
-      stack.pop_back();
-      if (node == Y) {
-        return true;
-      }
-      for (auto &succ : successors(node)) {
-        if (visited.at(succ) == 0 && has_directed_edge(node, succ)) {
-          stack.push_back(succ);
-        }
-      }
-    }
-    return false;
-  }
-};
-
-const int max_level = 20;
-const int max_dim = 21;
+#include "structure_learning/utils.cuh"
 
 // Behrooz Zarebavani, Foad Jafarinejad, Matin Hashemi, Saber Salehkaleybar,
 // cuPC: CUDA-based Parallel PC Algorithm for Causal Structure Learning on GPU,
@@ -390,39 +258,6 @@ __device__ void pseudoinverse(int m, double M2[][max_level],
   }
 }
 
-__device__ int binom(int n, int k) {
-  if (k > n - k) k = n - k;
-  int res = 1;
-  for (int i = 0; i < k; i++) {
-    res *= n - i;
-    res /= i + 1;
-  }
-  return res;
-}
-
-__device__ void comb(int n, int l, int t, int p, int *idset) {
-  int sum = 0;
-  int max_t = binom(n, l) - 1;
-  if (t > max_t) t = max_t;
-  for (int i = 0; i < l; i++) {
-    int x = (i == 0 ? 0 : idset[i - 1] + 1);
-    while (true) {
-      int d = binom(n - x - 1, l - i - 1);
-      if (sum + d > t) break;
-      x++;
-      sum += d;
-    }
-    idset[i] = x;
-  }
-  if (p >= 0) {
-    for (int i = 0; i < l; i++) {
-      if (idset[i] >= p) {
-        idset[i]++;
-      }
-    }
-  }
-}
-
 __global__ void calc_correlation_matrix(int n_node, int n_data, uint8_t *data,
                                         double *C) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
@@ -562,96 +397,6 @@ __global__ void PC_level_n(int level, int n_node, int n_data, int *G, double *C,
       }
     }
   }
-}
-
-void orientation(PDAG &G, const vector<int> &sepsets) {
-  /*
-      orient edges in a PDAG to a maximally oriented graph.
-      orient rules are based on rule 1~3 from Meek,C.:Causal Inference and
-     Causal Explanation with Background Knowledge,Proc.Confon Uncertainty in
-     Artificial Inteligence (UAl-95),p.403-410 (195)
-  */
-  // for each X-Z-Y (X and Y is not adjecent), find V-structure and orient as
-  // X
-  // -> Z <- Y
-  int n_node = G.g.size();
-  auto v_structure = vector<vector<bool>>(n_node, vector<bool>(n_node));
-  for (int X = 0; X < n_node; X++) {
-    for (int Z : G.undirected_neighbors(X)) {
-      for (int Y : G.undirected_neighbors(Z)) {
-        if (X == Y || G.has_edge(X, Y) || G.has_edge(Y, X)) continue;
-        bool in_sepset = false;
-        for (int i = 0; i < max_level; i++) {
-          int XYmin = (X < Y ? X : Y);
-          int XYmax = (X < Y ? Y : X);
-          int id = sepsets[(XYmin * n_node + XYmax) * max_level + i];
-          if (id == -1) break;
-          if (id == Z) {
-            in_sepset = true;
-            break;
-          }
-        }
-        if (!in_sepset) {
-          v_structure[X][Z] = true;
-          v_structure[Y][Z] = true;
-          // cout << "V-structure found:" << X << "->" << Z << "<-" << Y <<
-          // endl;
-        }
-      }
-    }
-  }
-  for (int i = 0; i < n_node; i++) {
-    for (int j = 0; j < n_node; j++) {
-      if (v_structure[i][j] && !v_structure[j][i]) {
-        G.remove_edge(j, i);
-      }
-    }
-  }
-  bool flag = true;
-  while (flag) {
-    flag = false;
-    // Rule 1: X -> Y - Z, no edge between X and Z then X -> Y -> Z
-    for (int X = 0; X < n_node; X++) {
-      for (int Y : G.successors(X)) {
-        if (!G.has_directed_edge(X, Y)) continue;
-        for (int Z : G.undirected_neighbors(Y)) {
-          if (!G.has_edge(X, Z) && !G.has_edge(Z, X) && Z != X) {
-            G.remove_edge(Z, Y);
-            // cout << "R1:" << Y << "->" << Z << endl;
-            flag = true;
-          }
-        }
-      }
-    }
-    // Rule 2: X - Y and if there is a directed path from X to Y, then X -> Y
-    for (int X = 0; X < n_node; X++) {
-      for (int Y : G.undirected_neighbors(X)) {
-        if (G.has_directed_path(X, Y)) {
-          G.remove_edge(Y, X);
-          // cout << "R2:" << X << "->" << Y << endl;
-          flag = true;
-        }
-      }
-    }
-    // Rule 3: for each X->W<-Z X-Y-Z Y-W, orient Y->W
-    for (int X = 0; X < n_node; X++) {
-      for (int Y : G.undirected_neighbors(X)) {
-        for (int Z : G.undirected_neighbors(Y)) {
-          if (Z == X || G.has_edge(X, Z) || G.has_edge(Z, X)) continue;
-          // X-Y-Z
-          for (int W : G.undirected_neighbors(Y)) {
-            if (W != X && W != Z && G.has_directed_edge(X, W) &&
-                G.has_directed_edge(Z, W)) {
-              G.remove_edge(W, Y);
-              // cout << "R3:" << Y << "->" << W << endl;
-              flag = true;
-            }
-          }
-        }
-      }
-    }
-  }
-  return;
 }
 
 PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
