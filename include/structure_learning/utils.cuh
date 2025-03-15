@@ -1,4 +1,7 @@
 #pragma once
+#include <cstdint>
+
+#include "constants.h"
 
 #define CUDA_CHECK(call)                               \
   do {                                                 \
@@ -194,4 +197,80 @@ __device__ void myAtomicAdd(double *a, double b) {
     old = atomicCAS(address_as_ull, assumed,
                     __double_as_longlong(b + __longlong_as_double(assumed)));
   } while (assumed != old);
+}
+
+__device__ bool d_separated(int level, int n_node, int i, int j, int *sepset,
+                            int *model) {
+  int stack[max_node_num * 2];
+  int sp = 0;
+  bool ancestor[max_node_num];
+  bool flag[max_node_num][2];  // (up, down)
+  for (int k = 0; k < n_node; k++) {
+    ancestor[k] = flag[k][0] = flag[k][1] = false;
+  }
+  for (int k = 0; k < level; k++) {
+    ancestor[sepset[k]] = true;
+    stack[sp++] = sepset[k];
+  }
+  while (sp) {
+    int v = stack[--sp];
+    for (int k = 0; k < model[n_node * n_node + v * n_node]; k++) {
+      int u = model[n_node * n_node + v * n_node + 1 + k];
+      if (!ancestor[u]) {
+        ancestor[u] = true;
+        stack[sp++] = u;
+      }
+    }
+  }
+  stack[sp++] = 2 * i;
+  flag[i][0] = true;
+  while (sp) {
+    int v = stack[sp - 1] / 2, dir = stack[sp - 1] % 2;
+    sp--;
+    if (v == j) return false;
+    bool in_sepset = false;
+    for (int k = 0; k < level; k++) {
+      if (sepset[k] == v) {
+        in_sepset = true;
+        break;
+      }
+    }
+    if (dir == 0) {
+      if (in_sepset) continue;
+      for (int k = 0; k < model[v * n_node]; k++) {
+        int u = model[v * n_node + 1 + k];
+        if (!flag[u][1]) {
+          stack[sp++] = 2 * u + 1;
+          flag[u][1] = true;
+        }
+      }
+      for (int k = 0; k < model[n_node * n_node + v * n_node]; k++) {
+        int u = model[n_node * n_node + v * n_node + 1 + k];
+        if (!flag[u][0]) {
+          stack[sp++] = 2 * u;
+          flag[u][0] = true;
+        }
+      }
+    } else {
+      if (!in_sepset) {
+        for (int k = 0; k < model[v * n_node]; k++) {
+          int u = model[v * n_node + 1 + k];
+          if (!flag[u][1]) {
+            stack[sp++] = 2 * u + 1;
+            flag[u][1] = true;
+          }
+        }
+      }
+      if (ancestor[v]) {
+        for (int k = 0; k < model[n_node * n_node + v * n_node]; k++) {
+          int u = model[n_node * n_node + v * n_node + 1 + k];
+          if (!flag[u][0]) {
+            stack[sp++] = 2 * u;
+            flag[u][0] = true;
+          }
+        }
+      }
+    }
+  }
+  return true;
 }

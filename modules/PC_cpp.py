@@ -9,9 +9,11 @@ import time
 
 sys.path.append("/workspace")
 from modules.visualize_graph import display_graph_info as show
+from modules.structural_distance import retrieve_adjacency_matrix
 
-
-def PCEstimator_cpp(data, ESS):
+def PCEstimator_cpp(model, data):
+    model_mat = retrieve_adjacency_matrix(model).astype(dtype=bool)
+    print(model_mat)
     # translate data from pandas dataframe to numpy array and extract column names
     columns = np.array(data.columns.tolist())
     t_data = data.to_numpy()
@@ -43,7 +45,8 @@ def PCEstimator_cpp(data, ESS):
 
     print("timer start")
     start_time = time.perf_counter()
-    ansmat = openbnsllib.structure_learning.gpuPC3(data_int, n_states)
+    ansmat = openbnsllib.structure_learning.gpuPC3(data_int, n_states, model_mat)
+    print("dtype=",ansmat.dtype)
     calc_time = time.perf_counter() - start_time
     print("ansmat = ", ansmat)
     print("calc_time = ", calc_time)
