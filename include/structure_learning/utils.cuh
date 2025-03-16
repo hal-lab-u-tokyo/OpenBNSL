@@ -201,7 +201,7 @@ __device__ void myAtomicAdd(double *a, double b) {
 
 __device__ bool d_separated(int level, int n_node, int i, int j, int *sepset,
                             int *model) {
-  int stack[max_node_num * 2];
+  uint16_t stack[max_node_num * 2];
   int sp = 0;
   bool ancestor[max_node_num];
   bool flag[max_node_num][2];  // (up, down)

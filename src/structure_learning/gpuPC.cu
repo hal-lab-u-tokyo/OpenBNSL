@@ -513,7 +513,8 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
       }
       if (reserved_size_per_ci_test * 2 < 1000) {
         PC_level_n<<<numBlocks, threadsPerBlock,
-                     sizeof(int) * (max_n_adj + 2 + reserved_size_per_ci_test) +
+                     sizeof(int) * (max_n_adj + 2 +
+                                    (level + reserved_size_per_ci_test) * 2) +
                          sizeof(double) * (10 + 1)>>>(
             level, n_node, n_data, data_d, G_d, n_states_d, false, nullptr,
             sepsets_d, regret_d);

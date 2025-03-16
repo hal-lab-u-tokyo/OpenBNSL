@@ -119,7 +119,8 @@ __device__ bool ci_test_bayes_factor_level_0(int n_data, int n_i, int n_j,
 }
 
 __global__ void PC_level_0(int n_node, int n_data, uint8_t *data, int *G,
-                           int *n_states, double *regret, int *model) {
+                           int *n_states, double *regret, int *model,
+                           int *stats) {
   int i = blockIdx.x;
   int j = blockIdx.y;
   if (i >= j) {
@@ -151,14 +152,21 @@ __global__ void PC_level_0(int n_node, int n_data, uint8_t *data, int *G,
         marginals_j[l] += entry;
       }
     }
-    // if (ci_test_sc_level_0(n_data, n_i, n_j, contingency_matrix, marginals_i,
-    //                        marginals_j, regret)) {
-    //   G[i * n_node + j] = 0;
-    //   G[j * n_node + i] = 0;
-    // }
-    if (d_separated(0, n_node, i, j, nullptr, model)) {
+    bool result = ci_test_sc_level_0(n_data, n_i, n_j, contingency_matrix,
+                                     marginals_i, marginals_j, regret);
+    if (result) {
       G[i * n_node + j] = 0;
       G[j * n_node + i] = 0;
+    }
+    bool sep_result = d_separated(0, n_node, i, j, nullptr, model);
+    if (result && sep_result) {
+      atomicAdd(stats, 1);
+    } else if (result && !sep_result) {
+      atomicAdd(stats + 1, 1);
+    } else if (!result && sep_result) {
+      atomicAdd(stats + 2, 1);
+    } else {
+      atomicAdd(stats + 3, 1);
     }
   }
 }
@@ -324,9 +332,10 @@ __device__ void ci_test_bayes_factor_level_n(double *scratch_ptr, int n_data,
 __global__ void PC_level_n(int level, int n_node, int n_data, uint8_t *data,
                            int *G, int *n_states, bool use_working_memory,
                            int *working_memory, int *sepsets, double *regret,
-                           int *model) {
+                           int *model, int *stats) {
   extern __shared__ int smem[];
   for (int i = blockIdx.x; i < n_node; i += gridDim.x) {
+    __syncthreads();
     int *G_compacted = smem;
     if (threadIdx.x == 0) {
       int cnt = 0;
@@ -346,42 +355,43 @@ __global__ void PC_level_n(int level, int n_node, int n_data, uint8_t *data,
     int reserved_size_per_ci_test =
         max_dim_s * max_dim * max_dim + 2 * max_dim_s * max_dim + max_dim_s;
     int sepset_cnt = binom(n_adj, level + 1);
-    int sepset[max_level + 1];
-    int dim_mul[max_level + 1];
+    int *sepset = smem + n_adj + 2;
+    int *dim_mul = smem + n_adj + 2 + level + 1;
     int *thread_memory;
     if (use_working_memory) {
       int thread_memory_index = gridDim.y * blockIdx.x + blockIdx.y;
       thread_memory =
           working_memory + thread_memory_index * reserved_size_per_ci_test;
     } else {
-      thread_memory = smem + n_adj + 2;
+      thread_memory = smem + n_adj + 2 + (level + 1) * 2;
     }
     for (int sepset_idx = blockIdx.y; sepset_idx < sepset_cnt;
          sepset_idx += gridDim.y) {
       __syncthreads();
-      comb(n_adj, level + 1, sepset_idx, -1, sepset);
-      int dim_s = 1;
       int *valid = smem + n_adj + 1;
       if (threadIdx.x == 0) {
+        comb(n_adj, level + 1, sepset_idx, -1, sepset);
         *valid = 0;
-      }
-      __syncthreads();
-      for (int k = 0; k < level + 1; k++) {
-        sepset[k] = G_compacted[sepset[k] + 1];
-        if (threadIdx.x == 0 && G[i * n_node + sepset[k]] == 1) {
-          *valid = 1;
+        for (int k = 0; k < level + 1; k++) {
+          sepset[k] = G_compacted[sepset[k] + 1];
+          if (G[i * n_node + sepset[k]] == 1) {
+            *valid = 1;
+          }
         }
-        dim_s *= n_states[sepset[k]];
       }
       __syncthreads();
       if (*valid == 0) continue;
-      dim_mul[level] = 1;
-      for (int k = level - 1; k >= 0; k--) {
-        dim_mul[k] = dim_mul[k + 1] * n_states[sepset[k + 1]];
+      int dim_s = 1;
+      for (int k = 0; k < level + 1; k++) {
+        dim_s *= n_states[sepset[k]];
       }
       int *N_i_j_s = thread_memory;
       int n_i = n_states[i];
       if (threadIdx.x == 0) {
+        dim_mul[level] = 1;
+        for (int k = level - 1; k >= 0; k--) {
+          dim_mul[k] = dim_mul[k + 1] * n_states[sepset[k + 1]];
+        }
         int malloc_size = dim_s * n_i;
         memset(N_i_j_s, 0, malloc_size * sizeof(int));
         // for (int k = threadIdx.x; k < malloc_size; k += blockDim.x) {
@@ -389,14 +399,14 @@ __global__ void PC_level_n(int level, int n_node, int n_data, uint8_t *data,
         // }
       }
       __syncthreads();
-      // for (int k = threadIdx.x; k < n_data; k += blockDim.x) {
-      //   int val_i = data[i * n_data + k];
-      //   int s_idx = 0;
-      //   for (int l = 0; l < level + 1; l++) {
-      //     s_idx = s_idx * n_states[sepset[l]] + data[sepset[l] * n_data + k];
-      //   }
-      //   atomicAdd(N_i_j_s + s_idx * n_i + val_i, 1);
-      // }
+      for (int k = threadIdx.x; k < n_data; k += blockDim.x) {
+        int val_i = data[i * n_data + k];
+        int s_idx = 0;
+        for (int l = 0; l < level + 1; l++) {
+          s_idx = s_idx * n_states[sepset[l]] + data[sepset[l] * n_data + k];
+        }
+        atomicAdd(N_i_j_s + s_idx * n_i + val_i, 1);
+      }
       for (int idx_j = 0; idx_j < level + 1; idx_j++) {
         __syncthreads();
         int j = sepset[idx_j];
@@ -418,34 +428,25 @@ __global__ void PC_level_n(int level, int n_node, int n_data, uint8_t *data,
           // }
         }
         __syncthreads();
-        // for (int g = threadIdx.x; g < dim_s; g += blockDim.x) {
-        //   int l = (g / dim_mul_j) % n_j;
-        //   int h = g / dim_mul_j / n_j * dim_mul_j + g % dim_mul_j;
-        //   for (int k = 0; k < n_i; k++) {
-        //     int entry = N_i_j_s[g * n_i + k];
-        //     atomicAdd(N_i_s + h * n_i + k, entry);
-        //     atomicAdd(N_j_s + h * n_j + l, entry);
-        //     atomicAdd(N_s + h, entry);
-        //   }
-        // }
+        for (int g = threadIdx.x; g < dim_s; g += blockDim.x) {
+          int l = (g / dim_mul_j) % n_j;
+          int h = g / dim_mul_j / n_j * dim_mul_j + g % dim_mul_j;
+          for (int k = 0; k < n_i; k++) {
+            int entry = N_i_j_s[g * n_i + k];
+            atomicAdd(N_i_s + h * n_i + k, entry);
+            atomicAdd(N_j_s + h * n_j + l, entry);
+            atomicAdd(N_s + h, entry);
+          }
+        }
         __syncthreads();
-        int scratch_addr =
-            n_adj + 2 + (use_working_memory ? 0 : reserved_size_per_ci_test);
+        int scratch_addr = n_adj + 2 + (level + 1) * 2 +
+                           (use_working_memory ? 0 : reserved_size_per_ci_test);
         scratch_addr = (scratch_addr + 1) / 2 * 2;
         double *scratch_ptr = reinterpret_cast<double *>(smem + scratch_addr);
         bool result;
-        // ci_test_sc_level_n(scratch_ptr, n_data, dim_s, dim_mul_j, n_i, n_j,
-        //                    N_i_j_s, N_i_s, N_j_s, N_s, &result, regret);
-        // if (threadIdx.x == 0 && result) {
-        int sepset_new[max_level];
-        int p = 0;
-        for (int k = 0; k < level + 1; k++) {
-          if (k == idx_j) continue;
-          sepset_new[p] = sepset[k];
-          p++;
-        }
-        if (threadIdx.x == 0 &&
-            d_separated(level, n_node, i, j, sepset_new, model)) {
+        ci_test_sc_level_n(scratch_ptr, n_data, dim_s, dim_mul_j, n_i, n_j,
+                           N_i_j_s, N_i_s, N_j_s, N_s, &result, regret);
+        if (threadIdx.x == 0 && result) {
           int ij_min = (i < j ? i : j);
           int ij_max = (i < j ? j : i);
           if (atomicCAS(G + ij_min * n_node + ij_max, 1, -1) == 1) {
@@ -456,6 +457,25 @@ __global__ void PC_level_n(int level, int n_node, int n_data, uint8_t *data,
               sepsets[(ij_min * n_node + ij_max) * max_level + p] = sepset[k];
               p++;
             }
+          }
+        }
+        if (threadIdx.x == 0) {
+          int sepset2[max_level];
+          int p = 0;
+          for (int k = 0; k < level + 1; k++) {
+            if (k == idx_j) continue;
+            sepset2[p] = sepset[k];
+            p++;
+          }
+          bool sep_result = d_separated(level, n_node, i, j, sepset2, model);
+          if (result && sep_result) {
+            atomicAdd(stats, 1);
+          } else if (result && !sep_result) {
+            atomicAdd(stats + 1, 1);
+          } else if (!result && sep_result) {
+            atomicAdd(stats + 2, 1);
+          } else {
+            atomicAdd(stats + 3, 1);
           }
         }
         __syncthreads();
@@ -475,7 +495,8 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
   vector<int> sepsets(n_node * n_node * max_level, -1);
   uint8_t *data_d;
   vector<double> regret(n_data * max_dim * 2);
-  int *G_d, *n_states_d, *working_memory_d, *sepsets_d, *model_d;
+  vector<int> stats(4);
+  int *G_d, *n_states_d, *working_memory_d, *sepsets_d, *model_d, *stats_d;
   double *regret_d;
   int size_G = sizeof(int) * n_node * n_node;
   int size_data = sizeof(uint8_t) * n_data * n_node;
@@ -484,6 +505,7 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
   int size_sepsets = sizeof(int) * n_node * n_node * max_level;
   int size_regret = sizeof(double) * n_data * max_dim * 2;
   int size_model = sizeof(int) * n_node * n_node * 2;
+  int size_stats = sizeof(int) * 4;
   CUDA_CHECK(cudaMalloc(&G_d, size_G));
   CUDA_CHECK(cudaMalloc(&data_d, size_data));
   CUDA_CHECK(cudaMalloc(&n_states_d, size_n_states));
@@ -491,6 +513,7 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
   CUDA_CHECK(cudaMalloc(&sepsets_d, size_sepsets));
   CUDA_CHECK(cudaMalloc(&regret_d, size_regret));
   CUDA_CHECK(cudaMalloc(&model_d, size_model));
+  CUDA_CHECK(cudaMalloc(&stats_d, size_stats));
   CUDA_CHECK(
       cudaMemcpy(data_d, data.data(), size_data, cudaMemcpyHostToDevice));
   CUDA_CHECK(cudaMemcpy(n_states_d, n_states.data(), size_n_states,
@@ -499,19 +522,25 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
                         cudaMemcpyHostToDevice));
   CUDA_CHECK(
       cudaMemcpy(model_d, model.data(), size_model, cudaMemcpyHostToDevice));
+  CUDA_CHECK(
+      cudaMemcpy(stats_d, stats.data(), size_stats, cudaMemcpyHostToDevice));
 
   calc_regret<<<n_data / 1024 + 1, 1024>>>(regret_d);
   CUDA_CHECK(
       cudaMemcpy(regret.data(), regret_d, size_regret, cudaMemcpyDeviceToHost));
 
-  cout << "---true_model---" << endl;
-  for (size_t i = 0; i < 2 * n_node; i++) {
-    for (size_t j = 0; j < model.at(i * n_node); j++) {
-      cout << model.at(i * n_node + j + 1) << ' ';
-    }
-    cout << endl;
+  int true_max_deg = 0, true_max_indeg = 0, true_max_outdeg = 0;
+  for (size_t i = 0; i < n_node; i++) {
+    true_max_deg =
+        max(true_max_deg,
+            model.at(i * n_node) + model.at(n_node * n_node + i * n_node));
+    true_max_indeg =
+        max(true_max_indeg, model.at(n_node * n_node + i * n_node));
+    true_max_outdeg = max(true_max_outdeg, model.at(i * n_node));
   }
-  cout << "---" << endl;
+  cout << "true_max_deg: " << true_max_deg
+       << ", true_max_indeg: " << true_max_indeg
+       << ", true_max_outdeg: " << true_max_outdeg << endl;
   cout << "---regret---" << endl;
   for (int n = n_data - 10; n <= n_data; n++) {
     for (int k = 1; k <= max_dim; k++) {
@@ -531,8 +560,8 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
     if (level == 0) {
       dim3 threadsPerBlock(64);
       dim3 numBlocks(n_node, n_node);
-      PC_level_0<<<numBlocks, threadsPerBlock>>>(n_node, n_data, data_d, G_d,
-                                                 n_states_d, regret_d, model_d);
+      PC_level_0<<<numBlocks, threadsPerBlock>>>(
+          n_node, n_data, data_d, G_d, n_states_d, regret_d, model_d, stats_d);
     } else {
       dim3 threadsPerBlock(64);
       dim3 numBlocks(n_node, max_n_adj * 2);
@@ -544,10 +573,11 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
       }
       if (reserved_size_per_ci_test < 1000) {
         PC_level_n<<<numBlocks, threadsPerBlock,
-                     sizeof(int) * (max_n_adj + 2 + reserved_size_per_ci_test) +
+                     sizeof(int) * (max_n_adj + 2 + (level + 1) * 2 +
+                                    reserved_size_per_ci_test) +
                          sizeof(double) * (5 + 1)>>>(
             level, n_node, n_data, data_d, G_d, n_states_d, false, nullptr,
-            sepsets_d, regret_d, model_d);
+            sepsets_d, regret_d, model_d, stats_d);
       } else {
         uint64_t reserved_size_per_row =
             reserved_size_per_ci_test * numBlocks.y;
@@ -564,12 +594,16 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
         cout << "numBlocks: " << numBlocks.x << ", " << numBlocks.y << endl;
         cout << "threadsPerBlock: " << threadsPerBlock.x << endl;
         PC_level_n<<<numBlocks, threadsPerBlock,
-                     sizeof(int) * (max_n_adj + 2) +
+                     sizeof(int) * (max_n_adj + 2 + (level + 1) * 2) +
                          sizeof(double) * (5 + 1)>>>(
             level, n_node, n_data, data_d, G_d, n_states_d, true,
-            working_memory_d, sepsets_d, regret_d, model_d);
+            working_memory_d, sepsets_d, regret_d, model_d, stats_d);
       }
     }
+    CUDA_CHECK(
+        cudaMemcpy(stats.data(), stats_d, size_stats, cudaMemcpyDeviceToHost));
+    cout << "stats: " << stats[0] << ", " << stats[1] << ", " << stats[2]
+         << ", " << stats[3] << endl;
     CUDA_CHECK(cudaMemcpy(G.data(), G_d, size_G, cudaMemcpyDeviceToHost));
     max_n_adj = 0;
     int next_node_cnt = 0;
