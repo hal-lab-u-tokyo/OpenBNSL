@@ -165,16 +165,6 @@ __device__ int binom(int n, int k) {
   return res;
 }
 
-uint64_t binom_host(int n, int k) {
-  if (k > n - k) k = n - k;
-  uint64_t res = 1;
-  for (int i = 0; i < k; i++) {
-    res *= n - i;
-    res /= i + 1;
-  }
-  return res;
-}
-
 __device__ void comb(int n, int l, int t, int p, int *idset) {
   int sum = 0;
   int max_t = binom(n, l) - 1;
