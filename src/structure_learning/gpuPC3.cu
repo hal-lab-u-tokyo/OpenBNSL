@@ -158,16 +158,16 @@ __global__ void PC_level_0(int n_node, int n_data, uint8_t *data, int *G,
       G[i * n_node + j] = 0;
       G[j * n_node + i] = 0;
     }
-    bool sep_result = d_separated(0, n_node, i, j, nullptr, model);
-    if (result && sep_result) {
-      atomicAdd(stats, 1);
-    } else if (result && !sep_result) {
-      atomicAdd(stats + 1, 1);
-    } else if (!result && sep_result) {
-      atomicAdd(stats + 2, 1);
-    } else {
-      atomicAdd(stats + 3, 1);
-    }
+    // bool sep_result = d_separated(0, n_node, i, j, nullptr, model);
+    // if (result && sep_result) {
+    //   atomicAdd(stats, 1);
+    // } else if (result && !sep_result) {
+    //   atomicAdd(stats + 1, 1);
+    // } else if (!result && sep_result) {
+    //   atomicAdd(stats + 2, 1);
+    // } else {
+    //   atomicAdd(stats + 3, 1);
+    // }
   }
 }
 
@@ -459,25 +459,25 @@ __global__ void PC_level_n(int level, int n_node, int n_data, uint8_t *data,
             }
           }
         }
-        if (threadIdx.x == 0) {
-          int sepset2[max_level];
-          int p = 0;
-          for (int k = 0; k < level + 1; k++) {
-            if (k == idx_j) continue;
-            sepset2[p] = sepset[k];
-            p++;
-          }
-          bool sep_result = d_separated(level, n_node, i, j, sepset2, model);
-          if (result && sep_result) {
-            atomicAdd(stats, 1);
-          } else if (result && !sep_result) {
-            atomicAdd(stats + 1, 1);
-          } else if (!result && sep_result) {
-            atomicAdd(stats + 2, 1);
-          } else {
-            atomicAdd(stats + 3, 1);
-          }
-        }
+        // if (threadIdx.x == 0) {
+        //   int sepset2[max_level];
+        //   int p = 0;
+        //   for (int k = 0; k < level + 1; k++) {
+        //     if (k == idx_j) continue;
+        //     sepset2[p] = sepset[k];
+        //     p++;
+        //   }
+        //   bool sep_result = d_separated(level, n_node, i, j, sepset2, model);
+        //   if (result && sep_result) {
+        //     atomicAdd(stats, 1);
+        //   } else if (result && !sep_result) {
+        //     atomicAdd(stats + 1, 1);
+        //   } else if (!result && sep_result) {
+        //     atomicAdd(stats + 2, 1);
+        //   } else {
+        //     atomicAdd(stats + 3, 1);
+        //   }
+        // }
         __syncthreads();
       }
     }

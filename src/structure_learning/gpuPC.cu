@@ -497,6 +497,7 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
   while (level <= n_node - 2) {
     CUDA_CHECK(cudaMemcpy(G_d, G.data(), size_G, cudaMemcpyHostToDevice));
     cout << "level: " << level << ", max_n_adj: " << max_n_adj << endl;
+    if (level > max_level) break;
     if (level == 0) {
       dim3 threadsPerBlock(64);
       dim3 numBlocks(n_node, n_node);
@@ -600,11 +601,6 @@ py::array_t<bool> gpuPC(py::array_t<uint8_t> data, py::array_t<int> n_states) {
   }
   for (size_t i = 0; i < n_node; i++) {
     n_states_vec.at(i) = prt_states[i];
-  }
-  for (size_t i = 0; i < n_data; i++) {
-    for (size_t j = 0; j < n_node; j++) {
-      assert(data_vec.at(j * n_data + i) < n_states_vec.at(j));
-    }
   }
   auto endg = py::array_t<bool>({n_node, n_node});
   py::buffer_info buf_endg = endg.request();

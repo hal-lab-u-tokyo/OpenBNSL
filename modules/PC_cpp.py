@@ -59,4 +59,4 @@ def PCEstimator_cpp(model, data):
                 edges.append((columns[i], columns[j]))  # i -> j
     G.add_edges_from(edges)
     # show(G)
-    return G
+    return G, calc_time
