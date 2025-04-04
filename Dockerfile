@@ -7,6 +7,7 @@ ARG INSTALL_R=false
 ARG INSTALL_GUROBI=false
 
 # Set timezone and locale for R
+ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Asia/Tokyo
 RUN apt-get update && \
     apt-get install -y tzdata && \
