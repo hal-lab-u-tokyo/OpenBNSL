@@ -5,7 +5,7 @@ from pgmpy.base import PDAG
 from pgmpy.utils import get_example_model
 
 sys.path.append("/workspace/build")
-import openbnsl
+import openbnsllib
 
 sys.path.append("/workspace")
 from modules.structural_distance import structural_errors, PDAG2CPDAG
@@ -14,9 +14,9 @@ from modules.structural_distance import structural_errors, PDAG2CPDAG
 @pytest.mark.parametrize(
     "model_name, score_type, sample_size, seed",
     [
-        ("cancer", openbnsl.score.BDeu(1.0), int(1e5), 0),  # 5 nodes
-        ("asia", openbnsl.score.BDeu(1.0), int(1e5), 0),  # 8 nodes
-        ("child", openbnsl.score.BDeu(1.0), int(1e5), 0),  # 20 nodes
+        ("cancer", openbnsllib.score.BDeu(1.0), int(1e5), 0),  # 5 nodes
+        ("asia", openbnsllib.score.BDeu(1.0), int(1e5), 0),  # 8 nodes
+        ("child", openbnsllib.score.BDeu(1.0), int(1e5), 0),  # 20 nodes
     ],
 )
 def test_exhaustive_search(model_name, score_type, sample_size, seed):
@@ -25,8 +25,8 @@ def test_exhaustive_search(model_name, score_type, sample_size, seed):
     samples = model_original.simulate(sample_size, seed=seed)
     samples = samples[sorted(samples.columns)]
 
-    df_wrapper = openbnsl.base.DataframeWrapper(samples)
-    ndarray = openbnsl.exhaustive_search(df_wrapper, score_type, max_parents=3)
+    df_wrapper = openbnsllib.base.DataframeWrapper(samples)
+    ndarray = openbnsllib.exhaustive_search(df_wrapper, score_type, max_parents=3)
 
     # Convert ndarray to PDAG
     model_estimated = PDAG()
