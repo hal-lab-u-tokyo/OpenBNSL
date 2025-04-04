@@ -1,11 +1,32 @@
 ARG BASE_IMAGE=ubuntu:22.04
-ARG INSTALL_GUROBI=false
 FROM ${BASE_IMAGE}
 
+# ARG statement must be defined after FROM statement since FROM resets ARG
+# https://docs.docker.jp/engine/reference/builder.html#understand-how-arg-and-from-interact
+ARG INSTALL_R=false
+ARG INSTALL_GUROBI=false
+
+# Set timezone and locale for R
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Asia/Tokyo
+RUN apt-get update && \
+    apt-get install -y tzdata && \
+    ln -sf /usr/share/zoneinfo/$TZ /etc/localtime && \
+    echo $TZ > /etc/timezone
+
+RUN apt-get update && apt-get install -y locales \
+    && locale-gen en_US.UTF-8 \
+    && update-locale LANG=en_US.UTF-8
+ENV LANG=en_US.UTF-8 \
+    LANGUAGE=en_US:en \
+    LC_ALL=en_US.UTF-8
+
+# Install packages
 RUN apt update && apt install -y \
     build-essential \
     cmake \
     ccache \
+    wget \
     git \
     clang-format \
     doxygen \
@@ -19,8 +40,8 @@ RUN apt update && apt install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Set Python3.10 as default
-RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
-RUN update-alternatives --set python3 /usr/bin/python3.10
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1 && \
+    update-alternatives --set python3 /usr/bin/python3.10
 
 # Build Google Test
 RUN cd /usr/src/googletest && \
@@ -28,12 +49,10 @@ RUN cd /usr/src/googletest && \
     make && \
     cp lib/*.a /usr/lib
 
-# Install Python packages
-RUN pip3 install --upgrade pip
-RUN pip3 install \
-    pandas==2.2.3 \
+# Install Python packages 
+# pgmpy depends on networkx, numpy, pandas
+RUN pip3 install --upgrade pip && pip3 install \
     pgmpy==0.1.26 \
-    networkx==3.4.2 \
     matplotlib==3.9.2 \
     notebook==7.2.2 \
     pulp==2.9.0 \
@@ -42,9 +61,18 @@ RUN pip3 install \
     sphinx==8.1.3 \
     breathe==4.35.0
 
+# Install R and packages if needed
+RUN if [ "$INSTALL_R" = "true" ] ; then \
+    wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/cran.gpg && \
+    echo "deb [signed-by=/etc/apt/trusted.gpg.d/cran.gpg] https://cloud.r-project.org/bin/linux/ubuntu jammy-cran40/" > /etc/apt/sources.list.d/cran.list && \
+    apt-get update && apt-get install -y r-base && \
+    R -e "install.packages('bnlearn', repos='https://cloud.r-project.org/')" && \
+    R -e "install.packages('IRkernel', repos='https://cloud.r-project.org/')" && \
+    R -e "IRkernel::installspec()" ; \
+    fi
+    
 # Install Gurobi if needed
 RUN if [ "$INSTALL_GUROBI" = "true" ] ; then \
-    apt update && apt install -y wget && \
     wget https://packages.gurobi.com/11.0/gurobi11.0.0_linux64.tar.gz && \
     tar -xvf gurobi11.0.0_linux64.tar.gz -C /opt && \
     rm gurobi11.0.0_linux64.tar.gz && \
