@@ -18,9 +18,7 @@ OpenBNSL ensures transparency by adopting the MIT License and maintaining a stro
 
 1. [Set Up](#set-up)
     1. [Using Docker](#using-docker)
-        1. [Optional: Nvidia GPU Support](#optional-nvidia-gpu-support)
-        2. [Optional: Gurobi License](#optional-gurobi-license)
-    2. [Local Installation](#local-installation)
+    2. [Using Bare Metal](#using-bare-metal)
 2. [Build and Install](#build-and-install)
 3. [Features](#features)
 4. [Tutorial and Examples](#tutorial-and-examples)
@@ -32,34 +30,18 @@ OpenBNSL ensures transparency by adopting the MIT License and maintaining a stro
 ---
 # Set Up
 
-## (Recommended) Using Docker
+## Using Docker
 ```bash
 git clone --recurse-submodules git@github.com:hal-lab-u-tokyo/OpenBNSL.git # for pybind11 submodule
 cd OpenBNSL
-docker compose build
+docker compose build \
+  [--build-arg BASE_IMAGE=nvidia/cuda:12.6.2-devel-ubuntu22.04] \  # Nvidia GPU
+  [--build-arg INSTALL_R=true] \                                   # R & bnlearn
+  [--build-arg INSTALL_GUROBI=true]                                # Gurobi (requires license)
 docker compose up
 ```
 
-### Optional: Nvidia GPU Support
-If you have an Nvidia GPU, you can use the following command to build the image with GPU support.
-```bash
-docker compose build --build-arg BASE_IMAGE=nvidia/cuda:12.6.2-devel-ubuntu22.04
-```
-
-### Optional: R and `bnlearn` Support 
-If you want to use R and `bnlearn`, you can use the following command to build the image with R and `bnlearn` support.
-```bash
-docker compose build --build-arg INSTALL_R=true
-```
-
-### Optional: Gurobi Support
-If you want to use gurobi, you need to get a license file (gurobi.lic) and put it in the same directory as the Dockerfile.
-Gurobi provides free licenses for academic use.
-```bash
-docker compose build --build-arg INSTALL_GUROBI=true
-```
-
-## (Not Recommended) Using Bare Metal
+## Using Bare Metal
 ⚠️ Under construction ⚠️
 
 

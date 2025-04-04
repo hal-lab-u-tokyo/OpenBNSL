@@ -2,9 +2,7 @@ import sys
 import numpy as np
 from benchmark_utils import benchmark_functions_variants
 
-sys.path.append("/workspace/build")
-import openbnsl
-
+import openbnsllib
 
 def python_matmul(a, b):
     n, m = len(a), len(b[0])
@@ -24,14 +22,14 @@ b = np.random.rand(matrix_size, matrix_size)
 input_args = (a, b)
 func_variants = [
     ("Python", python_matmul, -1),
-    ("Naive C++", openbnsl.matmul_naive, -1),
-    ("OpenMP", openbnsl.matmul_openmp, 1),
-    ("OpenMP", openbnsl.matmul_openmp, 4),
-    ("OpenMP", openbnsl.matmul_openmp, 8),
+    ("Naive C++", openbnsllib.matmul_naive, -1),
+    ("OpenMP", openbnsllib.matmul_openmp, 1),
+    ("OpenMP", openbnsllib.matmul_openmp, 4),
+    ("OpenMP", openbnsllib.matmul_openmp, 8),
     ("NumPy", np.dot, -1),
 ]
-if openbnsl.cuda_enabled:
-    func_variants += [("CUDA", openbnsl.matmul_cuda, -1)]
+if openbnsllib.cuda_enabled:
+    func_variants += [("CUDA", openbnsllib.matmul_cuda, -1)]
 
 benchmark_functions_variants(
     func_variants,
