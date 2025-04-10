@@ -16,9 +16,9 @@ Github's guide on [about issues](https://guides.github.com/features/issues/) is 
 ---
 # Scripts
 ```bash
-pytest # run the frontend test (pytest)
-./build_test.sh # build the backend test (gtest)
-./run_test.sh # run the backend test (gtest)
+pytest # run pytest
+./build_gtest.sh # build gtest
+./run_gtest.sh # run gtest
 ./format.sh # format the code before submitting a pull request
 ./gen_docs.sh # if you want to check the documentation locally
 ```

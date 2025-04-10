@@ -33,7 +33,7 @@ class DataframeWrapper {
 
   std::vector<size_t> num_of_values;
   std::vector<std::vector<dtype>>
-      data_col_idx;  // [num_of_column][num_of_datapoint]
+      data_column_major;  // [num_of_column][num_of_datapoint]
   std::vector<std::vector<dtype>>
-      data_idx_col;  // [num_of_datapoint][num_of_column]
+      data_row_major;  // [num_of_datapoint][num_of_column]
 };

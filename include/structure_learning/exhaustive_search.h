@@ -1,6 +1,7 @@
 #pragma once
 #include <pybind11/pybind11.h>
 
+#include "base/PDAG.h"
 #include "base/dataframe_wrapper.h"
 #include "score/score_type.h"
 namespace py = pybind11;
@@ -18,6 +19,9 @@ namespace py = pybind11;
  * complexity is O(n * 2^n) where n is the number of nodes. When n is large,
  * this algorithm is not recommended to use.
  */
-py::array_t<bool> exhaustive_search(const DataframeWrapper& df,
-                                    const ScoreType& score_type,
-                                    int max_parents);
+// py::array_t<bool> exhaustive_search(const DataframeWrapper& df,
+//                                     const ScoreType& score_type,
+//                                     int max_parents);
+
+PDAG exhaustive_search(const DataframeWrapper& df, const ScoreType& score_type,
+                       int max_parents);

@@ -5,11 +5,6 @@ AllDimsCache::AllDimsCache(const DataframeWrapper& df, int max_depth) : df(df) {
     throw std::invalid_argument("max_depth must be in [0, num_of_vars]");
   this->max_depth = max_depth;
 
-  bit_masks.resize(df.num_of_vars);
-  for (size_t i = 0; i < df.num_of_vars; ++i) {
-    bit_masks[i] = (mp::cpp_int(1) << i);
-  }
-
   root_node = std::make_unique<Node>();
   std::vector<int> freq_tbl = {(int)df.num_of_datapoints};
   std::vector<int> indices(df.num_of_datapoints);     // indices of datapoints
@@ -30,7 +25,7 @@ void AllDimsCache::branch(Node* node, const size_t curr_depth,
   for (int branch_idx = 0; branch_idx < num_of_branches; ++branch_idx) {
     const int tgt_var = rightmost_var + branch_idx + 1;
     const int num_of_values = df.val_idx2str[tgt_var].size();
-    const std::vector<uint8_t>& tgt_dataref = df.data_col_idx[tgt_var];
+    const std::vector<uint8_t>& tgt_dataref = df.data_column_major[tgt_var];
 
     std::vector<int> new_freq_tbl;
     std::vector<int> new_indices(indices.size());

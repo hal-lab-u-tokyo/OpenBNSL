@@ -7,28 +7,27 @@ from pgmpy.utils import get_example_model
 import openbnsllib
 
 from modules.structural_distance import structural_errors, PDAG2CPDAG
+from modules.util import to_pgmpy
 
 
 @pytest.mark.parametrize(
-    "model_name, score_type, sample_size, seed",
+    "model_name, citest_type, sample_size, seed",
     [
-        ("cancer", openbnsllib.score.BDeu(1.0), int(1e5), 0),  # 5 nodes
-        ("asia", openbnsllib.score.BDeu(1.0), int(1e5), 0),  # 8 nodes
-        ("child", openbnsllib.score.BDeu(1.0), int(1e5), 0),  # 20 nodes
+        ("cancer", openbnsllib.citest.ChiSquare(0.05), int(1e5), 0),  # 5 nodes
+        ("asia", openbnsllib.citest.ChiSquare(0.05), int(1e5), 0),  # 8 nodes
+        ("child", openbnsllib.citest.ChiSquare(0.05), int(1e5), 0),  # 20 nodes
     ],
 )
-def test_exhaustive_search(model_name, score_type, sample_size, seed):
+def test_pc2(model_name, citest_type, sample_size, seed):
 
     model_original = get_example_model(model_name)
     samples = model_original.simulate(sample_size, seed=seed)
     samples = samples[sorted(samples.columns)]
 
     df_wrapper = openbnsllib.base.DataframeWrapper(samples)
-    _pdag = openbnsllib.structure_learning.exhaustive_search(
-        df_wrapper, score_type, max_parents=3
-    )
+    _pdag = openbnsllib.structure_learning.PC2(df_wrapper, citest_type)
 
-    # Convert ndarray to PDAG
+    # Convert _pdag to pgmpy PDAG
     model_estimated = PDAG()
     node_labels = list(samples.columns)
     model_estimated.add_nodes_from(node_labels)

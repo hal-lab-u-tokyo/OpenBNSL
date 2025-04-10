@@ -10,8 +10,7 @@ from pgmpy import config
 from pgmpy.base import DAG
 from pgmpy.base import PDAG
 from pgmpy.base import UndirectedGraph as Graph
-import sys   # これが絶対 import
-sys.path.append('/workspace')
+import sys
 
 from modules.visualize_graph import display_graph_info as show
 from pgmpy.estimators import (
@@ -24,7 +23,8 @@ from pgmpy.estimators import (
     StructureEstimator,
     StructureScore,
 )
-#from pgmpy.estimators.CITests import NatoriScore
+
+# from pgmpy.estimators.CITests import NatoriScore
 from modules.CITests_fixed import NatoriScore
 from collections import defaultdict
 from itertools import combinations
@@ -61,26 +61,22 @@ class RAIEstimator(StructureEstimator):
     def __init__(self, data, use_cache=True, **kwargs):
         self.use_cache = use_cache
         super(RAIEstimator, self).__init__(data, **kwargs)
-    
-    @staticmethod
 
+    @staticmethod
     def orientation(self, Gs, Gall, ci_test, data, ESS):
         """
-    orient edges in a PDAG to a maximally oriented graph.
-    orient rules are based on rule 1~3 from Meek,C.:Causal Inference and Causal Explanation with Background Knowledge,Proc.Confon Uncertainty in Artificial Inteligence (UAl-95),p.403-410 (195)
-    """
+        orient edges in a PDAG to a maximally oriented graph.
+        orient rules are based on rule 1~3 from Meek,C.:Causal Inference and Causal Explanation with Background Knowledge,Proc.Confon Uncertainty in Artificial Inteligence (UAl-95),p.403-410 (195)
+        """
         cls_test = ci_test(data)
-                                            
-        #for each X-Z-Y (X and Y is not adjecent), find V-structure
+
+        # for each X-Z-Y (X and Y is not adjecent), find V-structure
         for pair in list(combinations(Gs.nodes(), 2)):
             X, Y = pair
             for Z in (
-                (set(Gs.successors(X))
-                & set(Gs.predecessors(X))
-                & set(Gs.successors(Y)))
-                | (set(Gs.successors(X))
-                & set(Gs.predecessors(Y))
-                & set(Gs.successors(Y)))
+                set(Gs.successors(X)) & set(Gs.predecessors(X)) & set(Gs.successors(Y))
+            ) | (
+                set(Gs.successors(X)) & set(Gs.predecessors(Y)) & set(Gs.successors(Y))
             ):
                 if not Gs.has_edge(X, Y):
                     if not Gs.has_edge(Y, X):
@@ -94,9 +90,9 @@ class RAIEstimator(StructureEstimator):
                             print("Vstructure")
                             print(X, Z, Y)
                             break
-                                    
+
         flag = True
-        while flag: # while the number of orientated edges increases
+        while flag:  # while the number of orientated edges increases
             flag = False
             # R1: X -> Y - Z, no edge between X and Z then X -> Y -> Z
             for node_y in Gs.nodes:
@@ -112,11 +108,11 @@ class RAIEstimator(StructureEstimator):
                                             print("nagare")
                                             print(node_x, node_y, node_z)
                                             flag = True
-                                        
+
             # R2: X - Y and if there is a directed path from X to Y, then X -> Y
             for node_y in Gs.nodes:
                 for node_x in list(Gs.predecessors(node_y)):
-                    if Gs.has_edge(node_y, node_x) :                 
+                    if Gs.has_edge(node_y, node_x):
                         Gs.remove_edge(node_y, node_x)
                         Gs.remove_edge(node_x, node_y)
                         if self.has_directedpath(Gs, node_x, node_y, mark=[]):
@@ -134,11 +130,11 @@ class RAIEstimator(StructureEstimator):
                         else:
                             Gs.add_edge(node_x, node_y)
                             Gs.add_edge(node_y, node_x)
-            # R3: for each X->W<-Z X-Y-Z Y-W, orient Y->W 
+            # R3: for each X->W<-Z X-Y-Z Y-W, orient Y->W
             for pair in list(permutations(Gs.nodes(), 2)):
                 X, Z = pair
                 if not Gs.has_edge(X, Z):
-                    if not Gs.has_edge(Z,X):
+                    if not Gs.has_edge(Z, X):
                         for Y in (
                             set(Gs.successors(X))
                             & set(Gs.successors(Z))
@@ -147,11 +143,11 @@ class RAIEstimator(StructureEstimator):
                         ):
                             for W in (
                                 set(Gs.successors(Y))
-                            & set(Gs.predecessors(Y))
-                            & set(Gs.successors(X))
-                            & set(Gs.successors(Z))
-                            - set(Gs.predecessors(X))
-                            - set(Gs.predecessors(Z))
+                                & set(Gs.predecessors(Y))
+                                & set(Gs.successors(X))
+                                & set(Gs.successors(Z))
+                                - set(Gs.predecessors(X))
+                                - set(Gs.predecessors(Z))
                             ):
                                 if Gs.has_edge(Y, W) and Gs.has_edge(W, Y):
                                     Gs.remove_edge(W, Y)
@@ -159,29 +155,28 @@ class RAIEstimator(StructureEstimator):
                                     flag = True
                                     print("R3")
         return Gs, Gall
-    
+
     def orientation_a2(self, Gs, Gall, deletededges):
         """
-    orient edges in a PDAG to a maximally oriented graph.
-    orient rules are based on rule 1~3 from Meek,C.:Causal Inference and Causal Explanation with Background Knowledge,Proc.Confon Uncertainty in Artificial Inteligence (UAl-95),p.403-410 (195)
-    in this stage (stage A2 in Yehezkel and Lerner(2009)), only rule 1 is applied because only X -> Y - Z shape is created in stage A1 (X-Z removed).
-    """
-        #Rule 1: X -> Y - Z, no edge between X and Z then X -> Y -> Z
+        orient edges in a PDAG to a maximally oriented graph.
+        orient rules are based on rule 1~3 from Meek,C.:Causal Inference and Causal Explanation with Background Knowledge,Proc.Confon Uncertainty in Artificial Inteligence (UAl-95),p.403-410 (195)
+        in this stage (stage A2 in Yehezkel and Lerner(2009)), only rule 1 is applied because only X -> Y - Z shape is created in stage A1 (X-Z removed).
+        """
+        # Rule 1: X -> Y - Z, no edge between X and Z then X -> Y -> Z
         for pair in deletededges:
             X, Z = pair
             for Y in (
-                (set(Gall.successors(X))
+                set(Gall.successors(X))
                 & set(Gall.successors(Z))
-                & set(Gall.predecessors(Z))
-                - set(Gall.predecessors(X)))
+                & set(Gall.predecessors(Z)) - set(Gall.predecessors(X))
             ):
                 Gs.remove_edge(Z, Y)
                 Gall.remove_edge(Z, Y)
         return Gs, Gall
-            
-    def lastorientation(self, G):                            
+
+    def lastorientation(self, G):
         flag = True
-        while flag: # while the number of orientated edges increases
+        while flag:  # while the number of orientated edges increases
             flag = False
             # X -> Y - Z, no edge between X and Z then X -> Y -> Z
             for node_y in G.nodes:
@@ -196,11 +191,11 @@ class RAIEstimator(StructureEstimator):
                                             print("nagare")
                                             print(node_x, node_y, node_z)
                                             flag = True
-                                        
-            #X - Y and if there is a directed path from X to Y, then X -> Y
+
+            # X - Y and if there is a directed path from X to Y, then X -> Y
             for node_y in G.nodes:
                 for node_x in list(G.predecessors(node_y)):
-                    if G.has_edge(node_y, node_x) :                 
+                    if G.has_edge(node_y, node_x):
                         G.remove_edge(node_y, node_x)
                         G.remove_edge(node_x, node_y)
                         if self.has_directedpath(G, node_x, node_y, mark=[]):
@@ -216,18 +211,13 @@ class RAIEstimator(StructureEstimator):
                         else:
                             G.add_edge(node_x, node_y)
                             G.add_edge(node_y, node_x)
-            #for each X->Z<-Y with Z-W or Z->W, orient edges as X->W, Y->W 
+            # for each X->Z<-Y with Z-W or Z->W, orient edges as X->W, Y->W
             for pair in list(permutations(G.nodes(), 2)):
                 X, Y = pair
-                for Z in (
-                    set(G.successors(X))
-                    & set(G.successors(Y))
-                    - set(G.predecessors(X))
-                    - set(G.predecessors(Y))
-                ):
-                    for W in (
-                        set(G.successors(Z))
-                    ):
+                for Z in set(G.successors(X)) & set(G.successors(Y)) - set(
+                    G.predecessors(X)
+                ) - set(G.predecessors(Y)):
+                    for W in set(G.successors(Z)):
                         if G.has_edge(W, X) and G.has_edge(X, W):
                             G.remove_edge(W, X)
                             print("zibun")
@@ -238,16 +228,18 @@ class RAIEstimator(StructureEstimator):
                             flag = True
         return G
 
-    def has_directedpath(self, G, node_x, node_y, mark): #if X has a path to Y such that all edges are directed
-            if node_x == node_y:
-                return True
-            for node_z in list(G.successors(node_x)):
-                if not node_z in mark:
-                    if not node_x in list(G.successors(node_z)):
-                        mark.append(node_z)
-                        if self.has_directedpath(G, node_z, node_y, mark):
-                            return True
-            return False
+    def has_directedpath(
+        self, G, node_x, node_y, mark
+    ):  # if X has a path to Y such that all edges are directed
+        if node_x == node_y:
+            return True
+        for node_z in list(G.successors(node_x)):
+            if not node_z in mark:
+                if not node_x in list(G.successors(node_z)):
+                    mark.append(node_z)
+                    if self.has_directedpath(G, node_z, node_y, mark):
+                        return True
+        return False
 
     def _legal_operations(
         self,
@@ -332,16 +324,18 @@ class RAIEstimator(StructureEstimator):
                         score_delta += structure_score("flip")
                         yield (operation, score_delta)
 
-    def RecursiveSearch(self, Nz, Gs, Gex, Gall, ci_test, ESS): #Gexを辞書からPDAGへ Gout削除
+    def RecursiveSearch(
+        self, Nz, Gs, Gex, Gall, ci_test, ESS
+    ):  # Gexを辞書からPDAGへ Gout削除
         # Step 1: Initial checks and setup for arguments
         # print(Nz)
         # show(Gs)
         # show(Gex)
         cls_test = ci_test(self.data)
         if all(len(Gs[node]) <= Nz for node in Gs):
-            #show(Gs)
-            #print(Nz)
-            return Gall #Gsを戻さない
+            # show(Gs)
+            # print(Nz)
+            return Gall  # Gsを戻さない
         # Step 2: Do CI tests for nodes between Gex and Gs and remove edge
         # print("Gex.nodes:")
         # print(Gex.nodes)
@@ -349,13 +343,17 @@ class RAIEstimator(StructureEstimator):
         for node_y in Gs.nodes:
             for node_x in Gex.nodes:
                 if Gall.has_edge(node_x, node_y):
-                    Z = set(Gall.predecessors(node_y))# | set(Gall.successors(node_y))
+                    Z = set(Gall.predecessors(node_y))  # | set(Gall.successors(node_y))
                     Z = Z - {node_x}
-                    #Z = Z - {node_y} #node_xは関係ない(元は実装ミス) これで正しい？
+                    # Z = Z - {node_y} #node_xは関係ない(元は実装ミス) これで正しい？
                     if len(Z) >= Nz:
                         for Z in combinations(Z, Nz):
-                            if Gall.has_edge(node_x, node_y) or Gall.has_edge(node_y, node_x):
-                                if cls_test.separate(node_x, node_y, Z, self.data, ESS, boolean=True):
+                            if Gall.has_edge(node_x, node_y) or Gall.has_edge(
+                                node_y, node_x
+                            ):
+                                if cls_test.separate(
+                                    node_x, node_y, Z, self.data, ESS, boolean=True
+                                ):
                                     if Gall.has_edge(node_x, node_y):
                                         Gall.remove_edge(node_x, node_y)
                                     if Gall.has_edge(node_y, node_x):
@@ -364,11 +362,11 @@ class RAIEstimator(StructureEstimator):
                                     break
 
         if Nz >= 1:
-            Gs, Gall = self.orientation_a2(Gs = Gs, Gall = Gall, deletededges = deletededges)
-        #show(Gall)
+            Gs, Gall = self.orientation_a2(Gs=Gs, Gall=Gall, deletededges=deletededges)
+        # show(Gall)
         checked = set()
         for node_y in Gs.nodes:
-            #neighbors = list(Gs.neighbors(node_y))
+            # neighbors = list(Gs.neighbors(node_y))
             neighbors = set(Gs.predecessors(node_y)) | set(Gs.successors(node_y))
             neighbors = neighbors - checked
             checked = checked | set(node_y)
@@ -378,7 +376,9 @@ class RAIEstimator(StructureEstimator):
                 if Nz == 0:
                     Z = []
                     if Gall.has_edge(node_x, node_y) or Gall.has_edge(node_y, node_x):
-                        if cls_test.separate(node_x, node_y, Z, self.data, ESS, boolean=True):
+                        if cls_test.separate(
+                            node_x, node_y, Z, self.data, ESS, boolean=True
+                        ):
                             if Gall.has_edge(node_x, node_y):
                                 Gall.remove_edge(node_x, node_y)
                             if Gall.has_edge(node_y, node_x):
@@ -388,15 +388,24 @@ class RAIEstimator(StructureEstimator):
                             if Gs.has_edge(node_y, node_x):
                                 Gs.remove_edge(node_y, node_x)
                 else:
-                    #set_Pa = set(Gall.predecessors(node_y)) | set(Gall.successors(node_y))
-                    set_Pa = set(Gall.predecessors(node_y)) | set(Gall.successors(node_y)) | set(Gall.predecessors(node_x)) | set(Gall.successors(node_x))
-                    #set_Pa = set(Gall.predecessors(node_y)) | set(Gall.predecessors(node_x))
-                    set_Pa = set_Pa - {node_y} - {node_x} 
+                    # set_Pa = set(Gall.predecessors(node_y)) | set(Gall.successors(node_y))
+                    set_Pa = (
+                        set(Gall.predecessors(node_y))
+                        | set(Gall.successors(node_y))
+                        | set(Gall.predecessors(node_x))
+                        | set(Gall.successors(node_x))
+                    )
+                    # set_Pa = set(Gall.predecessors(node_y)) | set(Gall.predecessors(node_x))
+                    set_Pa = set_Pa - {node_y} - {node_x}
                     num_Pa = len(set_Pa)
                     if num_Pa >= Nz:
                         for Z in combinations(set_Pa, Nz):
-                            if Gall.has_edge(node_x, node_y) or Gall.has_edge(node_y, node_x):
-                                if cls_test.separate(node_x, node_y, Z, self.data, ESS, boolean=True):
+                            if Gall.has_edge(node_x, node_y) or Gall.has_edge(
+                                node_y, node_x
+                            ):
+                                if cls_test.separate(
+                                    node_x, node_y, Z, self.data, ESS, boolean=True
+                                ):
                                     if Gall.has_edge(node_x, node_y):
                                         Gall.remove_edge(node_x, node_y)
                                     if Gall.has_edge(node_y, node_x):
@@ -404,40 +413,42 @@ class RAIEstimator(StructureEstimator):
                                     if Gs.has_edge(node_x, node_y):
                                         Gs.remove_edge(node_x, node_y)
                                     if Gs.has_edge(node_y, node_x):
-                                        Gs.remove_edge(node_y, node_x) #Frozen graph can't be modified error
+                                        Gs.remove_edge(
+                                            node_y, node_x
+                                        )  # Frozen graph can't be modified error
                                     break
 
-        Gs, Gall = self.orientation(self, Gs = Gs, Gall = Gall, ci_test = ci_test, data = self.data, ESS = ESS)
+        Gs, Gall = self.orientation(
+            self, Gs=Gs, Gall=Gall, ci_test=ci_test, data=self.data, ESS=ESS
+        )
         Gd, g_subs = self.order_grouping(Gs)
-        #show(Gd)
+        # show(Gd)
         Gexd = PDAG()
-        #show(Gs)
-        #show(Gall)
-        #show(Gs)
+        # show(Gs)
+        # show(Gall)
+        # show(Gs)
         for subs in g_subs:
-            #Gexd = nx.compose(Gexd, subs)
+            # Gexd = nx.compose(Gexd, subs)
             Gexd.add_nodes_from(subs.nodes)
             Gexd.add_edges_from(subs.edges)
-            #show(subs)
-            Gall = self.RecursiveSearch(Nz + 1, subs, Gex, Gall, ci_test, ESS)     #Recursive call for structure learning of each of the ancestor sub-structures
-        #show(Gexd)
-        return self.RecursiveSearch(Nz + 1, Gd, Gexd, Gall, ci_test, ESS)         #Recursive call for descendants sub-structure structure learning
+            # show(subs)
+            Gall = self.RecursiveSearch(
+                Nz + 1, subs, Gex, Gall, ci_test, ESS
+            )  # Recursive call for structure learning of each of the ancestor sub-structures
+        # show(Gexd)
+        return self.RecursiveSearch(
+            Nz + 1, Gd, Gexd, Gall, ci_test, ESS
+        )  # Recursive call for descendants sub-structure structure learning
 
     def order_grouping(self, Gs):
         sccs = list(nx.strongly_connected_components(Gs))
         scc_graph = nx.condensation(Gs)
         topological_order = list(nx.topological_sort(scc_graph))
         topological_lowest_nodes = sccs[topological_order[len(scc_graph.nodes) - 1]]
-        gc = self.extract_subgraph(
-            topological_lowest_nodes,
-            Gs
-        )
+        gc = self.extract_subgraph(topological_lowest_nodes, Gs)
         SubStructures = []
         for sccs_idx in topological_order[0 : len(scc_graph.nodes) - 1]:
-            sub = self.extract_subgraph(
-                sccs[sccs_idx],
-                Gs
-            )
+            sub = self.extract_subgraph(sccs[sccs_idx], Gs)
             # sub = Gs.subgraph(                #うまくいかない？速いがSHD高
             #     sccs[sccs_idx]
             # ).copy()
@@ -447,17 +458,22 @@ class RAIEstimator(StructureEstimator):
     def extract_subgraph(self, nodes, G):
         sub = PDAG()
         sub.add_nodes_from(nodes)
-        edges_to_add = [(node, sub_node) for node in nodes for sub_node in nodes if node != sub_node and G.has_edge(node, sub_node)]
+        edges_to_add = [
+            (node, sub_node)
+            for node in nodes
+            for sub_node in nodes
+            if node != sub_node and G.has_edge(node, sub_node)
+        ]
         sub.add_edges_from(edges_to_add)
         return sub
 
-    def estimate(        
+    def estimate(
         self,
         scoring_method="natoriscore",
         Gs=None,
         max_indegree=None,
         show_progress=True,
-        ESS = 1
+        ESS=1,
     ):
 
         # Step 1: Initial checks and setup for arguments
@@ -491,7 +507,7 @@ class RAIEstimator(StructureEstimator):
         Gs.add_edges_from(
             [
                 (X, Y)
-                for X, Y in permutations(self.variables, 2)     #combination から変更
+                for X, Y in permutations(self.variables, 2)  # combination から変更
                 if X != Y
             ]
         )
@@ -500,23 +516,18 @@ class RAIEstimator(StructureEstimator):
         Gall.add_edges_from(
             [
                 (X, Y)
-                for X, Y in permutations(self.variables, 2)     #combination から変更
+                for X, Y in permutations(self.variables, 2)  # combination から変更
                 if X != Y
             ]
         )
         Gex = PDAG()
         Nz = 0
-        #show(Gs)
+        # show(Gs)
         # Step 2: Define the structure_score function
         best_model = self.RecursiveSearch(
-            Nz=Nz,
-            Gs=Gs,
-            Gex=Gex,
-            Gall=Gall,
-            ci_test=ci_test,
-            ESS = ESS
+            Nz=Nz, Gs=Gs, Gex=Gex, Gall=Gall, ci_test=ci_test, ESS=ESS
         )
-        #best_model = self.lastorientation(best_model)
+        # best_model = self.lastorientation(best_model)
 
         return best_model
 
@@ -553,19 +564,13 @@ class RAIEstimator_transitivity(StructureEstimator):
     def __init__(self, data, use_cache=True, **kwargs):
         self.use_cache = use_cache
         super(RAIEstimator_transitivity, self).__init__(data, **kwargs)
-    
-    @staticmethod
 
+    @staticmethod
     def transive_cut(self, Gs, Gall, ci_test, data, ESS, X, Y, Z, deletededges):
         cls_test = ci_test(data)
-        A = ((set(Gall.successors(X))
-             | set(Gall.predecessors(X)))
-             & (set(Gall.successors(Y))
-             | set(Gall.predecessors(Y)))
-             - ((set(Gall.successors(X))
-                & set(Gall.successors(Y)))
-                | set(Z))
-             )
+        A = (set(Gall.successors(X)) | set(Gall.predecessors(X))) & (
+            set(Gall.successors(Y)) | set(Gall.predecessors(Y))
+        ) - ((set(Gall.successors(X)) & set(Gall.successors(Y))) | set(Z))
         for a in A:
             if not ((X, a) in deletededges or (a, X) in deletededges):
                 if cls_test.separate(X, a, Z, data, ESS, boolean=True):
@@ -591,33 +596,30 @@ class RAIEstimator_transitivity(StructureEstimator):
                             Gall.remove_edge(Y, a)
                         if Gs.has_edge(a, Y):
                             Gs.remove_edge(a, Y)
-                            Gall.remove_edge(a,Y)
+                            Gall.remove_edge(a, Y)
                     else:
                         if Gall.has_edge(Y, a):
                             Gall.remove_edge(Y, a)
                         if Gall.has_edge(a, Y):
                             Gall.remove_edge(a, Y)
                     deletededges.append((Y, a))
-                    return Gs, Gall, deletededges                
+                    return Gs, Gall, deletededges
         return Gs, Gall, deletededges
 
     def orientation(self, Gs, Gall, ci_test, data, ESS):
         """
-    orient edges in a PDAG to a maximally oriented graph.
-    orient rules are based on rule 1~3 from Meek,C.:Causal Inference and Causal Explanation with Background Knowledge,Proc.Confon Uncertainty in Artificial Inteligence (UAl-95),p.403-410 (195)
-    """
+        orient edges in a PDAG to a maximally oriented graph.
+        orient rules are based on rule 1~3 from Meek,C.:Causal Inference and Causal Explanation with Background Knowledge,Proc.Confon Uncertainty in Artificial Inteligence (UAl-95),p.403-410 (195)
+        """
         cls_test = ci_test(data)
-                                            
-        #for each X-Z-Y (X and Y is not adjecent), find V-structure
+
+        # for each X-Z-Y (X and Y is not adjecent), find V-structure
         for pair in list(combinations(Gs.nodes(), 2)):
             X, Y = pair
             for Z in (
-                (set(Gs.successors(X))
-                & set(Gs.predecessors(X))
-                & set(Gs.successors(Y)))
-                | (set(Gs.successors(X))
-                & set(Gs.predecessors(Y))
-                & set(Gs.successors(Y)))
+                set(Gs.successors(X)) & set(Gs.predecessors(X)) & set(Gs.successors(Y))
+            ) | (
+                set(Gs.successors(X)) & set(Gs.predecessors(Y)) & set(Gs.successors(Y))
             ):
                 if not Gs.has_edge(X, Y):
                     if not Gs.has_edge(Y, X):
@@ -629,9 +631,9 @@ class RAIEstimator_transitivity(StructureEstimator):
                                 Gs.remove_edge(Z, Y)
                                 Gall.remove_edge(Z, Y)
                             break
-                                    
+
         flag = True
-        while flag: # while the number of orientated edges increases
+        while flag:  # while the number of orientated edges increases
             flag = False
             # R1: X -> Y - Z, no edge between X and Z then X -> Y -> Z
             for node_y in Gs.nodes:
@@ -645,11 +647,11 @@ class RAIEstimator_transitivity(StructureEstimator):
                                             Gall.remove_edge(node_z, node_y)
                                             Gs.remove_edge(node_z, node_y)
                                             flag = True
-                                        
+
             # R2: X - Y and if there is a directed path from X to Y, then X -> Y
             for node_y in Gs.nodes:
                 for node_x in list(Gs.predecessors(node_y)):
-                    if Gs.has_edge(node_y, node_x) :                 
+                    if Gs.has_edge(node_y, node_x):
                         Gs.remove_edge(node_y, node_x)
                         Gs.remove_edge(node_x, node_y)
                         if self.has_directedpath(Gs, node_x, node_y, mark=[]):
@@ -663,11 +665,11 @@ class RAIEstimator_transitivity(StructureEstimator):
                         else:
                             Gs.add_edge(node_x, node_y)
                             Gs.add_edge(node_y, node_x)
-            # R3: for each X->W<-Z X-Y-Z Y-W, orient Y->W 
+            # R3: for each X->W<-Z X-Y-Z Y-W, orient Y->W
             for pair in list(permutations(Gs.nodes(), 2)):
                 X, Z = pair
                 if not Gs.has_edge(X, Z):
-                    if not Gs.has_edge(Z,X):
+                    if not Gs.has_edge(Z, X):
                         for Y in (
                             set(Gs.successors(X))
                             & set(Gs.successors(Z))
@@ -676,40 +678,39 @@ class RAIEstimator_transitivity(StructureEstimator):
                         ):
                             for W in (
                                 set(Gs.successors(Y))
-                            & set(Gs.predecessors(Y))
-                            & set(Gs.successors(X))
-                            & set(Gs.successors(Z))
-                            - set(Gs.predecessors(X))
-                            - set(Gs.predecessors(Z))
+                                & set(Gs.predecessors(Y))
+                                & set(Gs.successors(X))
+                                & set(Gs.successors(Z))
+                                - set(Gs.predecessors(X))
+                                - set(Gs.predecessors(Z))
                             ):
                                 if Gs.has_edge(Y, W) and Gs.has_edge(W, Y):
                                     Gs.remove_edge(W, Y)
                                     Gall.remove_edge(W, Y)
                                     flag = True
         return Gs, Gall
-    
+
     def orientation_a2(self, Gs, Gall, deletededges):
         """
-    orient edges in a PDAG to a maximally oriented graph.
-    orient rules are based on rule 1~3 from Meek,C.:Causal Inference and Causal Explanation with Background Knowledge,Proc.Confon Uncertainty in Artificial Inteligence (UAl-95),p.403-410 (195)
-    in this stage (stage A2 in Yehezkel and Lerner(2009)), only rule 1 is applied because only X -> Y - Z shape is created in stage A1 (X-Z removed).
-    """
-        #Rule 1: X -> Y - Z, no edge between X and Z then X -> Y -> Z
+        orient edges in a PDAG to a maximally oriented graph.
+        orient rules are based on rule 1~3 from Meek,C.:Causal Inference and Causal Explanation with Background Knowledge,Proc.Confon Uncertainty in Artificial Inteligence (UAl-95),p.403-410 (195)
+        in this stage (stage A2 in Yehezkel and Lerner(2009)), only rule 1 is applied because only X -> Y - Z shape is created in stage A1 (X-Z removed).
+        """
+        # Rule 1: X -> Y - Z, no edge between X and Z then X -> Y -> Z
         for pair in deletededges:
             X, Z = pair
             for Y in (
-                (set(Gall.successors(X))
+                set(Gall.successors(X))
                 & set(Gall.successors(Z))
-                & set(Gall.predecessors(Z))
-                - set(Gall.predecessors(X)))
+                & set(Gall.predecessors(Z)) - set(Gall.predecessors(X))
             ):
                 Gs.remove_edge(Z, Y)
                 Gall.remove_edge(Z, Y)
         return Gs, Gall
-    
-    def lastorientation(self, G):                            
+
+    def lastorientation(self, G):
         flag = True
-        while flag: # while the number of orientated edges increases
+        while flag:  # while the number of orientated edges increases
             flag = False
             # X -> Y - Z, no edge between X and Z then X -> Y -> Z
             for node_y in G.nodes:
@@ -722,11 +723,11 @@ class RAIEstimator_transitivity(StructureEstimator):
                                         if not G.has_edge(node_x, node_z):
                                             G.remove_edge(node_z, node_y)
                                             flag = True
-                                        
-            #X - Y and if there is a directed path from X to Y, then X -> Y
+
+            # X - Y and if there is a directed path from X to Y, then X -> Y
             for node_y in G.nodes:
                 for node_x in list(G.predecessors(node_y)):
-                    if G.has_edge(node_y, node_x) :                 
+                    if G.has_edge(node_y, node_x):
                         G.remove_edge(node_y, node_x)
                         G.remove_edge(node_x, node_y)
                         if self.has_directedpath(G, node_x, node_y, mark=[]):
@@ -738,18 +739,13 @@ class RAIEstimator_transitivity(StructureEstimator):
                         else:
                             G.add_edge(node_x, node_y)
                             G.add_edge(node_y, node_x)
-            #for each X->Z<-Y with Z-W or Z->W, orient edges as X->W, Y->W 
+            # for each X->Z<-Y with Z-W or Z->W, orient edges as X->W, Y->W
             for pair in list(permutations(G.nodes(), 2)):
                 X, Y = pair
-                for Z in (
-                    set(G.successors(X))
-                    & set(G.successors(Y))
-                    - set(G.predecessors(X))
-                    - set(G.predecessors(Y))
-                ):
-                    for W in (
-                        set(G.successors(Z))
-                    ):
+                for Z in set(G.successors(X)) & set(G.successors(Y)) - set(
+                    G.predecessors(X)
+                ) - set(G.predecessors(Y)):
+                    for W in set(G.successors(Z)):
                         if G.has_edge(W, X) and G.has_edge(X, W):
                             G.remove_edge(W, X)
                             flag = True
@@ -758,16 +754,18 @@ class RAIEstimator_transitivity(StructureEstimator):
                             flag = True
         return G
 
-    def has_directedpath(self, G, node_x, node_y, mark): #if X has a path to Y such that all edges are directed
-            if node_x == node_y:
-                return True
-            for node_z in list(G.successors(node_x)):
-                if not node_z in mark:
-                    if not node_x in list(G.successors(node_z)):
-                        mark.append(node_z)
-                        if self.has_directedpath(G, node_z, node_y, mark):
-                            return True
-            return False
+    def has_directedpath(
+        self, G, node_x, node_y, mark
+    ):  # if X has a path to Y such that all edges are directed
+        if node_x == node_y:
+            return True
+        for node_z in list(G.successors(node_x)):
+            if not node_z in mark:
+                if not node_x in list(G.successors(node_z)):
+                    mark.append(node_z)
+                    if self.has_directedpath(G, node_z, node_y, mark):
+                        return True
+        return False
 
     def _legal_operations(
         self,
@@ -862,22 +860,40 @@ class RAIEstimator_transitivity(StructureEstimator):
         for node_y in Gs.nodes:
             for node_x in Gex.nodes:
                 if Gall.has_edge(node_x, node_y):
-                    if not ((node_x, node_y) in deletededges or (node_y, node_x) in deletededges):
+                    if not (
+                        (node_x, node_y) in deletededges
+                        or (node_y, node_x) in deletededges
+                    ):
                         Z = set(Gall.predecessors(node_y))
                         Z = Z - {node_x}
                         if len(Z) >= Nz:
-                            if Gall.has_edge(node_x, node_y) or Gall.has_edge(node_y, node_x):
+                            if Gall.has_edge(node_x, node_y) or Gall.has_edge(
+                                node_y, node_x
+                            ):
                                 for Z in combinations(Z, Nz):
-                                    if cls_test.separate(node_x, node_y, Z, self.data, ESS, boolean=True):
+                                    if cls_test.separate(
+                                        node_x, node_y, Z, self.data, ESS, boolean=True
+                                    ):
                                         if Gall.has_edge(node_x, node_y):
                                             Gall.remove_edge(node_x, node_y)
                                         if Gall.has_edge(node_y, node_x):
                                             Gall.remove_edge(node_y, node_x)
-                                        Gs, Gall, deletededges = self.transive_cut(self, Gs, Gall, ci_test, self.data, ESS, node_x, node_y, Z, deletededges)
+                                        Gs, Gall, deletededges = self.transive_cut(
+                                            self,
+                                            Gs,
+                                            Gall,
+                                            ci_test,
+                                            self.data,
+                                            ESS,
+                                            node_x,
+                                            node_y,
+                                            Z,
+                                            deletededges,
+                                        )
                                         deletededges.append((node_x, node_y))
                                         break
         if Nz >= 1:
-            Gs, Gall = self.orientation_a2(Gs = Gs, Gall = Gall, deletededges = deletededges)
+            Gs, Gall = self.orientation_a2(Gs=Gs, Gall=Gall, deletededges=deletededges)
         checked = set()
         deletededges = []
         for node_y in Gs.nodes:
@@ -885,11 +901,17 @@ class RAIEstimator_transitivity(StructureEstimator):
             neighbors = neighbors - checked
             checked = checked | set(node_y)
             for node_x in neighbors:
-                if not ((node_x, node_y) in deletededges or (node_y, node_x) in deletededges):
+                if not (
+                    (node_x, node_y) in deletededges or (node_y, node_x) in deletededges
+                ):
                     if Nz == 0:
                         Z = []
-                        if Gall.has_edge(node_x, node_y) or Gall.has_edge(node_y, node_x):
-                            if cls_test.separate(node_x, node_y, Z, self.data, ESS, boolean=True):
+                        if Gall.has_edge(node_x, node_y) or Gall.has_edge(
+                            node_y, node_x
+                        ):
+                            if cls_test.separate(
+                                node_x, node_y, Z, self.data, ESS, boolean=True
+                            ):
                                 if Gall.has_edge(node_x, node_y):
                                     Gall.remove_edge(node_x, node_y)
                                 if Gall.has_edge(node_y, node_x):
@@ -899,15 +921,35 @@ class RAIEstimator_transitivity(StructureEstimator):
                                 if Gs.has_edge(node_y, node_x):
                                     Gs.remove_edge(node_y, node_x)
                                 deletededges.append((node_x, node_y))
-                                Gs, Gall, deletededges = self.transive_cut(self, Gs, Gall, ci_test, self.data, ESS, node_x, node_y, Z, deletededges)
+                                Gs, Gall, deletededges = self.transive_cut(
+                                    self,
+                                    Gs,
+                                    Gall,
+                                    ci_test,
+                                    self.data,
+                                    ESS,
+                                    node_x,
+                                    node_y,
+                                    Z,
+                                    deletededges,
+                                )
                     else:
-                        set_Pa = set(Gall.predecessors(node_y)) | set(Gall.successors(node_y)) | set(Gall.predecessors(node_x)) | set(Gall.successors(node_x))
-                        set_Pa = set_Pa - {node_y} - {node_x} 
+                        set_Pa = (
+                            set(Gall.predecessors(node_y))
+                            | set(Gall.successors(node_y))
+                            | set(Gall.predecessors(node_x))
+                            | set(Gall.successors(node_x))
+                        )
+                        set_Pa = set_Pa - {node_y} - {node_x}
                         num_Pa = len(set_Pa)
                         if num_Pa >= Nz:
                             for Z in combinations(set_Pa, Nz):
-                                if Gall.has_edge(node_x, node_y) or Gall.has_edge(node_y, node_x):
-                                    if cls_test.separate(node_x, node_y, Z, self.data, ESS, boolean=True):
+                                if Gall.has_edge(node_x, node_y) or Gall.has_edge(
+                                    node_y, node_x
+                                ):
+                                    if cls_test.separate(
+                                        node_x, node_y, Z, self.data, ESS, boolean=True
+                                    ):
                                         if Gall.has_edge(node_x, node_y):
                                             Gall.remove_edge(node_x, node_y)
                                         if Gall.has_edge(node_y, node_x):
@@ -915,52 +957,68 @@ class RAIEstimator_transitivity(StructureEstimator):
                                         if Gs.has_edge(node_x, node_y):
                                             Gs.remove_edge(node_x, node_y)
                                         if Gs.has_edge(node_y, node_x):
-                                            Gs.remove_edge(node_y, node_x) 
+                                            Gs.remove_edge(node_y, node_x)
                                         deletededges.append((node_x, node_y))
-                                        Gs, Gall, deletededges = self.transive_cut(self, Gs, Gall, ci_test, self.data, ESS, node_x, node_y, Z, deletededges)
+                                        Gs, Gall, deletededges = self.transive_cut(
+                                            self,
+                                            Gs,
+                                            Gall,
+                                            ci_test,
+                                            self.data,
+                                            ESS,
+                                            node_x,
+                                            node_y,
+                                            Z,
+                                            deletededges,
+                                        )
                                         break
 
-        Gs, Gall = self.orientation(Gs, Gall = Gall, ci_test = ci_test, data = self.data, ESS = ESS)
+        Gs, Gall = self.orientation(
+            Gs, Gall=Gall, ci_test=ci_test, data=self.data, ESS=ESS
+        )
         Gd, g_subs = self.order_grouping(Gs)
         Gexd = PDAG()
         for subs in g_subs:
             Gexd.add_nodes_from(subs.nodes)
             Gexd.add_edges_from(subs.edges)
-            Gall = self.RecursiveSearch(Nz + 1, subs, Gex, Gall, ci_test, ESS)     # Recursive call for structure learning of each of the ancestor sub-structures
-        return self.RecursiveSearch(Nz + 1, Gd, Gexd, Gall, ci_test, ESS)        # Recursive call for descendants sub-structure structure learning
+            Gall = self.RecursiveSearch(
+                Nz + 1, subs, Gex, Gall, ci_test, ESS
+            )  # Recursive call for structure learning of each of the ancestor sub-structures
+        return self.RecursiveSearch(
+            Nz + 1, Gd, Gexd, Gall, ci_test, ESS
+        )  # Recursive call for descendants sub-structure structure learning
 
     def order_grouping(self, Gs):
         sccs = list(nx.strongly_connected_components(Gs))
         scc_graph = nx.condensation(Gs)
         topological_order = list(nx.topological_sort(scc_graph))
         topological_lowest_nodes = sccs[topological_order[len(scc_graph.nodes) - 1]]
-        gc = self.extract_subgraph(
-            topological_lowest_nodes,
-            Gs
-        )
+        gc = self.extract_subgraph(topological_lowest_nodes, Gs)
         SubStructures = []
         for sccs_idx in topological_order[0 : len(scc_graph.nodes) - 1]:
-            sub = self.extract_subgraph(
-                sccs[sccs_idx],
-                Gs
-            )
+            sub = self.extract_subgraph(sccs[sccs_idx], Gs)
             SubStructures.append(sub)
         return gc, SubStructures
 
     def extract_subgraph(self, nodes, G):
         sub = PDAG()
         sub.add_nodes_from(nodes)
-        edges_to_add = [(node, sub_node) for node in nodes for sub_node in nodes if node != sub_node and G.has_edge(node, sub_node)]
+        edges_to_add = [
+            (node, sub_node)
+            for node in nodes
+            for sub_node in nodes
+            if node != sub_node and G.has_edge(node, sub_node)
+        ]
         sub.add_edges_from(edges_to_add)
         return sub
 
-    def estimate(               #全てをPDAGで定義
+    def estimate(  # 全てをPDAGで定義
         self,
         scoring_method="natoriscore",
         Gs=None,
         max_indegree=None,
         show_progress=True,
-        ESS = 1
+        ESS=1,
     ):
 
         # Step 1: Initial checks and setup for arguments
@@ -994,7 +1052,7 @@ class RAIEstimator_transitivity(StructureEstimator):
         Gs.add_edges_from(
             [
                 (X, Y)
-                for X, Y in permutations(self.variables, 2)     #combination から変更
+                for X, Y in permutations(self.variables, 2)  # combination から変更
                 if X != Y
             ]
         )
@@ -1003,22 +1061,17 @@ class RAIEstimator_transitivity(StructureEstimator):
         Gall.add_edges_from(
             [
                 (X, Y)
-                for X, Y in permutations(self.variables, 2)     #combination から変更
+                for X, Y in permutations(self.variables, 2)  # combination から変更
                 if X != Y
             ]
         )
         Gex = PDAG()
         Nz = 0
-        #show(Gs)
+        # show(Gs)
         # Step 2: Define the structure_score function
         best_model = self.RecursiveSearch(
-            Nz=Nz,
-            Gs=Gs,
-            Gex=Gex,
-            Gall=Gall,
-            ci_test=ci_test,
-            ESS = ESS
+            Nz=Nz, Gs=Gs, Gex=Gex, Gall=Gall, ci_test=ci_test, ESS=ESS
         )
-        #best_model = self.lastorientation(best_model)
+        # best_model = self.lastorientation(best_model)
 
         return best_model

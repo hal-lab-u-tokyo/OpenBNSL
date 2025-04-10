@@ -4,6 +4,7 @@ from benchmark_utils import benchmark_functions_variants
 
 import openbnsllib
 
+
 def python_matmul(a, b):
     n, m = len(a), len(b[0])
     p = len(b)

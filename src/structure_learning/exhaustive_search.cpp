@@ -2,20 +2,18 @@
 
 #include <iostream>
 
-#include "base/all_dims_cache.h"
+#include "base/contingency_table.h"
 #include "score/local_score.h"
 #include "utils/comb2vec.h"
 #include "utils/next_combination.h"
 
 #define varset_t uint64_t  // number of variables <= 64
 
-py::array_t<bool> exhaustive_search(const DataframeWrapper& df,
-                                    const ScoreType& score_type,
-                                    int max_parents) {
+PDAG exhaustive_search(const DataframeWrapper& df, const ScoreType& score_type,
+                       int max_parents) {
   if (max_parents < 0 || max_parents > (int)df.num_of_vars - 1)
     throw std::invalid_argument("max_parents must be in [0, num_of_vars-1]");
   size_t max_varset_size = max_parents + 1;
-  auto all_dims_cache = AllDimsCache(df, max_varset_size);
   size_t n = df.num_of_vars;
   if (n < 0 || n > 64)
     throw std::invalid_argument("num_of_vars must be in [0, 64]");
@@ -48,9 +46,10 @@ py::array_t<bool> exhaustive_search(const DataframeWrapper& df,
     // explore all possible variable combinations in the current subset size
     varset_t varset_int = (varset_t(1) << subset_size) - 1;
     do {
-      std::vector<int> varset_vec = comb2vec(varset_int);
-      const auto& freq_tbl = calc_ls ? all_dims_cache.get_freq_tbl(varset_vec)
-                                     : std::vector<int>();
+      std::vector<size_t> varset_vec = comb2vec(varset_int);
+
+      ContingencyTable ct;
+      if (calc_ls) ct = buildContingencyTable(varset_vec, df);
 
       double best_gs = 0;
       int best_ch = -1;
@@ -58,10 +57,15 @@ py::array_t<bool> exhaustive_search(const DataframeWrapper& df,
         auto child_var = varset_vec[child_idx];
         auto parents_varset_int = varset_int - bit_masks[child_var];
 
-        double ls = calc_ls ? calculate_local_score<double>(
-                                  child_var, varset_vec, df.num_of_values,
-                                  freq_tbl, score_type)
-                            : -std::numeric_limits<double>::infinity();
+        double ls = -std::numeric_limits<double>::infinity();
+        if (calc_ls) {
+          std::vector<size_t> parent_set;
+          for (auto v : varset_vec) {
+            if (v != child_var) parent_set.push_back(v);
+          }
+          ls = calculate_local_score<double>(child_var, parent_set, ct,
+                                             score_type);
+        }
 
         double best_ls = ls;
         varset_t best_ps = parents_varset_int;
@@ -120,16 +124,8 @@ py::array_t<bool> exhaustive_search(const DataframeWrapper& df,
     } while (next_combination(varset_int, n));
   }
 
-  py::array_t<bool> best_graph = py::array_t<bool>({n, n});
-  py::buffer_info best_graph_buf = best_graph.request();
-  auto best_graph_ptr = static_cast<bool*>(best_graph_buf.ptr);
-  for (size_t i = 0; i < n; i++) {
-    for (size_t j = 0; j < n; j++) {
-      best_graph_ptr[i * n + j] = false;
-    }
-  }
-
   // reconstruct the best graph
+  PDAG best_graph(n);
   varset_t varset_int = (varset_t(1) << n) - 1;
   for (size_t i = 0; i < n; i++) {
     // auto best_gs = best_gs_tbl[varset_int];
@@ -140,7 +136,7 @@ py::array_t<bool> exhaustive_search(const DataframeWrapper& df,
 
     for (size_t j = 0; j < n; j++) {
       if (best_ps & bit_masks[j]) {
-        best_graph_ptr[j * n + best_ch] = true;
+        best_graph.add_edge(j, best_ch);
       }
     }
     varset_int = parents_varset_int;
@@ -152,7 +148,7 @@ py::array_t<bool> exhaustive_search(const DataframeWrapper& df,
   // for (size_t i = 0; i < n; i++) {
   //   std::cout << df.col_idx2str[i] << " <- {";
   //   for (size_t j = 0; j < n; j++) {
-  //     if (best_graph_ptr[j * n + i]) {
+  //     if (best_graph.has_edge(j, i)) {
   //       std::cout << df.col_idx2str[j] << ", ";
   //     }
   //   }
