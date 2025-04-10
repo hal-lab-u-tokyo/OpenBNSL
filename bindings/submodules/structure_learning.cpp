@@ -1,6 +1,7 @@
 #include <pybind11/pybind11.h>
 
 #include "structure_learning/PC.h"
+#include "structure_learning/PC2.h"
 #include "structure_learning/RAI.h"
 #include "structure_learning/exhaustive_search.h"
 
@@ -10,6 +11,7 @@ void bind_structure_learning(py::module& m) {
 
   submodule.def("RAI", &RAI, "Run RAI algorithm");
   submodule.def("PC", &PC, "Run PC algorithm");
+  submodule.def("PC2", &PC2, "Run PC2 algorithm");
   submodule.def("exhaustive_search", &exhaustive_search,
                 "Run exhaustive search algorithm", py::arg("df"),
                 py::arg("score_type"), py::arg("max_parents"));

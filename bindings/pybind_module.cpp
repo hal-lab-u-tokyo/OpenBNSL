@@ -2,6 +2,7 @@
 #include <pybind11/stl.h>
 
 #include "submodules/base.cpp"
+#include "submodules/citest.cpp"
 #include "submodules/score.cpp"
 #include "submodules/structure_learning.cpp"
 #include "submodules/type_inspection.cpp"
@@ -15,6 +16,7 @@ PYBIND11_MODULE(openbnsllib, m) {
 
   bind_structure_learning(m);
   bind_score(m);
+  bind_citest(m);
   bind_base(m);
   bind_type_inspection(m);
 

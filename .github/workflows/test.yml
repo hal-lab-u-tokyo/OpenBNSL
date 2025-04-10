@@ -25,15 +25,15 @@ jobs:
           submodules: recursive
 
       - name: Set execute permissions for bash scripts
-        run: chmod +x ./scripts/build_test.sh ./scripts/run_test.sh ./scripts/format.sh
+        run: chmod +x ./scripts/build_gtest.sh ./scripts/run_gtest.sh ./scripts/format.sh
 
       - name: Run Build
         run: |
-          docker run --rm -v "$(pwd):/workspace" $IMAGE_NAME:$IMAGE_TAG ./scripts/build_test.sh
+          docker run --rm -v "$(pwd):/workspace" $IMAGE_NAME:$IMAGE_TAG ./scripts/build_gtest.sh
 
       - name: Run Tests
         run: |
-          docker run --rm -v "$(pwd):/workspace" $IMAGE_NAME:$IMAGE_TAG ./scripts/run_test.sh
+          docker run --rm -v "$(pwd):/workspace" $IMAGE_NAME:$IMAGE_TAG ./scripts/run_gtest.sh
 
       - name: Run Format Check
         run: |

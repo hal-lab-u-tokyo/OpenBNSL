@@ -1,22 +1,18 @@
-#define _GLIBCXX_DEBUG
 using namespace std;
 #include "structure_learning/PC.h"
 
+#include <algorithm>
 #include <cassert>
+#include <cmath>
+#include <functional>
+#include <iostream>
 #include <set>
 #include <stack>
 #include <string>
 #include <vector>
-// the following includes are for permutation and combination algorithms
-#include <algorithm>
-#include <functional>
-#include <iostream>
-
-// for gamma function
-#include <cmath>
 
 // input: data: np.ndarray,  shape: (n: number of variables, d: number of
-// samples) output: leard PDAG
+// samples) output: leard PDAG2
 // Gall.at(i).at(j)==1 means there is an edge i -> j
 
 template <typename T>
@@ -46,24 +42,24 @@ bool next_combination(const T first, const T last,
   return false;
 }
 
-struct PDAG {
+struct PDAG2 {
   vector<vector<bool>> g;
   // コンストラクタ
-  PDAG() {
+  PDAG2() {
     // cout << "normal constructor called" << endl;
   }
   // コピーコンストラクタ
-  PDAG(const PDAG &old) {
+  PDAG2(const PDAG2 &old) {
     // cout << "copy constructor called" << endl;
     g = old.g;
   }
   // 代入演算子
-  PDAG &operator=(const PDAG &a) {
+  PDAG2 &operator=(const PDAG2 &a) {
     if (this != &a) g = a.g;
     return *this;
   }
   // デストラクタ
-  ~PDAG() = default;
+  ~PDAG2() = default;
 
   vector<int> successors(int i) {
     // return the list of successors of node i (include undirected edge)
@@ -278,10 +274,10 @@ bool ci_test_PC(const vector<vector<int>> &data, int &node_x, int &node_y,
   }
 }
 
-void orientation(PDAG &Gall, const vector<vector<int>> &data, double &ESS,
+void orientation(PDAG2 &Gall, const vector<vector<int>> &data, double &ESS,
                  vector<int> &n_states) {
   /*
-      orient edges in a PDAG to a maximally oriented graph.
+      orient edges in a PDAG2 to a maximally oriented graph.
       orient rules are based on rule 1~3 from Meek,C.:Causal Inference and
      Causal Explanation with Background Knowledge,Proc.Confon Uncertainty in
      Artificial Inteligence (UAl-95),p.403-410 (195)
@@ -352,8 +348,8 @@ void orientation(PDAG &Gall, const vector<vector<int>> &data, double &ESS,
   return;
 }
 
-PDAG PCsearch(const vector<vector<int>> &data, PDAG &Gall, double &ESS,
-              vector<int> &n_states) {
+PDAG2 PCsearch(const vector<vector<int>> &data, PDAG2 &Gall, double &ESS,
+               vector<int> &n_states) {
   int n_node = data.at(0).size();
 
   // stage 1: Do CI tests between nodes and remove edge (undirected graph)
@@ -422,13 +418,13 @@ py::array_t<bool> PC(py::array_t<int> data, py::array_t<int> n_states,
   bool *__restrict__ prt_endg = static_cast<bool *>(buf_endg.ptr);
 
   // initialize Gall (complete undirected graph)
-  PDAG Gall;
+  PDAG2 Gall;
   vector<vector<bool>> gall(n_node, vector<bool>(n_node, true));
   for (int i = 0; i < (int)n_node; i++) {
     gall.at(i).at(i) = false;
   }
   Gall.g = gall;  // Gall is complete graph
-  PDAG Gend;
+  PDAG2 Gend;
   // vector<vector<string>> state_list = get_state_list(data);
   Gend = PCsearch(data_vec, Gall, ESS, n_states_vec);
 
