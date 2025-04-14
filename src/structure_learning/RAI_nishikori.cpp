@@ -1096,9 +1096,9 @@ void recursive_search(const vector<vector<uint8_t>> &data, PDAG_nishikori &Gall,
 }
 
 py::array_t<bool> RAI_nishikori(py::array_t<uint8_t> data,
-                      py::array_t<int> n_states,  // uint8_t
-                      float ESS, int parallel, int threshold_DP,
-                      bool search_neighbor, bool do_orientation_A2) {
+                                py::array_t<int> n_states,  // uint8_t
+                                float ESS, int parallel, int threshold_DP,
+                                bool search_neighbor, bool do_orientation_A2) {
   // translate imput data to c++ vector(this is not optimal but I don't know how
   // to use pybind11::array_t)
   py::buffer_info buf_data = data.request(), buf_states = n_states.request();

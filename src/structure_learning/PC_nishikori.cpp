@@ -274,8 +274,8 @@ bool ci_test_PC(const vector<vector<int>> &data, int &node_x, int &node_y,
   }
 }
 
-void orientation(PDAG_nishikori_PC &Gall, const vector<vector<int>> &data, double &ESS,
-                 vector<int> &n_states) {
+void orientation(PDAG_nishikori_PC &Gall, const vector<vector<int>> &data,
+                 double &ESS, vector<int> &n_states) {
   /*
       orient edges in a PDAG_nishikori_PC to a maximally oriented graph.
       orient rules are based on rule 1~3 from Meek,C.:Causal Inference and
@@ -348,8 +348,9 @@ void orientation(PDAG_nishikori_PC &Gall, const vector<vector<int>> &data, doubl
   return;
 }
 
-PDAG_nishikori_PC PCsearch(const vector<vector<int>> &data, PDAG_nishikori_PC &Gall, double &ESS,
-               vector<int> &n_states) {
+PDAG_nishikori_PC PCsearch(const vector<vector<int>> &data,
+                           PDAG_nishikori_PC &Gall, double &ESS,
+                           vector<int> &n_states) {
   int n_node = data.at(0).size();
 
   // stage 1: Do CI tests between nodes and remove edge (undirected graph)
@@ -395,7 +396,7 @@ PDAG_nishikori_PC PCsearch(const vector<vector<int>> &data, PDAG_nishikori_PC &G
 
 // void RAI(const vector<vector<int>> data, double ESS,vector<vector<bool>> g) {
 py::array_t<bool> PC_nishikori(py::array_t<int> data, py::array_t<int> n_states,
-                     double ESS) {
+                               double ESS) {
   // translate imput data to c++ vector(this is not optimal but I don't know how
   // to use pybind11::array_t)
   py::buffer_info buf_data = data.request(), buf_states = n_states.request();

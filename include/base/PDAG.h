@@ -15,9 +15,17 @@ struct PDAG {
   ~PDAG() = default;
 
   size_t get_num_vars() const;
+  std::vector<size_t> successors(size_t x) const;    // {y | x -> y}
+  std::vector<size_t> predecessors(size_t x) const;  // {y | y -> x}
+  std::vector<size_t> neighbors(size_t x) const;     // {y | x -> y or y -> x}
+  std::vector<size_t> undirected_neighbors(size_t x) const;  // {y | x <-> y}
   bool has_edge(size_t from, size_t to) const;
+  bool has_directed_edge(size_t from, size_t to) const;
+  bool has_undirected_edge(size_t from, size_t to) const;
+  bool has_directed_path(size_t from, size_t to) const;
+  bool has_path(size_t from, size_t to) const;
+  bool has_connection(size_t from, size_t to) const;
   void add_edge(size_t from, size_t to);
   void remove_edge(size_t from, size_t to);
   void complete_graph();
-  std::vector<size_t> neighbors(size_t x) const;
 };

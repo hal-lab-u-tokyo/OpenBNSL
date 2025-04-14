@@ -2,6 +2,7 @@
 
 #include "structure_learning/PC.h"
 #include "structure_learning/PC_nishikori.h"
+#include "structure_learning/RAI.h"
 #include "structure_learning/RAI_nishikori.h"
 #include "structure_learning/exhaustive_search.h"
 
@@ -15,4 +16,5 @@ void bind_structure_learning(py::module& m) {
                 "Run exhaustive search algorithm", py::arg("df"),
                 py::arg("score_type"), py::arg("max_parents"));
   submodule.def("PC", &PC, "Run PC algorithm");
+  submodule.def("RAI", &RAI, "Run RAI algorithm");
 }
