@@ -1,7 +1,7 @@
 import pytest
 import random
 from pgmpy.utils import get_example_model
-from pgmpy.estimators import BDeuScore
+from pgmpy.estimators import BDeu
 import openbnsllib
 
 
@@ -41,7 +41,7 @@ def test_local_score(model_name, sample_size, seed):
     sorted_parent_indices = sorted(selected_parent_indices)
 
     # pgmpy implementation
-    pgmpy_scoring = BDeuScore(samples, 1.0)
+    pgmpy_scoring = BDeu(samples, 1.0)
     columns = sorted(samples.columns)
     child_variable_name = columns[child_idx]
     parent_variable_names = [columns[i] for i in selected_parent_indices]
