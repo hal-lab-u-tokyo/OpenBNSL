@@ -15,8 +15,7 @@ import sys
 from modules.RAIEstimator_fixed import RAIEstimator, RAIEstimator_transitivity
 from modules.RAI_cpp import RAIEstimator_cpp
 from modules.PC_cpp import PCEstimator_cpp
-from modules.structural_distance import structural_errors, DAG2CPDAG, PDAG2CPDAG
-from modules.visualize_graph import display_graph_info as show
+from modules.structural_distance import _structural_errors, DAG2CPDAG, PDAG2CPDAG
 from modules.CITests_fixed import NatoriScore
 
 SAVE_DIR = "./results_2"
@@ -88,10 +87,7 @@ def test_benchmark(
         else:
             calc_time += time.time() - t
         best_model_compare = PDAG2CPDAG(best_model)
-        # show(best_model)
-        show(best_model_compare)
-        # show(comparemodel)
-        errors = structural_errors(comparemodel, best_model_compare)
+        errors = _structural_errors(comparemodel, best_model_compare)
         print(
             f"iteration {i}: [SHD, ME, EE, DE, ED, MD, RD]:{errors[0]}, {errors[1]}, {errors[2]}, {errors[3]}, {errors[4]}, {errors[5]}, {errors[6]}"
         )

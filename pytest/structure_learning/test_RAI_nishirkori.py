@@ -1,24 +1,10 @@
 import pytest
-import pandas as pd
-import numpy as np
-import networkx as nx
-import argparse
-import os
+from pgmpy.base import PDAG
 from pgmpy.utils import get_example_model
-
 from pgmpy.sampling import BayesianModelSampling, GibbsSampling
-from pgmpy.estimators import BicScore, HillClimbSearch
-from pgmpy.estimators import PC
 
-import time
-import sys
-
-from modules.RAIEstimator_fixed import RAIEstimator, RAIEstimator_transitivity
-from modules.RAI_cpp import RAIEstimator_cpp
-from modules.PC_cpp import PCEstimator_cpp
-from modules.structural_distance import structural_errors, PDAG2CPDAG
-from modules.visualize_graph import display_graph_info as show
-from modules.CITests_fixed import NatoriScore
+from modules.RAI_nishikori_cpp import RAI_nishikori_Estimator_cpp
+from modules.structural_distance import _structural_errors, PDAG2CPDAG
 
 
 @pytest.mark.parametrize(
@@ -50,7 +36,7 @@ def test_RAI_cpp(
         data = sampler.forward_sample(size=sample_size, seed=111)
         # data = model.simulate(sample_size)
         # print(data.head())
-        best_model, raitime = RAIEstimator_cpp(
+        best_model, raitime = RAI_nishikori_Estimator_cpp(
             data=data,
             ESS=ess,
             parallel=parallel,
@@ -60,8 +46,7 @@ def test_RAI_cpp(
         )
         best_model_compare = PDAG2CPDAG(best_model)
         calc_time += raitime
-        # show(best_model_compare)
-        errors = structural_errors(comparemodel, best_model_compare)
+        errors = _structural_errors(comparemodel, best_model_compare)
         print(
             f"iteration {i}: [SHD, ME, EE, DE, ED, MD, RD]:{errors[0]}, {errors[1]}, {errors[2]}, {errors[3]}, {errors[4]}, {errors[5]}, {errors[6]}"
         )

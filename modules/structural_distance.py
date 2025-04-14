@@ -1,37 +1,58 @@
-import pandas as pd
 import numpy as np
 import networkx as nx
-from pgmpy.base import DAG
 from pgmpy.base import PDAG
 from itertools import combinations
-import argparse
-import os
-from modules.visualize_graph import display_graph_info as show
 
 
-def retrieve_adjacency_matrix(graph, order_nodes=None, weight=False):
-    """Retrieve the adjacency matrix from the nx.DiGraph or numpy array."""
-    if isinstance(graph, np.ndarray):
-        return graph
-    elif isinstance(graph, nx.DiGraph):
-        if order_nodes is None:
-            order_nodes = graph.nodes()
-        if not weight:
-            return np.array(
-                nx.adjacency_matrix(graph, order_nodes, weight=None).todense()
-            )
-        else:
-            return np.array(nx.adjacency_matrix(graph, order_nodes).todense())
-    else:
-        raise TypeError(
-            "Only networkx.DiGraph and np.ndarray (adjacency matrixes) are supported."
-        )
+def _retrieve_adjacency_matrix(
+    graph: PDAG, order_nodes=None, weight=None
+) -> np.ndarray:
+    """
+    Retrieve the adjacency matrix of a PDAG.
+    Parameters
+    ----------
+    graph : PDAG
+        The PDAG object.
+    order_nodes : list, optional
+        The order of nodes in the adjacency matrix. If None, the order of original graph is used.
+    weight : str, optional
+        The edge attribute to use as weight. If None, the adjacency matrix is unweighted.
+    Returns
+    -------
+    np.ndarray
+        The adjacency matrix of the PDAG.
+    """
+
+    if not isinstance(graph, PDAG):
+        raise TypeError("graph must be a PDAG object")
+    if order_nodes is None:
+        order_nodes = graph.nodes()
+    return np.array(nx.adjacency_matrix(graph, order_nodes, weight=weight).todense())
 
 
-def SHD(target, pred):
-    true_labels = retrieve_adjacency_matrix(target)
-    predictions = retrieve_adjacency_matrix(
-        pred, target.nodes() if isinstance(target, nx.DiGraph) else None
+def structural_hamming_distance(ground_truth_pdag: PDAG, predicted_graph: PDAG) -> int:
+    """
+    Compute the structural Hamming distance between two PDAGs.
+    Parameters
+    ----------
+    ground_truth_pdag : PDAG
+        The ground_truth_pdag PDAG (ground truth).
+    predicted_graph : PDAG
+        The predicted PDAG.
+    Returns
+    -------
+    int
+        The structural Hamming distance between the ground_truth_pdag and predicted PDAGs.
+    """
+
+    true_labels = _retrieve_adjacency_matrix(ground_truth_pdag)
+    predictions = _retrieve_adjacency_matrix(
+        predicted_graph,
+        (
+            ground_truth_pdag.nodes()
+            if isinstance(ground_truth_pdag, nx.DiGraph)
+            else None
+        ),
     )
     diff = np.abs(true_labels - predictions)
     diff = diff + diff.transpose()
@@ -39,10 +60,28 @@ def SHD(target, pred):
     return int(np.sum(diff) / 2)
 
 
-def missing_edge(target, pred):
-    true_labels = retrieve_adjacency_matrix(target)
-    predictions = retrieve_adjacency_matrix(
-        pred, target.nodes() if isinstance(target, nx.DiGraph) else None
+def missing_edge(ground_truth_pdag: PDAG, predicted_graph: PDAG) -> int:
+    """
+    Compute the missing edge between two PDAGs.
+    Parameters
+    ----------
+    ground_truth_pdag : PDAG
+        The ground_truth_pdag PDAG (ground truth).
+    predicted_graph : PDAG
+        The predicted PDAG.
+    Returns
+    -------
+    int
+        The missing edge error between the ground_truth_pdag and predicted PDAGs.
+    """
+    true_labels = _retrieve_adjacency_matrix(ground_truth_pdag)
+    predictions = _retrieve_adjacency_matrix(
+        predicted_graph,
+        (
+            ground_truth_pdag.nodes()
+            if isinstance(ground_truth_pdag, nx.DiGraph)
+            else None
+        ),
     )
     diff = true_labels - predictions - predictions.transpose()
     diff[diff < 0] = 0  # Ignoring other types of error.
@@ -51,10 +90,29 @@ def missing_edge(target, pred):
     return int(np.sum(diff) / 2)
 
 
-def extra_edge(target, pred):
-    true_labels = retrieve_adjacency_matrix(target)
-    predictions = retrieve_adjacency_matrix(
-        pred, target.nodes() if isinstance(target, nx.DiGraph) else None
+def extra_edge(ground_truth_pdag: PDAG, predicted_graph: PDAG) -> int:
+    """
+    Compute the extra edge between two PDAGs.
+    Parameters
+    ----------
+    ground_truth_pdag : PDAG
+        The ground_truth_pdag PDAG (ground truth).
+    predicted_graph : PDAG
+        The predicted PDAG.
+    Returns
+    -------
+    int
+        The extra edge error between the ground_truth_pdag and predicted PDAGs.
+    """
+
+    true_labels = _retrieve_adjacency_matrix(ground_truth_pdag)
+    predictions = _retrieve_adjacency_matrix(
+        predicted_graph,
+        (
+            ground_truth_pdag.nodes()
+            if isinstance(ground_truth_pdag, nx.DiGraph)
+            else None
+        ),
     )
     diff = predictions - true_labels - true_labels.transpose()
     diff[diff < 0] = 0  # Ignoring other types of error.
@@ -63,10 +121,29 @@ def extra_edge(target, pred):
     return int(np.sum(diff) / 2)
 
 
-def extra_direction(target, pred):
-    true_labels = retrieve_adjacency_matrix(target)
-    predictions = retrieve_adjacency_matrix(
-        pred, target.nodes() if isinstance(target, nx.DiGraph) else None
+def extra_direction(ground_truth_pdag: PDAG, predicted_graph: PDAG) -> int:
+    """
+    Compute the extra direction between two PDAGs.
+    Parameters
+    ----------
+    ground_truth_pdag : PDAG
+        The ground_truth_pdag PDAG (ground truth).
+    predicted_graph : PDAG
+        The predicted PDAG.
+    Returns
+    -------
+    int
+        The extra direction error between the ground_truth_pdag and predicted PDAGs.
+    """
+
+    true_labels = _retrieve_adjacency_matrix(ground_truth_pdag)
+    predictions = _retrieve_adjacency_matrix(
+        predicted_graph,
+        (
+            ground_truth_pdag.nodes()
+            if isinstance(ground_truth_pdag, nx.DiGraph)
+            else None
+        ),
     )
     count = 0
     for x in range(true_labels.shape[0]):
@@ -81,10 +158,29 @@ def extra_direction(target, pred):
     return count
 
 
-def missing_direction(target, pred):
-    true_labels = retrieve_adjacency_matrix(target)
-    predictions = retrieve_adjacency_matrix(
-        pred, target.nodes() if isinstance(target, nx.DiGraph) else None
+def missing_direction(ground_truth_pdag: PDAG, predicted_graph: PDAG) -> int:
+    """
+    Compute the missing direction between two PDAGs.
+    Parameters
+    ----------
+    ground_truth_pdag : PDAG
+        The ground_truth_pdag PDAG (ground truth).
+    predicted_graph : PDAG
+        The predicted PDAG.
+    Returns
+    -------
+    int
+        The missing direction error between the ground_truth_pdag and predicted PDAGs.
+    """
+
+    true_labels = _retrieve_adjacency_matrix(ground_truth_pdag)
+    predictions = _retrieve_adjacency_matrix(
+        predicted_graph,
+        (
+            ground_truth_pdag.nodes()
+            if isinstance(ground_truth_pdag, nx.DiGraph)
+            else None
+        ),
     )
     count = 0
     for x in range(true_labels.shape[0]):
@@ -99,10 +195,29 @@ def missing_direction(target, pred):
     return count
 
 
-def reversed_direction(target, pred):
-    true_labels = retrieve_adjacency_matrix(target)
-    predictions = retrieve_adjacency_matrix(
-        pred, target.nodes() if isinstance(target, nx.DiGraph) else None
+def reversed_direction(ground_truth_pdag: PDAG, predicted_graph: PDAG) -> int:
+    """
+    Compute the reversed direction error between two PDAGs.
+    Parameters
+    ----------
+    ground_truth_pdag : PDAG
+        The ground_truth_pdag PDAG (ground truth).
+    predicted_graph : PDAG
+        The predicted PDAG.
+    Returns
+    -------
+    int
+        The reversed direction error between the ground_truth_pdag and predicted PDAGs.
+    """
+
+    true_labels = _retrieve_adjacency_matrix(ground_truth_pdag)
+    predictions = _retrieve_adjacency_matrix(
+        predicted_graph,
+        (
+            ground_truth_pdag.nodes()
+            if isinstance(ground_truth_pdag, nx.DiGraph)
+            else None
+        ),
     )
     count = 0
     for x in range(true_labels.shape[0]):
@@ -117,11 +232,30 @@ def reversed_direction(target, pred):
     return count
 
 
-def directional_error(target, pred):
-    return SHD(target, pred) - missing_edge(target, pred) - extra_edge(target, pred)
+def directional_error(ground_truth_pdag: PDAG, predicted_graph: PDAG) -> int:
+    """
+    Compute the directional error between two PDAGs.
+    Parameters
+    ----------
+    ground_truth_pdag : PDAG
+        The ground_truth_pdag PDAG (ground truth).
+    predicted_graph : PDAG
+        The predicted PDAG.
+    Returns
+    -------
+    int
+        The directional error between the ground_truth_pdag and predicted PDAGs.
+    """
+
+    return (
+        structural_hamming_distance(ground_truth_pdag, predicted_graph)
+        - missing_edge(ground_truth_pdag, predicted_graph)
+        - extra_edge(ground_truth_pdag, predicted_graph)
+    )
 
 
-def structural_errors(target, pred):
+# TODO remove this function
+def _structural_errors(ground_truth_pdag, predicted_graph):
     """
     Conpute Structural Hamming Distance (SHD), Extra Edge (EE), Missing Edge (ME), Directional Error (DE),ED (Extra Direction), MD (Missing Direction), RD(Reversed Direction)
     SHD = EE + ME + DE
@@ -137,9 +271,9 @@ def structural_errors(target, pred):
 
     Parameters
     ----------
-    target : nx.DiGraph
+    ground_truth_pdag : nx.DiGraph
         true CPDAG
-    pred : nx.DiGraph
+    predicted_graph : nx.DiGraph
         predicted CPDAG
     Returns
     ------
@@ -147,17 +281,62 @@ def structural_errors(target, pred):
     [SHD, missing_edge, extra_edge, directional_error, extra_direction, missing_direction, reversed_direction]
     """
     errors = []
-    errors.append(SHD(target, pred))
-    errors.append(missing_edge(target, pred))
-    errors.append(extra_edge(target, pred))
-    errors.append(directional_error(target, pred))
-    errors.append(extra_direction(target, pred))
-    errors.append(missing_direction(target, pred))
-    errors.append(reversed_direction(target, pred))
+    errors.append(
+        structural_hamming_distance(ground_truth_pdag, predicted_graph)
+    )  # SHD = EE + ME + DE
+    errors.append(missing_edge(ground_truth_pdag, predicted_graph))
+    errors.append(extra_edge(ground_truth_pdag, predicted_graph))
+    errors.append(
+        directional_error(ground_truth_pdag, predicted_graph)
+    )  # DE = ED + MD + RD
+    errors.append(extra_direction(ground_truth_pdag, predicted_graph))
+    errors.append(missing_direction(ground_truth_pdag, predicted_graph))
+    errors.append(reversed_direction(ground_truth_pdag, predicted_graph))
     return errors
 
 
-def PDAG2CPDAG(pdag):
+def structural_errors(ground_truth_pdag: PDAG, predicted_graph: PDAG) -> dict:
+    """
+    Compute structural errors between two PDAGs.
+    Parameters
+    ----------
+    ground_truth_pdag : PDAG
+        The ground_truth_pdag PDAG (ground truth).
+    predicted_graph : PDAG
+        The predicted PDAG.
+
+    Returns
+    -------
+    errors : dict
+        A dictionary containing the structural errors:
+        - SHD: Structural Hamming Distance
+        - ME: Missing Edge
+        - EE: Extra Edge
+        - DE: Directional Error
+        - ED: Extra Direction
+        - MD: Missing Direction
+        - RD: Reversed Direction
+    """
+    # Convert PDAG to CPDAG
+    ground_truth_pdag = PDAG2CPDAG(ground_truth_pdag)
+    predicted_graph = PDAG2CPDAG(predicted_graph)
+
+    errors = {}
+    errors["SHD"] = structural_hamming_distance(
+        ground_truth_pdag, predicted_graph
+    )  # SHD = EE + ME + DE
+    errors["ME"] = missing_edge(ground_truth_pdag, predicted_graph)
+    errors["EE"] = extra_edge(ground_truth_pdag, predicted_graph)
+    errors["DE"] = directional_error(
+        ground_truth_pdag, predicted_graph
+    )  # DE = ED + MD + RD
+    errors["ED"] = extra_direction(ground_truth_pdag, predicted_graph)
+    errors["MD"] = missing_direction(ground_truth_pdag, predicted_graph)
+    errors["RD"] = reversed_direction(ground_truth_pdag, predicted_graph)
+    return errors
+
+
+def PDAG2CPDAG(pdag: PDAG) -> PDAG:
     """
     Compute the completed partially directed acyclic graph (CPDAG) of a given PDAG.
 

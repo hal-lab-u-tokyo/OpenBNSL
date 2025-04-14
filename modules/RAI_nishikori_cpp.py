@@ -5,18 +5,17 @@ import time
 import numpy as np
 from pgmpy.base import PDAG
 
-from modules.visualize_graph import display_graph_info as show
-from modules.dataframe_wrapper2 import dataframe_wrapper2
+from modules.dataframe_wrapper_nishikori import dataframe_wrapper_nishikori
 
 
-def RAIEstimator_cpp(
+def RAI_nishikori_Estimator_cpp(
     data, ESS, parallel=1, threshold_DP=0, search_neighbor=True, do_orientation_A2=True
 ):
-    columns, data_int, n_states = dataframe_wrapper2(data)
+    columns, data_int, n_states = dataframe_wrapper_nishikori(data)
 
     calc_time2 = 0
     t2 = time.perf_counter()
-    ansmat = openbnsllib.structure_learning.RAI(
+    ansmat = openbnsllib.structure_learning.RAI_nishikori(
         data_int,
         n_states,
         ESS,
@@ -36,5 +35,4 @@ def RAIEstimator_cpp(
             if ansmat[i][j] == 1:
                 edges.append((columns[i], columns[j]))  # i -> j
     G.add_edges_from(edges)
-    # show(G)
     return G, calc_time2

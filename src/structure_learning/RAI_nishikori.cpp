@@ -1,5 +1,5 @@
 using namespace std;
-#include "structure_learning/RAI.h"
+#include "structure_learning/RAI_nishikori.h"
 
 #include <cassert>
 #include <set>
@@ -7,7 +7,7 @@ using namespace std;
 #include <string>
 #include <vector>
 
-#include "base/PDAG2.h"
+#include "base/PDAG_nishikori.h"
 // the following includes are for permutation and combination algorithms
 #include <algorithm>
 #include <functional>
@@ -17,7 +17,7 @@ using namespace std;
 #include <cmath>
 
 // input: data: np.ndarray,  shape: (n: number of variables, d: number of
-// samples) output: leard PDAG2
+// samples) output: leard PDAG_nishikori
 // Gall.at(i).at(j)==1 means there is an edge i -> j
 
 void dfs(int now, vector<vector<int>> &G, vector<bool> &visited,
@@ -132,13 +132,13 @@ bool next_combination(const T first, const T last,
   return false;
 }
 
-void order_grouping(PDAG2 &Gall, vector<int> &Gs, vector<int> &Gd,
+void order_grouping(PDAG_nishikori &Gall, vector<int> &Gs, vector<int> &Gd,
                     vector<vector<int>> &g_ex_connection) {
   vector<vector<bool>> adjmat = make_gs_graph(Gall.g, Gs);
   vector<vector<int>> listmat = adjmat2listmat(adjmat);
   vector<vector<int>> rlistmat = adjmat2listmat_reverse(adjmat);
   vector<int> comp = SCC(listmat, rlistmat);
-  PDAG2 Gss;
+  PDAG_nishikori Gss;
   Gss.g = make_gs_graph(Gall.g, Gs);
   bool flag = true;
   int order = 0;
@@ -199,7 +199,7 @@ void order_grouping(PDAG2 &Gall, vector<int> &Gs, vector<int> &Gd,
   }
 
   // G_d以外について，クラスタ0から連結しているクラスタをまとめていく
-  PDAG2 Gss_ex;
+  PDAG_nishikori Gss_ex;
   Gss_ex.g = make_gs_graph(Gss.g, Gex);
   for (int i = 0; i < (int)Gss_ex.g.size(); i++) {
     for (int j = 0; j < (int)Gss_ex.g.size(); j++) {
@@ -778,10 +778,10 @@ bool ci_test(const vector<vector<uint8_t>> &data, int &node_x, int &node_y,
   }
 }
 
-void orientation_A2(PDAG2 &Gall, vector<int> &Gs,
+void orientation_A2(PDAG_nishikori &Gall, vector<int> &Gs,
                     vector<vector<bool>> &deletededges) {
   /*
-      orient edges in a PDAG2 to a maximally oriented graph.
+      orient edges in a PDAG_nishikori to a maximally oriented graph.
       orient rules are based on rule 1~3 from Meek,C.:Causal Inference and
      Causal Explanation with Background Knowledge,Proc.Confon Uncertainty in
      Artificial Inteligence (UAl-95),p.403-410 (195) in this stage (stage A2 in
@@ -806,14 +806,14 @@ void orientation_A2(PDAG2 &Gall, vector<int> &Gs,
   return;
 }
 
-void orientation_B2(PDAG2 &Gall, vector<int> &Gs,
+void orientation_B2(PDAG_nishikori &Gall, vector<int> &Gs,
                     vector<vector<bool>> &deletededges,
                     const vector<vector<uint8_t>> &data, vector<int> &n_states,
                     float &ESS, int &parallel, bool &count_DP_flag,
                     vector<int> &count_DP, vector<vector<vector<bool>>> &sep,
                     vector<vector<bool>> &sep2) {
   /*
-      orient edges in a PDAG2 to a maximally oriented graph.
+      orient edges in a PDAG_nishikori to a maximally oriented graph.
       orient rules are based on rule 1~3 from Meek,C.:Causal Inference and
      Causal Explanation with Background Knowledge,Proc.Confon Uncertainty in
      Artificial Inteligence (UAl-95),p.403-410 (195)
@@ -922,7 +922,7 @@ void orientation_B2(PDAG2 &Gall, vector<int> &Gs,
   return;
 }
 
-void recursive_search(const vector<vector<uint8_t>> &data, PDAG2 &Gall,
+void recursive_search(const vector<vector<uint8_t>> &data, PDAG_nishikori &Gall,
                       vector<int> Gs, vector<int> &Gex, int N,
                       vector<int> &n_states, float &ESS, int &parallel,
                       int &threshold_DP, bool &search_neighbor,
@@ -1095,7 +1095,7 @@ void recursive_search(const vector<vector<uint8_t>> &data, PDAG2 &Gall,
   return;
 }
 
-py::array_t<bool> RAI(py::array_t<uint8_t> data,
+py::array_t<bool> RAI_nishikori(py::array_t<uint8_t> data,
                       py::array_t<int> n_states,  // uint8_t
                       float ESS, int parallel, int threshold_DP,
                       bool search_neighbor, bool do_orientation_A2) {
@@ -1129,7 +1129,7 @@ py::array_t<bool> RAI(py::array_t<uint8_t> data,
   vector<vector<bool>> sep2(sep_size, vector<bool>(sep_size, false));
 
   // initialize Gall, Gs, Gex
-  PDAG2 Gall;
+  PDAG_nishikori Gall;
   vector<vector<bool>> gall(n_node, vector<bool>(n_node, true));
   for (int i = 0; i < n_node; i++) {
     gall.at(i).at(i) = false;
@@ -1140,7 +1140,7 @@ py::array_t<bool> RAI(py::array_t<uint8_t> data,
     Gs.at(i) = i;
   }                 // Gs contains all nodes 0 ~ n_node - 1
   vector<int> Gex;  // Gex is empty
-  PDAG2 Gend;
+  PDAG_nishikori Gend;
 
   recursive_search(data_vec, Gall, Gs, Gex, 0, n_states_vec, ESS, parallel,
                    threshold_DP, search_neighbor, do_orientation_A2, sep, sep2,
