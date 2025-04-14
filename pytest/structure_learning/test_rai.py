@@ -16,12 +16,12 @@ from modules.structural_distance import structural_errors
         ("child", openbnsllib.citest.ChiSquare(0.05), int(1e5), 0),  # 20 nodes
     ],
 )
-def test_pc(model_name, citest_type, sample_size, seed):
+def test_rai(model_name, citest_type, sample_size, seed):
     model_original = get_example_model(model_name)
     samples = model_original.simulate(sample_size, seed=seed)
     samples = samples[sorted(samples.columns)]
     df_wrapper = openbnsllib.base.DataframeWrapper(samples)
-    _pdag = openbnsllib.structure_learning.PC(df_wrapper, citest_type)
+    _pdag = openbnsllib.structure_learning.RAI(df_wrapper, citest_type)
     model_estimated = to_pgmpy(_pdag, list(samples.columns))
     errors = structural_errors(model_original, model_estimated)
 
