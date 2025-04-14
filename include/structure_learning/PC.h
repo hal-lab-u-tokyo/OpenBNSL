@@ -1,8 +1,14 @@
 #pragma once
-#include <pybind11/numpy.h>
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-namespace py = pybind11;
 
-py::array_t<bool> PC(py::array_t<int> data, py::array_t<int> n_states,
-                     double ESS);
+#include "base/PDAG.h"
+#include "base/dataframe_wrapper.h"
+#include "citest/citest_type.h"
+
+/**
+ * @brief A function to run the PC algorithm
+ *
+ * @param df A DataframeWrapper object
+ * @param max_parents The maximum number of parents for each node
+ * @return A PDAG object
+ */
+PDAG PC(const DataframeWrapper& df, const CITestType& ci_test_type);

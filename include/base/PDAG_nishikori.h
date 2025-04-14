@@ -3,19 +3,19 @@ using namespace std;
 
 #include <vector>
 
-struct PDAG2 {
+struct PDAG_nishikori {
   vector<vector<bool>> g;
   // コンストラクタ
-  PDAG2() {}
+  PDAG_nishikori() {}
   // コピーコンストラクタ
-  PDAG2(const PDAG2 &old) { g = old.g; }
+  PDAG_nishikori(const PDAG_nishikori &old) { g = old.g; }
   // 代入演算子
-  PDAG2 &operator=(const PDAG2 &a) {
+  PDAG_nishikori &operator=(const PDAG_nishikori &a) {
     if (this != &a) g = a.g;
     return *this;
   }
   // デストラクタ
-  ~PDAG2() = default;
+  ~PDAG_nishikori() = default;
 
   vector<int> successors(int i) {
     // return the list of successors of node i (include undirected edge)

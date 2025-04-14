@@ -1,7 +1,6 @@
 #include <pybind11/pybind11.h>
 
 #include "base/PDAG.h"
-#include "base/PDAG2.h"
 #include "base/contingency_table.h"
 #include "base/dataframe_wrapper.h"
 
@@ -44,6 +43,7 @@ void bind_base(py::module& m) {
   py::class_<PDAG>(submodule, "PDAG")
       .def(py::init<size_t>())
       .def(py::init<const PDAG&>())
+      .def_readonly("num_vars", &PDAG::num_vars)
       .def("has_edge", &PDAG::has_edge, py::arg("from"), py::arg("to"))
       .def("add_edge", &PDAG::add_edge, py::arg("from"), py::arg("to"))
       .def("remove_edge", &PDAG::remove_edge, py::arg("from"), py::arg("to"));

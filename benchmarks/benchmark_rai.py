@@ -15,8 +15,7 @@ import sys
 from modules.RAIEstimator_fixed import RAIEstimator, RAIEstimator_transitivity
 from modules.RAI_cpp import RAIEstimator_cpp
 from modules.PC_cpp import PCEstimator_cpp
-from modules.structural_distance import structural_errors, PDAG2CPDAG
-from modules.visualize_graph import display_graph_info as show
+from modules.structural_distance import _structural_errors, PDAG2CPDAG
 from modules.CITests_fixed import NatoriScore
 
 SAVE_DIR = "./save_benchmark_RAI.txt"
@@ -61,8 +60,7 @@ def do_benchmark(
         )
         calc_time += shorttime
         best_model_compare = PDAG2CPDAG(best_model)
-        # show(best_model_compare)
-        errors = structural_errors(comparemodel, best_model_compare)
+        errors = _structural_errors(comparemodel, best_model_compare)
         ave_score = [x + y for x, y in zip(ave_score, errors)]
     ave_score = [x / max_iter for x in ave_score]
     calc_time /= max_iter
