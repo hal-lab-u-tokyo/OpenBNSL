@@ -60,7 +60,7 @@ PDAG build_skeleton(const DataframeWrapper& df, const CITestType& citest_type) {
   return g;
 }
 
-PDAG PC2(const DataframeWrapper& df, const CITestType& citest_type) {
+PDAG PC(const DataframeWrapper& df, const CITestType& citest_type) {
   PDAG g = build_skeleton(df, citest_type);
 
   return g;

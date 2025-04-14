@@ -16,7 +16,7 @@ from modules.structural_distance import structural_errors
         ("child", openbnsllib.citest.ChiSquare(0.05), int(1e5), 0),  # 20 nodes
     ],
 )
-def test_pc2(model_name, citest_type, sample_size, seed):
+def test_pc(model_name, citest_type, sample_size, seed):
     model_original = get_example_model(model_name)
     samples = model_original.simulate(sample_size, seed=seed)
     samples = samples[sorted(samples.columns)]
