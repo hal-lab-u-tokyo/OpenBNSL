@@ -13,6 +13,12 @@ void bind_score(py::module& m) {
   py::class_<K2>(submodule, "K2")
       .def(py::init<>())
       .def("__repr__", [](const K2& k2) { return "K2()"; });
+  py::class_<BIC>(submodule, "BIC")
+      .def(py::init<>())
+      .def("__repr__", [](const BIC& bic) { return "BIC()"; });
+  py::class_<AIC>(submodule, "AIC")
+      .def(py::init<>())
+      .def("__repr__", [](const AIC& aic) { return "AIC()"; });
 
   submodule.def("calculate_local_score", &calculate_local_score<double>,
                 py::arg("child_var"), py::arg("parent_set"), py::arg("ct"),
