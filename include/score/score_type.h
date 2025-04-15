@@ -6,10 +6,10 @@ struct BDeu {
   BDeu(double ess = 1.0) : ess(ess) {}
 };
 struct K2 {};
-// struct BIC {};
-// struct AIC {};
+struct BIC {};
+struct AIC {};
 
-using ScoreType = std::variant<BDeu, K2>;
+using ScoreType = std::variant<BDeu, K2, BIC, AIC>;
 
 /**
  * @brief Check if the score type is of a specific type

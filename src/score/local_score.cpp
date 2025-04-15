@@ -9,6 +9,10 @@ template <typename T>
 T calculate_local_score(size_t child_var, const std::vector<size_t>& parent_set,
                         const ContingencyTable& ct,
                         const ScoreType& score_type) {
+  if ( is_type<BIC>(score_type) || is_type<AIC>(score_type) ) {
+    throw std::invalid_argument("Unsupported score type.");
+  }
+  
   size_t outer_size = 1, child_size = 1, inner_size = 1;
   for (size_t i = 0; i < ct.vars.size(); i++) {
     if (ct.vars[i] < child_var) {
