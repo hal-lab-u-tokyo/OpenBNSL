@@ -237,8 +237,7 @@ __device__ void ci_test_sc_level_n(double *mi, int n_data, int dim_s,
                                    int *contingency_table, int *N_i_j_s,
                                    int *N_i_s, int *N_j_s, int *N_s,
                                    bool *result, double *regret) {
-  double *r_ij = mi + 1;
-  double *r_ji = mi + 2;
+  double *r_ij = mi + 1, *r_ji = mi + 2;
   double mi_local = 0;
   double r_i = 0, r_ij_local = 0, r_j = 0, r_ji_local = 0;
   if (threadIdx.x == 0) {
@@ -246,7 +245,7 @@ __device__ void ci_test_sc_level_n(double *mi, int n_data, int dim_s,
   }
   for (int h = 0; h < dim_s; h++) {
     __syncthreads();
-    for (int k = threadIdx.x; k < n_i + n_j + 1; k += blockDim.x) {
+    for (int k = threadIdx.x; k < 2 * max_dim + 1; k += blockDim.x) {
       N_i_s[k] = 0;
     }
     __syncthreads();
@@ -272,11 +271,11 @@ __device__ void ci_test_sc_level_n(double *mi, int n_data, int dim_s,
       if (l == 0) {
         r_ji_local += regret[N_i_s[k] * max_dim + n_j - 1];
       }
-      if (N_i_j_s[lk]) {
-        double sum_term = static_cast<double>(N_i_j_s[lk]) / n_data *
-                          log2(static_cast<double>(*N_s) * N_i_j_s[lk] /
-                               (static_cast<double>(N_i_s[k]) * N_j_s[l]));
-        mi_local += sum_term;
+      double entry = N_i_j_s[lk];
+      if (entry) {
+        mi_local +=
+            entry / n_data *
+            log2(*N_s * entry / (static_cast<double>(N_i_s[k]) * N_j_s[l]));
       }
     }
   }
@@ -286,11 +285,74 @@ __device__ void ci_test_sc_level_n(double *mi, int n_data, int dim_s,
   __syncthreads();
   if (threadIdx.x == 0) {
     double threshold = min(*r_ij - r_i, *r_ji - r_j) / n_data;
-    if (threshold > 0) {
-      // printf("threshold: %.7lf\n", threshold);
-    } else {
-      // printf("r_i: %.7lf, r_ij: %.7lf, mi: %.7lf\n", *r_i, *r_ij, *mi);
+    // if (threshold > 0) {
+    //   // printf("threshold: %.7lf\n", threshold);
+    // } else {
+    //   // printf("r_i: %.7lf, r_ij: %.7lf, mi: %.7lf\n", *r_i, *r_ij, *mi);
+    // }
+    *result = (*mi <= threshold);
+  }
+}
+
+__device__ void ci_test_sc_level_1(double *mi, int n_data, int dim_s,
+                                   int dim_mul, int n_i, int n_j,
+                                   int *contingency_table, int *N_j_s_i,
+                                   int *N_j_i, int *N_s_i, int *N_i,
+                                   bool *result, double *regret) {
+  // I(X_j;S|X_i)
+  double *r_js = mi + 1, *r_sj = mi + 2;
+  double mi_local = 0;
+  double r_j = 0, r_js_local = 0, r_s = 0, r_sj_local = 0;
+  if (threadIdx.x == 0) {
+    *mi = *r_js = *r_sj = 0;
+  }
+
+  for (int h = 0; h < n_i; h++) {
+    __syncthreads();
+    for (int k = threadIdx.x; k < 2 * max_dim + 1; k += blockDim.x) {
+      N_j_i[k] = 0;
     }
+    __syncthreads();
+    for (int kl = threadIdx.x; kl < n_j * dim_s; kl += blockDim.x) {
+      int k = kl % n_j, l = kl / n_j;
+      int entry = contingency_table[kl * n_i + h];
+      N_j_s_i[kl] = entry;
+      atomicAdd(N_j_i + k, entry);
+      atomicAdd(N_s_i + l, entry);
+      atomicAdd(N_i, entry);
+    }
+    __syncthreads();
+    if (threadIdx.x == 0) {
+      r_j += regret[*N_i * max_dim + n_j - 1];
+      r_s += regret[*N_i * max_dim + dim_s - 1];
+    }
+    for (int kl = threadIdx.x; kl < n_j * dim_s; kl += blockDim.x) {
+      int k = kl % n_j, l = kl / n_j;
+      if (k == 0) {
+        r_js_local += regret[N_s_i[l] * max_dim + n_j - 1];
+      }
+      if (l == 0) {
+        r_sj_local += regret[N_j_i[k] * max_dim + dim_s - 1];
+      }
+      double entry = N_j_s_i[kl];
+      if (entry) {
+        mi_local +=
+            entry / n_data *
+            log2(*N_i * entry / (static_cast<double>(N_j_i[k]) * N_s_i[l]));
+      }
+    }
+  }
+  myAtomicAdd(mi, mi_local);
+  myAtomicAdd(r_js, r_js_local);
+  myAtomicAdd(r_sj, r_sj_local);
+  __syncthreads();
+  if (threadIdx.x == 0) {
+    double threshold = min(*r_js - r_j, *r_sj - r_s) / n_data;
+    // if (threshold > 0) {
+    //   // printf("threshold: %.7lf\n", threshold);
+    // } else {
+    //   // printf("r_i: %.7lf, r_ij: %.7lf, mi: %.7lf\n", *r_i, *r_ij, *mi);
+    // }
     *result = (*mi <= threshold);
   }
 }
@@ -369,16 +431,15 @@ __global__ void PC_level_n(int level, int n_node, int n_data, uint8_t *data,
     if (n_adj - 1 < level) {
       continue;
     }
-    int max_dim_s = pow(static_cast<double>(max_dim), level);
-    int contingency_table_size = max_dim_s * max_dim * max_dim;
+    int contingency_table_size = pow(static_cast<double>(max_dim), level + 2);
     int sepset_cnt = binom(n_adj, level + 1);
     int *sepset = smem + n_adj + 2;
     int *dim_mul = smem + n_adj + 2 + level + 1;
     int *contingency_table;
     if (use_working_memory) {
-      int thread_memory_index = gridDim.y * blockIdx.x + blockIdx.y;
       contingency_table =
-          working_memory + thread_memory_index * contingency_table_size;
+          working_memory +
+          (gridDim.y * blockIdx.x + blockIdx.y) * contingency_table_size;
     } else {
       contingency_table = smem + n_adj + 2 + (level + 1) * 2 +
                           max_dim * max_dim + 2 * max_dim + 1;
@@ -401,6 +462,14 @@ __global__ void PC_level_n(int level, int n_node, int n_data, uint8_t *data,
             dim_mul[k + 1] = dim_mul[k] * n_states[sepset[k]];
           }
         }
+        if (level == 1 && G[sepset[0] * n_node + sepset[1]]) {
+          if (i < sepset[0] && i < sepset[1]) {
+            *valid =
+                ((*valid == 1) || (G[sepset[0] * n_node + sepset[1]] == 1));
+          } else {
+            *valid = 0;
+          }
+        }
       }
       __syncthreads();
       if (*valid == 0) continue;
@@ -417,6 +486,37 @@ __global__ void PC_level_n(int level, int n_node, int n_data, uint8_t *data,
         }
         atomicAdd(contingency_table + s_idx * n_i + val_i, 1);
       }
+      int *N_i_j_s = smem + n_adj + 2 + (level + 1) * 2;
+      int *N_i_s = N_i_j_s + max_dim * max_dim;
+      int *N_j_s = N_i_s + max_dim;
+      int *N_s = N_j_s + max_dim;
+      int scratch_addr = n_adj + 2 + (level + 1) * 2 + max_dim * max_dim +
+                         2 * max_dim + 1 +
+                         (use_working_memory ? 0 : contingency_table_size);
+      scratch_addr = (scratch_addr + 1) / 2 * 2;
+      double *scratch_ptr = reinterpret_cast<double *>(smem + scratch_addr);
+      bool result;
+      if (level == 1) {
+        __syncthreads();
+        if (threadIdx.x == 0) {
+          *valid = (G[sepset[0] * n_node + sepset[1]] == 1);
+        }
+        __syncthreads();
+        if (*valid == 1) {
+          int j = sepset[0];
+          int n_j = n_states[j];
+          ci_test_sc_level_1(scratch_ptr, n_data, dim_s / n_j, dim_mul[0], n_i,
+                             n_j, contingency_table, N_i_j_s, N_i_s, N_j_s, N_s,
+                             &result, regret);
+          if (threadIdx.x == 0 && result) {
+            int k = sepset[1];
+            if (atomicCAS(G + j * n_node + k, 1, -1) == 1) {
+              G[k * n_node + j] = -1;
+              sepsets[(j * n_node + k) * max_level] = i;
+            }
+          }
+        }
+      }
       for (int idx_j = 0; idx_j < level + 1; idx_j++) {
         __syncthreads();
         int j = sepset[idx_j];
@@ -426,16 +526,6 @@ __global__ void PC_level_n(int level, int n_node, int n_data, uint8_t *data,
         __syncthreads();
         if (*valid == 0) continue;
         int n_j = n_states[j];
-        int *N_i_j_s = smem + n_adj + 2 + (level + 1) * 2;
-        int *N_i_s = N_i_j_s + n_i * n_j;
-        int *N_j_s = N_i_s + n_i;
-        int *N_s = N_j_s + n_j;
-        int scratch_addr = n_adj + 2 + (level + 1) * 2 + max_dim * max_dim +
-                           2 * max_dim + 1 +
-                           (use_working_memory ? 0 : contingency_table_size);
-        scratch_addr = (scratch_addr + 1) / 2 * 2;
-        double *scratch_ptr = reinterpret_cast<double *>(smem + scratch_addr);
-        bool result;
         ci_test_sc_level_n(scratch_ptr, n_data, dim_s / n_j, dim_mul[idx_j],
                            n_i, n_j, contingency_table, N_i_j_s, N_i_s, N_j_s,
                            N_s, &result, regret);
