@@ -45,7 +45,7 @@ def PCEstimator_cpp(model, data):
 
     print("timer start")
     start_time = time.perf_counter()
-    ansmat = openbnsllib.structure_learning.gpuPC(data_int, n_states, model_mat)
+    ansmat = openbnsllib.structure_learning.gpuPC3(data_int, n_states, model_mat)
     calc_time = time.perf_counter() - start_time
     print("ansmat = ", ansmat)
     print("calc_time = ", calc_time)

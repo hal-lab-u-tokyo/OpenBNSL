@@ -46,7 +46,7 @@ def main():
         for i in range(max_iter):
             print("iter: " + str(i))
             # model_original, data = load_data(data_type, 20000)
-            data = generate_sample(model_original, 200000)
+            data = generate_sample(model_original, 20000)
             model_estimated, calc_time = PCEstimator_cpp(model=model_original, data=data)
             # model_estimated2, _ = RAIEstimator_cpp(
             #     data=data,

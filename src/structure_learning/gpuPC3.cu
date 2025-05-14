@@ -36,6 +36,9 @@ __device__ bool ci_test_chi_squared_level_0(int n_data, int n_i, int n_j,
                                             int *contingency_matrix,
                                             int *marginals_i,
                                             int *marginals_j) {
+  if (n_i == 1 || n_j == 1) {
+    return true;
+  }
   double chi_squared = 0;
   for (int k = 0; k < n_i; k++) {
     for (int l = 0; l < n_j; l++) {
@@ -156,8 +159,8 @@ __global__ void PC_level_0(int n_node, int n_data, uint8_t *data, int *G,
         marginals_j[l] += entry;
       }
     }
-    bool result = ci_test_sc_level_0(n_data, n_i, n_j, contingency_matrix,
-                                     marginals_i, marginals_j, regret);
+    bool result = ci_test_chi_squared_level_0(
+        n_data, n_i, n_j, contingency_matrix, marginals_i, marginals_j);
     if (result) {
       G[i * n_node + j] = 0;
       G[j * n_node + i] = 0;
@@ -177,31 +180,131 @@ __global__ void PC_level_0(int n_node, int n_data, uint8_t *data, int *G,
 
 __device__ void ci_test_chi_squared_level_n(double *chi_squared, int n_data,
                                             int dim_s, int dim_mul, int n_i,
-                                            int n_j, int *N_i_j_s, int *N_i_s,
+                                            int n_j, int *contingency_table,
+                                            int *N_i_j_s, int *N_i_s,
                                             int *N_j_s, int *N_s,
                                             bool *result) {
+  int *alx = reinterpret_cast<int *>(chi_squared + 1);
+  int *aly = reinterpret_cast<int *>(chi_squared + 2);
+  int df = 0;
   if (threadIdx.x == 0) {
     *chi_squared = 0;
   }
-  __syncthreads();
-  for (int g = threadIdx.x; g < dim_s; g += blockDim.x) {
-    int h = g / dim_mul / n_j * dim_mul + g % dim_mul;
-    int l = (g / dim_mul) % n_j;
-    if (N_j_s[h * n_j + l] == 0) continue;
-    for (int k = 0; k < n_i; k++) {
-      double expected =
-          static_cast<double>(N_i_s[h * n_i + k]) * N_j_s[h * n_j + l] / N_s[h];
+  for (int h = 0; h < dim_s; h++) {
+    __syncthreads();
+    for (int k = threadIdx.x; k < 2 * max_dim + 1; k += blockDim.x) {
+      N_i_s[k] = 0;
+    }
+    __syncthreads();
+    for (int lk = threadIdx.x; lk < n_i * n_j; lk += blockDim.x) {
+      int l = lk / n_i, k = lk % n_i;
+      int g = (h / dim_mul) * dim_mul * n_j + l * dim_mul + h % dim_mul;
+      int entry = contingency_table[g * n_i + k];
+      N_i_j_s[lk] = entry;
+      atomicAdd(N_i_s + k, entry);
+      atomicAdd(N_j_s + l, entry);
+      atomicAdd(N_s, entry);
+    }
+    if (threadIdx.x == 0) {
+      *alx = *aly = 0;
+    }
+    __syncthreads();
+    if (*N_s == 0) continue;
+    for (int lk = threadIdx.x; lk < n_i * n_j; lk += blockDim.x) {
+      int l = lk / n_i, k = lk % n_i;
+      if (l == 0 && N_i_s[k] > 0) {
+        atomicAdd(alx, 1);
+      }
+      if (k == 0 && N_j_s[l] > 0) {
+        atomicAdd(aly, 1);
+      }
+      double expected = static_cast<double>(N_i_s[k]) * N_j_s[l] / *N_s;
       if (expected == 0) continue;
-      double observed = N_i_j_s[g * n_i + k];
+      double observed = N_i_j_s[lk];
       double sum_term =
           (observed - expected) * (observed - expected) / expected;
       myAtomicAdd(chi_squared, sum_term);
     }
+    __syncthreads();
+    if (threadIdx.x == 0) {
+      *alx = (*alx >= 1 ? *alx : 1);
+      *aly = (*aly >= 1 ? *aly : 1);
+      df += (*alx - 1) * (*aly - 1);
+    }
   }
   __syncthreads();
   if (threadIdx.x == 0) {
-    double pval = pchisq(*chi_squared, (n_i - 1) * (n_j - 1) * dim_s / n_j);
-    *result = (pval >= 0.01);
+    if (df == 0) {
+      *result = true;
+    } else {
+      double pval = pchisq(*chi_squared, df);
+      *result = (pval >= 0.01);
+    }
+  }
+}
+
+__device__ void ci_test_chi_squared_level_n_2(
+    double *chi_squared, int n_data, int dim_s, int dim_mul_i, int dim_mul_j,
+    int n_i, int n_j, int *contingency_table, int *N_i_j_s, int *N_i_s,
+    int *N_j_s, int *N_s, bool *result) {
+  int *alx = reinterpret_cast<int *>(chi_squared + 1);
+  int *aly = reinterpret_cast<int *>(chi_squared + 2);
+  int df = 0;
+  if (threadIdx.x == 0) {
+    *chi_squared = 0;
+  }
+  for (int h = 0; h < dim_s; h++) {
+    __syncthreads();
+    for (int k = threadIdx.x; k < 2 * max_dim + 1; k += blockDim.x) {
+      N_i_s[k] = 0;
+    }
+    __syncthreads();
+    for (int lk = threadIdx.x; lk < n_i * n_j; lk += blockDim.x) {
+      int l = lk / n_i, k = lk % n_i;
+      int g = (h / (dim_mul_j / n_i)) * dim_mul_j * n_j + l * dim_mul_j +
+              (h % (dim_mul_j / n_i)) / dim_mul_i * dim_mul_i * n_i +
+              k * dim_mul_i + h % dim_mul_i;
+      int entry = contingency_table[g];
+      N_i_j_s[lk] = entry;
+      atomicAdd(N_i_s + k, entry);
+      atomicAdd(N_j_s + l, entry);
+      atomicAdd(N_s, entry);
+    }
+    if (threadIdx.x == 0) {
+      *alx = *aly = 0;
+    }
+    __syncthreads();
+    if (*N_s == 0) continue;
+    for (int lk = threadIdx.x; lk < n_i * n_j; lk += blockDim.x) {
+      int l = lk / n_i, k = lk % n_i;
+      if (l == 0 && N_i_s[k] > 0) {
+        atomicAdd(alx, 1);
+      }
+      if (k == 0 && N_j_s[l] > 0) {
+        atomicAdd(aly, 1);
+      }
+      double expected = static_cast<double>(N_i_s[k]) * N_j_s[l] / *N_s;
+      if (expected == 0) continue;
+      double observed = N_i_j_s[lk];
+      double sum_term =
+          (observed - expected) * (observed - expected) / expected;
+      myAtomicAdd(chi_squared, sum_term);
+    }
+    __syncthreads();
+    if (threadIdx.x == 0) {
+      *alx = (*alx >= 1 ? *alx : 1);
+      *aly = (*aly >= 1 ? *aly : 1);
+      df += (*alx - 1) * (*aly - 1);
+    }
+  }
+  __syncthreads();
+  if (threadIdx.x == 0) {
+    if (df == 0) {
+      *result = true;
+    } else {
+      double pval = pchisq(*chi_squared, df);
+      *result = (pval >= 0.01);
+    }
   }
 }
 
@@ -597,10 +700,10 @@ __global__ void PC_level_n(int level, int n_node, int n_data, uint8_t *data,
           }
           int n_j = n_states[j];
           int n_k = n_states[k];
-          ci_test_sc_level_n_2(scratch_ptr, n_data, dim_s / n_j / n_k * n_i,
-                               dim_mul[idx_j] * n_i, dim_mul[idx_k] * n_i, n_j,
-                               n_k, contingency_table, N_i_j_s, N_i_s, N_j_s,
-                               N_s, &result, regret);
+          ci_test_chi_squared_level_n_2(
+              scratch_ptr, n_data, dim_s / n_j / n_k * n_i,
+              dim_mul[idx_j] * n_i, dim_mul[idx_k] * n_i, n_j, n_k,
+              contingency_table, N_i_j_s, N_i_s, N_j_s, N_s, &result);
           if (threadIdx.x == 0 && result) {
             if (atomicCAS(G + j * n_node + k, 1, -1) == 1) {
               G[k * n_node + j] = -1;
@@ -630,9 +733,9 @@ __global__ void PC_level_n(int level, int n_node, int n_data, uint8_t *data,
           stats[smid]++;
         }
         int n_j = n_states[j];
-        ci_test_sc_level_n(scratch_ptr, n_data, dim_s / n_j, dim_mul[idx_j],
-                           n_i, n_j, contingency_table, N_i_j_s, N_i_s, N_j_s,
-                           N_s, &result, regret);
+        ci_test_chi_squared_level_n(scratch_ptr, n_data, dim_s / n_j,
+                                    dim_mul[idx_j], n_i, n_j, contingency_table,
+                                    N_i_j_s, N_i_s, N_j_s, N_s, &result);
         if (threadIdx.x == 0 && result) {
           int ij_min = (i < j ? i : j);
           int ij_max = (i < j ? j : i);
