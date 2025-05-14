@@ -38,15 +38,16 @@ __device__ bool ci_test_chi_squared_level_0(int n_data, int n_i, int n_j,
                                             int *contingency_matrix,
                                             int *marginals_i,
                                             int *marginals_j) {
+  if (n_i == 1 || n_j == 1) {
+    return true;
+  }
   double chi_squared = 0;
   for (int k = 0; k < n_i; k++) {
     for (int l = 0; l < n_j; l++) {
       double expected =
           static_cast<double>(marginals_i[k]) * marginals_j[l] / n_data;
-      if (expected != 0) {
-        double observed = contingency_matrix[k * n_j + l];
-        chi_squared += (observed - expected) * (observed - expected) / expected;
-      }
+      double observed = contingency_matrix[k * n_j + l];
+      chi_squared += (observed - expected) * (observed - expected) / expected;
     }
   }
   double pval = pchisq(chi_squared, (n_i - 1) * (n_j - 1));
@@ -98,6 +99,27 @@ __device__ bool ci_test_sc_level_0(int n_data, int n_i, int n_j,
   return mi <= threshold;
 }
 
+__device__ bool ci_test_g2_level_0(int n_data, int n_i, int n_j,
+                                   int *contingency_matrix, int *marginals_i,
+                                   int *marginals_j) {
+  if (n_i == 1 || n_j == 1) {
+    return true;
+  }
+  double g2 = 0;
+  for (int k = 0; k < n_i; k++) {
+    for (int l = 0; l < n_j; l++) {
+      double expected =
+          static_cast<double>(marginals_i[k]) * marginals_j[l] / n_data;
+      double observed = contingency_matrix[k * n_j + l];
+      if (observed != 0) {
+        g2 += 2 * observed * log(observed / expected);
+      }
+    }
+  }
+  double pval = pchisq(g2, (n_i - 1) * (n_j - 1));
+  return pval >= 0.05;
+}
+
 __device__ bool ci_test_bayes_factor_level_0(int n_data, int n_i, int n_j,
                                              int *contingency_matrix,
                                              int *marginals_i,
@@ -125,7 +147,8 @@ __device__ bool ci_test_bayes_factor_level_0(int n_data, int n_i, int n_j,
 }
 
 __global__ void PC_level_0(int n_node, int n_data, uint8_t *data, int *G,
-                           int *n_states, double *regret) {
+                           int *n_states, double *regret, int *model,
+                           int *stats) {
   int i = blockIdx.x;
   int j = blockIdx.y;
   if (i >= j) {
@@ -157,8 +180,8 @@ __global__ void PC_level_0(int n_node, int n_data, uint8_t *data, int *G,
         marginals_j[l] += entry;
       }
     }
-    if (ci_test_sc_level_0(n_data, n_i, n_j, contingency_matrix, marginals_i,
-                           marginals_j, regret)) {
+    if (ci_test_chi_squared_level_0(n_data, n_i, n_j, contingency_matrix,
+                                    marginals_i, marginals_j)) {
       G[i * n_node + j] = 0;
       G[j * n_node + i] = 0;
     }
@@ -170,13 +193,21 @@ __device__ void ci_test_chi_squared_level_n(double *chi_squared, int n_data,
                                             int *N_i_j_s, int *N_i_s,
                                             int *N_j_s, int *N_s,
                                             bool *result) {
+  int *df = reinterpret_cast<int *>(chi_squared + 1);
   if (threadIdx.x == 0) {
     *chi_squared = 0;
+    *df = 0;
   }
   __syncthreads();
   for (int g = threadIdx.x; g < dim_s; g += blockDim.x) {
     if (N_s[g] == 0) continue;
+    int alx = 0, aly = 0;
+    for (int l = 0; l < n_j; l++) {
+      aly += (N_j_s[g * n_j + l] > 0);
+    }
     for (int k = 0; k < n_i; k++) {
+      if (!N_i_s[g * n_i + k]) continue;
+      alx++;
       for (int l = 0; l < n_j; l++) {
         double expected = static_cast<double>(N_i_s[g * n_i + k]) *
                           N_j_s[g * n_j + l] / N_s[g];
@@ -187,11 +218,18 @@ __device__ void ci_test_chi_squared_level_n(double *chi_squared, int n_data,
         myAtomicAdd(chi_squared, sum_term);
       }
     }
+    alx = (alx >= 1 ? alx : 1);
+    aly = (aly >= 1 ? aly : 1);
+    atomicAdd(df, (alx - 1) * (aly - 1));
   }
   __syncthreads();
   if (threadIdx.x == 0) {
-    double pval = pchisq(*chi_squared, (n_i - 1) * (n_j - 1) * dim_s);
-    *result = (pval >= 0.01);
+    if (*df == 0) {
+      *result = true;
+    } else {
+      double pval = pchisq(*chi_squared, *df);
+      *result = (pval >= 0.01);
+    }
   }
 }
 
@@ -275,6 +313,50 @@ __device__ void ci_test_sc_level_n(double *mi, int n_data, int dim_s, int n_i,
   }
 }
 
+__device__ void ci_test_g2_level_n(double *g2, int n_data, int dim_s, int n_i,
+                                   int n_j, int *N_i_j_s, int *N_i_s,
+                                   int *N_j_s, int *N_s, bool *result) {
+  int *df = reinterpret_cast<int *>(g2 + 1);
+  if (threadIdx.x == 0) {
+    *g2 = 0;
+    *df = 0;
+  }
+  __syncthreads();
+  for (int g = threadIdx.x; g < dim_s; g += blockDim.x) {
+    if (N_s[g] == 0) continue;
+    int alx = 0, aly = 0;
+    for (int l = 0; l < n_j; l++) {
+      aly += (N_j_s[g * n_j + l] > 0);
+    }
+    for (int k = 0; k < n_i; k++) {
+      if (!N_i_s[g * n_i + k]) continue;
+      alx++;
+      for (int l = 0; l < n_j; l++) {
+        double expected = static_cast<double>(N_i_s[g * n_i + k]) *
+                          N_j_s[g * n_j + l] / N_s[g];
+        if (expected == 0) continue;
+        double observed = N_i_j_s[g * n_i * n_j + k * n_j + l];
+        if (observed != 0) {
+          double sum_term = 2 * observed * log(observed / expected);
+          myAtomicAdd(g2, sum_term);
+        }
+      }
+    }
+    alx = (alx >= 1 ? alx : 1);
+    aly = (aly >= 1 ? aly : 1);
+    atomicAdd(df, (alx - 1) * (aly - 1));
+  }
+  __syncthreads();
+  if (threadIdx.x == 0) {
+    if (*df == 0) {
+      *result = true;
+    } else {
+      double pval = pchisq(*g2, *df);
+      *result = (pval >= 0.05);
+    }
+  }
+}
+
 __device__ void ci_test_bayes_factor_level_n(double *scratch_ptr, int n_data,
                                              int dim_s, int n_i, int n_j,
                                              int *N_i_j_s, int *N_i_s,
@@ -329,7 +411,8 @@ __device__ void ci_test_bayes_factor_level_n(double *scratch_ptr, int n_data,
 
 __global__ void PC_level_n(int level, int n_node, int n_data, uint8_t *data,
                            int *G, int *n_states, bool use_working_memory,
-                           int *working_memory, int *sepsets, double *regret) {
+                           int *working_memory, int *sepsets, double *regret,
+                           int *model, int *stats) {
   extern __shared__ int smem[];
   for (int i = blockIdx.x; i < n_node; i += gridDim.x) {
     for (int idx_j = blockIdx.y; idx_j < n_node; idx_j += gridDim.y) {
@@ -384,6 +467,9 @@ __global__ void PC_level_n(int level, int n_node, int n_data, uint8_t *data,
           for (int k = 0; k < level; k++) {
             sepset[k] = G_compacted[sepset[k] + 1];
           }
+          uint smid;
+          asm volatile("mov.u32 %0, %smid;" : "=r"(smid));
+          stats[smid]++;
         }
         __syncthreads();
         int dim_s = 1;
@@ -429,8 +515,8 @@ __global__ void PC_level_n(int level, int n_node, int n_data, uint8_t *data,
         double *scratch_ptr =
             reinterpret_cast<double *>(smem + scratch_addr) + ci_test_idx * 5;
         bool result;
-        ci_test_sc_level_n(scratch_ptr, n_data, dim_s, n_i, n_j, N_i_j_s, N_i_s,
-                           N_j_s, N_s, &result, regret);
+        ci_test_chi_squared_level_n(scratch_ptr, n_data, dim_s, n_i, n_j,
+                                    N_i_j_s, N_i_s, N_j_s, N_s, &result);
         if (threadIdx.x == 0 && result) {
           int ij_min = (i < j ? i : j);
           int ij_max = (i < j ? j : i);
@@ -448,7 +534,7 @@ __global__ void PC_level_n(int level, int n_node, int n_data, uint8_t *data,
 }
 
 PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
-              const vector<int> &n_states) {
+              const vector<int> &n_states, const vector<int> &model) {
   vector<int> G(n_node * n_node);
   for (int i = 0; i < n_node; i++) {
     for (int j = 0; j < n_node; j++) {
@@ -458,7 +544,8 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
   vector<int> sepsets(n_node * n_node * max_level, -1);
   uint8_t *data_d;
   vector<double> regret(n_data * max_dim * 2);
-  int *G_d, *n_states_d, *working_memory_d, *sepsets_d;
+  vector<int> stats(128);
+  int *G_d, *n_states_d, *working_memory_d, *sepsets_d, *model_d, *stats_d;
   double *regret_d;
   int size_G = sizeof(int) * n_node * n_node;
   int size_data = sizeof(uint8_t) * n_data * n_node;
@@ -466,18 +553,26 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
   int size_working_memory = sizeof(int) * 500'000'000;
   int size_sepsets = sizeof(int) * n_node * n_node * max_level;
   int size_regret = sizeof(double) * n_data * max_dim * 2;
+  int size_model = sizeof(int) * n_node * n_node * 2;
+  int size_stats = sizeof(int) * 128;
   CUDA_CHECK(cudaMalloc(&G_d, size_G));
   CUDA_CHECK(cudaMalloc(&data_d, size_data));
   CUDA_CHECK(cudaMalloc(&n_states_d, size_n_states));
   CUDA_CHECK(cudaMalloc(&working_memory_d, size_working_memory));
   CUDA_CHECK(cudaMalloc(&sepsets_d, size_sepsets));
   CUDA_CHECK(cudaMalloc(&regret_d, size_regret));
+  CUDA_CHECK(cudaMalloc(&model_d, size_model));
+  CUDA_CHECK(cudaMalloc(&stats_d, size_stats));
   CUDA_CHECK(
       cudaMemcpy(data_d, data.data(), size_data, cudaMemcpyHostToDevice));
   CUDA_CHECK(cudaMemcpy(n_states_d, n_states.data(), size_n_states,
                         cudaMemcpyHostToDevice));
   CUDA_CHECK(cudaMemcpy(sepsets_d, sepsets.data(), size_sepsets,
                         cudaMemcpyHostToDevice));
+  CUDA_CHECK(
+      cudaMemcpy(model_d, model.data(), size_model, cudaMemcpyHostToDevice));
+  CUDA_CHECK(
+      cudaMemcpy(stats_d, stats.data(), size_stats, cudaMemcpyHostToDevice));
 
   calc_regret<<<n_data / 1024 + 1, 1024>>>(regret_d);
   CUDA_CHECK(
@@ -496,13 +591,16 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
   uint64_t max_dim_s = 1;
   while (level <= n_node - 2) {
     CUDA_CHECK(cudaMemcpy(G_d, G.data(), size_G, cudaMemcpyHostToDevice));
+    stats = vector<int>(128);
+    CUDA_CHECK(
+        cudaMemcpy(stats_d, stats.data(), size_stats, cudaMemcpyHostToDevice));
     cout << "level: " << level << ", max_n_adj: " << max_n_adj << endl;
     if (level > max_level) break;
     if (level == 0) {
       dim3 threadsPerBlock(64);
       dim3 numBlocks(n_node, n_node);
-      PC_level_0<<<numBlocks, threadsPerBlock>>>(n_node, n_data, data_d, G_d,
-                                                 n_states_d, regret_d);
+      PC_level_0<<<numBlocks, threadsPerBlock>>>(
+          n_node, n_data, data_d, G_d, n_states_d, regret_d, model_d, stats_d);
     } else {
       dim3 threadsPerBlock(64, 2);
       dim3 numBlocks(n_node, max_n_adj);
@@ -518,7 +616,7 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
                                     (level + reserved_size_per_ci_test) * 2) +
                          sizeof(double) * (10 + 1)>>>(
             level, n_node, n_data, data_d, G_d, n_states_d, false, nullptr,
-            sepsets_d, regret_d);
+            sepsets_d, regret_d, model_d, stats_d);
       } else {
         uint64_t reserved_size_per_row =
             reserved_size_per_ci_test * 2 * max_n_adj;
@@ -537,9 +635,18 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
                      sizeof(int) * (max_n_adj + 2 + level * 2) +
                          sizeof(double) * (10 + 1)>>>(
             level, n_node, n_data, data_d, G_d, n_states_d, true,
-            working_memory_d, sepsets_d, regret_d);
+            working_memory_d, sepsets_d, regret_d, model_d, stats_d);
       }
     }
+    CUDA_CHECK(
+        cudaMemcpy(stats.data(), stats_d, size_stats, cudaMemcpyDeviceToHost));
+    // cout << "stats: " << stats[0] << ", " << stats[1] << ", " << stats[2]
+    //      << ", " << stats[3] << endl;
+    cout << "----stats: " << endl;
+    for (int i = 0; i < 128; i++) {
+      cout << i << ' ' << stats[i] << endl;
+    }
+    cout << "-----" << endl;
     CUDA_CHECK(cudaMemcpy(G.data(), G_d, size_G, cudaMemcpyDeviceToHost));
     max_n_adj = 0;
     int next_node_cnt = 0;
@@ -559,7 +666,7 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
       next_edge_cnt += n_adj;
     }
     cout << "next_node_cnt, next_edge_cnt: " << next_node_cnt << ", "
-         << next_edge_cnt << endl;
+         << next_edge_cnt / 2 << endl;
     if (max_n_adj - 1 <= level) break;
     level++;
     max_dim_s *= max_dim;
@@ -583,17 +690,21 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
   return G_pdag;
 }
 
-py::array_t<bool> gpuPC(py::array_t<uint8_t> data, py::array_t<int> n_states) {
+py::array_t<bool> gpuPC(py::array_t<uint8_t> data, py::array_t<int> n_states,
+                        py::array_t<bool> true_model) {
   // translate input data to c++ vector(this is not optimal but I don't know
   // how to use pybind11::array_t)
-  py::buffer_info buf_data = data.request(), buf_states = n_states.request();
+  py::buffer_info buf_data = data.request(), buf_states = n_states.request(),
+                  buf_model = true_model.request();
   const uint8_t *__restrict__ prt_data = static_cast<uint8_t *>(buf_data.ptr);
   const int *__restrict__ prt_states = static_cast<int *>(buf_states.ptr);
+  const bool *__restrict__ prt_model = static_cast<bool *>(buf_model.ptr);
   size_t n_data = buf_data.shape[0],
          n_node = buf_data.shape[1];  // number of nodes
   cout << "n_data, n_node: " << n_data << ' ' << n_node << endl;
   vector<uint8_t> data_vec(n_data * n_node);
   vector<int> n_states_vec(n_node);
+  vector<int> model_vec(2 * n_node * n_node);
   for (size_t i = 0; i < n_data; i++) {
     for (size_t j = 0; j < n_node; j++) {
       data_vec.at(j * n_data + i) = prt_data[i * n_node + j];
@@ -602,11 +713,29 @@ py::array_t<bool> gpuPC(py::array_t<uint8_t> data, py::array_t<int> n_states) {
   for (size_t i = 0; i < n_node; i++) {
     n_states_vec.at(i) = prt_states[i];
   }
+  for (size_t i = 0; i < n_node; i++) {
+    int cnt = 0;
+    for (size_t j = 0; j < n_node; j++) {
+      if (prt_model[i * n_node + j]) {
+        model_vec.at(i * n_node + (++cnt)) = j;
+      }
+    }
+    model_vec.at(i * n_node) = cnt;
+  }
+  for (size_t i = 0; i < n_node; i++) {
+    int cnt = 0;
+    for (size_t j = 0; j < n_node; j++) {
+      if (prt_model[j * n_node + i]) {
+        model_vec.at(n_node * n_node + i * n_node + (++cnt)) = j;
+      }
+    }
+    model_vec.at(n_node * n_node + i * n_node) = cnt;
+  }
   auto endg = py::array_t<bool>({n_node, n_node});
   py::buffer_info buf_endg = endg.request();
   bool *__restrict__ prt_endg = static_cast<bool *>(buf_endg.ptr);
 
-  PDAG Gend = PCsearch(n_node, n_data, data_vec, n_states_vec);
+  PDAG Gend = PCsearch(n_node, n_data, data_vec, n_states_vec, model_vec);
 
   // translate Gend to py::array_t (this is not optimal but I don't know how
   // to use pybind11::array_t)
