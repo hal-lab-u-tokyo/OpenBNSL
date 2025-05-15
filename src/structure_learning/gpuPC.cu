@@ -54,21 +54,6 @@ __device__ bool ci_test_chi_squared_level_0(int n_data, int n_i, int n_j,
   return pval >= 0.01;
 }
 
-__device__ bool ci_test_mi_level_0(int n_data, int n_i, int n_j,
-                                   int *contingency_matrix, int *marginals_i,
-                                   int *marginals_j) {
-  double mi = 0;
-  for (int k = 0; k < n_i; k++) {
-    for (int l = 0; l < n_j; l++) {
-      if (!contingency_matrix[k * n_j + l]) continue;
-      mi += static_cast<double>(contingency_matrix[k * n_j + l]) / n_data *
-            log2(static_cast<double>(n_data) * contingency_matrix[k * n_j + l] /
-                 (static_cast<double>(marginals_i[k]) * marginals_j[l]));
-    }
-  }
-  return mi < 0.003;
-}
-
 __device__ bool ci_test_sc_level_0(int n_data, int n_i, int n_j,
                                    int *contingency_matrix, int *marginals_i,
                                    int *marginals_j, double *regret) {
@@ -118,32 +103,6 @@ __device__ bool ci_test_g2_level_0(int n_data, int n_i, int n_j,
   }
   double pval = pchisq(g2, (n_i - 1) * (n_j - 1));
   return pval >= 0.05;
-}
-
-__device__ bool ci_test_bayes_factor_level_0(int n_data, int n_i, int n_j,
-                                             int *contingency_matrix,
-                                             int *marginals_i,
-                                             int *marginals_j) {
-  double independent_score = 0;
-  double dependent_score = 0;
-  const double alpha = 0.5;
-  for (int k = 0; k < n_i; k++) {
-    independent_score += lgamma(marginals_i[k] + alpha) - lgamma(alpha);
-  }
-  independent_score += lgamma(n_i * alpha) - lgamma(n_i * alpha + n_data);
-  for (int l = 0; l < n_j; l++) {
-    independent_score += lgamma(marginals_j[l] + alpha) - lgamma(alpha);
-  }
-  independent_score += lgamma(n_j * alpha) - lgamma(n_j * alpha + n_data);
-  for (int k = 0; k < n_i; k++) {
-    for (int l = 0; l < n_j; l++) {
-      dependent_score +=
-          lgamma(contingency_matrix[k * n_j + l] + alpha) - lgamma(alpha);
-    }
-  }
-  dependent_score +=
-      lgamma(n_i * n_j * alpha) - lgamma(n_i * n_j * alpha + n_data);
-  return independent_score > dependent_score - 1e-10;
 }
 
 __global__ void PC_level_0(int n_node, int n_data, uint8_t *data, int *G,
@@ -233,34 +192,6 @@ __device__ void ci_test_chi_squared_level_n(double *chi_squared, int n_data,
   }
 }
 
-__device__ void ci_test_mi_level_n(double *mi, int n_data, int dim_s, int n_i,
-                                   int n_j, int *N_i_j_s, int *N_i_s,
-                                   int *N_j_s, int *N_s, bool *result) {
-  if (threadIdx.x == 0) {
-    *mi = 0;
-  }
-  __syncthreads();
-  for (int g = threadIdx.x; g < dim_s; g += blockDim.x) {
-    if (N_s[g] == 0) continue;
-    for (int k = 0; k < n_i; k++) {
-      for (int l = 0; l < n_j; l++) {
-        if (!N_i_j_s[g * n_i * n_j + k * n_j + l]) continue;
-        double sum_term =
-            static_cast<double>(N_i_j_s[g * n_i * n_j + k * n_j + l]) / n_data *
-            log2(
-                static_cast<double>(N_s[g]) *
-                N_i_j_s[g * n_i * n_j + k * n_j + l] /
-                (static_cast<double>(N_i_s[g * n_i + k]) * N_j_s[g * n_j + l]));
-        myAtomicAdd(mi, sum_term);
-      }
-    }
-  }
-  __syncthreads();
-  if (threadIdx.x == 0) {
-    *result = (*mi < 0.003);
-  }
-}
-
 __device__ void ci_test_sc_level_n(double *mi, int n_data, int dim_s, int n_i,
                                    int n_j, int *N_i_j_s, int *N_i_s,
                                    int *N_j_s, int *N_s, bool *result,
@@ -334,7 +265,6 @@ __device__ void ci_test_g2_level_n(double *g2, int n_data, int dim_s, int n_i,
       for (int l = 0; l < n_j; l++) {
         double expected = static_cast<double>(N_i_s[g * n_i + k]) *
                           N_j_s[g * n_j + l] / N_s[g];
-        if (expected == 0) continue;
         double observed = N_i_j_s[g * n_i * n_j + k * n_j + l];
         if (observed != 0) {
           double sum_term = 2 * observed * log(observed / expected);
@@ -354,58 +284,6 @@ __device__ void ci_test_g2_level_n(double *g2, int n_data, int dim_s, int n_i,
       double pval = pchisq(*g2, *df);
       *result = (pval >= 0.05);
     }
-  }
-}
-
-__device__ void ci_test_bayes_factor_level_n(double *scratch_ptr, int n_data,
-                                             int dim_s, int n_i, int n_j,
-                                             int *N_i_j_s, int *N_i_s,
-                                             int *N_j_s, int *N_s,
-                                             bool *result) {
-  if (threadIdx.x == 0) {
-    *scratch_ptr = 0;
-  }
-  __syncthreads();
-  const double alpha = 0.5;
-  // independent score
-  for (int g = threadIdx.x; g < dim_s; g += blockDim.x) {
-    if (N_s[g] == 0) continue;
-    double sum_term = 0;
-    for (int k = 0; k < n_i; k++) {
-      sum_term += lgamma(N_i_s[g * n_i + k] + alpha) - lgamma(alpha);
-    }
-    sum_term += lgamma(n_i * alpha) - lgamma(n_i * alpha + N_s[g]);
-    for (int l = 0; l < n_j; l++) {
-      sum_term += lgamma(N_j_s[g * n_j + l] + alpha) - lgamma(alpha);
-    }
-    sum_term += lgamma(n_j * alpha) - lgamma(n_j * alpha + N_s[g]);
-    myAtomicAdd(scratch_ptr, sum_term);
-  }
-  __syncthreads();
-  double independent_score = *scratch_ptr;
-  // dependent score
-  if (threadIdx.x == 0) {
-    *scratch_ptr = 0;
-  }
-  __syncthreads();
-  for (int g = threadIdx.x; g < dim_s; g += blockDim.x) {
-    if (N_s[g] == 0) continue;
-    double sum_term = 0;
-    for (int k = 0; k < n_i; k++) {
-      for (int l = 0; l < n_j; l++) {
-        sum_term += lgamma(N_i_j_s[g * n_i * n_j + k * n_j + l] + alpha) -
-                    lgamma(alpha);
-      }
-    }
-    sum_term += lgamma(n_i * n_j * alpha) - lgamma(n_i * n_j * alpha + N_s[g]);
-    myAtomicAdd(scratch_ptr, sum_term);
-  }
-  __syncthreads();
-  double dependent_score = *scratch_ptr;
-  if (threadIdx.x == 0) {
-    // printf("independent_score: %.7lf, dependent_score: %.7lf\n",
-    //        independent_score, dependent_score);
-    *result = (independent_score > dependent_score - 1e-10);
   }
 }
 
