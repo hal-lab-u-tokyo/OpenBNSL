@@ -17,3 +17,4 @@ doxygen/build/
 sphinx/build/
 
 .cache/
+dataset/

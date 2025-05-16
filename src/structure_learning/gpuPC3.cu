@@ -474,7 +474,7 @@ __device__ void ci_test_g2_level_n(double *g2, int n_data, int dim_s,
       *result = true;
     } else {
       double pval = pchisq(*g2, df);
-      *result = (pval >= 0.01);
+      *result = (pval >= 0.05);
     }
   }
 }
@@ -540,7 +540,7 @@ __device__ void ci_test_g2_level_n_2(double *g2, int n_data, int dim_s,
       *result = true;
     } else {
       double pval = pchisq(*g2, df);
-      *result = (pval >= 0.01);
+      *result = (pval >= 0.05);
     }
   }
 }

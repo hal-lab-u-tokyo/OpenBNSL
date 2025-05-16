@@ -139,8 +139,8 @@ __global__ void PC_level_0(int n_node, int n_data, uint8_t *data, int *G,
         marginals_j[l] += entry;
       }
     }
-    if (ci_test_chi_squared_level_0(n_data, n_i, n_j, contingency_matrix,
-                                    marginals_i, marginals_j)) {
+    if (ci_test_g2_level_0(n_data, n_i, n_j, contingency_matrix, marginals_i,
+                           marginals_j)) {
       G[i * n_node + j] = 0;
       G[j * n_node + i] = 0;
     }
@@ -393,8 +393,8 @@ __global__ void PC_level_n(int level, int n_node, int n_data, uint8_t *data,
         double *scratch_ptr =
             reinterpret_cast<double *>(smem + scratch_addr) + ci_test_idx * 5;
         bool result;
-        ci_test_chi_squared_level_n(scratch_ptr, n_data, dim_s, n_i, n_j,
-                                    N_i_j_s, N_i_s, N_j_s, N_s, &result);
+        ci_test_g2_level_n(scratch_ptr, n_data, dim_s, n_i, n_j, N_i_j_s, N_i_s,
+                           N_j_s, N_s, &result);
         if (threadIdx.x == 0 && result) {
           int ij_min = (i < j ? i : j);
           int ij_max = (i < j ? j : i);
