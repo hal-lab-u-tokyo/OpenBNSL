@@ -1,4 +1,5 @@
 #include <cmath>
+#include <iomanip>
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -118,6 +119,11 @@ __global__ void PC_level_0(int n_node, int n_data, uint8_t *data, int *G,
   int n_j = n_states[j];
   for (int k = threadIdx.x; k < n_i * n_j; k += blockDim.x) {
     contingency_matrix[k] = 0;
+  }
+  if (threadIdx.x == 0) {
+    uint smid;
+    asm volatile("mov.u32 %0, %smid;" : "=r"(smid));
+    atomicAdd(stats + smid, 1);
   }
   __syncthreads();
   for (int k = threadIdx.x; k < n_data; k += blockDim.x) {
@@ -347,7 +353,7 @@ __global__ void PC_level_n(int level, int n_node, int n_data, uint8_t *data,
           }
           uint smid;
           asm volatile("mov.u32 %0, %smid;" : "=r"(smid));
-          stats[smid]++;
+          atomicAdd(stats + smid, 1);
         }
         __syncthreads();
         int dim_s = 1;
@@ -422,7 +428,7 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
   vector<int> sepsets(n_node * n_node * max_level, -1);
   uint8_t *data_d;
   vector<double> regret(n_data * max_dim * 2);
-  vector<int> stats(128);
+  vector<int> stats(sm_num);
   int *G_d, *n_states_d, *working_memory_d, *sepsets_d, *model_d, *stats_d;
   double *regret_d;
   int size_G = sizeof(int) * n_node * n_node;
@@ -432,7 +438,7 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
   int size_sepsets = sizeof(int) * n_node * n_node * max_level;
   int size_regret = sizeof(double) * n_data * max_dim * 2;
   int size_model = sizeof(int) * n_node * n_node * 2;
-  int size_stats = sizeof(int) * 128;
+  int size_stats = sizeof(int) * sm_num;
   CUDA_CHECK(cudaMalloc(&G_d, size_G));
   CUDA_CHECK(cudaMalloc(&data_d, size_data));
   CUDA_CHECK(cudaMalloc(&n_states_d, size_n_states));
@@ -455,25 +461,31 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
   calc_regret<<<n_data / 1024 + 1, 1024>>>(regret_d);
   CUDA_CHECK(
       cudaMemcpy(regret.data(), regret_d, size_regret, cudaMemcpyDeviceToHost));
-  cout << "---regret---" << endl;
-  for (int n = n_data - 10; n <= n_data; n++) {
-    for (int k = 1; k <= max_dim; k++) {
-      cout << regret[n * max_dim + k - 1] << " ";
-    }
-    cout << endl;
-  }
-  cout << "---" << endl;
+  // cout << "---regret---" << endl;
+  // for (int n = n_data - 10; n <= n_data; n++) {
+  //   for (int k = 1; k <= max_dim; k++) {
+  //     cout << regret[n * max_dim + k - 1] << " ";
+  //   }
+  //   cout << endl;
+  // }
+  // cout << "---" << endl;
+  vector<float> buf1;
+  vector<int> buf2;
+  cudaEvent_t start, stop;
+  CUDA_CHECK(cudaEventCreate(&start));
+  CUDA_CHECK(cudaEventCreate(&stop));
   // stage 1: Do CI tests between nodes and remove edge (undirected graph)
   int level = 0;
   int max_n_adj = n_node - 1;
   uint64_t max_dim_s = 1;
   while (level <= n_node - 2) {
     CUDA_CHECK(cudaMemcpy(G_d, G.data(), size_G, cudaMemcpyHostToDevice));
-    stats = vector<int>(128);
+    stats = vector<int>(sm_num);
     CUDA_CHECK(
         cudaMemcpy(stats_d, stats.data(), size_stats, cudaMemcpyHostToDevice));
     cout << "level: " << level << ", max_n_adj: " << max_n_adj << endl;
     if (level > max_level) break;
+    CUDA_CHECK(cudaEventRecord(start));
     if (level == 0) {
       dim3 threadsPerBlock(64);
       dim3 numBlocks(n_node, n_node);
@@ -518,13 +530,17 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
     }
     CUDA_CHECK(
         cudaMemcpy(stats.data(), stats_d, size_stats, cudaMemcpyDeviceToHost));
-    // cout << "stats: " << stats[0] << ", " << stats[1] << ", " << stats[2]
-    //      << ", " << stats[3] << endl;
-    cout << "----stats: " << endl;
-    for (int i = 0; i < 128; i++) {
-      cout << i << ' ' << stats[i] << endl;
-    }
-    cout << "-----" << endl;
+    CUDA_CHECK(cudaEventRecord(stop));
+    CUDA_CHECK(cudaEventSynchronize(stop));
+    float milliseconds = 0;
+    CUDA_CHECK(cudaEventElapsedTime(&milliseconds, start, stop));
+    buf1.push_back(milliseconds / 1000);
+    // cout << "----stats: " << endl;
+    // for (int i = 0; i < sm_num; i++) {
+    //   cout << i << ", " << stats[i] << endl;
+    // }
+    // cout << "-----" << endl;
+    buf2.push_back(accumulate(stats.begin(), stats.begin() + sm_num, 0));
     CUDA_CHECK(cudaMemcpy(G.data(), G_d, size_G, cudaMemcpyDeviceToHost));
     max_n_adj = 0;
     int next_node_cnt = 0;
@@ -556,6 +572,14 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
   CUDA_CHECK(cudaFree(n_states_d));
   CUDA_CHECK(cudaFree(working_memory_d));
   CUDA_CHECK(cudaFree(sepsets_d));
+  CUDA_CHECK(cudaEventDestroy(start));
+  CUDA_CHECK(cudaEventDestroy(stop));
+  for (float f : buf1) {
+    cout << fixed << setprecision(3) << f << endl;
+  }
+  for (int c : buf2) {
+    cout << c << endl;
+  }
   // stage 2: orient edges
   PDAG G_pdag;
   G_pdag.g = vector<vector<bool>>(n_node, vector<bool>(n_node));
