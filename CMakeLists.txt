@@ -12,6 +12,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall") 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
+# set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -O3")
 
 find_program(CCACHE_PROGRAM ccache)
 if (CCACHE_PROGRAM)
@@ -65,6 +66,7 @@ if (VERBOSE_OUTPUT)
     endforeach()
 endif()
 add_library(openbnsl_core STATIC ${SOURCES})
+# set_property(TARGET openbnsl_core PROPERTY CUDA_ARCHITECTURES OFF)
 set_target_properties(openbnsl_core PROPERTIES POSITION_INDEPENDENT_CODE ON)
 target_include_directories(openbnsl_core PUBLIC include)
 target_link_libraries(
