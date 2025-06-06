@@ -16,8 +16,13 @@ def get_list(line):
 
 def main():
     path = "/workspace/dataset/"
-    model_name = "munin"
-    set_size = 20000
+    gpuPC_type = sys.argv[1]
+    citest_type = 0 if sys.argv[2] == "g2" else 1
+    # model_name = "diabetes"
+    # set_size = 20000
+    model_name = sys.argv[3]
+    set_size = int(sys.argv[4])
+    print(gpuPC_type, citest_type, model_name, set_size)
     for set_id in range(10):
       print("set_id: " + str(set_id))
       file_name = path + model_name + "_" + str(set_id) + "_int_s400000"
@@ -39,7 +44,10 @@ def main():
 
       print("timer start")
       start_time = time.perf_counter()
-      ansmat = openbnsllib.structure_learning.gpuPC3(data_int, n_states, model_mat)
+      if gpuPC_type == "gpuPC":
+        ansmat = openbnsllib.structure_learning.gpuPC(citest_type, data_int, n_states, model_mat)
+      else:
+        ansmat = openbnsllib.structure_learning.gpuPC3(citest_type, data_int, n_states, model_mat)
       calc_time = time.perf_counter() - start_time
       # print("ansmat = ", ansmat)
       # print("calc_time = ", calc_time)

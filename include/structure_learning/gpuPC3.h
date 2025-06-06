@@ -5,6 +5,7 @@
 namespace py = pybind11;
 
 namespace cuda3 {
-py::array_t<bool> gpuPC3(py::array_t<uint8_t> data, py::array_t<int> n_states,
+py::array_t<bool> gpuPC3(int citest_type, py::array_t<uint8_t> data,
+                         py::array_t<int> n_states,
                          py::array_t<bool> true_model);
 }  // namespace cuda3
