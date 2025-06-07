@@ -1,0 +1,6420 @@
+gpuPC 0 link 20000
+set_id: 0
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 699, 38047
+level: 1, max_n_adj: 248
+next_node_cnt, next_edge_cnt: 366, 3079
+level: 2, max_n_adj: 44
+next_node_cnt, next_edge_cnt: 62, 663
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 650
+level: 4, max_n_adj: 16
+0.007
+0.169
+0.118
+0.063
+261726
+2323300
+584894
+52332
+675
+545
+70
+60
+32
+20
+8
+0.565
+set_id: 1
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 702, 38438
+level: 1, max_n_adj: 249
+next_node_cnt, next_edge_cnt: 379, 3187
+level: 2, max_n_adj: 46
+next_node_cnt, next_edge_cnt: 71, 665
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 27, 639
+level: 4, max_n_adj: 16
+0.007
+0.170
+0.122
+0.077
+261726
+2376004
+675600
+55750
+646
+545
+59
+42
+34
+5
+3
+0.426
+set_id: 2
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 696, 37835
+level: 1, max_n_adj: 268
+next_node_cnt, next_edge_cnt: 370, 3215
+level: 2, max_n_adj: 49
+next_node_cnt, next_edge_cnt: 57, 666
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 656
+level: 4, max_n_adj: 16
+0.007
+0.170
+0.121
+0.061
+261726
+2366182
+675638
+52238
+687
+545
+76
+66
+40
+20
+6
+0.41
+set_id: 3
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 693, 37973
+level: 1, max_n_adj: 244
+next_node_cnt, next_edge_cnt: 354, 3163
+level: 2, max_n_adj: 46
+next_node_cnt, next_edge_cnt: 62, 659
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 644
+level: 4, max_n_adj: 16
+0.007
+0.170
+0.118
+0.069
+261726
+2332142
+694276
+55534
+667
+545
+64
+58
+34
+19
+5
+0.424
+set_id: 4
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 697, 37780
+level: 1, max_n_adj: 248
+next_node_cnt, next_edge_cnt: 376, 3210
+level: 2, max_n_adj: 46
+next_node_cnt, next_edge_cnt: 69, 669
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 27, 647
+level: 4, max_n_adj: 16
+0.007
+0.173
+0.124
+0.064
+261726
+2370718
+676074
+53916
+659
+545
+67
+47
+37
+5
+5
+0.418
+set_id: 5
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 700, 38193
+level: 1, max_n_adj: 253
+next_node_cnt, next_edge_cnt: 373, 3135
+level: 2, max_n_adj: 43
+next_node_cnt, next_edge_cnt: 61, 664
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 647
+level: 4, max_n_adj: 16
+0.007
+0.173
+0.118
+0.060
+261726
+2350720
+599510
+52258
+661
+545
+67
+49
+31
+14
+4
+0.415
+set_id: 6
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 695, 37710
+level: 1, max_n_adj: 252
+next_node_cnt, next_edge_cnt: 385, 3159
+level: 2, max_n_adj: 47
+next_node_cnt, next_edge_cnt: 72, 676
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 27, 657
+level: 4, max_n_adj: 16
+0.007
+0.172
+0.110
+0.070
+261726
+2343290
+667560
+55534
+678
+545
+77
+56
+36
+14
+6
+0.414
+set_id: 7
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 700, 38290
+level: 1, max_n_adj: 254
+next_node_cnt, next_edge_cnt: 377, 3156
+level: 2, max_n_adj: 47
+next_node_cnt, next_edge_cnt: 63, 657
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 643
+level: 4, max_n_adj: 16
+0.007
+0.174
+0.110
+0.064
+261726
+2363336
+649020
+52284
+648
+545
+63
+40
+30
+8
+2
+0.415
+set_id: 8
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 698, 39037
+level: 1, max_n_adj: 255
+next_node_cnt, next_edge_cnt: 372, 3262
+level: 2, max_n_adj: 46
+next_node_cnt, next_edge_cnt: 63, 666
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 651
+level: 4, max_n_adj: 16
+0.007
+0.179
+0.128
+0.076
+261726
+2442388
+673818
+55574
+670
+545
+71
+54
+38
+11
+5
+0.455
+set_id: 9
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 687, 35774
+level: 1, max_n_adj: 236
+next_node_cnt, next_edge_cnt: 364, 3103
+level: 2, max_n_adj: 43
+next_node_cnt, next_edge_cnt: 67, 668
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 647
+level: 4, max_n_adj: 16
+0.007
+0.155
+0.099
+0.062
+261726
+2173936
+605600
+52436
+655
+545
+67
+43
+27
+12
+4
+0.372
+gpuPC 0 link 40000
+set_id: 0
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 705, 41769
+level: 1, max_n_adj: 263
+next_node_cnt, next_edge_cnt: 379, 3944
+level: 2, max_n_adj: 59
+next_node_cnt, next_edge_cnt: 64, 658
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 27, 648
+level: 4, max_n_adj: 16
+0.011
+0.375
+0.319
+0.092
+261726
+3075486
+1216026
+52260
+650
+545
+68
+37
+31
+4
+2
+1.058
+set_id: 1
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 713, 42309
+level: 1, max_n_adj: 273
+next_node_cnt, next_edge_cnt: 376, 3869
+level: 2, max_n_adj: 59
+next_node_cnt, next_edge_cnt: 77, 673
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 27, 646
+level: 4, max_n_adj: 16
+0.011
+0.370
+0.306
+0.098
+261726
+3015910
+1215330
+55738
+656
+545
+66
+45
+29
+9
+7
+0.86
+set_id: 2
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 710, 43254
+level: 1, max_n_adj: 281
+next_node_cnt, next_edge_cnt: 404, 4029
+level: 2, max_n_adj: 61
+next_node_cnt, next_edge_cnt: 73, 675
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 655
+level: 4, max_n_adj: 16
+0.018
+0.384
+0.326
+0.093
+261726
+3195296
+1261388
+52406
+678
+545
+75
+58
+40
+12
+6
+0.909
+set_id: 3
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 706, 41306
+level: 1, max_n_adj: 259
+next_node_cnt, next_edge_cnt: 385, 3832
+level: 2, max_n_adj: 63
+next_node_cnt, next_edge_cnt: 66, 667
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 650
+level: 4, max_n_adj: 16
+0.019
+0.350
+0.277
+0.096
+261726
+2908858
+1145144
+52366
+662
+545
+70
+47
+33
+13
+1
+0.834
+set_id: 4
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 712, 41666
+level: 1, max_n_adj: 258
+next_node_cnt, next_edge_cnt: 389, 3819
+level: 2, max_n_adj: 54
+next_node_cnt, next_edge_cnt: 60, 652
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 27, 643
+level: 4, max_n_adj: 16
+0.018
+0.355
+0.264
+0.091
+261726
+2925996
+1118538
+52274
+648
+545
+63
+40
+30
+8
+2
+0.821
+set_id: 5
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 712, 42141
+level: 1, max_n_adj: 273
+next_node_cnt, next_edge_cnt: 392, 3871
+level: 2, max_n_adj: 57
+next_node_cnt, next_edge_cnt: 61, 661
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 648
+level: 4, max_n_adj: 16
+0.018
+0.365
+0.281
+0.099
+261726
+2995792
+1087190
+52324
+662
+545
+68
+49
+33
+13
+3
+0.839
+set_id: 6
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 709, 42092
+level: 1, max_n_adj: 265
+next_node_cnt, next_edge_cnt: 376, 3922
+level: 2, max_n_adj: 62
+next_node_cnt, next_edge_cnt: 58, 650
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 640
+level: 4, max_n_adj: 16
+0.018
+0.372
+0.332
+0.085
+261726
+3002852
+1220046
+52304
+648
+545
+60
+43
+35
+4
+4
+0.878
+set_id: 7
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 709, 42537
+level: 1, max_n_adj: 267
+next_node_cnt, next_edge_cnt: 383, 3822
+level: 2, max_n_adj: 57
+next_node_cnt, next_edge_cnt: 59, 649
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 27, 640
+level: 4, max_n_adj: 16
+0.018
+0.373
+0.273
+0.094
+261726
+3015032
+1088678
+52328
+650
+545
+60
+45
+37
+5
+3
+0.834
+set_id: 8
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 708, 41843
+level: 1, max_n_adj: 261
+next_node_cnt, next_edge_cnt: 369, 3967
+level: 2, max_n_adj: 58
+next_node_cnt, next_edge_cnt: 61, 657
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 645
+level: 4, max_n_adj: 16
+0.018
+0.365
+0.312
+0.090
+261726
+2996864
+1174502
+52320
+660
+545
+65
+50
+36
+9
+5
+0.859
+set_id: 9
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 705, 41663
+level: 1, max_n_adj: 266
+next_node_cnt, next_edge_cnt: 382, 3940
+level: 2, max_n_adj: 62
+next_node_cnt, next_edge_cnt: 62, 657
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 648
+level: 4, max_n_adj: 16
+0.017
+0.368
+0.305
+0.087
+261726
+3027506
+1291722
+52324
+658
+545
+68
+45
+33
+10
+2
+0.849
+gpuPC 0 link 100000
+set_id: 0
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 721, 46395
+level: 1, max_n_adj: 278
+next_node_cnt, next_edge_cnt: 401, 4948
+level: 2, max_n_adj: 80
+next_node_cnt, next_edge_cnt: 56, 657
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 27, 647
+level: 4, max_n_adj: 16
+0.044
+1.108
+1.307
+0.186
+261726
+3909094
+2257836
+52224
+662
+545
+67
+50
+34
+10
+6
+3.014
+set_id: 1
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 722, 46664
+level: 1, max_n_adj: 277
+next_node_cnt, next_edge_cnt: 394, 4994
+level: 2, max_n_adj: 81
+next_node_cnt, next_edge_cnt: 59, 656
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 644
+level: 4, max_n_adj: 16
+0.044
+1.120
+1.391
+0.232
+261726
+3956344
+2375914
+53936
+656
+545
+64
+47
+31
+13
+3
+2.99
+set_id: 2
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 722, 47233
+level: 1, max_n_adj: 290
+next_node_cnt, next_edge_cnt: 413, 5044
+level: 2, max_n_adj: 80
+next_node_cnt, next_edge_cnt: 70, 668
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 648
+level: 4, max_n_adj: 16
+0.044
+1.131
+1.396
+0.174
+261726
+3993892
+2370368
+52588
+662
+545
+68
+49
+37
+8
+4
+2.917
+set_id: 3
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 720, 45987
+level: 1, max_n_adj: 274
+next_node_cnt, next_edge_cnt: 403, 4973
+level: 2, max_n_adj: 81
+next_node_cnt, next_edge_cnt: 79, 679
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 27, 648
+level: 4, max_n_adj: 16
+0.044
+1.074
+1.348
+0.202
+261726
+3799080
+2307242
+57238
+653
+545
+68
+40
+32
+7
+1
+2.858
+set_id: 4
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 47008
+level: 1, max_n_adj: 275
+next_node_cnt, next_edge_cnt: 415, 4847
+level: 2, max_n_adj: 73
+next_node_cnt, next_edge_cnt: 60, 680
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 668
+level: 4, max_n_adj: 16
+0.044
+1.076
+1.165
+0.197
+261726
+3827742
+2117288
+52292
+686
+545
+88
+53
+35
+13
+5
+2.652
+set_id: 5
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 722, 47340
+level: 1, max_n_adj: 287
+next_node_cnt, next_edge_cnt: 400, 5116
+level: 2, max_n_adj: 80
+next_node_cnt, next_edge_cnt: 66, 653
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 634
+level: 4, max_n_adj: 16
+0.044
+1.136
+1.390
+0.180
+261726
+4018798
+2398508
+52366
+636
+545
+54
+37
+31
+3
+3
+2.945
+set_id: 6
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 46834
+level: 1, max_n_adj: 277
+next_node_cnt, next_edge_cnt: 409, 5025
+level: 2, max_n_adj: 85
+next_node_cnt, next_edge_cnt: 75, 674
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 28, 649
+level: 4, max_n_adj: 16
+0.044
+1.089
+1.419
+0.181
+261726
+3859062
+2297778
+52540
+659
+545
+69
+45
+35
+7
+3
+2.906
+set_id: 7
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 720, 46183
+level: 1, max_n_adj: 275
+next_node_cnt, next_edge_cnt: 385, 4961
+level: 2, max_n_adj: 84
+next_node_cnt, next_edge_cnt: 71, 662
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 644
+level: 4, max_n_adj: 16
+0.044
+1.093
+1.404
+0.205
+261726
+3859760
+2338276
+52424
+651
+545
+64
+42
+36
+4
+2
+2.938
+set_id: 8
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 717, 45949
+level: 1, max_n_adj: 279
+next_node_cnt, next_edge_cnt: 393, 5107
+level: 2, max_n_adj: 93
+next_node_cnt, next_edge_cnt: 69, 660
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 639
+level: 4, max_n_adj: 16
+0.044
+1.115
+1.491
+0.211
+261726
+3949782
+2510118
+55682
+640
+545
+59
+36
+30
+4
+2
+3.032
+set_id: 9
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 720, 46779
+level: 1, max_n_adj: 283
+next_node_cnt, next_edge_cnt: 392, 5000
+level: 2, max_n_adj: 81
+next_node_cnt, next_edge_cnt: 71, 662
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 643
+level: 4, max_n_adj: 16
+0.044
+1.102
+1.337
+0.176
+261726
+3900300
+2414858
+53768
+652
+545
+63
+44
+36
+5
+3
+2.848
+gpuPC 0 link 200000
+set_id: 0
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 48541
+level: 1, max_n_adj: 285
+next_node_cnt, next_edge_cnt: 422, 5698
+level: 2, max_n_adj: 98
+next_node_cnt, next_edge_cnt: 62, 659
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 643
+level: 4, max_n_adj: 16
+0.101
+2.698
+4.014
+0.339
+261726
+4474290
+3708382
+52416
+657
+545
+63
+49
+31
+13
+5
+7.605
+set_id: 1
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 49028
+level: 1, max_n_adj: 284
+next_node_cnt, next_edge_cnt: 428, 5807
+level: 2, max_n_adj: 97
+next_node_cnt, next_edge_cnt: 70, 668
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 27, 651
+level: 4, max_n_adj: 16
+0.101
+2.766
+3.961
+0.396
+261726
+4565578
+3719740
+54102
+671
+544
+70
+57
+40
+13
+4
+7.479
+set_id: 2
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 48837
+level: 1, max_n_adj: 282
+next_node_cnt, next_edge_cnt: 437, 5760
+level: 2, max_n_adj: 99
+next_node_cnt, next_edge_cnt: 64, 668
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 657
+level: 4, max_n_adj: 16
+0.098
+2.704
+3.958
+0.339
+261726
+4490124
+3599890
+52374
+680
+545
+77
+58
+34
+18
+6
+7.366
+set_id: 3
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 49107
+level: 1, max_n_adj: 285
+next_node_cnt, next_edge_cnt: 416, 5712
+level: 2, max_n_adj: 93
+next_node_cnt, next_edge_cnt: 69, 661
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 643
+level: 4, max_n_adj: 16
+0.098
+2.709
+3.744
+0.328
+261726
+4500212
+3626030
+53934
+659
+545
+63
+51
+31
+15
+5
+7.194
+set_id: 4
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 48652
+level: 1, max_n_adj: 285
+next_node_cnt, next_edge_cnt: 419, 5610
+level: 2, max_n_adj: 94
+next_node_cnt, next_edge_cnt: 55, 657
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 650
+level: 4, max_n_adj: 16
+0.098
+2.697
+3.681
+0.341
+261726
+4454268
+3357340
+52208
+668
+545
+70
+53
+37
+11
+5
+7.089
+set_id: 5
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 48684
+level: 1, max_n_adj: 281
+next_node_cnt, next_edge_cnt: 425, 5771
+level: 2, max_n_adj: 99
+next_node_cnt, next_edge_cnt: 73, 662
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 645
+level: 4, max_n_adj: 16
+0.097
+2.707
+4.069
+0.343
+261726
+4505370
+3654070
+52468
+667
+545
+65
+57
+37
+12
+8
+7.469
+set_id: 6
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 49143
+level: 1, max_n_adj: 290
+next_node_cnt, next_edge_cnt: 416, 5742
+level: 2, max_n_adj: 106
+next_node_cnt, next_edge_cnt: 73, 674
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 27, 648
+level: 4, max_n_adj: 16
+0.098
+2.708
+4.250
+0.350
+261726
+4489652
+3600876
+52616
+662
+545
+68
+49
+35
+10
+4
+7.684
+set_id: 7
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 48376
+level: 1, max_n_adj: 287
+next_node_cnt, next_edge_cnt: 406, 5762
+level: 2, max_n_adj: 96
+next_node_cnt, next_edge_cnt: 66, 651
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 631
+level: 4, max_n_adj: 16
+0.101
+2.729
+3.939
+0.360
+261726
+4514346
+3738864
+53836
+639
+545
+51
+43
+31
+9
+3
+7.437
+set_id: 8
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 48322
+level: 1, max_n_adj: 284
+next_node_cnt, next_edge_cnt: 414, 5721
+level: 2, max_n_adj: 98
+next_node_cnt, next_edge_cnt: 66, 661
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 27, 649
+level: 4, max_n_adj: 16
+0.099
+2.694
+3.759
+0.353
+261726
+4466596
+3658866
+55614
+661
+545
+69
+47
+31
+10
+6
+7.174
+set_id: 9
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 48740
+level: 1, max_n_adj: 287
+next_node_cnt, next_edge_cnt: 415, 5717
+level: 2, max_n_adj: 94
+next_node_cnt, next_edge_cnt: 61, 657
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 646
+level: 4, max_n_adj: 16
+0.098
+2.723
+3.679
+0.363
+261726
+4501206
+3594658
+53694
+667
+545
+66
+56
+34
+17
+5
+7.177
+gpuPC 0 link 400000
+set_id: 0
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50120
+level: 1, max_n_adj: 300
+next_node_cnt, next_edge_cnt: 445, 6200
+level: 2, max_n_adj: 108
+next_node_cnt, next_edge_cnt: 62, 661
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 645
+level: 4, max_n_adj: 16
+0.218
+7.227
+10.577
+0.627
+261726
+4936346
+5032940
+52428
+661
+545
+65
+51
+29
+15
+7
+19.522
+set_id: 1
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50055
+level: 1, max_n_adj: 294
+next_node_cnt, next_edge_cnt: 439, 6237
+level: 2, max_n_adj: 109
+next_node_cnt, next_edge_cnt: 57, 658
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 28, 646
+level: 4, max_n_adj: 16
+0.224
+7.237
+10.381
+0.698
+261726
+4929776
+5039834
+52292
+658
+545
+66
+47
+33
+11
+3
+19.291
+set_id: 2
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50260
+level: 1, max_n_adj: 307
+next_node_cnt, next_edge_cnt: 450, 6150
+level: 2, max_n_adj: 106
+next_node_cnt, next_edge_cnt: 61, 668
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 656
+level: 4, max_n_adj: 16
+0.231
+7.219
+10.278
+0.702
+261726
+4911334
+4914024
+52290
+679
+544
+75
+60
+37
+16
+7
+19.152
+set_id: 3
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50401
+level: 1, max_n_adj: 288
+next_node_cnt, next_edge_cnt: 440, 6202
+level: 2, max_n_adj: 105
+next_node_cnt, next_edge_cnt: 63, 673
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 657
+level: 4, max_n_adj: 16
+0.221
+7.282
+10.340
+0.684
+261726
+4943294
+4908674
+52420
+675
+545
+77
+53
+35
+12
+6
+19.273
+set_id: 4
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50020
+level: 1, max_n_adj: 289
+next_node_cnt, next_edge_cnt: 433, 6134
+level: 2, max_n_adj: 103
+next_node_cnt, next_edge_cnt: 65, 656
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 641
+level: 4, max_n_adj: 16
+0.225
+7.197
+9.676
+0.646
+261726
+4877002
+4659038
+52330
+648
+545
+61
+42
+34
+6
+2
+18.487
+set_id: 5
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50336
+level: 1, max_n_adj: 291
+next_node_cnt, next_edge_cnt: 433, 6151
+level: 2, max_n_adj: 104
+next_node_cnt, next_edge_cnt: 75, 668
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 27, 651
+level: 4, max_n_adj: 16
+0.225
+7.270
+10.193
+0.700
+261726
+4940484
+4781572
+54014
+666
+545
+71
+50
+32
+13
+5
+19.107
+set_id: 6
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50326
+level: 1, max_n_adj: 297
+next_node_cnt, next_edge_cnt: 429, 6189
+level: 2, max_n_adj: 107
+next_node_cnt, next_edge_cnt: 64, 671
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 27, 656
+level: 4, max_n_adj: 16
+0.223
+7.226
+10.108
+0.834
+261726
+4904382
+4820136
+55616
+683
+545
+76
+62
+38
+18
+6
+19.135
+set_id: 7
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50368
+level: 1, max_n_adj: 293
+next_node_cnt, next_edge_cnt: 417, 6142
+level: 2, max_n_adj: 105
+next_node_cnt, next_edge_cnt: 63, 648
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 633
+level: 4, max_n_adj: 16
+0.229
+7.277
+10.258
+0.664
+261726
+4943494
+4890784
+53708
+650
+545
+53
+52
+30
+17
+5
+19.158
+set_id: 8
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50281
+level: 1, max_n_adj: 298
+next_node_cnt, next_edge_cnt: 427, 6126
+level: 2, max_n_adj: 106
+next_node_cnt, next_edge_cnt: 71, 659
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 27, 642
+level: 4, max_n_adj: 16
+0.221
+7.189
+10.590
+0.769
+261726
+4905358
+4913528
+55724
+651
+545
+62
+44
+30
+10
+4
+19.48
+set_id: 9
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50272
+level: 1, max_n_adj: 295
+next_node_cnt, next_edge_cnt: 449, 6174
+level: 2, max_n_adj: 106
+next_node_cnt, next_edge_cnt: 73, 666
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 27, 650
+level: 4, max_n_adj: 16
+0.222
+7.243
+10.049
+0.781
+261726
+4934194
+4823214
+57070
+668
+545
+70
+53
+33
+14
+6
+19.022
+gpuPC 1 link 20000
+set_id: 0
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 699, 34904
+level: 1, max_n_adj: 284
+next_node_cnt, next_edge_cnt: 277, 1962
+level: 2, max_n_adj: 38
+next_node_cnt, next_edge_cnt: 40, 587
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 584
+level: 4, max_n_adj: 16
+0.007
+0.132
+0.052
+0.053
+261726
+1748124
+268524
+52194
+555
+545
+4
+6
+0
+3
+3
+0.465
+set_id: 1
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 702, 35623
+level: 1, max_n_adj: 288
+next_node_cnt, next_edge_cnt: 290, 2081
+level: 2, max_n_adj: 35
+next_node_cnt, next_edge_cnt: 38, 589
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 589
+level: 4, max_n_adj: 16
+0.007
+0.137
+0.048
+0.051
+261726
+1817306
+324428
+52040
+567
+545
+9
+13
+1
+7
+5
+0.301
+set_id: 2
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 696, 34533
+level: 1, max_n_adj: 311
+next_node_cnt, next_edge_cnt: 284, 2067
+level: 2, max_n_adj: 35
+next_node_cnt, next_edge_cnt: 69, 616
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+0.007
+0.132
+0.047
+0.062
+261726
+1759526
+316626
+54052
+547
+545
+2
+0
+0
+0
+0
+0.297
+set_id: 3
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 693, 33487
+level: 1, max_n_adj: 304
+next_node_cnt, next_edge_cnt: 272, 2103
+level: 2, max_n_adj: 38
+next_node_cnt, next_edge_cnt: 40, 592
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 589
+level: 4, max_n_adj: 16
+0.007
+0.131
+0.058
+0.055
+261726
+1722798
+334350
+52328
+564
+545
+9
+10
+2
+6
+2
+0.307
+set_id: 4
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 697, 34806
+level: 1, max_n_adj: 287
+next_node_cnt, next_edge_cnt: 277, 2071
+level: 2, max_n_adj: 36
+next_node_cnt, next_edge_cnt: 51, 599
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 585
+level: 4, max_n_adj: 16
+0.007
+0.136
+0.048
+0.058
+261726
+1780830
+308936
+53100
+555
+545
+5
+5
+1
+3
+1
+0.295
+set_id: 5
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 700, 35401
+level: 1, max_n_adj: 283
+next_node_cnt, next_edge_cnt: 288, 2002
+level: 2, max_n_adj: 32
+next_node_cnt, next_edge_cnt: 40, 587
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 585
+level: 4, max_n_adj: 16
+0.007
+0.135
+0.047
+0.054
+261726
+1786326
+284570
+52056
+557
+545
+5
+7
+1
+4
+2
+0.29
+set_id: 6
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 695, 34192
+level: 1, max_n_adj: 296
+next_node_cnt, next_edge_cnt: 284, 2069
+level: 2, max_n_adj: 35
+next_node_cnt, next_edge_cnt: 52, 605
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 587
+level: 4, max_n_adj: 16
+0.007
+0.135
+0.050
+0.063
+261726
+1744570
+324708
+56250
+562
+545
+7
+10
+2
+5
+3
+0.3
+set_id: 7
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 700, 35177
+level: 1, max_n_adj: 294
+next_node_cnt, next_edge_cnt: 280, 2064
+level: 2, max_n_adj: 33
+next_node_cnt, next_edge_cnt: 40, 591
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 588
+level: 4, max_n_adj: 16
+0.007
+0.134
+0.048
+0.062
+261726
+1783640
+314354
+52184
+564
+545
+8
+11
+3
+5
+3
+0.298
+set_id: 8
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 698, 35915
+level: 1, max_n_adj: 319
+next_node_cnt, next_edge_cnt: 276, 2028
+level: 2, max_n_adj: 36
+next_node_cnt, next_edge_cnt: 42, 591
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 585
+level: 4, max_n_adj: 16
+0.007
+0.135
+0.050
+0.058
+261726
+1788776
+293476
+55166
+554
+545
+5
+4
+2
+2
+0
+0.306
+set_id: 9
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 687, 31848
+level: 1, max_n_adj: 296
+next_node_cnt, next_edge_cnt: 274, 1959
+level: 2, max_n_adj: 32
+next_node_cnt, next_edge_cnt: 51, 600
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 587
+level: 4, max_n_adj: 16
+0.006
+0.117
+0.046
+0.055
+261726
+1537506
+264930
+52892
+566
+545
+7
+14
+2
+9
+3
+0.285
+gpuPC 1 link 40000
+set_id: 0
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 705, 37905
+level: 1, max_n_adj: 285
+next_node_cnt, next_edge_cnt: 270, 2364
+level: 2, max_n_adj: 43
+next_node_cnt, next_edge_cnt: 54, 601
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 584
+level: 4, max_n_adj: 16
+0.011
+0.312
+0.134
+0.093
+261726
+2292892
+507652
+52756
+553
+545
+4
+4
+0
+2
+2
+0.779
+set_id: 1
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 713, 38653
+level: 1, max_n_adj: 286
+next_node_cnt, next_edge_cnt: 274, 2372
+level: 2, max_n_adj: 42
+next_node_cnt, next_edge_cnt: 39, 586
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 583
+level: 4, max_n_adj: 16
+0.010
+0.301
+0.142
+0.077
+261726
+2308314
+510232
+52176
+551
+545
+3
+3
+1
+1
+1
+0.601
+set_id: 2
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 710, 39292
+level: 1, max_n_adj: 286
+next_node_cnt, next_edge_cnt: 282, 2378
+level: 2, max_n_adj: 43
+next_node_cnt, next_edge_cnt: 38, 586
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 584
+level: 4, max_n_adj: 16
+0.010
+0.321
+0.125
+0.081
+261726
+2355250
+468404
+52306
+556
+545
+4
+7
+1
+3
+3
+0.625
+set_id: 3
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 706, 37156
+level: 1, max_n_adj: 290
+next_node_cnt, next_edge_cnt: 266, 2368
+level: 2, max_n_adj: 45
+next_node_cnt, next_edge_cnt: 38, 583
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 583
+level: 4, max_n_adj: 16
+0.010
+0.299
+0.139
+0.081
+261726
+2194570
+503494
+52040
+550
+545
+3
+2
+0
+1
+1
+0.598
+set_id: 4
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 712, 38483
+level: 1, max_n_adj: 289
+next_node_cnt, next_edge_cnt: 275, 2341
+level: 2, max_n_adj: 41
+next_node_cnt, next_edge_cnt: 53, 599
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+0.011
+0.307
+0.126
+0.086
+261726
+2258944
+491060
+52988
+549
+545
+2
+2
+0
+1
+1
+0.599
+set_id: 5
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 712, 38657
+level: 1, max_n_adj: 279
+next_node_cnt, next_edge_cnt: 274, 2296
+level: 2, max_n_adj: 42
+next_node_cnt, next_edge_cnt: 39, 586
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 584
+level: 4, max_n_adj: 16
+0.011
+0.307
+0.124
+0.080
+261726
+2290038
+404542
+52048
+558
+545
+4
+9
+1
+5
+3
+0.595
+set_id: 6
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 709, 38258
+level: 1, max_n_adj: 299
+next_node_cnt, next_edge_cnt: 262, 2306
+level: 2, max_n_adj: 42
+next_node_cnt, next_edge_cnt: 65, 611
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+0.011
+0.308
+0.137
+0.097
+261726
+2267890
+486990
+57004
+550
+545
+2
+3
+1
+2
+0
+0.624
+set_id: 7
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 709, 37700
+level: 1, max_n_adj: 291
+next_node_cnt, next_edge_cnt: 279, 2353
+level: 2, max_n_adj: 44
+next_node_cnt, next_edge_cnt: 38, 582
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 581
+level: 4, max_n_adj: 16
+0.012
+0.311
+0.141
+0.083
+261726
+2266448
+461842
+52168
+550
+545
+1
+4
+0
+3
+1
+0.63
+set_id: 8
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 708, 38210
+level: 1, max_n_adj: 308
+next_node_cnt, next_edge_cnt: 270, 2306
+level: 2, max_n_adj: 42
+next_node_cnt, next_edge_cnt: 43, 590
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 581
+level: 4, max_n_adj: 16
+0.011
+0.298
+0.132
+0.102
+261726
+2207468
+459460
+55322
+546
+545
+1
+0
+0
+0
+0
+0.612
+set_id: 9
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 705, 38079
+level: 1, max_n_adj: 292
+next_node_cnt, next_edge_cnt: 266, 2406
+level: 2, max_n_adj: 44
+next_node_cnt, next_edge_cnt: 64, 610
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 583
+level: 4, max_n_adj: 16
+0.011
+0.311
+0.151
+0.081
+261726
+2286804
+545606
+53956
+553
+545
+3
+5
+1
+3
+1
+0.625
+gpuPC 1 link 100000
+set_id: 0
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 721, 41647
+level: 1, max_n_adj: 320
+next_node_cnt, next_edge_cnt: 273, 2805
+level: 2, max_n_adj: 52
+next_node_cnt, next_edge_cnt: 52, 599
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 581
+level: 4, max_n_adj: 16
+0.044
+0.927
+0.518
+0.202
+261726
+2944244
+809224
+56166
+546
+545
+1
+0
+0
+0
+0
+2.009
+set_id: 1
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 722, 40944
+level: 1, max_n_adj: 289
+next_node_cnt, next_edge_cnt: 269, 2869
+level: 2, max_n_adj: 57
+next_node_cnt, next_edge_cnt: 43, 588
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 583
+level: 4, max_n_adj: 16
+0.044
+0.922
+0.579
+0.172
+261726
+2969780
+906246
+52106
+555
+545
+3
+7
+1
+5
+1
+1.897
+set_id: 2
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 722, 41449
+level: 1, max_n_adj: 287
+next_node_cnt, next_edge_cnt: 273, 2865
+level: 2, max_n_adj: 61
+next_node_cnt, next_edge_cnt: 41, 585
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 581
+level: 4, max_n_adj: 16
+0.044
+0.926
+0.505
+0.174
+261726
+2986674
+832690
+52192
+546
+545
+1
+0
+0
+0
+0
+1.812
+set_id: 3
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 720, 40385
+level: 1, max_n_adj: 265
+next_node_cnt, next_edge_cnt: 267, 2802
+level: 2, max_n_adj: 56
+next_node_cnt, next_edge_cnt: 41, 584
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 581
+level: 4, max_n_adj: 16
+0.044
+0.861
+0.527
+0.158
+261726
+2808452
+826624
+52064
+548
+545
+1
+2
+0
+1
+1
+1.771
+set_id: 4
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 40804
+level: 1, max_n_adj: 287
+next_node_cnt, next_edge_cnt: 270, 2756
+level: 2, max_n_adj: 54
+next_node_cnt, next_edge_cnt: 45, 589
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 581
+level: 4, max_n_adj: 16
+0.044
+0.891
+0.505
+0.183
+261726
+2894692
+807986
+52260
+548
+545
+1
+2
+0
+1
+1
+1.795
+set_id: 5
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 722, 41330
+level: 1, max_n_adj: 264
+next_node_cnt, next_edge_cnt: 284, 2819
+level: 2, max_n_adj: 52
+next_node_cnt, next_edge_cnt: 57, 600
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 581
+level: 4, max_n_adj: 16
+0.044
+0.916
+0.492
+0.176
+261726
+2932014
+794200
+53040
+546
+545
+1
+0
+0
+0
+0
+1.808
+set_id: 6
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 40882
+level: 1, max_n_adj: 256
+next_node_cnt, next_edge_cnt: 272, 2776
+level: 2, max_n_adj: 52
+next_node_cnt, next_edge_cnt: 53, 598
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+0.044
+0.892
+0.489
+0.184
+261726
+2853930
+786720
+52834
+547
+545
+2
+0
+0
+0
+0
+1.742
+set_id: 7
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 720, 40291
+level: 1, max_n_adj: 276
+next_node_cnt, next_edge_cnt: 273, 2803
+level: 2, max_n_adj: 53
+next_node_cnt, next_edge_cnt: 39, 588
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 584
+level: 4, max_n_adj: 16
+0.044
+0.880
+0.493
+0.187
+261726
+2848622
+785568
+55286
+554
+545
+4
+5
+1
+3
+1
+1.793
+set_id: 8
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 717, 41180
+level: 1, max_n_adj: 297
+next_node_cnt, next_edge_cnt: 275, 2864
+level: 2, max_n_adj: 59
+next_node_cnt, next_edge_cnt: 39, 586
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 583
+level: 4, max_n_adj: 16
+0.044
+0.913
+0.505
+0.205
+261726
+2953442
+854334
+55246
+555
+545
+3
+7
+1
+5
+1
+1.8
+set_id: 9
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 720, 40949
+level: 1, max_n_adj: 292
+next_node_cnt, next_edge_cnt: 270, 2814
+level: 2, max_n_adj: 55
+next_node_cnt, next_edge_cnt: 42, 584
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+0.044
+0.900
+0.500
+0.198
+261726
+2893690
+816234
+52072
+545
+545
+0
+0
+0
+0
+0
+1.818
+gpuPC 1 link 200000
+set_id: 0
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 41697
+level: 1, max_n_adj: 264
+next_node_cnt, next_edge_cnt: 277, 3265
+level: 2, max_n_adj: 65
+next_node_cnt, next_edge_cnt: 47, 597
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+0.098
+2.090
+1.313
+0.364
+261726
+3316870
+1114854
+55330
+549
+545
+2
+2
+0
+1
+1
+4.305
+set_id: 1
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 41029
+level: 1, max_n_adj: 271
+next_node_cnt, next_edge_cnt: 286, 3299
+level: 2, max_n_adj: 68
+next_node_cnt, next_edge_cnt: 47, 600
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+0.097
+2.112
+1.448
+0.382
+261726
+3314008
+1199718
+55548
+545
+545
+0
+0
+0
+0
+0
+4.282
+set_id: 2
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 41329
+level: 1, max_n_adj: 259
+next_node_cnt, next_edge_cnt: 272, 3314
+level: 2, max_n_adj: 69
+next_node_cnt, next_edge_cnt: 38, 582
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 581
+level: 4, max_n_adj: 16
+0.100
+2.066
+1.332
+0.338
+261726
+3259664
+1123750
+52178
+546
+545
+1
+0
+0
+0
+0
+4.095
+set_id: 3
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 41039
+level: 1, max_n_adj: 262
+next_node_cnt, next_edge_cnt: 272, 3291
+level: 2, max_n_adj: 67
+next_node_cnt, next_edge_cnt: 41, 584
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+0.101
+2.104
+1.344
+0.356
+261726
+3313070
+1135560
+52192
+545
+545
+0
+0
+0
+0
+0
+4.149
+set_id: 4
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 40762
+level: 1, max_n_adj: 257
+next_node_cnt, next_edge_cnt: 277, 3234
+level: 2, max_n_adj: 63
+next_node_cnt, next_edge_cnt: 44, 589
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 581
+level: 4, max_n_adj: 16
+0.102
+2.025
+1.307
+0.385
+261726
+3206084
+1135424
+55186
+548
+545
+1
+2
+0
+1
+1
+4.078
+set_id: 5
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 40830
+level: 1, max_n_adj: 258
+next_node_cnt, next_edge_cnt: 293, 3267
+level: 2, max_n_adj: 68
+next_node_cnt, next_edge_cnt: 38, 582
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 581
+level: 4, max_n_adj: 16
+0.098
+2.054
+1.307
+0.385
+261726
+3262422
+1096490
+52168
+546
+545
+1
+0
+0
+0
+0
+4.105
+set_id: 6
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 41290
+level: 1, max_n_adj: 264
+next_node_cnt, next_edge_cnt: 284, 3237
+level: 2, max_n_adj: 68
+next_node_cnt, next_edge_cnt: 53, 600
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+0.098
+2.030
+1.262
+0.399
+261726
+3217414
+1097000
+55936
+550
+545
+2
+3
+1
+2
+0
+4.096
+set_id: 7
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 41542
+level: 1, max_n_adj: 282
+next_node_cnt, next_edge_cnt: 279, 3280
+level: 2, max_n_adj: 67
+next_node_cnt, next_edge_cnt: 42, 588
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 581
+level: 4, max_n_adj: 16
+0.098
+2.071
+1.384
+0.345
+261726
+3271268
+1160986
+52232
+546
+545
+1
+0
+0
+0
+0
+4.179
+set_id: 8
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 41962
+level: 1, max_n_adj: 294
+next_node_cnt, next_edge_cnt: 272, 3275
+level: 2, max_n_adj: 66
+next_node_cnt, next_edge_cnt: 50, 597
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 581
+level: 4, max_n_adj: 16
+0.100
+2.086
+1.328
+0.408
+261726
+3300842
+1146044
+55954
+550
+545
+1
+4
+0
+3
+1
+4.235
+set_id: 9
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 41386
+level: 1, max_n_adj: 280
+next_node_cnt, next_edge_cnt: 271, 3264
+level: 2, max_n_adj: 65
+next_node_cnt, next_edge_cnt: 52, 596
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+0.101
+2.087
+1.361
+0.383
+261726
+3288692
+1150272
+56164
+545
+545
+0
+0
+0
+0
+0
+4.24
+gpuPC 1 link 400000
+set_id: 0
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 41547
+level: 1, max_n_adj: 270
+next_node_cnt, next_edge_cnt: 286, 3959
+level: 2, max_n_adj: 73
+next_node_cnt, next_edge_cnt: 49, 593
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+0.216
+5.137
+3.337
+0.628
+261726
+3666746
+1502308
+52920
+545
+545
+0
+0
+0
+0
+0
+10.193
+set_id: 1
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 722, 41201
+level: 1, max_n_adj: 268
+next_node_cnt, next_edge_cnt: 283, 3953
+level: 2, max_n_adj: 71
+next_node_cnt, next_edge_cnt: 49, 593
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+0.219
+5.066
+3.432
+0.807
+261726
+3626440
+1537166
+52844
+545
+545
+0
+0
+0
+0
+0
+10.251
+set_id: 2
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 722, 41186
+level: 1, max_n_adj: 267
+next_node_cnt, next_edge_cnt: 288, 3987
+level: 2, max_n_adj: 74
+next_node_cnt, next_edge_cnt: 40, 583
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 581
+level: 4, max_n_adj: 16
+0.220
+5.026
+3.454
+0.677
+261726
+3601064
+1510198
+52056
+548
+545
+1
+2
+0
+1
+1
+10.093
+set_id: 3
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 41301
+level: 1, max_n_adj: 264
+next_node_cnt, next_edge_cnt: 284, 3941
+level: 2, max_n_adj: 74
+next_node_cnt, next_edge_cnt: 45, 589
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 581
+level: 4, max_n_adj: 16
+0.220
+5.054
+3.371
+0.620
+261726
+3609924
+1524286
+52244
+546
+545
+1
+0
+0
+0
+0
+10.018
+set_id: 4
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 721, 41165
+level: 1, max_n_adj: 265
+next_node_cnt, next_edge_cnt: 284, 3893
+level: 2, max_n_adj: 72
+next_node_cnt, next_edge_cnt: 53, 597
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 581
+level: 4, max_n_adj: 16
+0.225
+4.972
+3.323
+0.661
+261726
+3559846
+1486236
+52776
+546
+545
+1
+0
+0
+0
+0
+9.93
+set_id: 5
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 41118
+level: 1, max_n_adj: 265
+next_node_cnt, next_edge_cnt: 283, 3932
+level: 2, max_n_adj: 73
+next_node_cnt, next_edge_cnt: 51, 596
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 581
+level: 4, max_n_adj: 16
+0.217
+5.008
+3.280
+0.658
+261726
+3597154
+1483552
+52860
+546
+545
+1
+0
+0
+0
+0
+9.907
+set_id: 6
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 41608
+level: 1, max_n_adj: 268
+next_node_cnt, next_edge_cnt: 286, 3958
+level: 2, max_n_adj: 74
+next_node_cnt, next_edge_cnt: 45, 596
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 584
+level: 4, max_n_adj: 16
+0.225
+5.052
+3.431
+0.796
+261726
+3612422
+1504438
+55358
+554
+545
+4
+5
+1
+3
+1
+10.221
+set_id: 7
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 721, 41100
+level: 1, max_n_adj: 264
+next_node_cnt, next_edge_cnt: 287, 3964
+level: 2, max_n_adj: 74
+next_node_cnt, next_edge_cnt: 38, 582
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 581
+level: 4, max_n_adj: 16
+0.224
+5.039
+3.530
+0.697
+261726
+3621494
+1532522
+52168
+546
+545
+1
+0
+0
+0
+0
+10.227
+set_id: 8
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 41286
+level: 1, max_n_adj: 268
+next_node_cnt, next_edge_cnt: 285, 3990
+level: 2, max_n_adj: 74
+next_node_cnt, next_edge_cnt: 43, 585
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 581
+level: 4, max_n_adj: 16
+0.217
+5.071
+3.527
+0.688
+261726
+3633276
+1540818
+52080
+546
+545
+1
+0
+0
+0
+0
+10.239
+set_id: 9
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 41360
+level: 1, max_n_adj: 266
+next_node_cnt, next_edge_cnt: 285, 3948
+level: 2, max_n_adj: 73
+next_node_cnt, next_edge_cnt: 45, 598
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+0.223
+5.063
+3.475
+0.731
+261726
+3631514
+1539652
+55498
+548
+545
+2
+1
+1
+0
+0
+10.219
+gpuPC3 0 link 20000
+set_id: 0
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 699, 38047
+level: 1, max_n_adj: 248
+next_node_cnt, next_edge_cnt: 366, 3079
+level: 2, max_n_adj: 44
+next_node_cnt, next_edge_cnt: 62, 663
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 650
+level: 4, max_n_adj: 16
+0.007
+0.214
+0.052
+0.033
+261726
+261726
+1828331
+1382875
+409355
+247534
+52141
+13048
+674
+545
+70
+59
+31
+20
+8
+0.535
+set_id: 1
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 702, 38438
+level: 1, max_n_adj: 249
+next_node_cnt, next_edge_cnt: 379, 3187
+level: 2, max_n_adj: 46
+next_node_cnt, next_edge_cnt: 71, 665
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 27, 639
+level: 4, max_n_adj: 16
+0.007
+0.213
+0.062
+0.040
+261726
+261726
+1857661
+1404054
+466308
+278964
+55674
+14110
+648
+545
+59
+44
+34
+7
+3
+0.372
+set_id: 2
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 696, 37835
+level: 1, max_n_adj: 268
+next_node_cnt, next_edge_cnt: 370, 3215
+level: 2, max_n_adj: 49
+next_node_cnt, next_edge_cnt: 57, 666
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 656
+level: 4, max_n_adj: 16
+0.007
+0.207
+0.065
+0.031
+261726
+261726
+1853042
+1398256
+480307
+290950
+52077
+13023
+689
+545
+76
+68
+40
+22
+6
+0.361
+set_id: 3
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 693, 37973
+level: 1, max_n_adj: 244
+next_node_cnt, next_edge_cnt: 354, 3163
+level: 2, max_n_adj: 46
+next_node_cnt, next_edge_cnt: 62, 659
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 644
+level: 4, max_n_adj: 16
+0.007
+0.214
+0.063
+0.036
+261726
+261726
+1823226
+1374974
+454033
+276431
+55365
+14103
+668
+545
+64
+59
+35
+19
+5
+0.381
+set_id: 4
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 697, 37780
+level: 1, max_n_adj: 248
+next_node_cnt, next_edge_cnt: 376, 3210
+level: 2, max_n_adj: 46
+next_node_cnt, next_edge_cnt: 69, 669
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 27, 647
+level: 4, max_n_adj: 16
+0.007
+0.214
+0.060
+0.032
+261726
+261726
+1848840
+1389050
+463293
+282272
+53729
+13567
+657
+545
+67
+45
+37
+4
+4
+0.363
+set_id: 5
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 700, 38193
+level: 1, max_n_adj: 253
+next_node_cnt, next_edge_cnt: 373, 3135
+level: 2, max_n_adj: 43
+next_node_cnt, next_edge_cnt: 61, 664
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 647
+level: 4, max_n_adj: 16
+0.007
+0.206
+0.057
+0.037
+261726
+261726
+1836145
+1387383
+427552
+258463
+52073
+13021
+658
+545
+67
+46
+30
+12
+4
+0.373
+set_id: 6
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 695, 37710
+level: 1, max_n_adj: 252
+next_node_cnt, next_edge_cnt: 385, 3159
+level: 2, max_n_adj: 47
+next_node_cnt, next_edge_cnt: 72, 676
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 27, 657
+level: 4, max_n_adj: 16
+0.007
+0.214
+0.056
+0.039
+261726
+261726
+1824024
+1381280
+446531
+263100
+55368
+14095
+678
+545
+77
+56
+36
+14
+6
+0.373
+set_id: 7
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 700, 38290
+level: 1, max_n_adj: 254
+next_node_cnt, next_edge_cnt: 377, 3156
+level: 2, max_n_adj: 47
+next_node_cnt, next_edge_cnt: 63, 657
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 643
+level: 4, max_n_adj: 16
+0.007
+0.215
+0.056
+0.029
+261726
+261726
+1848239
+1394844
+457321
+270926
+52091
+13027
+648
+545
+63
+40
+28
+9
+3
+0.363
+set_id: 8
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 698, 39037
+level: 1, max_n_adj: 255
+next_node_cnt, next_edge_cnt: 372, 3262
+level: 2, max_n_adj: 46
+next_node_cnt, next_edge_cnt: 63, 666
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 651
+level: 4, max_n_adj: 16
+0.007
+0.220
+0.064
+0.038
+261726
+261726
+1932610
+1456368
+503373
+300336
+55356
+14070
+670
+545
+71
+54
+38
+11
+5
+0.383
+set_id: 9
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 687, 35774
+level: 1, max_n_adj: 236
+next_node_cnt, next_edge_cnt: 364, 3103
+level: 2, max_n_adj: 43
+next_node_cnt, next_edge_cnt: 67, 668
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 647
+level: 4, max_n_adj: 16
+0.007
+0.198
+0.059
+0.032
+261726
+261726
+1730814
+1296734
+449347
+269454
+52245
+13077
+656
+545
+67
+44
+28
+12
+4
+0.347
+gpuPC3 0 link 40000
+set_id: 0
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 705, 41769
+level: 1, max_n_adj: 263
+next_node_cnt, next_edge_cnt: 379, 3944
+level: 2, max_n_adj: 59
+next_node_cnt, next_edge_cnt: 64, 658
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 27, 648
+level: 4, max_n_adj: 16
+0.011
+0.401
+0.135
+0.035
+261726
+261726
+2339131
+1717429
+749831
+485253
+52046
+13012
+650
+545
+68
+37
+31
+4
+2
+0.852
+set_id: 1
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 713, 42309
+level: 1, max_n_adj: 273
+next_node_cnt, next_edge_cnt: 376, 3869
+level: 2, max_n_adj: 59
+next_node_cnt, next_edge_cnt: 77, 673
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 27, 646
+level: 4, max_n_adj: 16
+0.011
+0.400
+0.140
+0.044
+261726
+261726
+2338997
+1724763
+745788
+467319
+55504
+14104
+654
+545
+66
+43
+29
+8
+6
+0.685
+set_id: 2
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 710, 43254
+level: 1, max_n_adj: 281
+next_node_cnt, next_edge_cnt: 404, 4029
+level: 2, max_n_adj: 61
+next_node_cnt, next_edge_cnt: 73, 675
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 655
+level: 4, max_n_adj: 16
+0.011
+0.425
+0.148
+0.035
+261726
+261726
+2474917
+1831005
+807069
+517257
+52180
+13057
+676
+545
+75
+56
+42
+9
+5
+0.691
+set_id: 3
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 706, 41306
+level: 1, max_n_adj: 259
+next_node_cnt, next_edge_cnt: 385, 3832
+level: 2, max_n_adj: 63
+next_node_cnt, next_edge_cnt: 66, 667
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 650
+level: 4, max_n_adj: 16
+0.011
+0.394
+0.126
+0.032
+261726
+261726
+2282429
+1680606
+717402
+452490
+52155
+13048
+663
+545
+70
+48
+34
+13
+1
+0.657
+set_id: 4
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 712, 41666
+level: 1, max_n_adj: 258
+next_node_cnt, next_edge_cnt: 389, 3819
+level: 2, max_n_adj: 54
+next_node_cnt, next_edge_cnt: 60, 652
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 27, 643
+level: 4, max_n_adj: 16
+0.011
+0.393
+0.132
+0.034
+261726
+261726
+2263480
+1664617
+722638
+453042
+52091
+13024
+648
+545
+63
+40
+32
+7
+1
+0.647
+set_id: 5
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 712, 42141
+level: 1, max_n_adj: 273
+next_node_cnt, next_edge_cnt: 392, 3871
+level: 2, max_n_adj: 57
+next_node_cnt, next_edge_cnt: 61, 661
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 648
+level: 4, max_n_adj: 16
+0.011
+0.397
+0.136
+0.034
+261726
+261726
+2307815
+1698832
+701725
+452415
+52146
+13045
+662
+545
+68
+49
+33
+13
+3
+0.654
+set_id: 6
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 709, 42092
+level: 1, max_n_adj: 265
+next_node_cnt, next_edge_cnt: 376, 3922
+level: 2, max_n_adj: 62
+next_node_cnt, next_edge_cnt: 58, 650
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 640
+level: 4, max_n_adj: 16
+0.016
+0.408
+0.140
+0.033
+261726
+261726
+2337744
+1723199
+743334
+481573
+52139
+13040
+649
+545
+60
+44
+36
+4
+4
+0.669
+set_id: 7
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 709, 42537
+level: 1, max_n_adj: 267
+next_node_cnt, next_edge_cnt: 383, 3822
+level: 2, max_n_adj: 57
+next_node_cnt, next_edge_cnt: 59, 649
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 27, 640
+level: 4, max_n_adj: 16
+0.017
+0.398
+0.123
+0.034
+261726
+261726
+2342824
+1726800
+669892
+430332
+52149
+13045
+651
+545
+60
+46
+36
+6
+4
+0.656
+set_id: 8
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 708, 41843
+level: 1, max_n_adj: 261
+next_node_cnt, next_edge_cnt: 369, 3967
+level: 2, max_n_adj: 58
+next_node_cnt, next_edge_cnt: 61, 657
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 645
+level: 4, max_n_adj: 16
+0.016
+0.397
+0.145
+0.035
+261726
+261726
+2303835
+1690813
+784039
+506373
+52120
+13039
+659
+545
+65
+49
+37
+8
+4
+0.669
+set_id: 9
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 705, 41663
+level: 1, max_n_adj: 266
+next_node_cnt, next_edge_cnt: 382, 3940
+level: 2, max_n_adj: 62
+next_node_cnt, next_edge_cnt: 62, 657
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 648
+level: 4, max_n_adj: 16
+0.016
+0.407
+0.139
+0.036
+261726
+261726
+2358911
+1729027
+758085
+487390
+52124
+13038
+658
+545
+68
+45
+33
+10
+2
+0.687
+gpuPC3 0 link 100000
+set_id: 0
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 721, 46395
+level: 1, max_n_adj: 278
+next_node_cnt, next_edge_cnt: 401, 4948
+level: 2, max_n_adj: 80
+next_node_cnt, next_edge_cnt: 56, 657
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 27, 647
+level: 4, max_n_adj: 16
+0.044
+1.037
+0.486
+0.045
+261726
+261726
+2967518
+2124640
+1320886
+880427
+52050
+13016
+660
+545
+67
+48
+34
+8
+6
+1.936
+set_id: 1
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 722, 46664
+level: 1, max_n_adj: 277
+next_node_cnt, next_edge_cnt: 394, 4994
+level: 2, max_n_adj: 81
+next_node_cnt, next_edge_cnt: 59, 656
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 644
+level: 4, max_n_adj: 16
+0.044
+1.058
+0.491
+0.054
+261726
+261726
+3053029
+2165510
+1327285
+884796
+53768
+13587
+656
+545
+64
+47
+31
+13
+3
+1.833
+set_id: 2
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 722, 47233
+level: 1, max_n_adj: 290
+next_node_cnt, next_edge_cnt: 413, 5044
+level: 2, max_n_adj: 80
+next_node_cnt, next_edge_cnt: 70, 668
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 648
+level: 4, max_n_adj: 16
+0.044
+1.074
+0.510
+0.044
+261726
+261726
+3067612
+2197922
+1383943
+921961
+52360
+13103
+661
+545
+68
+48
+36
+8
+4
+1.839
+set_id: 3
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 720, 45987
+level: 1, max_n_adj: 274
+next_node_cnt, next_edge_cnt: 403, 4973
+level: 2, max_n_adj: 81
+next_node_cnt, next_edge_cnt: 79, 679
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 27, 648
+level: 4, max_n_adj: 16
+0.044
+1.042
+0.477
+0.051
+261726
+261726
+2936075
+2107957
+1308640
+870727
+56925
+14581
+653
+545
+68
+40
+32
+7
+1
+1.8
+set_id: 4
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 47008
+level: 1, max_n_adj: 275
+next_node_cnt, next_edge_cnt: 415, 4847
+level: 2, max_n_adj: 73
+next_node_cnt, next_edge_cnt: 60, 680
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 668
+level: 4, max_n_adj: 16
+0.044
+1.033
+0.475
+0.044
+261726
+261726
+2941066
+2114375
+1271432
+851430
+52096
+13032
+686
+545
+88
+53
+35
+13
+5
+1.736
+set_id: 5
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 722, 47340
+level: 1, max_n_adj: 287
+next_node_cnt, next_edge_cnt: 400, 5116
+level: 2, max_n_adj: 80
+next_node_cnt, next_edge_cnt: 66, 653
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 634
+level: 4, max_n_adj: 16
+0.044
+1.073
+0.527
+0.046
+261726
+261726
+3065706
+2187791
+1403400
+937523
+52153
+13044
+636
+545
+54
+37
+31
+3
+3
+1.886
+set_id: 6
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 46834
+level: 1, max_n_adj: 277
+next_node_cnt, next_edge_cnt: 409, 5025
+level: 2, max_n_adj: 85
+next_node_cnt, next_edge_cnt: 75, 674
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 28, 649
+level: 4, max_n_adj: 16
+0.044
+1.051
+0.490
+0.044
+261726
+261726
+2993482
+2143004
+1332900
+902171
+52306
+13097
+658
+545
+69
+44
+36
+6
+2
+1.775
+set_id: 7
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 720, 46183
+level: 1, max_n_adj: 275
+next_node_cnt, next_edge_cnt: 385, 4961
+level: 2, max_n_adj: 84
+next_node_cnt, next_edge_cnt: 71, 662
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 644
+level: 4, max_n_adj: 16
+0.044
+1.030
+0.494
+0.045
+261726
+261726
+2957583
+2111138
+1349908
+898544
+52206
+13067
+652
+545
+64
+43
+35
+5
+3
+1.807
+set_id: 8
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 717, 45949
+level: 1, max_n_adj: 279
+next_node_cnt, next_edge_cnt: 393, 5107
+level: 2, max_n_adj: 93
+next_node_cnt, next_edge_cnt: 69, 660
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 639
+level: 4, max_n_adj: 16
+0.044
+1.043
+0.523
+0.058
+261726
+261726
+2977166
+2107142
+1412328
+961937
+55667
+14096
+640
+545
+59
+36
+30
+4
+2
+1.843
+set_id: 9
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 720, 46779
+level: 1, max_n_adj: 283
+next_node_cnt, next_edge_cnt: 392, 5000
+level: 2, max_n_adj: 81
+next_node_cnt, next_edge_cnt: 71, 662
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 643
+level: 4, max_n_adj: 16
+0.044
+1.042
+0.515
+0.044
+261726
+261726
+2975128
+2122466
+1397632
+931886
+53523
+13502
+652
+545
+63
+44
+36
+5
+3
+1.845
+gpuPC3 0 link 200000
+set_id: 0
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 48541
+level: 1, max_n_adj: 285
+next_node_cnt, next_edge_cnt: 422, 5698
+level: 2, max_n_adj: 98
+next_node_cnt, next_edge_cnt: 62, 659
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 643
+level: 4, max_n_adj: 16
+0.098
+2.931
+1.376
+0.071
+261726
+261726
+3425293
+2391495
+2053265
+1343814
+52222
+13072
+657
+545
+63
+49
+31
+13
+5
+4.924
+set_id: 1
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 49028
+level: 1, max_n_adj: 284
+next_node_cnt, next_edge_cnt: 428, 5807
+level: 2, max_n_adj: 97
+next_node_cnt, next_edge_cnt: 70, 668
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 27, 651
+level: 4, max_n_adj: 16
+0.098
+2.967
+1.372
+0.087
+261726
+261726
+3492253
+2425977
+2016581
+1324439
+53884
+13620
+674
+544
+70
+60
+39
+16
+5
+4.778
+set_id: 2
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 48837
+level: 1, max_n_adj: 282
+next_node_cnt, next_edge_cnt: 437, 5760
+level: 2, max_n_adj: 99
+next_node_cnt, next_edge_cnt: 64, 668
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 657
+level: 4, max_n_adj: 16
+0.101
+2.923
+1.355
+0.073
+261726
+261726
+3409916
+2390744
+2016306
+1314201
+52173
+13057
+680
+545
+77
+58
+34
+18
+6
+4.724
+set_id: 3
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 49107
+level: 1, max_n_adj: 285
+next_node_cnt, next_edge_cnt: 416, 5712
+level: 2, max_n_adj: 93
+next_node_cnt, next_edge_cnt: 69, 661
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 643
+level: 4, max_n_adj: 16
+0.101
+2.993
+1.350
+0.071
+261726
+261726
+3479459
+2440610
+1986637
+1305421
+53680
+13550
+661
+545
+63
+53
+33
+15
+5
+4.768
+set_id: 4
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 48652
+level: 1, max_n_adj: 285
+next_node_cnt, next_edge_cnt: 419, 5610
+level: 2, max_n_adj: 94
+next_node_cnt, next_edge_cnt: 55, 657
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 650
+level: 4, max_n_adj: 16
+0.101
+2.929
+1.278
+0.070
+261726
+261726
+3388936
+2385431
+1846411
+1218200
+52036
+13015
+670
+545
+70
+55
+37
+13
+5
+4.645
+set_id: 5
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 48684
+level: 1, max_n_adj: 281
+next_node_cnt, next_edge_cnt: 425, 5771
+level: 2, max_n_adj: 99
+next_node_cnt, next_edge_cnt: 73, 662
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 645
+level: 4, max_n_adj: 16
+0.100
+2.932
+1.366
+0.072
+261726
+261726
+3429499
+2399696
+1992846
+1314892
+52235
+13071
+667
+545
+65
+57
+37
+12
+8
+4.726
+set_id: 6
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 49143
+level: 1, max_n_adj: 290
+next_node_cnt, next_edge_cnt: 416, 5742
+level: 2, max_n_adj: 106
+next_node_cnt, next_edge_cnt: 73, 674
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 27, 648
+level: 4, max_n_adj: 16
+0.098
+2.934
+1.382
+0.083
+261726
+261726
+3399535
+2393041
+2080698
+1354332
+52378
+13116
+662
+545
+68
+49
+35
+10
+4
+4.816
+set_id: 7
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 48376
+level: 1, max_n_adj: 287
+next_node_cnt, next_edge_cnt: 406, 5762
+level: 2, max_n_adj: 96
+next_node_cnt, next_edge_cnt: 66, 651
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 631
+level: 4, max_n_adj: 16
+0.099
+2.924
+1.346
+0.077
+261726
+261726
+3432001
+2388970
+1936743
+1296314
+53624
+13537
+640
+545
+51
+44
+32
+9
+3
+4.696
+set_id: 8
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 48322
+level: 1, max_n_adj: 284
+next_node_cnt, next_edge_cnt: 414, 5721
+level: 2, max_n_adj: 98
+next_node_cnt, next_edge_cnt: 66, 661
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 27, 649
+level: 4, max_n_adj: 16
+0.099
+2.898
+1.343
+0.080
+261726
+261726
+3396319
+2356142
+1985386
+1313606
+55322
+14065
+661
+545
+69
+47
+31
+10
+6
+4.699
+set_id: 9
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 48740
+level: 1, max_n_adj: 287
+next_node_cnt, next_edge_cnt: 415, 5717
+level: 2, max_n_adj: 94
+next_node_cnt, next_edge_cnt: 61, 657
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 646
+level: 4, max_n_adj: 16
+0.098
+2.892
+1.402
+0.070
+261726
+261726
+3380457
+2356802
+2066086
+1352167
+53496
+13494
+667
+545
+66
+56
+34
+17
+5
+4.726
+gpuPC3 0 link 400000
+set_id: 0
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50120
+level: 1, max_n_adj: 300
+next_node_cnt, next_edge_cnt: 445, 6200
+level: 2, max_n_adj: 108
+next_node_cnt, next_edge_cnt: 62, 661
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 645
+level: 4, max_n_adj: 16
+0.224
+6.204
+4.438
+0.128
+261726
+261726
+3710810
+2542213
+2725809
+1741933
+52221
+13072
+661
+545
+65
+51
+29
+15
+7
+11.881
+set_id: 1
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50055
+level: 1, max_n_adj: 294
+next_node_cnt, next_edge_cnt: 439, 6237
+level: 2, max_n_adj: 109
+next_node_cnt, next_edge_cnt: 57, 658
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 28, 646
+level: 4, max_n_adj: 16
+0.231
+6.248
+4.522
+0.133
+261726
+261726
+3725934
+2558592
+2841981
+1788750
+52127
+13039
+658
+545
+66
+47
+33
+11
+3
+11.865
+set_id: 2
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50260
+level: 1, max_n_adj: 307
+next_node_cnt, next_edge_cnt: 450, 6150
+level: 2, max_n_adj: 106
+next_node_cnt, next_edge_cnt: 61, 668
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 656
+level: 4, max_n_adj: 16
+0.224
+6.424
+4.382
+0.129
+261726
+261726
+3825811
+2634915
+2768283
+1723070
+52093
+13031
+678
+544
+75
+59
+36
+16
+7
+11.886
+set_id: 3
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50401
+level: 1, max_n_adj: 288
+next_node_cnt, next_edge_cnt: 440, 6202
+level: 2, max_n_adj: 105
+next_node_cnt, next_edge_cnt: 63, 673
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 657
+level: 4, max_n_adj: 16
+0.222
+6.392
+4.463
+0.131
+261726
+261726
+3812796
+2626638
+2796696
+1765671
+52225
+13067
+675
+545
+77
+53
+35
+12
+6
+11.934
+set_id: 4
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50020
+level: 1, max_n_adj: 289
+next_node_cnt, next_edge_cnt: 433, 6134
+level: 2, max_n_adj: 103
+next_node_cnt, next_edge_cnt: 65, 656
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 641
+level: 4, max_n_adj: 16
+0.226
+6.240
+4.330
+0.136
+261726
+261726
+3730376
+2563643
+2681234
+1709193
+52126
+13039
+648
+545
+61
+42
+34
+7
+1
+11.66
+set_id: 5
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50336
+level: 1, max_n_adj: 291
+next_node_cnt, next_edge_cnt: 433, 6151
+level: 2, max_n_adj: 104
+next_node_cnt, next_edge_cnt: 75, 668
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 27, 651
+level: 4, max_n_adj: 16
+0.221
+6.383
+4.344
+0.139
+261726
+261726
+3798506
+2613204
+2724821
+1714862
+53771
+13574
+667
+545
+71
+51
+31
+15
+5
+11.853
+set_id: 6
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50326
+level: 1, max_n_adj: 297
+next_node_cnt, next_edge_cnt: 429, 6189
+level: 2, max_n_adj: 107
+next_node_cnt, next_edge_cnt: 64, 671
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 27, 656
+level: 4, max_n_adj: 16
+0.219
+6.187
+4.440
+0.149
+261726
+261726
+3682846
+2532793
+2751707
+1746000
+55477
+14069
+683
+545
+76
+62
+38
+18
+6
+11.706
+set_id: 7
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50368
+level: 1, max_n_adj: 293
+next_node_cnt, next_edge_cnt: 417, 6142
+level: 2, max_n_adj: 105
+next_node_cnt, next_edge_cnt: 63, 648
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 633
+level: 4, max_n_adj: 16
+0.225
+6.272
+4.532
+0.136
+261726
+261726
+3744328
+2578320
+2827385
+1779682
+53480
+13496
+650
+545
+53
+52
+30
+17
+5
+11.907
+set_id: 8
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50281
+level: 1, max_n_adj: 298
+next_node_cnt, next_edge_cnt: 427, 6126
+level: 2, max_n_adj: 106
+next_node_cnt, next_edge_cnt: 71, 659
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 27, 642
+level: 4, max_n_adj: 16
+0.220
+6.315
+4.354
+0.147
+261726
+261726
+3768290
+2590246
+2755413
+1724176
+55401
+14078
+651
+545
+62
+44
+30
+10
+4
+11.788
+set_id: 9
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50272
+level: 1, max_n_adj: 295
+next_node_cnt, next_edge_cnt: 449, 6174
+level: 2, max_n_adj: 106
+next_node_cnt, next_edge_cnt: 73, 666
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 27, 650
+level: 4, max_n_adj: 16
+0.229
+6.359
+4.360
+0.147
+261726
+261726
+3782571
+2601971
+2735047
+1721101
+56794
+14531
+668
+545
+70
+53
+33
+14
+6
+11.807
+gpuPC3 1 link 20000
+set_id: 0
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 699, 34904
+level: 1, max_n_adj: 284
+next_node_cnt, next_edge_cnt: 277, 1962
+level: 2, max_n_adj: 38
+next_node_cnt, next_edge_cnt: 55, 602
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 585
+level: 4, max_n_adj: 16
+0.007
+0.165
+0.020
+0.024
+261726
+261726
+1303037
+1011542
+175001
+83501
+52278
+13183
+556
+545
+5
+6
+0
+3
+3
+0.451
+set_id: 1
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 702, 35623
+level: 1, max_n_adj: 288
+next_node_cnt, next_edge_cnt: 290, 2081
+level: 2, max_n_adj: 35
+next_node_cnt, next_edge_cnt: 45, 596
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 586
+level: 4, max_n_adj: 16
+0.007
+0.171
+0.020
+0.023
+261726
+261726
+1369378
+1060448
+206946
+105353
+55214
+14057
+563
+545
+6
+12
+0
+6
+6
+0.269
+set_id: 2
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 696, 34533
+level: 1, max_n_adj: 311
+next_node_cnt, next_edge_cnt: 284, 2067
+level: 2, max_n_adj: 35
+next_node_cnt, next_edge_cnt: 41, 586
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+0.007
+0.166
+0.019
+0.023
+261726
+261726
+1307560
+1013089
+199207
+100776
+52061
+13020
+547
+545
+2
+0
+0
+0
+0
+0.262
+set_id: 3
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 693, 33487
+level: 1, max_n_adj: 304
+next_node_cnt, next_edge_cnt: 272, 2103
+level: 2, max_n_adj: 38
+next_node_cnt, next_edge_cnt: 39, 595
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 590
+level: 4, max_n_adj: 16
+0.007
+0.155
+0.020
+0.022
+261726
+261726
+1283669
+983864
+211600
+108691
+55268
+14080
+575
+545
+10
+20
+2
+13
+5
+0.261
+set_id: 4
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 697, 34806
+level: 1, max_n_adj: 287
+next_node_cnt, next_edge_cnt: 277, 2071
+level: 2, max_n_adj: 36
+next_node_cnt, next_edge_cnt: 52, 601
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 583
+level: 4, max_n_adj: 16
+0.007
+0.167
+0.021
+0.023
+261726
+261726
+1328905
+1023648
+205934
+101143
+55919
+14388
+555
+545
+3
+7
+1
+4
+2
+0.264
+set_id: 5
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 700, 35401
+level: 1, max_n_adj: 283
+next_node_cnt, next_edge_cnt: 288, 2002
+level: 2, max_n_adj: 32
+next_node_cnt, next_edge_cnt: 42, 590
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 586
+level: 4, max_n_adj: 16
+0.007
+0.170
+0.018
+0.020
+261726
+261726
+1323001
+1029078
+173831
+87960
+51975
+12992
+560
+545
+6
+9
+1
+5
+3
+0.262
+set_id: 6
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 695, 34192
+level: 1, max_n_adj: 296
+next_node_cnt, next_edge_cnt: 284, 2069
+level: 2, max_n_adj: 35
+next_node_cnt, next_edge_cnt: 39, 592
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 588
+level: 4, max_n_adj: 16
+0.007
+0.164
+0.021
+0.024
+261726
+261726
+1300155
+1004977
+195870
+98690
+55248
+14045
+564
+545
+8
+11
+1
+6
+4
+0.262
+set_id: 7
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 700, 35177
+level: 1, max_n_adj: 294
+next_node_cnt, next_edge_cnt: 280, 2064
+level: 2, max_n_adj: 33
+next_node_cnt, next_edge_cnt: 64, 613
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 587
+level: 4, max_n_adj: 16
+0.007
+0.173
+0.021
+0.024
+261726
+261726
+1368811
+1065098
+199354
+104452
+52484
+13333
+563
+545
+7
+11
+3
+5
+3
+0.273
+set_id: 8
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 698, 35915
+level: 1, max_n_adj: 319
+next_node_cnt, next_edge_cnt: 276, 2028
+level: 2, max_n_adj: 36
+next_node_cnt, next_edge_cnt: 39, 588
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 585
+level: 4, max_n_adj: 16
+0.007
+0.174
+0.019
+0.024
+261726
+261726
+1347884
+1048150
+196227
+95707
+55167
+14010
+558
+545
+5
+8
+2
+5
+1
+0.275
+set_id: 9
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 687, 31848
+level: 1, max_n_adj: 296
+next_node_cnt, next_edge_cnt: 274, 1959
+level: 2, max_n_adj: 32
+next_node_cnt, next_edge_cnt: 38, 589
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 587
+level: 4, max_n_adj: 16
+0.007
+0.143
+0.016
+0.021
+261726
+261726
+1193655
+914719
+170728
+84484
+52183
+13052
+570
+545
+7
+18
+2
+12
+4
+0.238
+gpuPC3 1 link 40000
+set_id: 0
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 705, 37905
+level: 1, max_n_adj: 285
+next_node_cnt, next_edge_cnt: 270, 2364
+level: 2, max_n_adj: 43
+next_node_cnt, next_edge_cnt: 38, 584
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 583
+level: 4, max_n_adj: 16
+0.011
+0.310
+0.045
+0.026
+261726
+261726
+1649939
+1240977
+310371
+160139
+52059
+13017
+554
+545
+3
+6
+0
+3
+3
+0.653
+set_id: 1
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 713, 38653
+level: 1, max_n_adj: 286
+next_node_cnt, next_edge_cnt: 274, 2372
+level: 2, max_n_adj: 42
+next_node_cnt, next_edge_cnt: 64, 612
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 587
+level: 4, max_n_adj: 16
+0.011
+0.317
+0.041
+0.026
+261726
+261726
+1692625
+1283109
+280524
+151473
+52336
+13223
+555
+545
+7
+3
+1
+1
+1
+0.474
+set_id: 2
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 710, 39292
+level: 1, max_n_adj: 286
+next_node_cnt, next_edge_cnt: 282, 2378
+level: 2, max_n_adj: 43
+next_node_cnt, next_edge_cnt: 49, 597
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 585
+level: 4, max_n_adj: 16
+0.010
+0.314
+0.044
+0.029
+261726
+261726
+1733973
+1307889
+314265
+163412
+52113
+13089
+559
+545
+5
+9
+1
+5
+3
+0.466
+set_id: 3
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 706, 37156
+level: 1, max_n_adj: 290
+next_node_cnt, next_edge_cnt: 266, 2368
+level: 2, max_n_adj: 45
+next_node_cnt, next_edge_cnt: 40, 585
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+0.011
+0.292
+0.043
+0.025
+261726
+261726
+1621048
+1214303
+279161
+153594
+51935
+12984
+549
+545
+2
+2
+0
+1
+1
+0.441
+set_id: 4
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 712, 38483
+level: 1, max_n_adj: 289
+next_node_cnt, next_edge_cnt: 275, 2341
+level: 2, max_n_adj: 41
+next_node_cnt, next_edge_cnt: 46, 593
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 583
+level: 4, max_n_adj: 16
+0.011
+0.315
+0.040
+0.024
+261726
+261726
+1676626
+1269952
+280317
+146998
+52112
+13031
+550
+545
+3
+2
+0
+1
+1
+0.458
+set_id: 5
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 712, 38657
+level: 1, max_n_adj: 279
+next_node_cnt, next_edge_cnt: 274, 2296
+level: 2, max_n_adj: 42
+next_node_cnt, next_edge_cnt: 57, 605
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 584
+level: 4, max_n_adj: 16
+0.011
+0.306
+0.037
+0.027
+261726
+261726
+1690829
+1278505
+256172
+135374
+52336
+13172
+558
+545
+4
+9
+1
+5
+3
+0.45
+set_id: 6
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 709, 38258
+level: 1, max_n_adj: 299
+next_node_cnt, next_edge_cnt: 262, 2306
+level: 2, max_n_adj: 42
+next_node_cnt, next_edge_cnt: 51, 595
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+0.011
+0.311
+0.038
+0.026
+261726
+261726
+1685325
+1283379
+266176
+142751
+52140
+13100
+550
+545
+2
+3
+1
+2
+0
+0.457
+set_id: 7
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 709, 37700
+level: 1, max_n_adj: 291
+next_node_cnt, next_edge_cnt: 279, 2353
+level: 2, max_n_adj: 44
+next_node_cnt, next_edge_cnt: 51, 594
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 581
+level: 4, max_n_adj: 16
+0.011
+0.311
+0.040
+0.026
+261726
+261726
+1669259
+1260166
+276939
+146209
+52188
+13150
+550
+545
+1
+4
+0
+3
+1
+0.462
+set_id: 8
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 708, 38210
+level: 1, max_n_adj: 308
+next_node_cnt, next_edge_cnt: 270, 2306
+level: 2, max_n_adj: 42
+next_node_cnt, next_edge_cnt: 75, 621
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+0.011
+0.308
+0.041
+0.023
+261726
+261726
+1681089
+1273478
+267507
+143890
+52657
+13418
+545
+545
+0
+0
+0
+0
+0
+0.465
+set_id: 9
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 705, 38079
+level: 1, max_n_adj: 292
+next_node_cnt, next_edge_cnt: 266, 2406
+level: 2, max_n_adj: 44
+next_node_cnt, next_edge_cnt: 39, 587
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 583
+level: 4, max_n_adj: 16
+0.010
+0.306
+0.047
+0.028
+261726
+261726
+1685833
+1265892
+312813
+168070
+55141
+14045
+553
+545
+3
+5
+1
+3
+1
+0.463
+gpuPC3 1 link 100000
+set_id: 0
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 721, 41647
+level: 1, max_n_adj: 320
+next_node_cnt, next_edge_cnt: 273, 2805
+level: 2, max_n_adj: 52
+next_node_cnt, next_edge_cnt: 66, 611
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+0.044
+0.773
+0.132
+0.042
+261726
+261726
+2114028
+1536457
+391260
+227334
+52402
+13259
+545
+545
+0
+0
+0
+0
+0
+1.32
+set_id: 1
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 722, 40944
+level: 1, max_n_adj: 289
+next_node_cnt, next_edge_cnt: 269, 2869
+level: 2, max_n_adj: 57
+next_node_cnt, next_edge_cnt: 43, 593
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 583
+level: 4, max_n_adj: 16
+0.044
+0.782
+0.143
+0.050
+261726
+261726
+2175123
+1564914
+394968
+243125
+55211
+14065
+551
+545
+3
+3
+1
+2
+0
+1.237
+set_id: 2
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 722, 41449
+level: 1, max_n_adj: 287
+next_node_cnt, next_edge_cnt: 273, 2865
+level: 2, max_n_adj: 61
+next_node_cnt, next_edge_cnt: 38, 582
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+0.044
+0.805
+0.148
+0.043
+261726
+261726
+2196640
+1585637
+435294
+258571
+51928
+12982
+547
+545
+2
+0
+0
+0
+0
+1.207
+set_id: 3
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 720, 40385
+level: 1, max_n_adj: 265
+next_node_cnt, next_edge_cnt: 267, 2802
+level: 2, max_n_adj: 56
+next_node_cnt, next_edge_cnt: 55, 602
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 583
+level: 4, max_n_adj: 16
+0.044
+0.759
+0.137
+0.039
+261726
+261726
+2071027
+1499755
+387061
+231975
+52302
+13192
+550
+545
+3
+2
+0
+1
+1
+1.161
+set_id: 4
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 40804
+level: 1, max_n_adj: 287
+next_node_cnt, next_edge_cnt: 270, 2756
+level: 2, max_n_adj: 54
+next_node_cnt, next_edge_cnt: 46, 592
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+0.044
+0.783
+0.127
+0.046
+261726
+261726
+2128030
+1548530
+384224
+221732
+55041
+14017
+549
+545
+2
+2
+0
+1
+1
+1.166
+set_id: 5
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 722, 41330
+level: 1, max_n_adj: 264
+next_node_cnt, next_edge_cnt: 284, 2819
+level: 2, max_n_adj: 52
+next_node_cnt, next_edge_cnt: 69, 615
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+0.044
+0.788
+0.137
+0.040
+261726
+261726
+2172367
+1562430
+399525
+236084
+52623
+13374
+545
+545
+0
+0
+0
+0
+0
+1.191
+set_id: 6
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 40882
+level: 1, max_n_adj: 256
+next_node_cnt, next_edge_cnt: 272, 2776
+level: 2, max_n_adj: 52
+next_node_cnt, next_edge_cnt: 39, 585
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+0.044
+0.764
+0.124
+0.040
+261726
+261726
+2102239
+1529370
+367174
+214184
+52053
+13018
+549
+545
+2
+2
+0
+1
+1
+1.132
+set_id: 7
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 720, 40291
+level: 1, max_n_adj: 276
+next_node_cnt, next_edge_cnt: 273, 2803
+level: 2, max_n_adj: 53
+next_node_cnt, next_edge_cnt: 54, 600
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 584
+level: 4, max_n_adj: 16
+0.044
+0.771
+0.130
+0.039
+261726
+261726
+2114668
+1523525
+396113
+226477
+52155
+13120
+554
+545
+4
+5
+1
+3
+1
+1.163
+set_id: 8
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 717, 41180
+level: 1, max_n_adj: 297
+next_node_cnt, next_edge_cnt: 275, 2864
+level: 2, max_n_adj: 59
+next_node_cnt, next_edge_cnt: 51, 596
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 583
+level: 4, max_n_adj: 16
+0.044
+0.770
+0.138
+0.045
+261726
+261726
+2130280
+1537345
+390204
+244301
+52180
+13125
+555
+545
+3
+7
+1
+5
+1
+1.166
+set_id: 9
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 720, 40949
+level: 1, max_n_adj: 292
+next_node_cnt, next_edge_cnt: 270, 2814
+level: 2, max_n_adj: 55
+next_node_cnt, next_edge_cnt: 52, 596
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+0.044
+0.775
+0.135
+0.042
+261726
+261726
+2131601
+1544391
+380831
+234249
+52369
+13197
+545
+545
+0
+0
+0
+0
+0
+1.174
+gpuPC3 1 link 200000
+set_id: 0
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 41697
+level: 1, max_n_adj: 264
+next_node_cnt, next_edge_cnt: 277, 3265
+level: 2, max_n_adj: 65
+next_node_cnt, next_edge_cnt: 53, 599
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 584
+level: 4, max_n_adj: 16
+0.098
+1.997
+0.365
+0.071
+261726
+261726
+2403015
+1685885
+534180
+329654
+52158
+13115
+551
+545
+4
+2
+0
+1
+1
+2.975
+set_id: 1
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 41029
+level: 1, max_n_adj: 271
+next_node_cnt, next_edge_cnt: 286, 3299
+level: 2, max_n_adj: 68
+next_node_cnt, next_edge_cnt: 45, 591
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+0.101
+1.932
+0.377
+0.078
+261726
+261726
+2360413
+1644329
+539722
+333700
+55070
+14032
+545
+545
+0
+0
+0
+0
+0
+2.735
+set_id: 2
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 41329
+level: 1, max_n_adj: 259
+next_node_cnt, next_edge_cnt: 272, 3314
+level: 2, max_n_adj: 69
+next_node_cnt, next_edge_cnt: 38, 582
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+0.096
+1.930
+0.376
+0.078
+261726
+261726
+2349096
+1650714
+514193
+334903
+52187
+13052
+545
+545
+0
+0
+0
+0
+0
+2.793
+set_id: 3
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 41039
+level: 1, max_n_adj: 262
+next_node_cnt, next_edge_cnt: 272, 3291
+level: 2, max_n_adj: 67
+next_node_cnt, next_edge_cnt: 38, 580
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+0.101
+2.013
+0.374
+0.075
+261726
+261726
+2433447
+1697339
+537212
+336244
+51928
+12982
+545
+545
+0
+0
+0
+0
+0
+2.808
+set_id: 4
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 40762
+level: 1, max_n_adj: 257
+next_node_cnt, next_edge_cnt: 277, 3234
+level: 2, max_n_adj: 63
+next_node_cnt, next_edge_cnt: 42, 589
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 583
+level: 4, max_n_adj: 16
+0.098
+1.877
+0.357
+0.081
+261726
+261726
+2308093
+1617313
+506266
+323625
+55146
+14048
+550
+545
+3
+2
+0
+1
+1
+2.676
+set_id: 5
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 40830
+level: 1, max_n_adj: 258
+next_node_cnt, next_edge_cnt: 293, 3267
+level: 2, max_n_adj: 68
+next_node_cnt, next_edge_cnt: 42, 587
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+0.097
+1.928
+0.379
+0.066
+261726
+261726
+2357927
+1653077
+527793
+329197
+52097
+13027
+547
+545
+2
+0
+0
+0
+0
+2.72
+set_id: 6
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 41290
+level: 1, max_n_adj: 264
+next_node_cnt, next_edge_cnt: 284, 3237
+level: 2, max_n_adj: 68
+next_node_cnt, next_edge_cnt: 56, 600
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 581
+level: 4, max_n_adj: 16
+0.097
+1.920
+0.338
+0.073
+261726
+261726
+2342387
+1639486
+493627
+304953
+52184
+13124
+549
+545
+1
+3
+1
+2
+0
+2.688
+set_id: 7
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 41542
+level: 1, max_n_adj: 282
+next_node_cnt, next_edge_cnt: 279, 3280
+level: 2, max_n_adj: 67
+next_node_cnt, next_edge_cnt: 45, 589
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+0.100
+1.933
+0.360
+0.071
+261726
+261726
+2359562
+1648712
+517679
+326582
+51982
+13005
+545
+545
+0
+0
+0
+0
+0
+2.72
+set_id: 8
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 41962
+level: 1, max_n_adj: 294
+next_node_cnt, next_edge_cnt: 272, 3275
+level: 2, max_n_adj: 66
+next_node_cnt, next_edge_cnt: 39, 586
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+0.101
+1.948
+0.369
+0.075
+261726
+261726
+2366017
+1657917
+536244
+327369
+55306
+14045
+551
+545
+2
+4
+0
+3
+1
+2.75
+set_id: 9
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 41386
+level: 1, max_n_adj: 280
+next_node_cnt, next_edge_cnt: 271, 3264
+level: 2, max_n_adj: 65
+next_node_cnt, next_edge_cnt: 65, 615
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+0.098
+1.933
+0.373
+0.069
+261726
+261726
+2368114
+1648225
+534902
+331032
+52588
+13329
+545
+545
+0
+0
+0
+0
+0
+2.719
+gpuPC3 1 link 400000
+set_id: 0
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 41547
+level: 1, max_n_adj: 270
+next_node_cnt, next_edge_cnt: 286, 3959
+level: 2, max_n_adj: 73
+next_node_cnt, next_edge_cnt: 58, 603
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+0.224
+4.261
+1.259
+0.163
+261726
+261726
+2622043
+1755250
+706781
+477600
+55284
+14153
+547
+545
+2
+0
+0
+0
+0
+6.802
+set_id: 1
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 722, 41201
+level: 1, max_n_adj: 268
+next_node_cnt, next_edge_cnt: 283, 3953
+level: 2, max_n_adj: 71
+next_node_cnt, next_edge_cnt: 42, 584
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+0.215
+4.168
+1.351
+0.136
+261726
+261726
+2578226
+1723412
+736621
+493357
+51960
+12992
+545
+545
+0
+0
+0
+0
+0
+6.583
+set_id: 2
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 722, 41186
+level: 1, max_n_adj: 267
+next_node_cnt, next_edge_cnt: 288, 3987
+level: 2, max_n_adj: 74
+next_node_cnt, next_edge_cnt: 47, 595
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+0.220
+4.144
+1.350
+0.150
+261726
+261726
+2540930
+1705677
+776963
+512974
+55101
+14040
+549
+545
+2
+2
+0
+1
+1
+6.573
+set_id: 3
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 41301
+level: 1, max_n_adj: 264
+next_node_cnt, next_edge_cnt: 284, 3941
+level: 2, max_n_adj: 74
+next_node_cnt, next_edge_cnt: 38, 582
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 581
+level: 4, max_n_adj: 16
+0.218
+4.229
+1.321
+0.124
+261726
+261726
+2607016
+1741740
+748576
+497755
+52062
+13017
+546
+545
+1
+0
+0
+0
+0
+6.603
+set_id: 4
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 721, 41165
+level: 1, max_n_adj: 265
+next_node_cnt, next_edge_cnt: 284, 3893
+level: 2, max_n_adj: 72
+next_node_cnt, next_edge_cnt: 42, 585
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 581
+level: 4, max_n_adj: 16
+0.223
+4.157
+1.280
+0.141
+261726
+261726
+2556303
+1716694
+723627
+476718
+51965
+12992
+546
+545
+1
+0
+0
+0
+0
+6.522
+set_id: 5
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 41118
+level: 1, max_n_adj: 265
+next_node_cnt, next_edge_cnt: 283, 3932
+level: 2, max_n_adj: 73
+next_node_cnt, next_edge_cnt: 38, 581
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+0.223
+4.156
+1.287
+0.135
+261726
+261726
+2535396
+1706596
+707059
+470322
+52047
+13017
+545
+545
+0
+0
+0
+0
+0
+6.511
+set_id: 6
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 41608
+level: 1, max_n_adj: 268
+next_node_cnt, next_edge_cnt: 286, 3958
+level: 2, max_n_adj: 74
+next_node_cnt, next_edge_cnt: 43, 594
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 583
+level: 4, max_n_adj: 16
+0.218
+4.223
+1.332
+0.129
+261726
+261726
+2589743
+1738330
+767597
+498922
+52194
+13088
+553
+545
+3
+5
+1
+3
+1
+6.605
+set_id: 7
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 721, 41100
+level: 1, max_n_adj: 264
+next_node_cnt, next_edge_cnt: 287, 3964
+level: 2, max_n_adj: 74
+next_node_cnt, next_edge_cnt: 49, 595
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+0.225
+4.176
+1.306
+0.129
+261726
+261726
+2578220
+1723688
+736178
+486314
+52432
+13225
+547
+545
+2
+0
+0
+0
+0
+6.565
+set_id: 8
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 41286
+level: 1, max_n_adj: 268
+next_node_cnt, next_edge_cnt: 285, 3990
+level: 2, max_n_adj: 74
+next_node_cnt, next_edge_cnt: 60, 608
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 581
+level: 4, max_n_adj: 16
+0.216
+4.227
+1.364
+0.154
+261726
+261726
+2588916
+1740183
+785753
+518450
+55490
+14222
+546
+545
+1
+0
+0
+0
+0
+6.683
+set_id: 9
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 41360
+level: 1, max_n_adj: 266
+next_node_cnt, next_edge_cnt: 285, 3948
+level: 2, max_n_adj: 73
+next_node_cnt, next_edge_cnt: 39, 585
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+0.225
+4.186
+1.298
+0.130
+261726
+261726
+2583416
+1724185
+749460
+493107
+52059
+13018
+548
+545
+2
+1
+1
+0
+0
+6.541
