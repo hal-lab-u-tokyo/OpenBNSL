@@ -1,67 +1,138 @@
 #include "structure_learning/PC.h"
 
-#include <cstddef>
-#include <vector>
+#include <algorithm>
+#include <queue>
+#include <set>
+#include <unordered_set>
 
 #include "base/contingency_table.h"
 #include "base/dataframe_wrapper.h"
 #include "citest/citest.h"
-#include "utils/next_combination.h"
 
-PDAG build_skeleton(const DataframeWrapper& df, const CITestType& citest_type) {
-  size_t n = df.num_of_vars;
-  PDAG g(n);
-  g.complete_graph();  // Start with a complete graph
-
-  size_t l = 0;  // the order of the conditioning set
-  while (l <= n - 2) {
-    for (size_t x = 0; x < n; ++x) {
-      std::vector<size_t> x_neighbors = g.neighbors(x);
-      // TODO: In case not enough neighbors to condition on
-
-      std::vector<size_t> varset(x_neighbors);
-      varset.push_back(x);
-      std::sort(varset.begin(), varset.end());
-      ContingencyTable ct = buildContingencyTable(varset, df);
-
-      for (size_t y : x_neighbors) {
-        // Get the neighbors of x excluding y
-        std::vector<size_t> adj_without_y;
-        for (size_t neighbor : x_neighbors) {
-          if (neighbor != y) {
-            adj_without_y.push_back(neighbor);
-          }
-        }
-
-        // Not enough neighbors to condition on
-        if (adj_without_y.size() < l) continue;
-
-        // Generate all combinations of size l from adj_without_y
-        std::vector<bool> comb_mask(adj_without_y.size(), false);
-        std::fill(comb_mask.begin(), comb_mask.begin() + l, true);
-        do {
-          std::vector<size_t> sepset_candidate;
-          for (size_t i = 0; i < comb_mask.size(); ++i) {
-            if (comb_mask[i]) {
-              sepset_candidate.push_back(adj_without_y[i]);
-            }
-          }
-          if (citest(x, y, sepset_candidate, ct, citest_type)) {
-            g.remove_edge(x, y);
-            g.remove_edge(y, x);
-            break;  // No need to check further sepset candidates
-          }
-        } while (std::prev_permutation(comb_mask.begin(), comb_mask.end()));
-      }
-    }
-    l++;
+void enumerate_combinations(
+  const std::vector<size_t> &items, 
+  size_t k,
+  size_t idx, std::vector<size_t> &current,
+  std::vector<std::vector<size_t>> &result
+) {
+  if (current.size() == k) {
+    result.push_back(current);
+    return;
   }
-
-  return g;
+  for (size_t i = idx; i < items.size(); ++i) {
+    current.push_back(items[i]);
+    enumerate_combinations(items, k, i + 1, current, result);
+    current.pop_back();
+  }
 }
 
-PDAG PC(const DataframeWrapper& df, const CITestType& citest_type) {
-  PDAG g = build_skeleton(df, citest_type);
+std::vector<std::vector<size_t>> combinations(
+  const std::vector<size_t> &items,
+  size_t k) {
+  std::vector<std::vector<size_t>> res;
+  if (k == 0) {
+    res.push_back({});
+    return res;
+  }
+  std::vector<size_t> current;
+  enumerate_combinations(items, k, 0, current, res);
+  return res;
+}
 
-  return g;
+static bool all_nodes_degree_less_than(const PDAG &g, size_t limit) {
+    const size_t n = g.num_vars;
+    for (size_t v = 0; v < n; ++v) {
+        if (g.undirected_neighbors(v).size() >= limit) return false;
+    }
+    return true;
+}
+
+PDAG build_skeleton(
+  const DataframeWrapper &df, 
+  const CITestType &citest_type,
+  size_t max_cond_vars,
+  std::vector<std::vector<std::vector<size_t>>> &sepset
+) {
+  const size_t n = df.num_of_vars;
+  PDAG pdag(n);
+  pdag.complete_graph();
+  
+  for (size_t l = 0; l <= max_cond_vars; ++l) {
+    for (size_t x = 0; x < n; ++x) {
+      for (size_t y = x + 1; y < n; ++y) {
+        if (!pdag.has_edge(x, y)) continue; // already removed
+        std::vector<size_t> neigh_x = pdag.undirected_neighbors(x);
+        neigh_x.erase(std::remove(neigh_x.begin(), neigh_x.end(), y), neigh_x.end());
+        for (auto &sepset_candidates: combinations(neigh_x, l)) {
+          std::vector<size_t> var_ids(sepset_candidates);
+          var_ids.push_back(x);
+          var_ids.push_back(y);
+          std::sort(var_ids.begin(), var_ids.end());
+          ContingencyTable ct = buildContingencyTable(var_ids, df);
+          if (citest(x, y, sepset_candidates, ct, citest_type)) {
+            pdag.remove_edge(x, y);
+            pdag.remove_edge(y, x);
+            sepset[x][y] = sepset[y][x] = sepset_candidates;
+            break;  // stop checking other sets for this pair
+          }
+        } 
+
+        if (!pdag.has_edge(x, y)) continue; // already removed
+        std::vector<size_t> neigh_y = pdag.undirected_neighbors(y);
+        neigh_y.erase(std::remove(neigh_y.begin(), neigh_y.end(), x), neigh_y.end());
+        for (auto &sepset_candidates: combinations(neigh_y, l)) {
+          std::vector<size_t> var_ids(sepset_candidates);
+          var_ids.push_back(x);
+          var_ids.push_back(y);
+          std::sort(var_ids.begin(), var_ids.end());
+          ContingencyTable ct = buildContingencyTable(var_ids, df);
+          if (citest(x, y, sepset_candidates, ct, citest_type)) {
+            pdag.remove_edge(x, y);
+            pdag.remove_edge(y, x);
+            sepset[x][y] = sepset[y][x] = sepset_candidates;
+            break;  // stop checking other sets for this pair
+          }
+        }
+      }
+    }
+    if (all_nodes_degree_less_than(pdag, l + 1) || l == max_cond_vars) {
+        break;
+    }
+  }
+  return pdag;
+}
+
+void orient_colliders(
+  PDAG &pdag,
+  const std::vector<std::vector<std::vector<size_t>>> &sepset) {
+  const size_t n = pdag.num_vars;
+  for (size_t y = 0; y < n; ++y) {
+    auto neigh = pdag.undirected_neighbors(y);
+    if (neigh.size() < 2) continue;
+    for (size_t i = 0; i < neigh.size(); ++i) {
+      for (size_t j = i + 1; j < neigh.size(); ++j) {
+        size_t x = neigh[i], z = neigh[j];
+        if (pdag.is_adjacent(x, z)) continue;
+        if (std::find(sepset[x][z].begin(), sepset[x][z].end(), y) ==
+            sepset[x][z].end()) {
+          if (pdag.has_edge(y, x)) pdag.remove_edge(y, x);
+          if (pdag.has_edge(y, z)) pdag.remove_edge(y, z);
+        }
+      }
+    }
+  }
+}
+
+PDAG PC(
+  const DataframeWrapper &df, 
+  const CITestType &citest_type,
+  size_t max_cond_vars
+) {
+  const size_t n = df.num_of_vars;
+  std::vector<std::vector<std::vector<size_t>>> sepset(
+      n, std::vector<std::vector<size_t>>(n));
+
+  PDAG pdag = build_skeleton(df, citest_type, max_cond_vars, sepset);
+  orient_colliders(pdag, sepset);
+  return pdag;
 }

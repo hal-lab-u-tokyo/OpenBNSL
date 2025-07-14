@@ -14,12 +14,12 @@ T calculate_local_score(size_t child_var, const std::vector<size_t>& parent_set,
   }
   
   size_t outer_size = 1, child_size = 1, inner_size = 1;
-  for (size_t i = 0; i < ct.vars.size(); i++) {
-    if (ct.vars[i] < child_var) {
+  for (size_t i = 0; i < ct.var_ids.size(); i++) {
+    if (ct.var_ids[i] < child_var) {
       outer_size *= ct.cardinalities[i];
-    } else if (ct.vars[i] == child_var) {
+    } else if (ct.var_ids[i] == child_var) {
       child_size = ct.cardinalities[i];
-    } else {  // ct.vars[i] > child_var
+    } else {  // ct.var_ids[i] > child_var
       inner_size *= ct.cardinalities[i];
     }
   }

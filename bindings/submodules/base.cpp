@@ -33,12 +33,12 @@ void bind_base(py::module& m) {
       });
 
   py::class_<ContingencyTable>(submodule, "ContingencyTable")
-      .def_readonly("vars", &ContingencyTable::vars)
+      .def_readonly("var_ids", &ContingencyTable::var_ids)
       .def_readonly("cardinalities", &ContingencyTable::cardinalities)
       .def_readonly("counts", &ContingencyTable::counts);
 
   submodule.def("buildContingencyTable", &buildContingencyTable,
-                py::arg("vars"), py::arg("df"));
+                py::arg("var_ids"), py::arg("df"));
 
   py::class_<PDAG>(submodule, "PDAG")
       .def(py::init<size_t>())
