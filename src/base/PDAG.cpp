@@ -35,11 +35,18 @@ bool PDAG::has_directed_edge(size_t x, size_t y) const {
   return has_edge(x, y) && !has_edge(y, x);
 }
 
-// if x <-> y
+// if x -> y and y -> x
 bool PDAG::has_undirected_edge(size_t x, size_t y) const {
   if (x >= num_vars || y >= num_vars)
     throw std::out_of_range("Index out of range");
   return has_edge(x, y) && has_edge(y, x);
+}
+
+// if x -> y or y -> x
+bool PDAG::is_adjacent(size_t x, size_t y) const {
+  if (x >= num_vars || y >= num_vars)
+    throw std::out_of_range("Index out of range");
+  return has_edge(x, y) || has_edge(y, x);
 }
 
 // succ(x) = {y | x -> y}
@@ -92,6 +99,7 @@ std::vector<size_t> PDAG::neighbors(size_t x) const {
 }
 
 // undirected_neighbors(x) = {y | x <-> y}
+// O( |N(x)| )
 std::vector<size_t> PDAG::undirected_neighbors(size_t x) const {
   if (x >= num_vars) throw std::out_of_range("Index out of range");
   std::vector<size_t> undir;
@@ -212,3 +220,67 @@ void PDAG::complete_graph() {
     remove_edge(i, i);
   }
 }
+
+// TODO
+// void apply_meeks_rules(PDAG &g) {
+//   const size_t n = g.num_vars;
+//   bool changed = true;
+
+//   while (changed) {
+//     changed = false;
+
+//     // ---------------------------- Rule 1 ----------------------------
+//     for (size_t y = 0; y < n; ++y) {
+//       auto parents = directed_parents(g, y);
+//       auto undirected_nbs = g.undirected_neighbors(g, y);
+//       for (size_t x : parents) {
+//         for (size_t z : undirected_nbs) {
+//           if (is_adjacent(g, x, z)) continue;
+//           // Avoid cycles: ensure there is no directed path z ⇒ y
+//           if (has_directed_path(g, z, y)) continue;
+//           // Orient y‑z as y→z
+//           if (g.has_edge(z, y)) {
+//             g.remove_edge(z, y);
+//             changed = true;
+//           }
+//         }
+//       }
+//     }
+
+//     // ---------------------------- Rule 2 ----------------------------
+//     for (size_t z = 0; z < n; ++z) {
+//       auto parents = directed_parents(g, z);
+//       auto children = directed_children(g, z);
+//       for (size_t x : parents) {
+//         for (size_t y : children) {
+//           if (g.has_undirected_edge(g, x, y)) {
+//             // Orient x‑y as x→y
+//             g.remove_edge(y, x);
+//             changed = true;
+//           }
+//         }
+//       }
+//     }
+
+//     // ---------------------------- Rule 3 ----------------------------
+//     for (size_t x = 0; x < n; ++x) {
+//       auto undirected_nbs = g.undirected_neighbors(g, x);
+//       if (undirected_nbs.size() < 3) continue;
+//       for (size_t w : undirected_nbs) {
+//         size_t cnt = 0;
+//         for (size_t nbr : undirected_nbs) {
+//           if (nbr == w) continue;
+//           if (g.has_directed_edge(g, nbr, w)) ++cnt;
+//           if (cnt >= 2) break;
+//         }
+//         if (cnt >= 2) {
+//           // Orient x‑w as x→w
+//           if (g.has_edge(w, x)) {
+//             g.remove_edge(w, x);
+//             changed = true;
+//           }
+//         }
+//       }
+//     }
+//   }
+// }
