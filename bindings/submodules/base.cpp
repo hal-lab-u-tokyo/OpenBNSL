@@ -1,8 +1,8 @@
 #include <pybind11/pybind11.h>
 
-#include "base/PDAG.h"
 #include "base/contingency_table.h"
 #include "base/dataframe_wrapper.h"
+#include "graph/pdag.h"
 
 void bind_base(py::module& m) {
   auto submodule = m.def_submodule("base", "Base submodule");
@@ -37,8 +37,10 @@ void bind_base(py::module& m) {
       .def_readonly("cardinalities", &ContingencyTable::cardinalities)
       .def_readonly("counts", &ContingencyTable::counts);
 
-  submodule.def("buildContingencyTable", &buildContingencyTable,
-                py::arg("var_ids"), py::arg("df"));
+  submodule.def("buildContingencyTable",
+                &buildContingencyTable,
+                py::arg("var_ids"),
+                py::arg("df"));
 
   py::class_<PDAG>(submodule, "PDAG")
       .def(py::init<size_t>())

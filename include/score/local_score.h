@@ -14,6 +14,7 @@
  * @return The calculated local score as the specified precision type
  */
 template <typename T>
-T calculate_local_score(size_t child_var, const std::vector<size_t>& parent_set,
+T calculate_local_score(size_t child_var,
+                        const std::vector<size_t>& parent_set,
                         const ContingencyTable& ct,
                         const ScoreType& score_type = BDeu{1.0});

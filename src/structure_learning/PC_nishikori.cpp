@@ -16,7 +16,8 @@ using namespace std;
 // Gall.at(i).at(j)==1 means there is an edge i -> j
 
 template <typename T>
-bool next_combination(const T first, const T last,
+bool next_combination(const T first,
+                      const T last,
                       int k) {  // use sorted vector
   const T subset = first + k;
   // empty container | k = 0 | k == n
@@ -154,7 +155,8 @@ struct PDAG_nishikori_PC {
   }
 };
 
-vector<vector<int>> state_count_PC(const vector<vector<int>> &data, int &node_x,
+vector<vector<int>> state_count_PC(const vector<vector<int>> &data,
+                                   int &node_x,
                                    vector<int> &parents,
                                    vector<int> &n_states) {
   if (parents.empty()) {
@@ -206,8 +208,10 @@ vector<vector<int>> state_count_PC(const vector<vector<int>> &data, int &node_x,
   }
 }
 
-float localBDeuscore_PC(const vector<vector<int>> &data, int &node_x,
-                        vector<int> &parents, double &ESS,
+float localBDeuscore_PC(const vector<vector<int>> &data,
+                        int &node_x,
+                        vector<int> &parents,
+                        double &ESS,
                         vector<int> &n_states) {
   // return log of the BDeu score of X, Y | Z
   double score = 0.0;
@@ -251,8 +255,12 @@ float localBDeuscore_PC(const vector<vector<int>> &data, int &node_x,
   return score;
 }
 
-bool ci_test_PC(const vector<vector<int>> &data, int &node_x, int &node_y,
-                vector<int> &Z, double &ESS, vector<int> &n_states) {
+bool ci_test_PC(const vector<vector<int>> &data,
+                int &node_x,
+                int &node_y,
+                vector<int> &Z,
+                double &ESS,
+                vector<int> &n_states) {
   // CI test for X _|_ Y | Z
   float independent_score = 0;
   float dependent_score = 0;
@@ -274,8 +282,10 @@ bool ci_test_PC(const vector<vector<int>> &data, int &node_x, int &node_y,
   }
 }
 
-void orientation(PDAG_nishikori_PC &Gall, const vector<vector<int>> &data,
-                 double &ESS, vector<int> &n_states) {
+void orientation(PDAG_nishikori_PC &Gall,
+                 const vector<vector<int>> &data,
+                 double &ESS,
+                 vector<int> &n_states) {
   /*
       orient edges in a PDAG_nishikori_PC to a maximally oriented graph.
       orient rules are based on rule 1~3 from Meek,C.:Causal Inference and
@@ -349,7 +359,8 @@ void orientation(PDAG_nishikori_PC &Gall, const vector<vector<int>> &data,
 }
 
 PDAG_nishikori_PC PCsearch(const vector<vector<int>> &data,
-                           PDAG_nishikori_PC &Gall, double &ESS,
+                           PDAG_nishikori_PC &Gall,
+                           double &ESS,
                            vector<int> &n_states) {
   int n_node = data.at(0).size();
 
@@ -395,7 +406,8 @@ PDAG_nishikori_PC PCsearch(const vector<vector<int>> &data,
 }
 
 // void RAI(const vector<vector<int>> data, double ESS,vector<vector<bool>> g) {
-py::array_t<bool> PC_nishikori(py::array_t<int> data, py::array_t<int> n_states,
+py::array_t<bool> PC_nishikori(py::array_t<int> data,
+                               py::array_t<int> n_states,
                                double ESS) {
   // translate imput data to c++ vector(this is not optimal but I don't know how
   // to use pybind11::array_t)

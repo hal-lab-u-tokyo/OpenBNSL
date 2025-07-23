@@ -1,1 +1,4 @@
 BasedOnStyle: Google
+AllowAllParametersOfDeclarationOnNextLine: false
+BinPackParameters: false
+BinPackArguments: false

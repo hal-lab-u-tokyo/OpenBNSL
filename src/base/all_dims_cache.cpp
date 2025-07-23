@@ -12,7 +12,8 @@ AllDimsCache::AllDimsCache(const DataframeWrapper& df, int max_depth) : df(df) {
   branch(root_node.get(), 0, -1, freq_tbl, indices);  // recursive
 }
 
-void AllDimsCache::branch(Node* node, const size_t curr_depth,
+void AllDimsCache::branch(Node* node,
+                          const size_t curr_depth,
                           const int rightmost_var,
                           const std::vector<int>& freq_tbl,
                           const std::vector<int>& indices) {

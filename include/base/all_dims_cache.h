@@ -29,7 +29,9 @@ class AllDimsCache {
   size_t max_depth;
 
   std::unique_ptr<Node> root_node;
-  void branch(Node* parent, const size_t curr_depth, const int rightmost_var,
+  void branch(Node* parent,
+              const size_t curr_depth,
+              const int rightmost_var,
               const std::vector<int>& freq_tbl,
               const std::vector<int>& indices);
 

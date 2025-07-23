@@ -4,6 +4,7 @@ from pgmpy.utils import get_example_model
 from pgmpy.estimators import K2, BDeu
 import openbnsllib
 
+
 @pytest.mark.parametrize(
     "model_name, sample_size, seed",
     [
@@ -18,11 +19,10 @@ import openbnsllib
     [
         ("K2", openbnsllib.score.K2(), lambda s: K2(s)),
         ("BDeu", openbnsllib.score.BDeu(1.0), lambda s: BDeu(s, 1.0)),
-    ]
+    ],
 )
 def test_local_score(
-    model_name, sample_size, seed,
-    score_name, score_type, pgmpy_score_func
+    model_name, sample_size, seed, score_name, score_type, pgmpy_score_func
 ):
     random.seed(seed)
 

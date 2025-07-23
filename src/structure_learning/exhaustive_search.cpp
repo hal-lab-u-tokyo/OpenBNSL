@@ -9,7 +9,8 @@
 
 #define varset_t uint64_t  // number of variables <= 64
 
-PDAG exhaustive_search(const DataframeWrapper& df, const ScoreType& score_type,
+PDAG exhaustive_search(const DataframeWrapper& df,
+                       const ScoreType& score_type,
                        int max_parents) {
   if (max_parents < 0 || max_parents > (int)df.num_of_vars - 1)
     throw std::invalid_argument("max_parents must be in [0, num_of_vars-1]");
@@ -63,8 +64,8 @@ PDAG exhaustive_search(const DataframeWrapper& df, const ScoreType& score_type,
           for (auto v : varset_vec) {
             if (v != child_var) parent_set.push_back(v);
           }
-          ls = calculate_local_score<double>(child_var, parent_set, ct,
-                                             score_type);
+          ls = calculate_local_score<double>(
+              child_var, parent_set, ct, score_type);
         }
 
         double best_ls = ls;

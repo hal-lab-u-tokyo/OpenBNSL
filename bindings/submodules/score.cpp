@@ -20,7 +20,10 @@ void bind_score(py::module& m) {
       .def(py::init<>())
       .def("__repr__", [](const AIC& aic) { return "AIC()"; });
 
-  submodule.def("calculate_local_score", &calculate_local_score<double>,
-                py::arg("child_var"), py::arg("parent_set"), py::arg("ct"),
+  submodule.def("calculate_local_score",
+                &calculate_local_score<double>,
+                py::arg("child_var"),
+                py::arg("parent_set"),
+                py::arg("ct"),
                 py::arg("score_type"));
 }

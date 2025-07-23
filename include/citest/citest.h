@@ -21,5 +21,8 @@
  * @return true if x and y are conditionally independent given Z, false
  * otherwise.
  */
-bool citest(size_t x, size_t y, const std::vector<size_t>& sepset_candidate,
-            const ContingencyTable& ct, const CITestType& ci_test_type);
+bool citest(size_t x,
+            size_t y,
+            const std::vector<size_t>& sepset_candidate,
+            const ContingencyTable& ct,
+            const CITestType& ci_test_type);

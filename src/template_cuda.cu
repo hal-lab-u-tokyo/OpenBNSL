@@ -6,8 +6,12 @@
 #include "template.h"
 namespace py = pybind11;
 
-__global__ void matmul(const double* A, const double* B, double* C, int M,
-                       int K, int N) {
+__global__ void matmul(const double* A,
+                       const double* B,
+                       double* C,
+                       int M,
+                       int K,
+                       int N) {
   int row = blockIdx.y * blockDim.y + threadIdx.y;
   int col = blockIdx.x * blockDim.x + threadIdx.x;
 

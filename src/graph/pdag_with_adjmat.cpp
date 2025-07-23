@@ -1,13 +1,16 @@
-#include "base/PDAG.h"
+#include "graph/pdag_with_adjmat.h"
 
 #include <stdexcept>
+#include <unordered_map>
 
-PDAG::PDAG(size_t num_vars) : num_vars(num_vars) {
+#include "graph/pdag.h"
+
+PDAGwithAdjMat::PDAGwithAdjMat(size_t num_vars) : num_vars(num_vars) {
   size_t blocks = (num_vars + 63) / 64;
   adj_mat.resize(num_vars, std::vector<uint64_t>(blocks, 0ULL));
 }
 
-PDAG &PDAG::operator=(const PDAG &a) {
+PDAGwithAdjMat &PDAGwithAdjMat::operator=(const PDAGwithAdjMat &a) {
   if (this != &a) {
     this->num_vars = a.num_vars;
     this->adj_mat = a.adj_mat;
@@ -15,12 +18,13 @@ PDAG &PDAG::operator=(const PDAG &a) {
   return *this;
 }
 
-PDAG::PDAG(const PDAG &old) : num_vars(old.num_vars), adj_mat(old.adj_mat) {}
+PDAGwithAdjMat::PDAGwithAdjMat(const PDAGwithAdjMat &old)
+    : num_vars(old.num_vars), adj_mat(old.adj_mat) {}
 
-size_t PDAG::get_num_vars() const { return num_vars; }
+size_t PDAGwithAdjMat::get_num_vars() const { return num_vars; }
 
 // if x -> y
-bool PDAG::has_edge(size_t x, size_t y) const {
+bool PDAGwithAdjMat::has_edge(size_t x, size_t y) const {
   if (x >= num_vars || y >= num_vars)
     throw std::out_of_range("Index out of range");
   size_t block = y / 64;
@@ -29,28 +33,28 @@ bool PDAG::has_edge(size_t x, size_t y) const {
 }
 
 // if x -> y and not y -> x
-bool PDAG::has_directed_edge(size_t x, size_t y) const {
+bool PDAGwithAdjMat::has_directed_edge(size_t x, size_t y) const {
   if (x >= num_vars || y >= num_vars)
     throw std::out_of_range("Index out of range");
   return has_edge(x, y) && !has_edge(y, x);
 }
 
 // if x -> y and y -> x
-bool PDAG::has_undirected_edge(size_t x, size_t y) const {
+bool PDAGwithAdjMat::has_undirected_edge(size_t x, size_t y) const {
   if (x >= num_vars || y >= num_vars)
     throw std::out_of_range("Index out of range");
   return has_edge(x, y) && has_edge(y, x);
 }
 
 // if x -> y or y -> x
-bool PDAG::is_adjacent(size_t x, size_t y) const {
+bool PDAGwithAdjMat::is_adjacent(size_t x, size_t y) const {
   if (x >= num_vars || y >= num_vars)
     throw std::out_of_range("Index out of range");
   return has_edge(x, y) || has_edge(y, x);
 }
 
 // succ(x) = {y | x -> y}
-std::vector<size_t> PDAG::successors(size_t x) const {
+std::vector<size_t> PDAGwithAdjMat::successors(size_t x) const {
   if (x >= num_vars) throw std::out_of_range("Index out of range");
   std::vector<size_t> succ;
   size_t blocks = (num_vars + 63) / 64;
@@ -68,7 +72,7 @@ std::vector<size_t> PDAG::successors(size_t x) const {
 }
 
 // pred(x) = {y | y -> x} (slower than successors)
-std::vector<size_t> PDAG::predecessors(size_t x) const {
+std::vector<size_t> PDAGwithAdjMat::predecessors(size_t x) const {
   if (x >= num_vars) throw std::out_of_range("Index out of range");
   std::vector<size_t> pred;
   size_t block = x / 64;
@@ -81,7 +85,7 @@ std::vector<size_t> PDAG::predecessors(size_t x) const {
 }
 
 // neigh(x) = {y | x -> y or y -> x}
-std::vector<size_t> PDAG::neighbors(size_t x) const {
+std::vector<size_t> PDAGwithAdjMat::neighbors(size_t x) const {
   if (x >= num_vars) throw std::out_of_range("Index out of range");
   std::vector<size_t> neigh;
   std::vector<bool> visited(num_vars, false);
@@ -100,7 +104,7 @@ std::vector<size_t> PDAG::neighbors(size_t x) const {
 
 // undirected_neighbors(x) = {y | x <-> y}
 // O( |N(x)| )
-std::vector<size_t> PDAG::undirected_neighbors(size_t x) const {
+std::vector<size_t> PDAGwithAdjMat::undirected_neighbors(size_t x) const {
   if (x >= num_vars) throw std::out_of_range("Index out of range");
   std::vector<size_t> undir;
   auto succ = successors(x);
@@ -110,7 +114,7 @@ std::vector<size_t> PDAG::undirected_neighbors(size_t x) const {
   return undir;
 }
 
-bool PDAG::has_directed_path(size_t x, size_t y) const {
+bool PDAGwithAdjMat::has_directed_path(size_t x, size_t y) const {
   if (x >= num_vars || y >= num_vars)
     throw std::out_of_range("Index out of range");
 
@@ -134,7 +138,7 @@ bool PDAG::has_directed_path(size_t x, size_t y) const {
   return false;
 }
 
-bool PDAG::has_path(size_t x, size_t y) const {
+bool PDAGwithAdjMat::has_path(size_t x, size_t y) const {
   if (x >= num_vars || y >= num_vars)
     throw std::out_of_range("Index out of range");
 
@@ -158,7 +162,7 @@ bool PDAG::has_path(size_t x, size_t y) const {
   return false;
 }
 
-bool PDAG::has_connection(size_t x, size_t y) const {
+bool PDAGwithAdjMat::has_connection(size_t x, size_t y) const {
   if (x >= num_vars || y >= num_vars)
     throw std::out_of_range("Index out of range");
 
@@ -183,7 +187,7 @@ bool PDAG::has_connection(size_t x, size_t y) const {
 }
 
 // add edge x -> y
-void PDAG::add_edge(size_t x, size_t y) {
+void PDAGwithAdjMat::add_edge(size_t x, size_t y) {
   if (x >= num_vars || y >= num_vars)
     throw std::out_of_range("Index out of range");
   if (has_edge(x, y)) throw std::invalid_argument("Edge already exists");
@@ -193,7 +197,7 @@ void PDAG::add_edge(size_t x, size_t y) {
 }
 
 // remove edge x -> y
-void PDAG::remove_edge(size_t x, size_t y) {
+void PDAGwithAdjMat::remove_edge(size_t x, size_t y) {
   if (x >= num_vars || y >= num_vars)
     throw std::out_of_range("Index out of range");
   if (!has_edge(x, y)) throw std::invalid_argument("Edge does not exist");
@@ -202,7 +206,7 @@ void PDAG::remove_edge(size_t x, size_t y) {
   adj_mat[x][block] &= ~(1ULL << shift);
 }
 
-void PDAG::complete_graph() {
+void PDAGwithAdjMat::complete_graph() {
   size_t blocks = (num_vars + 63) / 64;
   for (size_t i = 0; i < num_vars; ++i) {
     for (size_t j = 0; j < blocks; ++j) {
@@ -221,8 +225,20 @@ void PDAG::complete_graph() {
   }
 }
 
+PDAG PDAGwithAdjMat::to_pdag() const {
+  PDAG pdag(num_vars);
+  for (size_t i = 0; i < num_vars; ++i) {
+    for (size_t j = 0; j < num_vars; ++j) {
+      if (has_edge(i, j)) {
+        pdag.add_edge(i, j);
+      }
+    }
+  }
+  return pdag;
+}
+
 // TODO
-// void apply_meeks_rules(PDAG &g) {
+// void apply_meeks_rules(PDAGwithAdjMat &g) {
 //   const size_t n = g.num_vars;
 //   bool changed = true;
 
