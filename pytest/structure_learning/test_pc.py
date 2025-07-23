@@ -8,13 +8,20 @@ import openbnsllib
 from modules.utils import to_pgmpy
 from modules.structural_distance import structural_errors
 
+
 @pytest.mark.parametrize(
     "model_name",
     [
-        # "cancer",  # 5 nodes
-        "asia",    # 8 nodes
+        "cancer",  # 5 nodes
+        "asia",  # 8 nodes
         # "child",   # 20 nodes
         # "alarm",   # 37 nodes
+    ],
+)
+@pytest.mark.parametrize(
+    "max_cond_vars",
+    [
+        5,
     ],
 )
 @pytest.mark.parametrize(
@@ -40,11 +47,11 @@ from modules.structural_distance import structural_errors
 @pytest.mark.parametrize(
     "seed",
     [
-        0, 
+        0,
         # 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
     ],
 )
-def test_pc(model_name, citest_type_str, level, sample_size, seed):
+def test_pc(model_name, max_cond_vars, citest_type_str, level, sample_size, seed):
     random.seed(seed)
 
     model_original = get_example_model(model_name)
@@ -55,9 +62,9 @@ def test_pc(model_name, citest_type_str, level, sample_size, seed):
     estimator = PC(samples)
     expected_pgmpy = estimator.estimate(
         variant="orig",
-        ci_test=citest_type_str, 
+        ci_test=citest_type_str,
         significance_level=level,
-        max_cond_vars=5,
+        max_cond_vars=max_cond_vars,
     )
 
     # our implementation
@@ -69,17 +76,17 @@ def test_pc(model_name, citest_type_str, level, sample_size, seed):
         raise ValueError(f"Unsupported citest_type_str: {citest_type_str}")
     df_wrapper = openbnsllib.base.DataframeWrapper(samples)
     _pdag = openbnsllib.structure_learning.PC(
-        df_wrapper, 
+        df_wrapper,
         citest_type,
-        5,
+        max_cond_vars,
     )
-    expected_obnsl = to_pgmpy(_pdag, list(samples.columns))
-    
-    # errors = structural_errors(expected_pgmpy, expected_obnsl)
-    # assert errors["SHD"] == 0, f"Failed for model {model_name} with Errors: {errors}"
 
-    # debugging
+    expected_obnsl = to_pgmpy(_pdag, list(samples.columns))
     error_pgmpy = structural_errors(expected_pgmpy, model_original)
     error_obnsl = structural_errors(expected_obnsl, model_original)
-    print(f"[pgmpy] Model: {model_name}, Seed: {seed}, {error_pgmpy}")
-    print(f"[obnsl] Model: {model_name}, Seed: {seed}, {error_obnsl}")
+
+    assert error_pgmpy == error_obnsl, (
+        f"Structural errors do not match: "
+        f"pgmpy: {error_pgmpy}, "
+        f"openbnsllib: {error_obnsl}"
+    )

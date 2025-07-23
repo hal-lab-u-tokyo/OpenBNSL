@@ -17,7 +17,11 @@ void bind_citest(py::module& m) {
         return "GSquare(level=" + std::to_string(g_square.level) + ")";
       });
 
-  submodule.def("citest", &citest, py::arg("x"), py::arg("y"),
-                py::arg("sepset_candidate"), py::arg("ct"),
+  submodule.def("citest",
+                &citest,
+                py::arg("x"),
+                py::arg("y"),
+                py::arg("sepset_candidate"),
+                py::arg("ct"),
                 py::arg("citest_type"));
 }

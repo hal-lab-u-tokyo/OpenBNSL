@@ -13,8 +13,8 @@ from modules.structural_distance import structural_errors
     "model_name",
     [
         "cancer",  # 5 nodes
-        "asia",  # 8 nodes
-        "child",  # 20 nodes
+        # "asia",  # 8 nodes
+        # "child",   # 20 nodes
         # "alarm",   # 37 nodes
     ],
 )
@@ -36,13 +36,13 @@ from modules.structural_distance import structural_errors
         0,
     ],
 )
-def test_exhaustive_search(model_name, score_type, sample_size, seed):
+def test_simulated_annealing(model_name, score_type, sample_size, seed):
     model_original = get_example_model(model_name)
     samples = model_original.simulate(sample_size, seed=seed)
     samples = samples[sorted(samples.columns)]
     df_wrapper = openbnsllib.base.DataframeWrapper(samples)
-    _pdag = openbnsllib.structure_learning.exhaustive_search(
-        df_wrapper, score_type, max_parents=3
+    _pdag = openbnsllib.structure_learning.simulated_annealing(
+        df_wrapper, score_type, max_parents=3, is_deterministic=True, seed=seed
     )
     model_estimated = to_pgmpy(_pdag, list(samples.columns))
     errors = structural_errors(model_original, model_estimated)

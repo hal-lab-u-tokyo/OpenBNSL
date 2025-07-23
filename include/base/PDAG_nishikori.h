@@ -132,7 +132,8 @@ struct PDAG_nishikori {
   }
 
   bool has_connection(
-      int X, int Y) {  // check if there is connection between X and Y using DFS
+      int X,
+      int Y) {  // check if there is connection between X and Y using DFS
     vector<int> visited(g.size(), 0);
     vector<int> stack;
     stack.push_back(X);

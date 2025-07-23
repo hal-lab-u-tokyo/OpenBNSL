@@ -1,8 +1,8 @@
 #pragma once
 
-#include "base/PDAG.h"
 #include "base/dataframe_wrapper.h"
 #include "citest/citest_type.h"
+#include "graph/PDAG.h"
 
 /**
  * @brief A function to run the PC algorithm
@@ -12,7 +12,6 @@
  * @param max_cond_vars The maximum number of conditional variables to consider
  * @return A PDAG object
  */
-PDAG PC(
-    const DataframeWrapper& df, 
-    const CITestType& ci_test_type,
-    size_t max_cond_vars);
+PDAG PC(const DataframeWrapper& df,
+        const CITestType& ci_test_type,
+        size_t max_cond_vars);

@@ -6,11 +6,12 @@ from pgmpy.estimators.CITests import chi_square, g_sq
 
 import openbnsllib
 
+
 @pytest.mark.parametrize(
     "model_name",
     [
-        # "cancer",  # e.g. 5 nodes
-        "asia",    # e.g. 8 nodes
+        "cancer",  # e.g. 5 nodes
+        "asia",  # e.g. 8 nodes
         # "child",   # e.g. 20 nodes
         # "alarm",   # e.g. 37 nodes
     ],
@@ -38,11 +39,30 @@ import openbnsllib
 @pytest.mark.parametrize(
     "seed",
     [
-        0,1,2,
+        0,
+        1,
+        2,
         # 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
     ],
 )
-def test_citest(model_name: Literal['asia'], citest_type_str: Literal['chi_square'] | Literal['g_sq'], level: float, sample_size: int, seed: Literal[0] | Literal[1] | Literal[2] | Literal[3] | Literal[4] | Literal[5] | Literal[6] | Literal[7] | Literal[8] | Literal[9]):
+def test_citest(
+    model_name: Literal["asia"],
+    citest_type_str: Literal["chi_square"] | Literal["g_sq"],
+    level: float,
+    sample_size: int,
+    seed: (
+        Literal[0]
+        | Literal[1]
+        | Literal[2]
+        | Literal[3]
+        | Literal[4]
+        | Literal[5]
+        | Literal[6]
+        | Literal[7]
+        | Literal[8]
+        | Literal[9]
+    ),
+):
     random.seed(seed)
 
     model_original = get_example_model(model_name)
@@ -80,9 +100,11 @@ def test_citest(model_name: Literal['asia'], citest_type_str: Literal['chi_squar
         boolean=False,
         significance_level=level,
     )
-    expected_result = (p_value >= level)
-    print(f"[pgmpy] stat: {chi2}, p_value: {p_value}, dof: {dof}, level: {level}, "
-          f"expected_result: {expected_result}")
+    expected_result = p_value >= level
+    print(
+        f"[pgmpy] stat: {chi2}, p_value: {p_value}, dof: {dof}, level: {level}, "
+        f"expected_result: {expected_result}"
+    )
 
     # our implementation
     if citest_type_str == "chi_square":
@@ -101,4 +123,4 @@ def test_citest(model_name: Literal['asia'], citest_type_str: Literal['chi_squar
         f"CItest for {x_idx}, {y_idx} | {sorted_sepset_indices} of {model_name}: "
         f"pgmpy: {expected_result}, ours: {computed_result}"
     )
-    # assert expected_result == computed_result, msg
+    assert expected_result == computed_result, msg
