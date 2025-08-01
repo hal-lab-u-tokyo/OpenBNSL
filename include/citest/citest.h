@@ -12,8 +12,8 @@
 #include "base/contingency_table.h"
 #include "citest/citest_type.h"
 
-template <typename StatScalar>
-inline StatScalar pchisq(StatScalar x, std::size_t dof) {
+
+inline double pchisq(double x, std::size_t dof) {
   if (dof == 0) return (x == 0.0 ? 1.0 : 0.0);
   const boost::math::chi_squared dist(dof);
   return 1.0 - boost::math::cdf(dist, x);
@@ -31,22 +31,24 @@ inline StatScalar pchisq(StatScalar x, std::size_t dof) {
  * @return True if the conditional independence test passes (p_value >= alpha),
  *         false otherwise.
  */
-template <typename StatScalar, bool Deterministic>
-bool citest(std::size_t                       x,
-            std::size_t                       y,
-            const std::vector<std::size_t>&   /*sepset_candidate*/,
+template <bool Deterministic>
+bool citest(std::size_t x,
+            std::size_t y,
+            const std::vector<std::size_t>& sepset_candidate,
             const ContingencyTable<Deterministic>& ct,
-            const CITestType&                 ci_test_type)
-{
-  if (x >= y) std::swap(x, y);
+            const CITestType& ci_test_type) {
 
-  StatScalar alpha;
+  double alpha;
   if (is_type<ChiSquare>(ci_test_type))
-    alpha = static_cast<StatScalar>(get_type<ChiSquare>(ci_test_type).level);
+    alpha = static_cast<double>(get_type<ChiSquare>(ci_test_type).level);
   else if (is_type<GSquare>(ci_test_type))
-    alpha = static_cast<StatScalar>(get_type<GSquare>(ci_test_type).level);
+    alpha = static_cast<double>(get_type<GSquare>(ci_test_type).level);
   else
     throw std::invalid_argument("Unsupported CI test type");
+
+
+  if (x == y) throw std::invalid_argument("x and y must differ");
+  if (x >= y) std::swap(x, y);
 
   const auto it_x = std::find(ct.var_ids.begin(), ct.var_ids.end(), x);
   const auto it_y = std::find(ct.var_ids.begin(), ct.var_ids.end(), y);
@@ -56,79 +58,85 @@ bool citest(std::size_t                       x,
   const std::size_t idx_x = static_cast<std::size_t>(it_x - ct.var_ids.begin());
   const std::size_t idx_y = static_cast<std::size_t>(it_y - ct.var_ids.begin());
 
-  const std::size_t rw_x  = ct.radix_weight(idx_x);
-  const std::size_t rw_y  = ct.radix_weight(idx_y);
+  const std::size_t n_x = ct.cardinalities[idx_x];
+  const std::size_t n_y = ct.cardinalities[idx_y];
 
-  CountsMap<Deterministic> n_xz, n_yz, n_z;
-  
-  // unique X and Y values for each Z slice  
-  std::unordered_map<std::size_t, std::unordered_set<std::size_t>> x_vals_of_z;
-  std::unordered_map<std::size_t, std::unordered_set<std::size_t>> y_vals_of_z;
+  // Generate slices for each observed z state
+  std::unordered_map<std::size_t, std::vector<std::size_t>> slices;
+  for (const auto& [key, freq] : ct.counts) {
+    const std::size_t x_state = ct.state_of(key, idx_x);
+    const std::size_t y_state = ct.state_of(key, idx_y);
+    std::size_t slice_key = key - x_state * ct.radix_weight(idx_x) -
+                            y_state * ct.radix_weight(idx_y);
 
-  for (const auto& [key, cnt] : ct.counts) {
-    const std::size_t key_xz = ct.strip(key, idx_y);
-    const std::size_t key_yz = ct.strip(key, idx_x);
-    const std::size_t key_z  = ct.strip(key_xz, idx_x);
-
-    n_xz[key_xz] += cnt;
-    n_yz[key_yz] += cnt;
-    n_z [key_z ] += cnt;
-
-    x_vals_of_z[key_z].insert(ct.state_of(key, idx_x));
-    y_vals_of_z[key_z].insert(ct.state_of(key, idx_y));
+    auto& slice = slices[slice_key];
+    if (slice.empty()) slice.assign(n_x * n_y, 0);
+    slice[x_state * n_y + y_state] += freq;
   }
 
-  StatScalar stat = 0.0;
-  for (const auto& [key_z, pz] : n_z) {
+  double stat = 0;
+  std::size_t dof = 0;
+  for (const auto& [_, slice] : slices) {
+    std::vector<double> row_sum(n_x, 0), col_sum(n_y, 0);
+    double n_total = 0;
+    for (std::size_t i = 0; i < n_x; ++i) {
+      for (std::size_t j = 0; j < n_y; ++j) {
+        const double obs = static_cast<double>(slice[i * n_y + j]);
+        row_sum[i] += obs;
+        col_sum[j] += obs;
+        n_total += obs;
+      }
+    }
 
-    std::cerr << "[Z] key=" << key_z << " N=" << pz
-            << "  |X|=" << xs_of_z[key_z].size()
-            << "  |Y|=" << ys_of_z[key_z].size() << '\n';
+    if (n_total == 0) continue;  // skip empty slices
+    std::vector<std::size_t> rows_obs, cols_obs;
+    for (std::size_t i = 0; i < n_x; ++i) {
+      if (row_sum[i] > 0) rows_obs.push_back(i);
+    }
+    for (std::size_t j = 0; j < n_y; ++j) {
+      if (col_sum[j] > 0) cols_obs.push_back(j);
+    }
 
-    const auto& xs = x_vals_of_z[key_z];
-    const auto& ys = y_vals_of_z[key_z];
+    const std::size_t _dof = (rows_obs.size() - 1) * (cols_obs.size() - 1);
+    const bool apply_yates = (_dof == 1);
+    dof += _dof;
 
-    for (std::size_t xv : xs) {
-      const std::size_t key_xz = key_z + xv * rw_x;
-      const StatScalar  pxz    = static_cast<StatScalar>(n_xz[key_xz]);
+    for (auto i : rows_obs) {
+      for (auto j : cols_obs) {
+        double obs = slice[i * n_y + j];
+        double exp = row_sum[i] * col_sum[j] / n_total;
 
-      for (std::size_t yv : ys) {
-        const std::size_t key_yz = key_z + yv * rw_y;
-        const StatScalar  pyz    = static_cast<StatScalar>(n_yz[key_yz]);
+        // Apply Yates' correction (reference:
+        // https://github.com/scipy/scipy/blob/v1.16.1/scipy/stats/contingency.py)
+        if (apply_yates) {
+          double diff = exp - obs;
+          double direction = (diff > 0)   ? 1.0
+                                 : (diff < 0) ? -1.0
+                                              : 0.0;
+          double magnitude = std::min(0.5, std::fabs(diff));
+          obs += magnitude * direction;
+        }
 
-        const StatScalar  exp = pxz * pyz / static_cast<StatScalar>(pz);
-
-        const std::size_t full_key = key_z + xv * rw_x + yv * rw_y;
-        const StatScalar  obs = ct.contains(full_key)
-                                ? static_cast<StatScalar>(ct.counts.at(full_key))
-                                : static_cast<StatScalar>(0);
-
-                                
         if (is_type<ChiSquare>(ci_test_type)) {
-          const StatScalar diff = obs - exp;
-          stat += (diff * diff) / exp;
-        } else {
+          double diff = obs - exp;
+          stat += diff * diff / exp;
+        } else if (is_type<GSquare>(ci_test_type)) {
           if (obs > 0)
-            stat += static_cast<StatScalar>(2.0) * obs * std::log(obs / exp);
+            stat += 2.0 * obs * std::log(obs / exp);
+        } else {
+          throw std::invalid_argument("Unsupported CI test type");
         }
       }
     }
   }
 
-  std::size_t dof = 0;
-  for (const auto& [key_z, pz] : n_z) {
-    if (pz == 0) continue;
-    const std::size_t r = x_vals_of_z[key_z].size();
-    const std::size_t c = y_vals_of_z[key_z].size();
-    if (r >= 2 && c >= 2) dof += (r - 1) * (c - 1);
-  }
-
-  const StatScalar p_value = pchisq(stat, dof);
-  std::cout << "[obnsl] stat: " << stat 
-            << ", p_value: " << p_value
-            << ", dof: " << dof 
-            << ", level: " << alpha
-            << ", result: " << (p_value >= alpha ? "True" : "False") << std::endl;
+  const double p_value = pchisq(stat, dof);
+  // std::cout << "[obnsl] stat: " << stat
+  //           << ", p_value: " << p_value
+  //           << ", dof: " << dof
+  //           << ", level: " << alpha
+  //           << ", result: " << (p_value >= alpha ? "True" : "False") <<
+  //           std::endl;
 
   return p_value >= alpha;
 }

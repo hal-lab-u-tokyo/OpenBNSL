@@ -61,13 +61,13 @@ def test_citest(
         pytest.skip("pgmpy produced NaN p‑value (dof == 0); test not informative.")
 
     expected_result = p_value >= level
-    print(
-        f"[pgmpy] stat: {chi2}, "
-        f"p_value: {p_value}, "
-        f"dof: {dof}, "
-        f"level: {level}, "
-        f"result: {expected_result}"
-    )
+    # print(
+    #     f"[pgmpy] stat: {chi2}, "
+    #     f"p_value: {p_value}, "
+    #     f"dof: {dof}, "
+    #     f"level: {level}, "
+    #     f"result: {expected_result}"
+    # )
 
     # our implementation
     if citest_type_str == "chi_square":
@@ -88,4 +88,3 @@ def test_citest(
         f"pgmpy: {expected_result}, ours: {computed_result}"
     )
     assert expected_result == computed_result, msg
-
