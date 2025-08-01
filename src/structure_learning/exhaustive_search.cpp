@@ -11,8 +11,9 @@
 
 PDAG exhaustive_search(const DataframeWrapper& df,
                        const ScoreType& score_type,
-                       int max_parents) {
-  if (max_parents < 0 || max_parents > (int)df.num_of_vars - 1)
+                       size_t max_parents,
+                       bool is_deterministic) {
+  if (max_parents < 0 || max_parents > df.num_of_vars - 1)
     throw std::invalid_argument("max_parents must be in [0, num_of_vars-1]");
   size_t max_varset_size = max_parents + 1;
   size_t n = df.num_of_vars;
@@ -49,8 +50,10 @@ PDAG exhaustive_search(const DataframeWrapper& df,
     do {
       std::vector<size_t> varset_vec = comb2vec(varset_int);
 
-      ContingencyTable ct;
-      if (calc_ls) ct = buildContingencyTable(varset_vec, df);
+      // TODO
+      // ContingencyTable<true> ct;
+      // if (calc_ls) ct = ContingencyTable<true>(varset_vec, df);
+      ContingencyTable<true> ct(varset_vec, df);
 
       double best_gs = 0;
       int best_ch = -1;

@@ -18,7 +18,8 @@ void bind_structure_learning(py::module& m) {
                 "Run exhaustive search algorithm",
                 py::arg("df"),
                 py::arg("score_type"),
-                py::arg("max_parents"));
+                py::arg("max_parents"),
+                py::arg("is_deterministic") = false);
   submodule.def("simulated_annealing",
                 &simulated_annealing,
                 "Run simulated annealing algorithm",

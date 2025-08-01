@@ -32,15 +32,14 @@ void bind_base(py::module& m) {
         return repr;
       });
 
-  py::class_<ContingencyTable>(submodule, "ContingencyTable")
-      .def_readonly("var_ids", &ContingencyTable::var_ids)
-      .def_readonly("cardinalities", &ContingencyTable::cardinalities)
-      .def_readonly("counts", &ContingencyTable::counts);
-
-  submodule.def("buildContingencyTable",
-                &buildContingencyTable,
-                py::arg("var_ids"),
-                py::arg("df"));
+  // only for testing purposes
+  py::class_<ContingencyTable<true>>(submodule, "ContingencyTable")
+      .def(py::init<const std::vector<size_t>&, const DataframeWrapper&>(),
+           py::arg("var_ids"),
+           py::arg("df"))
+      .def_readonly("var_ids", &ContingencyTable<true>::var_ids)
+      .def_readonly("cardinalities", &ContingencyTable<true>::cardinalities)
+      .def_readonly("counts", &ContingencyTable<true>::counts);
 
   py::class_<PDAG>(submodule, "PDAG")
       .def(py::init<size_t>())

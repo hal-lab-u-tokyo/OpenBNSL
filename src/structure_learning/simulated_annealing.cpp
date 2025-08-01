@@ -15,7 +15,7 @@
 template <typename GraphT>
 static void run_single_chain(const DataframeWrapper& df,
                              const ScoreType& score_type,
-                             int max_parents,
+                             size_t max_parents,
                              size_t max_iters,
                              double init_temp,
                              double cooling_rate,
@@ -27,7 +27,7 @@ static void run_single_chain(const DataframeWrapper& df,
   std::vector<double> ls(n, 0.0);
   for (size_t v = 0; v < n; ++v) {
     ls[v] = calculate_local_score<double>(
-        v, {}, buildContingencyTable({v}, df), score_type);
+        v, {}, ContingencyTable<true>({v}, df), score_type);
   }
 
   double curr_score = std::accumulate(ls.begin(), ls.end(), 0.0);
@@ -78,7 +78,7 @@ static void run_single_chain(const DataframeWrapper& df,
     vars.push_back(child);
     std::sort(vars.begin(), vars.end());
     double new_ls = calculate_local_score<double>(
-        child, new_pa, buildContingencyTable(vars, df), score_type);
+        child, new_pa, ContingencyTable<true>(vars, df), score_type);
     double delta = new_ls - ls[child];
 
     if (delta >= 0.0 || std::exp(delta / T) > uni(rng)) {
@@ -99,14 +99,14 @@ static void run_single_chain(const DataframeWrapper& df,
 
 PDAG simulated_annealing(const DataframeWrapper& df,
                          const ScoreType& score_type,
-                         int max_parents,
+                         size_t max_parents,
                          size_t max_iters,
                          double init_temp,
                          double cooling_rate,
                          bool is_deterministic,
                          uint64_t seed,
-                         int num_chains) {
-  if (max_parents < 0 || max_parents >= static_cast<int>(df.num_of_vars)) {
+                         size_t num_chains) {
+  if (max_parents < 0 || max_parents >= df.num_of_vars) {
     throw std::invalid_argument("max_parents out of range");
   }
 
@@ -121,7 +121,7 @@ PDAG simulated_annealing(const DataframeWrapper& df,
     using GraphT = PDAGwithAdjList<true>;
     std::vector<GraphT> graphs(num_chains, GraphT(df.num_of_vars));
 #pragma omp parallel for
-    for (int c = 0; c < num_chains; ++c) {
+    for (size_t c = 0; c < num_chains; ++c) {
       run_single_chain<GraphT>(df,
                                score_type,
                                max_parents,
@@ -139,7 +139,7 @@ PDAG simulated_annealing(const DataframeWrapper& df,
     using GraphT = PDAGwithAdjList<false>;
     std::vector<GraphT> graphs(num_chains, GraphT(df.num_of_vars));
 #pragma omp parallel for
-    for (int c = 0; c < num_chains; ++c) {
+    for (size_t c = 0; c < num_chains; ++c) {
       run_single_chain<GraphT>(df,
                                score_type,
                                max_parents,

@@ -67,8 +67,8 @@ PDAGwithAdjMat build_skeleton(
           var_ids.push_back(x);
           var_ids.push_back(y);
           std::sort(var_ids.begin(), var_ids.end());
-          ContingencyTable ct = buildContingencyTable(var_ids, df);
-          if (citest(x, y, sepset_candidates, ct, citest_type)) {
+          ContingencyTable<true> ct(var_ids, df);
+          if (citest<double, true>(x, y, sepset_candidates, ct, citest_type)) {
             PDAGwithAdjMat.remove_edge(x, y);
             PDAGwithAdjMat.remove_edge(y, x);
             sepset[x][y] = sepset[y][x] = sepset_candidates;
@@ -85,8 +85,8 @@ PDAGwithAdjMat build_skeleton(
           var_ids.push_back(x);
           var_ids.push_back(y);
           std::sort(var_ids.begin(), var_ids.end());
-          ContingencyTable ct = buildContingencyTable(var_ids, df);
-          if (citest(x, y, sepset_candidates, ct, citest_type)) {
+          ContingencyTable<true> ct(var_ids, df);
+          if (citest<double, true>(x, y, sepset_candidates, ct, citest_type)) {
             PDAGwithAdjMat.remove_edge(x, y);
             PDAGwithAdjMat.remove_edge(y, x);
             sepset[x][y] = sepset[y][x] = sepset_candidates;

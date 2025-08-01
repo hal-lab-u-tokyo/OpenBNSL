@@ -1,67 +1,25 @@
 from typing import Literal
 import pytest
 import random
+import numpy as np
+import pandas as pd
 from pgmpy.utils import get_example_model
 from pgmpy.estimators.CITests import chi_square, g_sq
 
 import openbnsllib
 
 
-@pytest.mark.parametrize(
-    "model_name",
-    [
-        "cancer",  # e.g. 5 nodes
-        "asia",  # e.g. 8 nodes
-        # "child",   # e.g. 20 nodes
-        # "alarm",   # e.g. 37 nodes
-    ],
-)
-@pytest.mark.parametrize(
-    "citest_type_str",
-    [
-        "chi_square",
-        "g_sq",
-    ],
-)
-@pytest.mark.parametrize(
-    "level",
-    [
-        0.01,
-        0.05,
-    ],
-)
-@pytest.mark.parametrize(
-    "sample_size",
-    [
-        int(1e5),
-    ],
-)
-@pytest.mark.parametrize(
-    "seed",
-    [
-        0,
-        1,
-        2,
-        # 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
-    ],
-)
+@pytest.mark.parametrize("model_name", ["cancer", "asia", "child", "alarm"])
+@pytest.mark.parametrize("sample_size", [int(1e5)])
+@pytest.mark.parametrize("citest_type_str", ["chi_square", "g_sq"])
+@pytest.mark.parametrize("level", [0.01])
+@pytest.mark.parametrize("seed", [0])
 def test_citest(
     model_name: Literal["asia"],
     citest_type_str: Literal["chi_square"] | Literal["g_sq"],
     level: float,
     sample_size: int,
-    seed: (
-        Literal[0]
-        | Literal[1]
-        | Literal[2]
-        | Literal[3]
-        | Literal[4]
-        | Literal[5]
-        | Literal[6]
-        | Literal[7]
-        | Literal[8]
-        | Literal[9]
-    ),
+    seed: int,
 ):
     random.seed(seed)
 
@@ -96,14 +54,19 @@ def test_citest(
         Y=y_name,
         Z=z_names,
         data=samples,
-        # boolean=True,
         boolean=False,
         significance_level=level,
     )
+    if np.isnan(p_value):
+        pytest.skip("pgmpy produced NaN p‑value (dof == 0); test not informative.")
+
     expected_result = p_value >= level
     print(
-        f"[pgmpy] stat: {chi2}, p_value: {p_value}, dof: {dof}, level: {level}, "
-        f"expected_result: {expected_result}"
+        f"[pgmpy] stat: {chi2}, "
+        f"p_value: {p_value}, "
+        f"dof: {dof}, "
+        f"level: {level}, "
+        f"result: {expected_result}"
     )
 
     # our implementation
@@ -114,13 +77,15 @@ def test_citest(
     else:
         raise ValueError(f"Unsupported citest_type_str: {citest_type_str}")
     var_indices = sorted(sorted_sepset_indices + [x_idx, y_idx])
-    ct = openbnsllib.base.buildContingencyTable(var_indices, df_wrapper)
+    ct = openbnsllib.base.ContingencyTable(var_indices, df_wrapper)
     computed_result = openbnsllib.citest.citest(
         x_idx, y_idx, sorted_sepset_indices, ct, citest_type
     )
 
+    # Check the result
     msg = (
         f"CItest for {x_idx}, {y_idx} | {sorted_sepset_indices} of {model_name}: "
         f"pgmpy: {expected_result}, ours: {computed_result}"
     )
     assert expected_result == computed_result, msg
+

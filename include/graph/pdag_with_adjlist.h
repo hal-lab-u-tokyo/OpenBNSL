@@ -2,20 +2,20 @@
 #include "graph/ipdag_convertible.h"
 #include "graph/pdag.h"
 
-template <bool is_deterministic>
-using ParentSet = std::conditional_t<is_deterministic,
+template <bool Deterministic>
+using ParentSet = std::conditional_t<Deterministic,
                                      std::set<std::size_t>,
                                      std::unordered_set<std::size_t>>;
 
 /**
  * @brief
  */
-template <bool is_deterministic>
+template <bool Deterministic>
 struct PDAGwithAdjList : IPDAGConvertible {
-  using ParentSetType = ParentSet<is_deterministic>;
+  using ParentSetType = ParentSet<Deterministic>;
 
   std::size_t num_vars;
-  std::vector<ParentSet<is_deterministic>> parents;
+  std::vector<ParentSet<Deterministic>> parents;
 
   explicit PDAGwithAdjList(std::size_t num_vars)
       : num_vars(num_vars), parents(num_vars) {}

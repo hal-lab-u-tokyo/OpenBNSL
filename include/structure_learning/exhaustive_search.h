@@ -16,4 +16,5 @@ namespace py = pybind11;
 
 PDAG exhaustive_search(const DataframeWrapper& df,
                        const ScoreType& score_type,
-                       int max_parents);
+                       size_t max_parents,
+                       bool is_deterministic);

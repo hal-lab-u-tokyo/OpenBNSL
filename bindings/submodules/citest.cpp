@@ -18,7 +18,7 @@ void bind_citest(py::module& m) {
       });
 
   submodule.def("citest",
-                &citest,
+                &citest<double, true>,
                 py::arg("x"),
                 py::arg("y"),
                 py::arg("sepset_candidate"),
