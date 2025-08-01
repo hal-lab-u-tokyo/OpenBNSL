@@ -18,10 +18,10 @@
  */
 PDAG simulated_annealing(const DataframeWrapper& df,
                          const ScoreType& score_type,
-                         int max_parents,
+                         size_t max_parents,
                          size_t max_iters = 10000,
                          double init_temp = 1.0,
                          double cooling_rate = 0.9995,
                          bool is_deterministic = false,
                          uint64_t seed = 0,
-                         int num_chains = 0);
+                         size_t num_chains = 0);

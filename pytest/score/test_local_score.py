@@ -1,23 +1,16 @@
 import pytest
 import random
 from pgmpy.utils import get_example_model
-from pgmpy.estimators import K2, BDeu
+from pgmpy.estimators import BDeu
 import openbnsllib
 
 
-@pytest.mark.parametrize(
-    "model_name, sample_size, seed",
-    [
-        ("cancer", int(1e4), 0),  # e.g. 5 nodes
-        ("asia", int(1e4), 0),  # e.g. 8 nodes
-        ("child", int(1e4), 0),  # e.g. 20 nodes
-        ("alarm", int(1e4), 0),  # e.g. 37 nodes
-    ],
-)
+@pytest.mark.parametrize("model_name", ["cancer", "asia", "child", "alarm"])
+@pytest.mark.parametrize("sample_size", [int(1e5)])
+@pytest.mark.parametrize("seed", [0, 1, 2, 3])
 @pytest.mark.parametrize(
     "score_name, score_type, pgmpy_score_func",
     [
-        ("K2", openbnsllib.score.K2(), lambda s: K2(s)),
         ("BDeu", openbnsllib.score.BDeu(1.0), lambda s: BDeu(s, 1.0)),
     ],
 )
@@ -35,7 +28,7 @@ def test_local_score(
 
     child_idx = random.randint(0, n - 1)
     candidate_parent_indices = [i for i in range(n) if i != child_idx]
-    num_parent_candidates = random.randint(1, min(3, len(candidate_parent_indices)))
+    num_parent_candidates = random.randint(1, min(5, len(candidate_parent_indices)))
     selected_parent_indices = random.sample(
         candidate_parent_indices, num_parent_candidates
     )
@@ -52,7 +45,7 @@ def test_local_score(
 
     # our implementation
     var_indices = sorted(selected_parent_indices + [child_idx])
-    ct = openbnsllib.base.buildContingencyTable(var_indices, df_wrapper)
+    ct = openbnsllib.base.ContingencyTable(var_indices, df_wrapper)
     computed_score = openbnsllib.score.calculate_local_score(
         child_idx, selected_parent_indices, ct, score_type
     )

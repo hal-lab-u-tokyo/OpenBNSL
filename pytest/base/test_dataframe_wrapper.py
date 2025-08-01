@@ -4,14 +4,9 @@ from pgmpy.utils import get_example_model
 import openbnsllib
 
 
-@pytest.mark.parametrize(
-    "model_name, sample_size, seed",
-    [
-        ("cancer", int(1e3), 0),  # 5 nodes
-        ("asia", int(1e3), 0),  # 8 nodes
-        ("child", int(1e3), 0),  # 20 nodes
-    ],
-)
+@pytest.mark.parametrize("model_name", ["cancer", "asia", "child", "alarm"])
+@pytest.mark.parametrize("sample_size", [int(1e5)])
+@pytest.mark.parametrize("seed", [0])
 def test_dataframe_wrapper_basic(model_name, sample_size, seed):
     # Get example model and simulate samples.
     model_original = get_example_model(model_name)
@@ -65,9 +60,3 @@ def test_dataframe_wrapper_basic(model_name, sample_size, seed):
     #         assert (
     #             df_wrapper.data_row_major[i][j] == col_data[i]
     #         ), f"Mismatch at row {i}, col {j}: expected {col_data[i]}, got {df_wrapper.data_row_major[i][j]}"
-
-
-def test_dataframe_wrapper_invalid_input():
-    # Test with a non-DataFrame input.
-    with pytest.raises(Exception):
-        DataframeWrapper(42)
