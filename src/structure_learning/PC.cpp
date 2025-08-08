@@ -1,138 +1,106 @@
-#include "structure_learning/PC.h"
+#include "structure_learning/pc.h"
 
 #include <algorithm>
-#include <queue>
-#include <set>
+#include <array>
 #include <unordered_set>
+#include <vector>
 
 #include "base/contingency_table.h"
 #include "base/dataframe_wrapper.h"
 #include "citest/citest.h"
 #include "graph/pdag_with_adjmat.h"
+#include "utils/gen_comb.h"
 
-void enumerate_combinations(const std::vector<size_t> &items,
-                            size_t k,
-                            size_t idx,
-                            std::vector<size_t> &current,
-                            std::vector<std::vector<size_t>> &result) {
-  if (current.size() == k) {
-    result.push_back(current);
-    return;
+using Sepset = std::vector<std::vector<std::unordered_set<size_t>>>;
+
+static PDAGwithAdjMat build_skeleton(const DataframeWrapper& df,
+                                     const CITestType& test,
+                                     size_t max_cond_vars,
+                                     Sepset& sepset) {
+  PDAGwithAdjMat g(df.num_of_vars);
+  g.complete_graph();
+
+  for (size_t k = 0; k <= max_cond_vars; ++k) {
+    bool any_removed = false;
+
+    for (size_t x = 0; x < g.num_vars; ++x) {
+      for (size_t y = x + 1; y < g.num_vars; ++y) {
+        // Skip if there is no edge between x and y
+        if (!g.has_undirected_edge(x, y)) continue;
+
+        // Check if we can remove the edge (x, y) by ci-test
+        for (auto [u, v] : std::array{std::pair{x, y}, std::pair{y, x}}) {
+          // With any set of k conditional variables from the neighbors of u
+          // except v
+          auto neigh = g.undirected_neighbors_without(u, v);
+          for (auto& Z : gen_combs(neigh, k)) {
+            std::vector<size_t> vars = Z;
+            vars.push_back(u);
+            vars.push_back(v);
+            std::sort(vars.begin(), vars.end());
+            ContingencyTable<true> ct(vars, df);
+
+            if (citest<true>(u, v, Z, ct, test)) {
+              any_removed = true;
+              g.remove_undirected_edge(x, y);
+              sepset[x][y].insert(Z.begin(), Z.end());
+              sepset[y][x] = sepset[x][y];
+              goto NEXT_PAIR;
+            }
+          }
+        }
+      NEXT_PAIR:;
+      }
+    }
+
+    // Exit conditions:
+    // 1. No edges were removed in this iteration.
+    // 2. We have reached the maximum number of conditional variables.
+    // 3. No variable has enough neighbors (>= k+1) to perform a CI test.
+    if (!any_removed) break;
+    if (k == max_cond_vars) break;
+    bool can_perform_ci_test = false;
+    for (size_t v = 0; v < g.num_vars; ++v) {
+      if (g.undirected_neighbors(v).size() >= k + 1) {
+        can_perform_ci_test = true;
+        break;
+      }
+    }
+    if (!can_perform_ci_test) break;
   }
-  for (size_t i = idx; i < items.size(); ++i) {
-    current.push_back(items[i]);
-    enumerate_combinations(items, k, i + 1, current, result);
-    current.pop_back();
-  }
+  return g;
 }
 
-std::vector<std::vector<size_t>> combinations(const std::vector<size_t> &items,
-                                              size_t k) {
-  std::vector<std::vector<size_t>> res;
-  if (k == 0) {
-    res.push_back({});
-    return res;
-  }
-  std::vector<size_t> current;
-  enumerate_combinations(items, k, 0, current, res);
-  return res;
-}
-
-static bool all_nodes_degree_less_than(const PDAGwithAdjMat &g, size_t limit) {
+void orient_colliders(PDAGwithAdjMat& g, const Sepset& sepset) {
   const size_t n = g.num_vars;
-  for (size_t v = 0; v < n; ++v) {
-    if (g.undirected_neighbors(v).size() >= limit) return false;
-  }
-  return true;
-}
-
-PDAGwithAdjMat build_skeleton(
-    const DataframeWrapper &df,
-    const CITestType &citest_type,
-    size_t max_cond_vars,
-    std::vector<std::vector<std::vector<size_t>>> &sepset) {
-  const size_t n = df.num_of_vars;
-  PDAGwithAdjMat PDAGwithAdjMat(n);
-  PDAGwithAdjMat.complete_graph();
-
-  for (size_t l = 0; l <= max_cond_vars; ++l) {
-    for (size_t x = 0; x < n; ++x) {
-      for (size_t y = x + 1; y < n; ++y) {
-        if (!PDAGwithAdjMat.has_edge(x, y)) continue;  // already removed
-        std::vector<size_t> neigh_x = PDAGwithAdjMat.undirected_neighbors(x);
-        neigh_x.erase(std::remove(neigh_x.begin(), neigh_x.end(), y),
-                      neigh_x.end());
-        for (auto &sepset_candidates : combinations(neigh_x, l)) {
-          std::vector<size_t> var_ids(sepset_candidates);
-          var_ids.push_back(x);
-          var_ids.push_back(y);
-          std::sort(var_ids.begin(), var_ids.end());
-          ContingencyTable<true> ct(var_ids, df);
-          if (citest<true>(x, y, sepset_candidates, ct, citest_type)) {
-            PDAGwithAdjMat.remove_edge(x, y);
-            PDAGwithAdjMat.remove_edge(y, x);
-            sepset[x][y] = sepset[y][x] = sepset_candidates;
-            break;  // stop checking other sets for this pair
-          }
-        }
-
-        if (!PDAGwithAdjMat.has_edge(x, y)) continue;  // already removed
-        std::vector<size_t> neigh_y = PDAGwithAdjMat.undirected_neighbors(y);
-        neigh_y.erase(std::remove(neigh_y.begin(), neigh_y.end(), x),
-                      neigh_y.end());
-        for (auto &sepset_candidates : combinations(neigh_y, l)) {
-          std::vector<size_t> var_ids(sepset_candidates);
-          var_ids.push_back(x);
-          var_ids.push_back(y);
-          std::sort(var_ids.begin(), var_ids.end());
-          ContingencyTable<true> ct(var_ids, df);
-          if (citest<true>(x, y, sepset_candidates, ct, citest_type)) {
-            PDAGwithAdjMat.remove_edge(x, y);
-            PDAGwithAdjMat.remove_edge(y, x);
-            sepset[x][y] = sepset[y][x] = sepset_candidates;
-            break;  // stop checking other sets for this pair
-          }
-        }
-      }
-    }
-    if (all_nodes_degree_less_than(PDAGwithAdjMat, l + 1) ||
-        l == max_cond_vars) {
-      break;
-    }
-  }
-  return PDAGwithAdjMat;
-}
-
-void orient_colliders(
-    PDAGwithAdjMat &PDAGwithAdjMat,
-    const std::vector<std::vector<std::vector<size_t>>> &sepset) {
-  const size_t n = PDAGwithAdjMat.num_vars;
   for (size_t y = 0; y < n; ++y) {
-    auto neigh = PDAGwithAdjMat.undirected_neighbors(y);
-    if (neigh.size() < 2) continue;
-    for (size_t i = 0; i < neigh.size(); ++i) {
-      for (size_t j = i + 1; j < neigh.size(); ++j) {
-        size_t x = neigh[i], z = neigh[j];
-        if (PDAGwithAdjMat.is_adjacent(x, z)) continue;
-        if (std::find(sepset[x][z].begin(), sepset[x][z].end(), y) ==
-            sepset[x][z].end()) {
-          if (PDAGwithAdjMat.has_edge(y, x)) PDAGwithAdjMat.remove_edge(y, x);
-          if (PDAGwithAdjMat.has_edge(y, z)) PDAGwithAdjMat.remove_edge(y, z);
+    bool changed = true;
+    while (changed) {
+      changed = false;
+      auto neigh = g.undirected_neighbors(y);
+      for (size_t i = 0; i + 1 < neigh.size(); ++i) {
+        for (size_t j = i + 1; j < neigh.size(); ++j) {
+          size_t x = neigh[i], z = neigh[j];
+          if (g.is_adjacent(x, z)) continue;
+          if (sepset[x][z].count(y) == 0) {
+            g.orient_edge(x, y);
+            g.orient_edge(z, y);
+            changed = true;
+          }
         }
       }
     }
   }
 }
 
-PDAG PC(const DataframeWrapper &df,
-        const CITestType &citest_type,
+PDAG PC(const DataframeWrapper& df,
+        const CITestType& test,
         size_t max_cond_vars) {
   const size_t n = df.num_of_vars;
-  std::vector<std::vector<std::vector<size_t>>> sepset(
-      n, std::vector<std::vector<size_t>>(n));
+  Sepset sepset(n, std::vector<std::unordered_set<size_t>>(n));
 
-  PDAGwithAdjMat PDAGwithAdjMat =
-      build_skeleton(df, citest_type, max_cond_vars, sepset);
-  orient_colliders(PDAGwithAdjMat, sepset);
-  return PDAGwithAdjMat.to_pdag();
+  PDAGwithAdjMat g = build_skeleton(df, test, max_cond_vars, sepset);
+  orient_colliders(g, sepset);
+  // g.apply_meeks_rules(false);
+  return g.to_pdag();
 }

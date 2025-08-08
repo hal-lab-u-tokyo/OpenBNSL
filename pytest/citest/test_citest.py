@@ -2,7 +2,6 @@ from typing import Literal
 import pytest
 import random
 import numpy as np
-import pandas as pd
 from pgmpy.utils import get_example_model
 from pgmpy.estimators.CITests import chi_square, g_sq
 

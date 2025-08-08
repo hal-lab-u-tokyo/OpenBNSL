@@ -2,7 +2,7 @@
 
 #include "base/dataframe_wrapper.h"
 #include "citest/citest_type.h"
-#include "graph/PDAG.h"
+#include "graph/pdag.h"
 
 /**
  * @brief A function to run the RAI algorithm

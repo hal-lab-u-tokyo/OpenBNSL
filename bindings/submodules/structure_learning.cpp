@@ -1,10 +1,10 @@
 #include <pybind11/pybind11.h>
 
-#include "structure_learning/PC.h"
 #include "structure_learning/PC_nishikori.h"
-#include "structure_learning/RAI.h"
 #include "structure_learning/RAI_nishikori.h"
 #include "structure_learning/exhaustive_search.h"
+#include "structure_learning/pc.h"
+#include "structure_learning/rai.h"
 #include "structure_learning/simulated_annealing.h"
 
 void bind_structure_learning(py::module& m) {

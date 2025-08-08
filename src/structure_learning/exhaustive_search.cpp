@@ -1,11 +1,13 @@
 #include "structure_learning/exhaustive_search.h"
 
 #include <iostream>
+#include <optional>
+#include <stdexcept>
 
 #include "base/contingency_table.h"
 #include "score/local_score.h"
-#include "utils/comb2vec.h"
-#include "utils/next_combination.h"
+#include "utils/combmask2vec.h"
+#include "utils/next_combmask.h"
 
 #define varset_t uint64_t  // number of variables <= 64
 
@@ -48,12 +50,11 @@ PDAG exhaustive_search(const DataframeWrapper& df,
     // explore all possible variable combinations in the current subset size
     varset_t varset_int = (varset_t(1) << subset_size) - 1;
     do {
-      std::vector<size_t> varset_vec = comb2vec(varset_int);
+      std::vector<size_t> varset_vec = combmask2vec(varset_int);
 
-      // TODO
-      // ContingencyTable<true> ct;
-      // if (calc_ls) ct = ContingencyTable<true>(varset_vec, df);
-      ContingencyTable<true> ct(varset_vec, df);
+      std::optional<ContingencyTable<true>>
+          ct;  // optional to avoid unnecessary computation
+      if (calc_ls) ct.emplace(varset_vec, df);
 
       double best_gs = 0;
       int best_ch = -1;
@@ -68,7 +69,7 @@ PDAG exhaustive_search(const DataframeWrapper& df,
             if (v != child_var) parent_set.push_back(v);
           }
           ls = calculate_local_score<double>(
-              child_var, parent_set, ct, score_type);
+              child_var, parent_set, *ct, score_type);
         }
 
         double best_ls = ls;
@@ -125,7 +126,7 @@ PDAG exhaustive_search(const DataframeWrapper& df,
       //           << std::endl;
       // /* debug print end */
 
-    } while (next_combination(varset_int, n));
+    } while (next_combmask(varset_int, n));
   }
 
   // reconstruct the best graph

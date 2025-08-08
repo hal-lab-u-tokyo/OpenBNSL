@@ -309,10 +309,10 @@ def structural_errors(ground_truth_pdag: PDAG, predicted_graph: PDAG) -> dict:
     -------
     errors : dict
         A dictionary containing the structural errors:
-        - SHD: Structural Hamming Distance
+        - SHD: Structural Hamming Distance (= EE + ME + DE)
         - ME: Missing Edge
         - EE: Extra Edge
-        - DE: Directional Error
+        - DE: Directional Error (= ED + MD + RD)
         - ED: Extra Direction
         - MD: Missing Direction
         - RD: Reversed Direction
@@ -322,14 +322,10 @@ def structural_errors(ground_truth_pdag: PDAG, predicted_graph: PDAG) -> dict:
     predicted_graph = PDAG2CPDAG(predicted_graph)
 
     errors = {}
-    errors["SHD"] = structural_hamming_distance(
-        ground_truth_pdag, predicted_graph
-    )  # SHD = EE + ME + DE
+    errors["SHD"] = structural_hamming_distance(ground_truth_pdag, predicted_graph)
     errors["ME"] = missing_edge(ground_truth_pdag, predicted_graph)
     errors["EE"] = extra_edge(ground_truth_pdag, predicted_graph)
-    errors["DE"] = directional_error(
-        ground_truth_pdag, predicted_graph
-    )  # DE = ED + MD + RD
+    errors["DE"] = directional_error(ground_truth_pdag, predicted_graph)
     errors["ED"] = extra_direction(ground_truth_pdag, predicted_graph)
     errors["MD"] = missing_direction(ground_truth_pdag, predicted_graph)
     errors["RD"] = reversed_direction(ground_truth_pdag, predicted_graph)
