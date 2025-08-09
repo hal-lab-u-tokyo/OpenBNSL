@@ -39,8 +39,8 @@ void bind_structure_learning(py::module& m) {
                 py::arg("ci_test_type"),
                 py::arg("max_cond_vars"),
                 py::arg("stable") = true);
-  submodule.def("RAI",
-                &RAI,
+  submodule.def("rai",
+                &rai,
                 "Run RAI algorithm",
                 py::arg("df"),
                 py::arg("ci_test_type"),

@@ -9,8 +9,6 @@
 /**
  * @brief PDAG implementation backed by a bit-compressed adjacency matrix.
  *
- *  *arc*  : directed link  (u -> v)
- *  *edge* : undirected link (u -> v and u <- v) == u <-> v
  */
 struct PDAGwithAdjMat : IPDAGConvertible {
   /* Data members */
