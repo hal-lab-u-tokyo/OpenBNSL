@@ -32,12 +32,13 @@ void bind_structure_learning(py::module& m) {
                 py::arg("is_deterministic") = false,
                 py::arg("seed") = 0,
                 py::arg("num_chains") = 0);
-  submodule.def("PC",
-                &PC,
+  submodule.def("pc",
+                &pc,
                 "Run PC algorithm",
                 py::arg("df"),
                 py::arg("ci_test_type"),
-                py::arg("max_cond_vars"));
+                py::arg("max_cond_vars"),
+                py::arg("stable") = true);
   submodule.def("RAI",
                 &RAI,
                 "Run RAI algorithm",

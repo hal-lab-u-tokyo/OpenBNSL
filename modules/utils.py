@@ -5,10 +5,8 @@ from openbnsllib.base import PDAG as OpenBNSLPDAG
 def to_pgmpy(openbnsl_pdag: OpenBNSLPDAG, node_labels: list[str]) -> PgmpyPDAG:
     """
     Convert an OpenBNSL PDAG to a pgmpy PDAG.
-
     Args:
         openbnsl_pdag (OpenBNSLPDAG): The OpenBNSL PDAG to convert.
-
     Returns:
         PgmpyPDAG: The converted pgmpy PDAG.
     """
@@ -31,10 +29,8 @@ def to_pgmpy(openbnsl_pdag: OpenBNSLPDAG, node_labels: list[str]) -> PgmpyPDAG:
 def to_openbnsl(pgmpy_pdag: PgmpyPDAG, var_str2idx: dict[str, int]) -> OpenBNSLPDAG:
     """
     Convert a pgmpy PDAG to an OpenBNSL PDAG.
-
     Args:
         pgmpy_pdag (PgmpyPDAG): The pgmpy PDAG to convert.
-
     Returns:
         OpenBNSLPDAG: The converted OpenBNSL PDAG.
     """

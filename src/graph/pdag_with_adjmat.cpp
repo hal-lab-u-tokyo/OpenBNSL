@@ -7,6 +7,7 @@
 PDAGwithAdjMat::PDAGwithAdjMat(size_t num_vars) : num_vars(num_vars) {
   size_t blocks = (num_vars + 63) / 64;
   adj_mat.resize(num_vars, std::vector<uint64_t>(blocks, 0ULL));
+  complete_graph();
 }
 PDAGwithAdjMat::PDAGwithAdjMat(const PDAGwithAdjMat &old)
     : num_vars(old.num_vars), adj_mat(old.adj_mat) {}
