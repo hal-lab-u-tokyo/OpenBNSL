@@ -1,8 +1,9 @@
 
+#include "citest/citest.h"
+
 #include <pybind11/pybind11.h>
 
 #include "citest/citest_type.h"
-#include "citest/citest.h"
 
 void bind_citest(py::module& m) {
   auto submodule = m.def_submodule("citest", "CITests submodule");

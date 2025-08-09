@@ -17,7 +17,7 @@ PYTHON_TARGET_DIRS=("benchmarks" "pytest" "modules")
 PYTHON_EXTENSION="*.py"
 
 CHECK_MODE=false
-if [[ "$1" == "--check" ]]; then
+if [[ "${1:-}" == "--check" ]]; then
   CHECK_MODE=true
 fi
 
