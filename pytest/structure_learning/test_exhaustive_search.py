@@ -9,33 +9,10 @@ from modules.utils import to_pgmpy
 from modules.structural_distance import structural_errors
 
 
-@pytest.mark.parametrize(
-    "model_name",
-    [
-        "cancer",  # 5 nodes
-        "asia",  # 8 nodes
-        "child",  # 20 nodes
-        # "alarm",   # 37 nodes
-    ],
-)
-@pytest.mark.parametrize(
-    "score_type",
-    [
-        openbnsllib.score.BDeu(1.0),
-    ],
-)
-@pytest.mark.parametrize(
-    "sample_size",
-    [
-        int(1e5),
-    ],
-)
-@pytest.mark.parametrize(
-    "seed",
-    [
-        0,
-    ],
-)
+@pytest.mark.parametrize("model_name", ["cancer", "asia", "child"])
+@pytest.mark.parametrize("score_type", [openbnsllib.score.BDeu(1.0)])
+@pytest.mark.parametrize("sample_size", [int(1e5)])
+@pytest.mark.parametrize("seed", [0])
 def test_exhaustive_search(model_name, score_type, sample_size, seed):
     model_original = get_example_model(model_name)
     samples = model_original.simulate(sample_size, seed=seed)

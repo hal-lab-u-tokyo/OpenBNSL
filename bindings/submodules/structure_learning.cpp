@@ -1,10 +1,10 @@
 #include <pybind11/pybind11.h>
 
-#include "structure_learning/PC.h"
 #include "structure_learning/PC_nishikori.h"
-#include "structure_learning/RAI.h"
 #include "structure_learning/RAI_nishikori.h"
 #include "structure_learning/exhaustive_search.h"
+#include "structure_learning/pc.h"
+#include "structure_learning/rai.h"
 #include "structure_learning/simulated_annealing.h"
 
 void bind_structure_learning(py::module& m) {
@@ -32,14 +32,15 @@ void bind_structure_learning(py::module& m) {
                 py::arg("is_deterministic") = false,
                 py::arg("seed") = 0,
                 py::arg("num_chains") = 0);
-  submodule.def("PC",
-                &PC,
+  submodule.def("pc",
+                &pc,
                 "Run PC algorithm",
                 py::arg("df"),
                 py::arg("ci_test_type"),
-                py::arg("max_cond_vars"));
-  submodule.def("RAI",
-                &RAI,
+                py::arg("max_cond_vars"),
+                py::arg("stable") = true);
+  submodule.def("rai",
+                &rai,
                 "Run RAI algorithm",
                 py::arg("df"),
                 py::arg("ci_test_type"),

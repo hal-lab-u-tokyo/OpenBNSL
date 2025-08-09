@@ -10,18 +10,20 @@
  * representation.
  */
 struct PDAG {
+  /* Data members */
   std::size_t num_vars;
   std::vector<std::set<size_t>> parents;  // parents[v] = {u | u -> v}
 
-  explicit PDAG(std::size_t num_vars) : num_vars(num_vars), parents(num_vars) {}
+  /* Lifecycle */
+  PDAG(std::size_t num_vars) : num_vars(num_vars), parents(num_vars) {}
 
   bool has_edge(std::size_t from, std::size_t to) const {
-    return parents[from].find(to) != parents[from].end();
+    return parents[to].find(from) != parents[to].end();
   }
 
-  void add_edge(std::size_t from, std::size_t to) { parents[from].insert(to); }
+  void add_edge(std::size_t from, std::size_t to) { parents[to].insert(from); }
 
   void remove_edge(std::size_t from, std::size_t to) {
-    parents[from].erase(to);
+    parents[to].erase(from);
   }
 };

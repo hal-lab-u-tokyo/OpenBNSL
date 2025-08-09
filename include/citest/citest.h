@@ -11,7 +11,8 @@
 
 #include "base/contingency_table.h"
 #include "citest/citest_type.h"
-
+#include "citest/graph_dsep.h"
+#include "graph/pdag.h"
 
 inline double pchisq(double x, std::size_t dof) {
   if (dof == 0) return (x == 0.0 ? 1.0 : 0.0);
@@ -37,18 +38,20 @@ bool citest(std::size_t x,
             const std::vector<std::size_t>& sepset_candidate,
             const ContingencyTable<Deterministic>& ct,
             const CITestType& ci_test_type) {
-
-  double alpha;
-  if (is_type<ChiSquare>(ci_test_type))
-    alpha = static_cast<double>(get_type<ChiSquare>(ci_test_type).level);
-  else if (is_type<GSquare>(ci_test_type))
-    alpha = static_cast<double>(get_type<GSquare>(ci_test_type).level);
-  else
-    throw std::invalid_argument("Unsupported CI test type");
-
-
   if (x == y) throw std::invalid_argument("x and y must differ");
   if (x >= y) std::swap(x, y);
+
+  double alpha;
+  if (is_type<ChiSquare>(ci_test_type)) {
+    alpha = static_cast<double>(get_type<ChiSquare>(ci_test_type).level);
+  } else if (is_type<GSquare>(ci_test_type)) {
+    alpha = static_cast<double>(get_type<GSquare>(ci_test_type).level);
+  } else if (is_type<OracleGraph>(ci_test_type)) {
+    const PDAG& g = get_type<OracleGraph>(ci_test_type).graph;
+    return is_d_separated(g, x, y, sepset_candidate);
+  } else {
+    throw std::invalid_argument("Unsupported CI test type");
+  }
 
   const auto it_x = std::find(ct.var_ids.begin(), ct.var_ids.end(), x);
   const auto it_y = std::find(ct.var_ids.begin(), ct.var_ids.end(), y);
@@ -110,9 +113,7 @@ bool citest(std::size_t x,
         // https://github.com/scipy/scipy/blob/v1.16.1/scipy/stats/contingency.py)
         if (apply_yates) {
           double diff = exp - obs;
-          double direction = (diff > 0)   ? 1.0
-                                 : (diff < 0) ? -1.0
-                                              : 0.0;
+          double direction = (diff > 0) ? 1.0 : (diff < 0) ? -1.0 : 0.0;
           double magnitude = std::min(0.5, std::fabs(diff));
           obs += magnitude * direction;
         }
@@ -121,8 +122,7 @@ bool citest(std::size_t x,
           double diff = obs - exp;
           stat += diff * diff / exp;
         } else if (is_type<GSquare>(ci_test_type)) {
-          if (obs > 0)
-            stat += 2.0 * obs * std::log(obs / exp);
+          if (obs > 0) stat += 2.0 * obs * std::log(obs / exp);
         } else {
           throw std::invalid_argument("Unsupported CI test type");
         }

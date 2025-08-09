@@ -1,6 +1,8 @@
 #pragma once
 #include <variant>
 
+#include "graph/pdag.h"
+
 struct ChiSquare {
   double level;
   ChiSquare(double level = 0.05) : level(level) {}
@@ -11,7 +13,12 @@ struct GSquare {
   GSquare(double level = 0.05) : level(level) {}
 };
 
-using CITestType = std::variant<ChiSquare, GSquare>;
+struct OracleGraph {
+  PDAG graph;
+  explicit OracleGraph(const PDAG& g) : graph(g) {}
+};
+
+using CITestType = std::variant<ChiSquare, GSquare, OracleGraph>;
 /**
  * @brief Check if the CI test type is of a specific type
  * @tparam T A CI test type

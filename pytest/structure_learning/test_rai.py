@@ -82,7 +82,7 @@ def test_rai(model_name, max_cond_vars, citest_type_str, level, sample_size, see
     )
 
     expected_obnsl = to_pgmpy(_pdag, list(samples.columns))
-    error_pgmpy = structural_errors(expected_pgmpy, model_original)
-    error_obnsl = structural_errors(expected_obnsl, model_original)
+    error_pgmpy = structural_errors(model_original, expected_pgmpy)
+    error_obnsl = structural_errors(model_original, expected_obnsl)
     print(f"[pgmpy] Model: {model_name}, Seed: {seed}, {error_pgmpy}")
     print(f"[obnsl] Model: {model_name}, Seed: {seed}, {error_obnsl}")

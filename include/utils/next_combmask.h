@@ -22,16 +22,19 @@ namespace mp = boost::multiprecision;
  * @example
  * Example usage:
  * @code
+ * #include <boost/multiprecision/cpp_int.hpp>
+ * #include "next_combmask.h"
+ * namespace mp = boost::multiprecision;
  * int n = 5, t = 3;
  * mp::cpp_int combination = (mp::cpp_int(1) << t) - 1; // 00111
  * do {
  *     // Process the current combination
- * } while (next_combination(combination, n));
+ * } while (next_combmask(combination, n));
  * @endcode
  *
  */
 template <typename T>
-bool next_combination(T& comb, int n) {
+bool next_combmask(T& comb, int n) {
   static_assert(
       std::is_integral<T>::value || std::is_same<T, mp::cpp_int>::value,
       "T must be an integral type or cpp_int");
