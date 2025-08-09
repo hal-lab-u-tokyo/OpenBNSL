@@ -33,6 +33,7 @@ DataframeWrapper::DataframeWrapper(const py::object& dataframe) {
   // order
   val_str2idx.resize(num_of_vars);
   val_idx2str.resize(num_of_vars);
+#pragma omp parallel for
   for (size_t i = 0; i < num_of_vars; i++) {
     std::set<std::string> unique_values;
     for (size_t j = 0; j < num_of_datapoints; j++) {
@@ -52,26 +53,28 @@ DataframeWrapper::DataframeWrapper(const py::object& dataframe) {
 
   // manage the num_of_values
   num_of_values.resize(num_of_vars);
+#pragma omp parallel for
   for (size_t i = 0; i < num_of_vars; i++) {
     num_of_values[i] = val_idx2str[i].size();
   }
 
-  // manage the data_col_idx
-  data_col_idx.resize(num_of_vars);
+  // manage the data_column_major
+  data_column_major.resize(num_of_vars);
+#pragma omp parallel for
   for (size_t i = 0; i < num_of_vars; i++) {
-    data_col_idx[i].resize(num_of_datapoints);
+    data_column_major[i].resize(num_of_datapoints);
     for (size_t j = 0; j < num_of_datapoints; j++) {
       auto value = dataset_ptr[i * num_of_datapoints + j].cast<std::string>();
-      data_col_idx[i][j] = val_str2idx[i][value];
+      data_column_major[i][j] = val_str2idx[i][value];
     }
   }
 
-  // manage the data_idx_col
-  data_idx_col.resize(num_of_datapoints);
+  // manage the data_row_major
+  data_row_major.resize(num_of_datapoints);
   for (size_t i = 0; i < num_of_datapoints; i++) {
-    data_idx_col[i].resize(num_of_vars);
+    data_row_major[i].resize(num_of_vars);
     for (size_t j = 0; j < num_of_vars; j++) {
-      data_idx_col[i][j] = data_col_idx[j][i];
+      data_row_major[i][j] = data_column_major[j][i];
     }
   }
 

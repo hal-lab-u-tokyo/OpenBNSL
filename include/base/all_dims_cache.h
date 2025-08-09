@@ -28,9 +28,10 @@ class AllDimsCache {
   const DataframeWrapper& df;
   size_t max_depth;
 
-  std::vector<mp::cpp_int> bit_masks;
   std::unique_ptr<Node> root_node;
-  void branch(Node* parent, const size_t curr_depth, const int rightmost_var,
+  void branch(Node* parent,
+              const size_t curr_depth,
+              const int rightmost_var,
               const std::vector<int>& freq_tbl,
               const std::vector<int>& indices);
 

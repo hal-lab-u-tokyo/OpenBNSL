@@ -1,220 +1,129 @@
-import pandas as pd
+# modules/structural_distance.py
+
 import numpy as np
 import networkx as nx
-from pgmpy.base import DAG
 from pgmpy.base import PDAG
 from itertools import combinations
-import argparse
-import os
-from modules.visualize_graph import display_graph_info as show
 
-def retrieve_adjacency_matrix(graph, order_nodes=None, weight=False):
-    """Retrieve the adjacency matrix from the nx.DiGraph or numpy array."""
-    if isinstance(graph, np.ndarray):
-        return graph
-    elif isinstance(graph, nx.DiGraph):
-        if order_nodes is None:
-            order_nodes = graph.nodes()
-        if not weight:
-            return np.array(nx.adjacency_matrix(graph, order_nodes, weight=None).todense())
+
+def _assert_same_nodes(gt: PDAG, pred: PDAG):
+    """Assert that the ground truth and predicted PDAGs have the same nodes."""
+    gt_nodes = set(gt.nodes())
+    pr_nodes = set(pred.nodes())
+    if gt_nodes != pr_nodes:
+        missing = gt_nodes - pr_nodes
+        extra = pr_nodes - gt_nodes
+        raise ValueError(
+            f"Node sets differ. missing_in_pred={missing}, extra_in_pred={extra}"
+        )
+
+
+def _split_edge_sets(G: PDAG):
+    """Split edges of a PDAG into directed and undirected sets."""
+    dir_edges = set()
+    undir_edges = set()
+    for u, v in G.edges():
+        if G.has_edge(v, u):
+            if u != v:
+                undir_edges.add(frozenset((u, v)))
         else:
-            return np.array(nx.adjacency_matrix(graph, order_nodes).todense())
-    else:
-        raise TypeError("Only networkx.DiGraph and np.ndarray (adjacency matrixes) are supported.")
+            if u != v:
+                dir_edges.add((u, v))
+    return dir_edges, undir_edges
 
 
-def SHD(target, pred):
-    true_labels = retrieve_adjacency_matrix(target)
-    predictions = retrieve_adjacency_matrix(pred, target.nodes() 
-                                            if isinstance(target, nx.DiGraph) else None)
-    diff = np.abs(true_labels - predictions)
-    diff = diff + diff.transpose()
-    diff[diff > 1] = 1  # Ignoring the double edges.
-    return int(np.sum(diff)/2)
-
-def missing_edge(target, pred):
-    true_labels = retrieve_adjacency_matrix(target)
-    predictions = retrieve_adjacency_matrix(pred, target.nodes() 
-    if isinstance(target, nx.DiGraph) else None)
-    diff = true_labels - predictions - predictions.transpose()
-    diff[diff < 0] = 0  # Ignoring other types of error.
-    diff = diff + diff.transpose()
-    diff[diff > 1] = 1  # Ignoring the double edges.
-    return int(np.sum(diff)/2)
-
-def extra_edge(target, pred):
-    true_labels = retrieve_adjacency_matrix(target)
-    predictions = retrieve_adjacency_matrix(pred, target.nodes() 
-    if isinstance(target, nx.DiGraph) else None)
-    diff = predictions - true_labels - true_labels.transpose()
-    diff[diff < 0] = 0  # Ignoring other types of error.
-    diff = diff + diff.transpose()
-    diff[diff > 1] = 1  # Ignoring the double edges.
-    return int(np.sum(diff)/2)
-
-def extra_direction(target, pred):
-    true_labels = retrieve_adjacency_matrix(target)
-    predictions = retrieve_adjacency_matrix(pred, target.nodes() 
-    if isinstance(target, nx.DiGraph) else None)
-    count = 0
-    for x in range(true_labels.shape[0]):
-        for y in range(true_labels.shape[1]):
-            if true_labels[x, y] == 1 and true_labels[y, x] == 1 and predictions[x, y] == 1 and predictions[y, x] == 0:
-                count += 1
-    return count
-
-def missing_direction(target, pred):
-    true_labels = retrieve_adjacency_matrix(target)
-    predictions = retrieve_adjacency_matrix(pred, target.nodes() 
-    if isinstance(target, nx.DiGraph) else None)
-    count = 0
-    for x in range(true_labels.shape[0]):
-        for y in range(true_labels.shape[1]):
-            if true_labels[x, y] == 1 and true_labels[y, x] == 0 and predictions[x, y] == 1 and predictions[y, x] == 1:
-                count += 1
-    return count
-
-def reversed_direction(target, pred):
-    true_labels = retrieve_adjacency_matrix(target)
-    predictions = retrieve_adjacency_matrix(pred, target.nodes() 
-    if isinstance(target, nx.DiGraph) else None)
-    count = 0
-    for x in range(true_labels.shape[0]):
-        for y in range(true_labels.shape[1]):
-            if true_labels[x, y] == 1 and true_labels[y, x] == 0 and predictions[x, y] == 0 and predictions[y, x] == 1:
-                count += 1
-    return count
-
-def directional_error(target, pred):
-    return SHD(target, pred) - missing_edge(target, pred) - extra_edge(target, pred)
-
-def structural_errors(target, pred):
-    """
-    Conpute Structural Hamming Distance (SHD), Extra Edge (EE), Missing Edge (ME), Directional Error (DE),ED (Extra Direction), MD (Missing Direction), RD(Reversed Direction)
-    SHD = EE + ME + DE
-    DE = ED + MD + RD
-    true    predicted
-    no      -           SHD = 1  EE = 1
-    no      ->          SHD = 1  EE = 1
-    ->      <-          SHD = 1  DE = 1 (Reversed Direction)
-    ->      no          SHD = 1  ME = 1
-    ->      -           SHD = 1  DE = 1 (Missing Direction)
-    -       no          SHD = 1  ME = 1
-    -       ->          SHD = 1  DE = 1 (Extra Direction)
-
-    Parameters
-    ----------
-    target : nx.DiGraph
-        true CPDAG
-    pred : nx.DiGraph
-        predicted CPDAG
-    Returns
-    ------
-    errors : list
-    [SHD, missing_edge, extra_edge, directional_error, extra_direction, missing_direction, reversed_direction]
-    """
-    errors = []
-    errors.append(SHD(target, pred))
-    errors.append(missing_edge(target, pred))
-    errors.append(extra_edge(target, pred))
-    errors.append(directional_error(target, pred))
-    errors.append(extra_direction(target, pred))
-    errors.append(missing_direction(target, pred))
-    errors.append(reversed_direction(target, pred))
-    return errors
+def _skeleton_from(dir_edges, undir_edges):
+    """Create a skeleton graph from directed and undirected edge sets."""
+    skel = set(undir_edges)
+    for u, v in dir_edges:
+        skel.add(frozenset((u, v)))
+    return skel
 
 
-def PDAG2CPDAG(pdag): 
+def PDAG2CPDAG(pdag: PDAG) -> PDAG:
     """
     Compute the completed partially directed acyclic graph (CPDAG) of a given PDAG.
-    
-    Parameters
-    ----------
-    pdag : nx.DiGraph
-        input PDAG
-
-    Returns
-    -------
-    cpdag : nx.DiGraph
-        output CPDAG
+    Args:
+        pdag (PDAG): The input PDAG to convert.
+    Returns:
+        PDAG: The completed PDAG.
     """
     cpdag = PDAG()
     cpdag.add_nodes_from(pdag.nodes)
-    
-    #make skeleton
     cpdag.add_edges_from(pdag.edges)
-    reversedag = pdag.reverse(copy = True)
+    reversedag = pdag.reverse(copy=True)
     cpdag.add_edges_from(reversedag.edges)
 
-    # vstructuredag = PDAG()
-    # vstructuredag.add_nodes_from(pdag.nodes)
-
-    #pdag_removed = pdag.copy() #remove all undirected edges
     pdag_removed = PDAG()
     pdag_removed.add_nodes_from(pdag.nodes)
     pdag_removed.add_edges_from(pdag.edges)
-    for pair in list(combinations(pdag.nodes(), 2)):
-            X, Y = pair
-            if pdag_removed.has_edge(X, Y) and pdag_removed.has_edge(Y, X): 
-                pdag_removed.remove_edge(Y, X)
-                pdag_removed.remove_edge(X, Y)
+    for X, Y in combinations(pdag.nodes(), 2):
+        if pdag_removed.has_edge(X, Y) and pdag_removed.has_edge(Y, X):
+            pdag_removed.remove_edge(Y, X)
+            pdag_removed.remove_edge(X, Y)
+
     for X in pdag_removed.nodes:
         if pdag_removed.in_degree(X) > 1:
-            for Y in pdag_removed.predecessors(X): #for every parent of V-structure fix it
-                cpdag.remove_edge(X, Y)
-    #             vstructuredag.add_edge(Y, X)
-    
-    # for X in pdag.nodes:
-    #     for Y in pdag.nodes:
-    #         if cpdag.has_edge(X, Y) and cpdag.has_edge(Y, X):
-    #             if vstructuredag.in_degree(X) > 0 and vstructuredag.in_degree(Y) == 0:
-    #                 vstructuredag.add_edge(X, Y)
-    #                 cpdag.remove_edge(Y, X)
-    #             elif vstructuredag.in_degree(Y) > 0 and vstructuredag.in_degree(X) == 0:
-    #                 vstructuredag.add_edge(Y, X)
-    #                 cpdag.remove_edge(X, Y)
-
+            parents = list(pdag_removed.predecessors(X))
+            for i in range(len(parents)):
+                for j in range(i + 1, len(parents)):
+                    Y, Z = parents[i], parents[j]
+                    if (not pdag.has_edge(Y, Z)) and (not pdag.has_edge(Z, Y)):
+                        if cpdag.has_edge(X, Y) and cpdag.has_edge(Y, X):
+                            cpdag.remove_edge(X, Y)
+                        if cpdag.has_edge(X, Z) and cpdag.has_edge(Z, X):
+                            cpdag.remove_edge(X, Z)
     return cpdag
 
-def DAG2CPDAG(dag): 
+
+def structural_errors(ground_truth_pdag: PDAG, predicted_graph: PDAG) -> dict:
     """
-    Compute the completed partially directed acyclic graph (CPDAG) of a given DAG.
-    
-    Parameters
-    ----------
-    dag : nx.DiGraph
-        input DAG
-
-    Returns
-    -------
-    cpdag : nx.DiGraph
-        output CPDAG
+    Compute structural errors between two PDAGs.
+    Args:
+        ground_truth_pdag (PDAG): The ground truth PDAG.
+        predicted_graph (PDAG): The predicted PDAG.
+    Returns:
+        dict: A dictionary containing the structural errors:
+        - SHD: Structural Hamming Distance (= EE + ME + DE)
+        - ME: Missing Edge          (ground truth has edge, prediction does not)
+        - EE: Extra Edge            (prediction has edge, ground truth does not)
+        - DE: Directional Error     (= ED + MD + RD)
+        - ED: Extra Direction       (undirected in ground truth, directed in prediction)
+        - MD: Missing Direction     (directed in ground truth, undirected in prediction)
+        - RD: Reversed Direction    (X -> Y in ground truth, Y -> X in prediction)
     """
-    cpdag = PDAG()
-    cpdag.add_nodes_from(dag.nodes)
-    
-    #make skeleton
-    cpdag.add_edges_from(dag.edges)
-    reversedag = dag.reverse(copy = True)
-    cpdag.add_edges_from(reversedag.edges)
+    gt = PDAG2CPDAG(ground_truth_pdag)
+    pr = PDAG2CPDAG(predicted_graph)
 
-    # vstructuredag = PDAG()
-    # vstructuredag.add_nodes_from(dag.nodes)
+    _assert_same_nodes(gt, pr)
 
-    for X in dag.nodes:
-        if dag.in_degree(X) > 1:
-            for Y in dag.predecessors(X): #for every parent of V-structure fix it
-                cpdag.remove_edge(X, Y)
-                # vstructuredag.add_edge(Y, X)
-    
-    # for X in dag.nodes:
-    #     for Y in dag.nodes:
-    #         if cpdag.has_edge(X, Y) and cpdag.has_edge(Y, X):
-    #             if vstructuredag.in_degree(X) > 0 and vstructuredag.in_degree(Y) == 0:
-    #                 vstructuredag.add_edge(X, Y)
-    #                 cpdag.remove_edge(Y, X)
-    #             elif vstructuredag.in_degree(Y) > 0 and vstructuredag.in_degree(X) == 0:
-    #                 vstructuredag.add_edge(Y, X)
-    #                 cpdag.remove_edge(X, Y)
+    dir_true, undir_true = _split_edge_sets(gt)
+    dir_pred, undir_pred = _split_edge_sets(pr)
 
-    return cpdag
+    skel_true = _skeleton_from(dir_true, undir_true)
+    skel_pred = _skeleton_from(dir_pred, undir_pred)
+
+    ME = len(skel_true - skel_pred)
+    EE = len(skel_pred - skel_true)
+
+    ED = 0
+    for e in undir_true:
+        u, v = tuple(e)
+        ed_flag = ((u, v) in dir_pred) ^ ((v, u) in dir_pred)  # 片方だけ
+        if ed_flag:
+            ED += 1
+
+    MD = 0
+    for u, v in dir_true:
+        if frozenset((u, v)) in undir_pred:
+            MD += 1
+
+    RD = 0
+    for u, v in dir_true:
+        if (v, u) in dir_pred:
+            RD += 1
+
+    DE = ED + MD + RD
+    SHD = ME + EE + DE
+
+    return {"SHD": SHD, "ME": ME, "EE": EE, "DE": DE, "ED": ED, "MD": MD, "RD": RD}

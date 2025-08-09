@@ -8,7 +8,7 @@
 import os
 import subprocess
 import sys
-from setuptools import setup, Extension
+from setuptools import setup, find_packages, Extension
 from setuptools.command.build_ext import build_ext
 
 class CMakeBuildExtension(build_ext):
@@ -49,18 +49,19 @@ setup(
     long_description_content_type="text/markdown",
     ext_modules=[CMakeExtension("openbnsllib")],
     cmdclass={"build_ext": CMakeBuildExtension},
+    packages=find_packages(include=["modules", "modules.*"]),
     install_requires=[], # TODO: Add dependencies
     extras_require={},
     url="https://github.com/hal-lab-u-tokyo/openbnsl",
     author="Ryota Miyagi",
     author_email="rmiyagi@hal.ipc.i.u-tokyo.ac.jp",
     python_requires=">=3.7",
+    license = "MIT",
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
         "Intended Audience :: Education",
         "Intended Audience :: Science/Research",
-        "License :: OSI Approved :: MIT License",
         "Topic :: Scientific/Engineering",
         "Topic :: Scientific/Engineering :: Mathematics",
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
@@ -71,5 +72,5 @@ setup(
         "Programming Language :: Python :: 3",
     ],
     keywords="Bayesian Network, Structure Learning, Machine Learning",
-    license="MIT",
+
 )

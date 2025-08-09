@@ -1,8 +1,8 @@
-#include "utils/next_combination.h"
-
 #include <gtest/gtest.h>
 
 #include <boost/multiprecision/cpp_int.hpp>
+
+#include "utils/next_combmask.h"
 namespace mp = boost::multiprecision;
 
 template <typename T>
@@ -11,7 +11,7 @@ int comb_cnt(int n, int m) {
   int cnt = 0;
   do {
     cnt++;
-  } while (next_combination(comb, n));
+  } while (next_combmask(comb, n));
   return cnt;
 }
 

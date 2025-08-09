@@ -31,6 +31,7 @@ RUN apt update && apt install -y \
     clang-format \
     doxygen \
     graphviz \
+    libgraphviz-dev \
     python3.10 \
     python3.10-dev \
     python3-pip \
@@ -52,8 +53,10 @@ RUN cd /usr/src/googletest && \
 # Install Python packages 
 # pgmpy depends on networkx, numpy, pandas
 RUN pip3 install --upgrade pip && pip3 install \
-    pgmpy==0.1.26 \
+    pgmpy==1.0.0 \
     matplotlib==3.9.2 \
+    graphviz==0.21 \
+    pygraphviz==1.14 \
     notebook==7.2.2 \
     pulp==2.9.0 \
     pytest==8.3.3 \
