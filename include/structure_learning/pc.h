@@ -12,7 +12,7 @@
  * @param max_cond_vars The maximum number of conditional variables to consider
  * @return A PDAG object
  *
- * 
+ *
  */
 PDAG pc(const DataframeWrapper& df,
         const CITestType& ci_test_type,

@@ -12,7 +12,6 @@ inline bool is_d_separated(const PDAG& g,
                            std::size_t x,
                            std::size_t y,
                            const std::vector<std::size_t>& Z) {
-
   // (0) Check input validity
   const std::size_t n = g.num_vars;
   if (x >= n || y >= n) throw std::out_of_range("x or y is out of range");
@@ -22,7 +21,7 @@ inline bool is_d_separated(const PDAG& g,
       std::find(Z.begin(), Z.end(), y) != Z.end()) {
     throw std::invalid_argument("x or y is in Z");
   }
-  
+
   std::vector<char> in_Z(n, 0);
   for (auto z : Z) in_Z[z] = 1;
 
@@ -50,7 +49,7 @@ inline bool is_d_separated(const PDAG& g,
     }
   }
 
-  // (2) Moralization 
+  // (2) Moralization
   std::vector<std::unordered_set<std::size_t>> und_adj(n);
 
   // (2.a) Make directed edges undirected
@@ -82,7 +81,8 @@ inline bool is_d_separated(const PDAG& g,
     }
   }
 
-  // (3) Check reachability from X to Y in the undirected graph (without going through Z)
+  // (3) Check reachability from X to Y in the undirected graph (without going
+  // through Z)
   std::vector<char> vis(n, 0);
   std::queue<std::size_t> bfs;
   vis[x] = 1;
@@ -99,5 +99,5 @@ inline bool is_d_separated(const PDAG& g,
       bfs.push(v);
     }
   }
-  return true; // If we cannot reach y from x, they are d-separated.
+  return true;  // If we cannot reach y from x, they are d-separated.
 }

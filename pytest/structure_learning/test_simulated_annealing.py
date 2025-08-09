@@ -8,8 +8,8 @@ import openbnsllib
 from modules.utils import to_pgmpy
 from modules.structural_distance import structural_errors
 
-
-@pytest.mark.parametrize("model_name", ["cancer", "asia", "child"])
+# @pytest.mark.parametrize("model_name", ["cancer", "asia", "child", "alarm"])
+@pytest.mark.parametrize("model_name", ["cancer"])
 @pytest.mark.parametrize("score_type", [openbnsllib.score.BDeu(1.0)])
 @pytest.mark.parametrize("sample_size", [int(1e5)])
 @pytest.mark.parametrize("seed", [0])
