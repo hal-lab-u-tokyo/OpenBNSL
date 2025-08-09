@@ -7,16 +7,17 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write        # Write access to GitHub Pages
-  id-token: write     # Required for Pages deployment
+  packages: read      # Required to pull private packages (e.g., GHCR images) from GitHub Packages
+  contents: read      # Allows reading repository contents
+  pages: write        # Required to deploy to GitHub Pages
+  id-token: write     # Required for OIDC authentication during Pages deployment
 
 jobs:
   build:
     name: Build Documentation
     runs-on: ubuntu-latest
     steps:
-      - name: Set IMAGE_NAME and IMAGE_TAG
+      - name: Set lowercase $IMAGE_NAME and $IMAGE_TAG
         run: |
           echo "IMAGE_NAME=$(echo ghcr.io/${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
           echo "IMAGE_TAG=latest" >> $GITHUB_ENV
