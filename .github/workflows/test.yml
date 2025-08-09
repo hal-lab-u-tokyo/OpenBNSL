@@ -4,21 +4,47 @@ on:
   pull_request:
   workflow_dispatch:
 
+permissions:
+  contents: read
+  packages: read
+
 jobs:
   build_test_and_format:
-    name: Build, Test, and Format Check
     runs-on: ubuntu-latest
     steps:
-      - name: Set lowercase $IMAGE_NAME and $IMAGE_TAG
+      - name: Set IMAGE_NAME and IMAGE_TAG
         run: |
           echo "IMAGE_NAME=$(echo ghcr.io/${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
           echo "IMAGE_TAG=latest" >> $GITHUB_ENV
+          echo "CACHE_KEY_IMAGE=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
+      - name: Restore cached Docker image
+        id: cache-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: /tmp/image.tar
+          key: ${{ runner.os }}-docker-${{ env.CACHE_KEY_IMAGE }}-${{ env.IMAGE_TAG }}
+
+      - name: Load image from cache
+        if: steps.cache-restore.outputs.cache-hit == 'true'
+        run: docker load -i /tmp/image.tar
 
       - name: Log in to GitHub Docker Registry
+        if: steps.cache-restore.outputs.cache-hit != 'true'
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
 
-      - name: Pull Docker Image
-        run: docker pull $IMAGE_NAME:$IMAGE_TAG
+      - name: Pull & save image (cache miss)
+        if: steps.cache-restore.outputs.cache-hit != 'true'
+        run: |
+          docker pull "$IMAGE_NAME:$IMAGE_TAG"
+          docker save "$IMAGE_NAME:$IMAGE_TAG" -o /tmp/image.tar
+
+      - name: Save image to cache
+        if: steps.cache-restore.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: /tmp/image.tar
+          key: ${{ steps.cache-restore.outputs.cache-primary-key }}
 
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -26,24 +52,19 @@ jobs:
           submodules: recursive
 
       - name: Set execute permissions for bash scripts
-        run: chmod -R +x scripts/*.sh
+        run: chmod +x scripts/*.sh
 
       - name: Run Format Check
-        run: |
-          docker run --rm -v "$(pwd):/workspace" $IMAGE_NAME:$IMAGE_TAG ./scripts/format.sh --check
-        
+        run: docker run --rm -v "$(pwd):/workspace" "$IMAGE_NAME:$IMAGE_TAG" ./scripts/format.sh --check
+
       # - name: Build GTest
-      #   run: |
-      #     docker run --rm -v "$(pwd):/workspace" $IMAGE_NAME:$IMAGE_TAG ./scripts/build_gtest.sh
+      #   run: docker run --rm -v "$(pwd):/workspace" "$IMAGE_NAME:$IMAGE_TAG" ./scripts/build_gtest.sh
 
       # - name: Run GTest
-      #   run: |
-      #     docker run --rm -v "$(pwd):/workspace" $IMAGE_NAME:$IMAGE_TAG ./scripts/run_gtest.sh
+      #   run: docker run --rm -v "$(pwd):/workspace" "$IMAGE_NAME:$IMAGE_TAG" ./scripts/run_gtest.sh
 
       - name: Build and Install OpenBNSL
-        run: |
-          docker run --rm -v "$(pwd):/workspace" $IMAGE_NAME:$IMAGE_TAG pip install .
+        run: docker run --rm -v "$(pwd):/workspace" "$IMAGE_NAME:$IMAGE_TAG" pip install .
 
       - name: Run Pytest
-        run: |
-          docker run --rm -v "$(pwd):/workspace" $IMAGE_NAME:$IMAGE_TAG pytest
+        run: docker run --rm -v "$(pwd):/workspace" "$IMAGE_NAME:$IMAGE_TAG" pytest
