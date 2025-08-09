@@ -2,7 +2,7 @@
 #include <pybind11/pybind11.h>
 
 #include "base/dataframe_wrapper.h"
-#include "graph/PDAG.h"
+#include "graph/pdag.h"
 #include "score/score_type.h"
 namespace py = pybind11;
 

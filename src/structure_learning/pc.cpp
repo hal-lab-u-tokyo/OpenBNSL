@@ -20,7 +20,6 @@ static PDAGwithAdjMat build_skeleton(const DataframeWrapper& df,
                                      Sepset& sepset) {
   PDAGwithAdjMat g(df.num_of_vars);
   for (size_t k = 0; k <= max_cond_vars; ++k) {
-
     // snapshot the current graph if stable version
     PDAGwithAdjMat snapshot = g;
     PDAGwithAdjMat* g_ref = stable ? &snapshot : &g;

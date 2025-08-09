@@ -4,20 +4,21 @@ on:
   pull_request:
   workflow_dispatch:
 
-env:
-  IMAGE_NAME: ghcr.io/${{ github.repository }}
-  IMAGE_TAG: latest
-
 jobs:
   build_test_and_format:
     name: Build, Test, and Format Check
     runs-on: ubuntu-latest
     steps:
+      - name: Set lowercase $IMAGE_NAME and $IMAGE_TAG
+        run: |
+          echo "IMAGE_NAME=$(echo ghcr.io/${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+          echo "IMAGE_TAG=latest" >> $GITHUB_ENV
+
       - name: Log in to GitHub Docker Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
 
       - name: Pull Docker Image
-        run: docker pull $IMAGE_NAME:$IMAGE_TAG
+        run: docker pull ${IMAGE_NAME}:${IMAGE_TAG}
 
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -25,16 +26,20 @@ jobs:
           submodules: recursive
 
       - name: Set execute permissions for bash scripts
-        run: chmod +x ./scripts/build_gtest.sh ./scripts/run_gtest.sh ./scripts/format.sh
-
-      - name: Run Build
-        run: |
-          docker run --rm -v "$(pwd):/workspace" $IMAGE_NAME:$IMAGE_TAG ./scripts/build_gtest.sh
-
-      - name: Run Tests
-        run: |
-          docker run --rm -v "$(pwd):/workspace" $IMAGE_NAME:$IMAGE_TAG ./scripts/run_gtest.sh
+        run: chmod -R +x scripts/*.sh
 
       - name: Run Format Check
         run: |
-          docker run --rm -v "$(pwd):/workspace" $IMAGE_NAME:$IMAGE_TAG ./scripts/format.sh --check
+          docker run --rm -v "$(pwd):/workspace" ${IMAGE_NAME}:${IMAGE_TAG} ./scripts/format.sh --check
+        
+      # - name: Build GTest
+      #   run: |
+      #     docker run --rm -v "$(pwd):/workspace" ${IMAGE_NAME}:${IMAGE_TAG} ./scripts/build_gtest.sh
+
+      # - name: Run GTest
+      #   run: |
+      #     docker run --rm -v "$(pwd):/workspace" ${IMAGE_NAME}:${IMAGE_TAG} ./scripts/run_gtest.sh
+
+      - name: Run Pytest
+        run: |
+          docker run --rm -v "$(pwd):/workspace" ${IMAGE_NAME}:${IMAGE_TAG} bash -lc "pip install . && pytest"

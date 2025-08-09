@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 RED='\033[31m'
 GREEN='\033[32m'
@@ -16,7 +17,7 @@ PYTHON_TARGET_DIRS=("benchmarks" "pytest" "modules")
 PYTHON_EXTENSION="*.py"
 
 CHECK_MODE=false
-if [[ "$1" == "--check" ]]; then
+if [[ "${1:-}" == "--check" ]]; then
   CHECK_MODE=true
 fi
 

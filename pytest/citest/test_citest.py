@@ -7,6 +7,7 @@ from pgmpy.estimators.CITests import chi_square, g_sq
 
 import openbnsllib
 
+
 @pytest.mark.parametrize("model_name", ["cancer", "asia", "child", "alarm"])
 @pytest.mark.parametrize("sample_size", [int(1e5)])
 @pytest.mark.parametrize("citest_type_str", ["chi_square", "g_sq"])

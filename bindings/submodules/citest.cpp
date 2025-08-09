@@ -1,4 +1,5 @@
-#include "citest/CItest.h"
+
+#include "citest/citest.h"
 
 #include <pybind11/pybind11.h>
 
