@@ -26,7 +26,7 @@ void bind_structure_learning(py::module& m) {
                 py::arg("df"),
                 py::arg("score_type"),
                 py::arg("max_parents"),
-                py::arg("max_iters") = 10000,
+                py::arg("max_iters") = 100000,
                 py::arg("init_temp") = 1.0,
                 py::arg("cooling_rate") = 0.9995,
                 py::arg("is_deterministic") = false,
