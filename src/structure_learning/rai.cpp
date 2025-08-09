@@ -1,4 +1,4 @@
-#include "structure_learning/RAI.h"
+#include "structure_learning/rai.h"
 
 #include "graph/pdag_with_adjmat.h"
 

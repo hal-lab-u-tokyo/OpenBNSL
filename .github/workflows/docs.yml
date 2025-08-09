@@ -6,12 +6,17 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+  contents: read
+  pages: write        # Write access to GitHub Pages
+  id-token: write     # Required for Pages deployment
+
 jobs:
-  generate_and_deploy_docs:
-    name: Generate and Deploy Documentation
+  build:
+    name: Build Documentation
     runs-on: ubuntu-latest
     steps:
-      - name: Set lowercase $IMAGE_NAME
+      - name: Set IMAGE_NAME and IMAGE_TAG
         run: |
           echo "IMAGE_NAME=$(echo ghcr.io/${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
           echo "IMAGE_TAG=latest" >> $GITHUB_ENV
@@ -33,7 +38,19 @@ jobs:
       - name: Generate Documentation
         run: docker run --rm -v "$(pwd):/workspace" $IMAGE_NAME:$IMAGE_TAG ./scripts/gen_docs.sh
 
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v1
+      - name: Upload artifact for Pages
+        uses: actions/upload-pages-artifact@v3
         with:
           path: sphinx/build/html
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
