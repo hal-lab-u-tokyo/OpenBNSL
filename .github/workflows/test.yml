@@ -40,10 +40,6 @@ jobs:
       #   run: |
       #     docker run --rm -v "$(pwd):/workspace" ${IMAGE_NAME}:${IMAGE_TAG} ./scripts/run_gtest.sh
 
-      - name: Build and Install OpenBNSL
-        run: |
-          docker run --rm -v "$(pwd):/workspace" ${IMAGE_NAME}:${IMAGE_TAG} pip install .
-
       - name: Run Pytest
         run: |
-          docker run --rm -v "$(pwd):/workspace" ${IMAGE_NAME}:${IMAGE_TAG} pytest
+          docker run --rm -v "$(pwd):/workspace" ${IMAGE_NAME}:${IMAGE_TAG} bash -lc "pip install . && pytest"
