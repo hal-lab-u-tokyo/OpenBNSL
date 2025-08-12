@@ -10,18 +10,25 @@ namespace py = pybind11;
 using dtype = uint8_t;
 
 /**
- * @class DataframeWrapper
- * @brief A wrapper class for a pandas DataFrame.
- *
- * This class is used to store the data from a pandas DataFrame.
+ * @ingroup base
+ * @struct DataframeWrapper
+ * @brief A wrapper struct for a pandas DataFrame.
+ * @details
+ * This struct is used to store the data from a pandas DataFrame.
  * It stores the data in two formats: column-major and row-major.
  * It also stores the mapping between the column names and the column indices,
  * and the mapping between the column values and the column value indices.
  * using uint8_t to minimize data size and improve cache hit rate
  * (uint8_t is still redundant)
  */
-class DataframeWrapper {
- public:
+struct DataframeWrapper {
+  /**
+   * @brief Construct a new Dataframe Wrapper from a pandas DataFrame.
+   * @param dataframe The pandas DataFrame to wrap.
+   * @details
+   * The constructor extracts the column names, value mappings, and stores
+   * the data in both column-major and row-major formats.
+   */
   DataframeWrapper(const py::object& dataframe);
   size_t num_of_vars;
   size_t num_of_datapoints;

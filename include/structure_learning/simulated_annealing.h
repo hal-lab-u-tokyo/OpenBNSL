@@ -4,6 +4,7 @@
 #include "score/score_type.h"
 
 /**
+ * @ingroup structure_learning
  * @brief Score-based multi-chain simulated annealing
  * @param df Dataframe containing the data
  * @param score_type Type of score to use (e.g., BIC, AIC)

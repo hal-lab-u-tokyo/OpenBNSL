@@ -1,0 +1,5 @@
+/** \defgroup base Base
+ *  Basic data structure and preprocess
+ *  - DataframeWrapper
+ *  - ContingencyTable
+ */

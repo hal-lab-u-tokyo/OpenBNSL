@@ -7,8 +7,12 @@
 #include "graph/pdag.h"
 
 /**
+ * @ingroup graph
+ * @struct PDAGwithAdjMat
  * @brief PDAG implementation backed by a bit-compressed adjacency matrix.
- *
+ * @details
+ * This structure uses a bit-compressed adjacency matrix to represent the PDAG,
+ * allowing for efficient storage and access patterns.
  */
 struct PDAGwithAdjMat : IPDAGConvertible {
   /* Data members */
@@ -16,6 +20,10 @@ struct PDAGwithAdjMat : IPDAGConvertible {
   std::vector<std::vector<uint64_t>> adj_mat;
 
   /* Lifecycle */
+  /**
+   * @brief Construct a new PDAGwithAdjMat with a specified number of variables.
+   * @param num_vars The number of variables in the PDAG.
+   */
   PDAGwithAdjMat(std::size_t num_vars);
   PDAGwithAdjMat(const PDAGwithAdjMat &old);
   PDAGwithAdjMat &operator=(const PDAGwithAdjMat &a);

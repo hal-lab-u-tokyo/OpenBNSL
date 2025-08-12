@@ -14,6 +14,11 @@ using CountsMap = std::conditional_t<Deterministic,
                                      std::map<size_t, size_t>,
                                      std::unordered_map<size_t, size_t>>;
 
+/**
+ * @ingroup base
+ * @struct ContingencyTable
+ * @brief Represents a contingency table for a subset of variables.
+ */
 template <bool Deterministic>
 struct ContingencyTable {
   std::vector<size_t> var_ids;        // column indices (ascending)
@@ -21,9 +26,14 @@ struct ContingencyTable {
   std::vector<size_t> radix_weights;  // radix weights for each var
   CountsMap<Deterministic> counts;    // linear‑index → frequency
 
-  /* ---------- ctor ----------------------------------------------------- */
-  ContingencyTable(const std::vector<size_t>& ids, const DataframeWrapper& df)
-      : var_ids(ids) {
+  /**
+   * @brief Construct a new ContingencyTable from a subset of variables.
+   * @param var_ids The column indices of the variables to include.
+   * @param df The DataFrameWrapper containing the data.
+   */
+  ContingencyTable(const std::vector<size_t>& var_ids,
+                   const DataframeWrapper& df)
+      : var_ids(var_ids) {
     if (!std::is_sorted(var_ids.begin(), var_ids.end()))
       throw std::invalid_argument("var_ids must be sorted");
 
