@@ -1,0 +1,6 @@
+/** \defgroup structure_learning StructureLearning 
+ *  Bayesian Network Structure Learning (BNSL) algorithms including
+ *  - exhaustive_search
+ *  - simulated_annealing
+ *  - pc
+ */

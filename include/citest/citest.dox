@@ -1,0 +1,6 @@
+/** \defgroup citest CI-test
+ *  Conditional Independence (CI) test
+ *  - CI test types (ChiSquare, GSquare, OracleGraph),
+ *  - Its helper (is_type, get_type), and
+ *  - CI test Implementation (citest, is_d_separated)
+ */

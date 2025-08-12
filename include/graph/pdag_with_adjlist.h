@@ -8,7 +8,12 @@ using ParentSet = std::conditional_t<Deterministic,
                                      std::unordered_set<std::size_t>>;
 
 /**
- * @brief
+ * @ingroup graph
+ * @struct PDAGwithAdjList
+ * @brief PDAG implementation backed by an adjacency list.
+ * @details
+ * This structure uses an adjacency list to represent the PDAG, allowing for
+ * efficient storage and access patterns.
  */
 template <bool Deterministic>
 struct PDAGwithAdjList : IPDAGConvertible {
@@ -17,6 +22,11 @@ struct PDAGwithAdjList : IPDAGConvertible {
   std::size_t num_vars;
   std::vector<ParentSet<Deterministic>> parents;
 
+  /**
+   * @brief Construct a new PDAGwithAdjList with a specified number of
+   * variables.
+   * @param num_vars The number of variables in the PDAG.
+   */
   explicit PDAGwithAdjList(std::size_t num_vars)
       : num_vars(num_vars), parents(num_vars) {}
 

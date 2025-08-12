@@ -2,8 +2,10 @@
 #include "graph/pdag.h"
 
 /**
+ * @ingroup graph
+ * @struct
  * @brief Interface for converting internal graph structures to a unified PDAG.
- *
+ * @details
  * Structure learning algorithms may use different graph representations.
  * This interface ensures that all such graphs can be converted into a common
  * sparse PDAG form for downstream use (e.g., evaluation, comparison, or Python

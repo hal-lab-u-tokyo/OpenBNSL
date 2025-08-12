@@ -5,8 +5,8 @@
 #include "graph/pdag.h"
 
 /**
+ * @ingroup structure_learning
  * @brief A function to run the PC algorithm
- *
  * @param df A DataframeWrapper object
  * @param ci_test_type The type of conditional independence test to use
  * @param max_cond_vars The maximum number of conditional variables to consider

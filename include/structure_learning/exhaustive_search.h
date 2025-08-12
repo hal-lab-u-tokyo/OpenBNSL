@@ -7,8 +7,8 @@
 namespace py = pybind11;
 
 /**
+ * @ingroup structure_learning
  * @brief A function to run the exhaustive search with dynamic programming
- *
  * @param df A DataframeWrapper object
  * @param max_parents The maximum number of parents for each node
  * @return A PDAG object representing the learned structure

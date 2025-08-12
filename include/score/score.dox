@@ -1,0 +1,6 @@
+/** \defgroup score Score
+ *  Score
+ *  - Score types (BDeu, K2, BIC, AIC)
+ *  - Its helper (is_type, get_type), and
+ *  - Score computation (citecalculate_local_score)
+ */
