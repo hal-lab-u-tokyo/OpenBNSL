@@ -2,7 +2,7 @@ helpers
 =============
 
 pgmpy bridge
------
+------------
 .. automodule:: helpers.pgmpy_bridge
    :members:
    :undoc-members:
