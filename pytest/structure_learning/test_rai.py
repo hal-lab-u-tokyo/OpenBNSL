@@ -4,8 +4,8 @@ from pgmpy.utils import get_example_model
 
 import openbnsllib
 
-from modules.utils import to_pgmpy, to_openbnsl
-from modules.structural_distance import structural_errors
+from helpers.pgmpy_bridge import to_pgmpy, to_openbnsl
+from helpers.structural_distance import structural_errors
 
 
 @pytest.mark.parametrize("model_name", ["cancer", "asia", "child", "alarm"])

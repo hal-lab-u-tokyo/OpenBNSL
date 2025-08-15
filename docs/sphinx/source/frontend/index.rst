@@ -5,4 +5,4 @@ Python API
    :maxdepth: 1
 
    openbnsllib
-   modules
+   helpers

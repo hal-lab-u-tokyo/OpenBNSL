@@ -1,14 +1,14 @@
-modules
+helpers
 =============
 
-Utils
------
-.. automodule:: modules.utils
+pgmpy bridge
+------------
+.. automodule:: helpers.pgmpy_bridge
    :members:
    :undoc-members:
 
 Structural Distance
 -------------------
-.. automodule:: modules.structural_distance
+.. automodule:: helpers.structural_distance
    :members:
    :undoc-members:

@@ -49,7 +49,7 @@ setup(
     long_description_content_type="text/markdown",
     ext_modules=[CMakeExtension("openbnsllib")],
     cmdclass={"build_ext": CMakeBuildExtension},
-    packages=find_packages(include=["modules", "modules.*"]),
+    packages=find_packages(include=["helpers", "helpers.*"]),
     install_requires=[], # TODO: Add dependencies
     extras_require={},
     url="https://github.com/hal-lab-u-tokyo/openbnsl",
