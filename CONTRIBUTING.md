@@ -31,37 +31,6 @@ Branch naming examples:
 - `feature/*` - Feature branches. These branches are created from `develop` and are used to develop new features.
 
 ---
-# Directory Structure
-```plaintext
-.
-├── .github/            # Github actions (build, test, format, etc.)
-├── benchmarks/         # Benchmarking code
-├── bindings/           # Python binding code (Pybind11) for the backend code
-├── docs/               # Documentation (Doxygen, Sphinx)
-├── examples/           # Jupyter notebook examples
-├── external/           # External libraries (only pybind11 for now)
-├── gtest/              # gtest test code for the backend code
-├── images/             # Images for the README
-├── include/            # Header files for the backend code
-├── modules/            # Python modules
-├── pytest/             # Pytest test code for the frontend code (test_*.py)
-├── scripts/            # Scripts (format.sh, gen_docs.sh, etc.)
-├── src/                # Source code for the backend code
-├── .clang-format       # Clang format file
-├── .gitignore          # Git ignore file
-├── .gitmodules         # Git submodules file
-├── CMakeLists.txt      # CMake build file (Compile backend code, bindings, and tests)
-├── CONTRIBUTING.md     # Contributing guidelines
-├── docker-compose.yml  # Docker compose file
-├── Dockerfile          # Docker file
-├── LICENSE             # License file
-├── pyproject.toml      # Python project file
-├── pytest.ini          # Pytest configuration file
-├── README.md           # Project README
-└── setup.py            # Python setup file
-```
-
----
 # Coding Style
 For C++ code, we use clang-format with Google's C++ style guide [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html).
 Before submitting a pull request, please run the following command to format your code:
