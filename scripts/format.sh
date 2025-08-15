@@ -13,7 +13,7 @@ PROJECT_ROOT=$(realpath "$SCRIPT_DIR/..")
 TARGET_DIRS=("src" "include" "gtest" "bindings")
 FILE_EXTENSIONS=("*.c" "*.cpp" "*.cu" "*.h" "*.hpp")
 
-PYTHON_TARGET_DIRS=("benchmarks" "pytest" "modules")
+PYTHON_TARGET_DIRS=("benchmarks" "pytest" "helpers")
 PYTHON_EXTENSION="*.py"
 
 CHECK_MODE=false

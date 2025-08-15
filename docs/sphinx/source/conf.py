@@ -17,12 +17,17 @@ release = '0.0.1'
 extensions = [
     'breathe',
     'sphinx.ext.autodoc',
+    'sphinx.ext.autosummary',
+    'sphinx.ext.napoleon',
 ]
+autodoc_typehints = "description"
+napoleon_google_docstring = True
+napoleon_numpy_docstring = False
 
 breathe_projects = {
-    "OpenBNSL": "../../doxygen/build/xml",
+    "openbnsllib": "../../doxygen/build/xml",
 }
-breathe_default_project = "OpenBNSL"
+breathe_default_project = "openbnsllib"
 
 autodoc_default_options = {
     "members": True,

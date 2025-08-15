@@ -1,0 +1,7 @@
+/** \defgroup graph Graph
+ *  Graph data structures, including:
+ *  - PDAG: A common graph representation, convertible to a pgmpy.base.PDAG.
+ *  - IPDAGConvertible: Ensures convertibility to the common representation.
+ *  - Data structures optimized for various structure learning algorithms
+ *    (PDAGwithAdjList, PDAGwithAdjMat).
+ */

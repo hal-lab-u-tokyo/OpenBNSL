@@ -8,6 +8,16 @@
 
 #include "graph/pdag.h"
 
+/**
+ * @ingroup citest
+ * @brief Check if two variables x and y are d-separated given a PDAG and a set
+ * of observed variables Z.
+ * @param g The PDAG to check.
+ * @param x The first variable index.
+ * @param y The second variable index.
+ * @param Z The set of observed variable indices.
+ * @return True if x and y are d-separated, false otherwise.
+ */
 inline bool is_d_separated(const PDAG& g,
                            std::size_t x,
                            std::size_t y,

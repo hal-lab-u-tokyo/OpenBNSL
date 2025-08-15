@@ -17,14 +17,11 @@ struct Node {
 };
 
 /**
- * @class AllDimsCache
- * @brief Represents a cache for frequency tables of all dimensions.
- *
- * This class implements a cache for frequency tables of all dimensions for a
- * given df.
+ * @ingroup base
+ * @struct AllDimsCache
+ * @brief Represents a cache for frequency tables of all dimensions given df.
  */
-class AllDimsCache {
- private:
+struct AllDimsCache {
   const DataframeWrapper& df;
   size_t max_depth;
 
@@ -35,7 +32,6 @@ class AllDimsCache {
               const std::vector<int>& freq_tbl,
               const std::vector<int>& indices);
 
- public:
   AllDimsCache(const DataframeWrapper& df, int max_depth);
   const std::vector<int>& get_freq_tbl(const std::vector<int>& variables);
 };
