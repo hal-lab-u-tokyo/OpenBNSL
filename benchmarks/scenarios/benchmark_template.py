@@ -16,6 +16,7 @@ SCENARIO_NAME = os.path.splitext(os.path.basename(__file__))[0]
 RESULTS_FILE = os.path.join(RESULTS_PATH, f"{SCENARIO_NAME}.csv")
 SUMMARY_FILE = os.path.join(RESULTS_PATH, f"{SCENARIO_NAME}_summary.csv")
 
+
 def initialize():
     """
     Prepare a fresh results CSV for this scenario.
@@ -23,7 +24,10 @@ def initialize():
     if not os.path.exists(RESULTS_PATH):
         os.makedirs(RESULTS_PATH)
     with open(RESULTS_FILE, "w", newline="") as f:
-        csv.writer(f).writerow(["model_name", "num_threads", "seed", "shd", "elapsed_sec"])
+        csv.writer(f).writerow(
+            ["model_name", "num_threads", "seed", "shd", "elapsed_sec"]
+        )
+
 
 @pytest.mark.parametrize("model_name", ["cancer", "asia", "child", "alarm"])
 @pytest.mark.parametrize("num_threads", [1, 2, 4, 8])
@@ -52,7 +56,9 @@ def benchmark_template(model_name, num_threads, seed):
     elapsed = time.perf_counter() - start
 
     # Measurement
-    error_dict = structural_errors(original_pdag, to_pgmpy(learned_pdag, list(samples.columns)))
+    error_dict = structural_errors(
+        original_pdag, to_pgmpy(learned_pdag, list(samples.columns))
+    )
     shd = error_dict["SHD"]
 
     with open(RESULTS_FILE, "a", newline="") as f:
@@ -60,23 +66,23 @@ def benchmark_template(model_name, num_threads, seed):
 
     assert True
 
+
 def summarize():
     df = pd.read_csv(RESULTS_FILE)
     summary = (
         df.groupby(["model_name", "num_threads"])
-          .agg(
-              count=("shd", "count"),
-              shd_mean=("shd", "mean"),
-              shd_std=("shd", "std"),
-              time_mean_s=("elapsed_sec", "mean"),
-              time_std_s=("elapsed_sec", "std"),
-              time_min_s=("elapsed_sec", "min"),
-              time_max_s=("elapsed_sec", "max"),
-          )
-          .reset_index()
+        .agg(
+            count=("shd", "count"),
+            shd_mean=("shd", "mean"),
+            shd_std=("shd", "std"),
+            time_mean_s=("elapsed_sec", "mean"),
+            time_std_s=("elapsed_sec", "std"),
+            time_min_s=("elapsed_sec", "min"),
+            time_max_s=("elapsed_sec", "max"),
+        )
+        .reset_index()
     )
     print(f"\n--- Summary for {SCENARIO_NAME} ---")
     print(summary.to_string(index=False))
 
     summary.to_csv(SUMMARY_FILE, index=False)
-

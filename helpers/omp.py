@@ -1,5 +1,6 @@
 import ctypes
 
+
 class OpenMP:
     """
     Wrapper class for OpenMP functions using ctypes.

@@ -1,5 +1,6 @@
 import pytest
 
+
 @pytest.fixture(scope="module", autouse=True)
 def _benchmark_init_and_summarize(request):
     """
