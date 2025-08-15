@@ -73,7 +73,7 @@ Before submitting a pull request, please run the following command to format you
 ---
 # Interface of BNSL algorithm
 
-![Interface Diagram](images/interface.png)
+<!-- ![Interface Diagram](images/interface.png) -->
 
 The BNSL algorithm requires a `DataframeWrapper` class object as its first argument.  
 The `DataframeWrapper` class provides the following interface:

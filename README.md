@@ -8,7 +8,7 @@ OpenBNSL is an open framework designed to enable fair and highly reproducible co
 | Evaluation Suite       | Python scripts for evaluating BNSL algorithms             |
 | Experiment Environment | Docker-based environment for reproducible experiments     |
 
-![OpenBNSL Architecture](images/architecture.png)
+<!-- ![OpenBNSL Architecture](images/architecture.png) -->
 
 
 1. [Set Up](#set-up)
