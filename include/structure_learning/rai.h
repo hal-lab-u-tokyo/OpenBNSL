@@ -5,12 +5,15 @@
 #include "graph/pdag.h"
 
 /**
- * @brief A function to run the RAI algorithm
- *
+ * @ingroup structure_learning
+ * @brief A function to run the RAI (Recursive Autonomy Identification)
+ * algorithm.
  * @param df A DataframeWrapper object
- * @param max_parents The maximum number of parents for each node
+ * @param ci_test_type The type of conditional independence test to use
+ * @param max_cond_vars The maximum number of conditional variables to consider
  * @return A PDAG object
  */
 PDAG rai(const DataframeWrapper& df,
          const CITestType& ci_test_type,
-         size_t max_cond_vars);
+         size_t max_cond_vars,
+         bool apply_meek_r4 = false);

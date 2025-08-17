@@ -19,6 +19,7 @@ static PDAGwithAdjMat build_skeleton(const DataframeWrapper& df,
                                      bool stable,
                                      Sepset& sepset) {
   PDAGwithAdjMat g(df.num_of_vars);
+  g.complete_graph();
   for (size_t k = 0; k <= max_cond_vars; ++k) {
     // snapshot the current graph if stable version
     PDAGwithAdjMat snapshot = g;
@@ -81,6 +82,6 @@ PDAG pc(const DataframeWrapper& df,
   Sepset sepset(n, std::vector<std::unordered_set<size_t>>(n));
   PDAGwithAdjMat g = build_skeleton(df, test, max_cond_vars, stable, sepset);
   orient_colliders(g, sepset);
-  // g.apply_meeks_rules(false);
+  g.apply_meeks_rules(false);
   return g.to_pdag();
 }

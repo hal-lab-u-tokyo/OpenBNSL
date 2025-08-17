@@ -7,7 +7,6 @@
 PDAGwithAdjMat::PDAGwithAdjMat(size_t num_vars) : num_vars(num_vars) {
   size_t blocks = (num_vars + 63) / 64;
   adj_mat.resize(num_vars, std::vector<uint64_t>(blocks, 0ULL));
-  complete_graph();
 }
 PDAGwithAdjMat::PDAGwithAdjMat(const PDAGwithAdjMat &old)
     : num_vars(old.num_vars), adj_mat(old.adj_mat) {}
@@ -23,52 +22,43 @@ PDAGwithAdjMat &PDAGwithAdjMat::operator=(const PDAGwithAdjMat &a) {
 inline static void _bounds(std::size_t idx, std::size_t n) {
   if (idx >= n) throw std::out_of_range("PDAG index out of range");
 }
-
-/* Read-only primitives */
-bool PDAGwithAdjMat::has_directed_edge(std::size_t u, std::size_t v) const {
+bool PDAGwithAdjMat::_has_arc(std::size_t u, std::size_t v) const {
   _bounds(u, num_vars);
   _bounds(v, num_vars);
   std::size_t b = v / 64, s = v % 64;
   return (adj_mat[u][b] & (1ULL << s)) != 0ULL;
 }
+void PDAGwithAdjMat::_remove_arc(std::size_t u, std::size_t v) {
+  _bounds(u, num_vars);
+  _bounds(v, num_vars);
+  std::size_t b = v / 64, s = v % 64;
+  adj_mat[u][b] &= ~(1ULL << s);
+}
+
+/* Read-only primitives */
+bool PDAGwithAdjMat::has_directed_edge(std::size_t u, std::size_t v) const {
+  return _has_arc(u, v) && !_has_arc(v, u);
+}
 bool PDAGwithAdjMat::has_undirected_edge(std::size_t u, std::size_t v) const {
-  return has_directed_edge(u, v) && has_directed_edge(v, u);
+  return _has_arc(u, v) && _has_arc(v, u);
 }
 bool PDAGwithAdjMat::is_adjacent(std::size_t u, std::size_t v) const {
-  return has_directed_edge(u, v) || has_directed_edge(v, u);
+  return _has_arc(u, v) || _has_arc(v, u);
 }
 
 /* Modification primitives */
-void PDAGwithAdjMat::add_directed_edge(std::size_t u, std::size_t v) {
-  _bounds(u, num_vars);
-  _bounds(v, num_vars);
-  if (has_directed_edge(u, v))
-    throw std::invalid_argument("arc already exists");
-  adj_mat[u][v / 64] |= (1ULL << (v % 64));
-}
-void PDAGwithAdjMat::remove_directed_edge(std::size_t u, std::size_t v) {
-  _bounds(u, num_vars);
-  _bounds(v, num_vars);
-  if (!has_directed_edge(u, v)) throw std::invalid_argument("arc not found");
-  adj_mat[u][v / 64] &= ~(1ULL << (v % 64));
-}
-void PDAGwithAdjMat::add_undirected_edge(std::size_t u, std::size_t v) {
-  if (has_undirected_edge(u, v))
-    throw std::invalid_argument("edge already exists");
-  add_directed_edge(u, v);
-  add_directed_edge(v, u);
-}
 void PDAGwithAdjMat::remove_undirected_edge(std::size_t u, std::size_t v) {
   if (!has_undirected_edge(u, v)) throw std::invalid_argument("edge not found");
-  remove_directed_edge(u, v);
-  remove_directed_edge(v, u);
+  _remove_arc(u, v);
+  _remove_arc(v, u);
 }
-void PDAGwithAdjMat::orient_edge(std::size_t from, std::size_t to) {
-  if (!has_undirected_edge(from, to)) return;
-  remove_directed_edge(to, from);
+void PDAGwithAdjMat::orient_edge(std::size_t u, std::size_t v) {
+  if (has_directed_edge(u, v)) return;  // already oriented
+  _remove_arc(v, u);
 }
 
 /* Neighbor operations */
+// {u | v -> u or v <-> u}
 std::vector<std::size_t> PDAGwithAdjMat::successors(std::size_t v) const {
   _bounds(v, num_vars);
   std::vector<std::size_t> res;
@@ -82,97 +72,39 @@ std::vector<std::size_t> PDAGwithAdjMat::successors(std::size_t v) const {
       bits &= bits - 1;
     }
   }
-  return res;
+  return res;  // {u | v -> u or v <-> u}
 }
-std::vector<std::size_t> PDAGwithAdjMat::predecessors(std::size_t v) const {
+std::vector<std::size_t> PDAGwithAdjMat::children(std::size_t v) const {
   _bounds(v, num_vars);
   std::vector<std::size_t> res;
-  std::size_t b = v / 64, m = 1ULL << (v % 64);
-  for (std::size_t u = 0; u < num_vars; ++u)
-    if (adj_mat[u][b] & m) res.push_back(u);
-  return res;
-}
-std::vector<std::size_t> PDAGwithAdjMat::neighbors(std::size_t v) const {
-  auto res = successors(v);
-  auto pred = predecessors(v);
-  res.insert(res.end(), pred.begin(), pred.end());
-  std::sort(res.begin(), res.end());
-  res.erase(std::unique(res.begin(), res.end()), res.end());
-  return res;
+  for (auto u : successors(v))  // v -> u or v <-> u
+    if (!_has_arc(u, v)) res.push_back(u);
+  return res;  // {u | v -> u}
 }
 std::vector<std::size_t> PDAGwithAdjMat::undirected_neighbors(
     std::size_t v) const {
   std::vector<std::size_t> res;
-  for (auto u : successors(v))
-    if (has_undirected_edge(u, v)) res.push_back(u);
-  return res;
+  for (auto u : successors(v))  // v -> u or v <-> u
+    if (_has_arc(u, v)) res.push_back(u);
+  return res;  // {u | v <-> u}
 }
 std::vector<std::size_t> PDAGwithAdjMat::undirected_neighbors_without(
     std::size_t v,
     std::size_t excl) const {
   std::vector<std::size_t> res;
-  for (auto u : successors(v))
-    if (u != excl && has_undirected_edge(u, v)) res.push_back(u);
-  return res;
+  for (auto u : successors(v))  // v -> u or v <-> u
+    if (u != excl && _has_arc(u, v)) res.push_back(u);
+  return res;  // {u | v <-> u and u != excl}
 }
 
 /* Reachability operations */
-bool PDAGwithAdjMat::has_directed_path(std::size_t s, std::size_t t) const {
-  _bounds(s, num_vars);
-  _bounds(t, num_vars);
-  std::vector<char> vis(num_vars);
-  std::vector<std::size_t> st{s};
-  while (!st.empty()) {
-    auto u = st.back();
-    st.pop_back();
-    if (u == t) return true;
-    if (vis[u]) continue;
-    vis[u] = 1;
-    for (auto w : successors(u))
-      if (!vis[w] && !has_directed_edge(w, u))
-        st.push_back(w);  // only forward arcs
-  }
-  return false;
-}
-bool PDAGwithAdjMat::has_path(std::size_t s, std::size_t t) const {
-  _bounds(s, num_vars);
-  _bounds(t, num_vars);
-  std::vector<char> vis(num_vars);
-  std::vector<std::size_t> st{s};
-  while (!st.empty()) {
-    auto u = st.back();
-    st.pop_back();
-    if (u == t) return true;
-    if (vis[u]) continue;
-    vis[u] = 1;
-    for (auto w : successors(u))
-      if (!vis[w]) st.push_back(w);
-  }
-  return false;
-}
-bool PDAGwithAdjMat::has_connection(std::size_t s, std::size_t t) const {
-  _bounds(s, num_vars);
-  _bounds(t, num_vars);
-  std::vector<char> vis(num_vars);
-  std::vector<std::size_t> st{s};
-  while (!st.empty()) {
-    auto u = st.back();
-    st.pop_back();
-    if (u == t) return true;
-    if (vis[u]) continue;
-    vis[u] = 1;
-    for (auto w : neighbors(u))
-      if (!vis[w]) st.push_back(w);
-  }
-  return false;
-}
 
 /* Graph-wide operations */
 PDAG PDAGwithAdjMat::to_pdag() const {
   PDAG g(num_vars);
   for (std::size_t u = 0; u < num_vars; ++u)
     for (std::size_t v = 0; v < num_vars; ++v)
-      if (has_directed_edge(u, v)) g.add_edge(u, v);
+      if (_has_arc(u, v)) g.add_edge(u, v);
   return g;
 }
 void PDAGwithAdjMat::complete_graph() {
@@ -184,96 +116,72 @@ void PDAGwithAdjMat::complete_graph() {
                           : ~0ULL;
       adj_mat[i][j] = mask;
     }
-    remove_directed_edge(i, i);  // no self-loop
+    _remove_arc(i, i);  // no self-loop
   }
 }
 
 /* Meek's rules and helpers */
-std::vector<std::size_t> PDAGwithAdjMat::directed_parents(std::size_t v) const {
-  std::vector<std::size_t> res;
-  for (auto u : predecessors(v))
-    if (!has_directed_edge(v, u)) res.push_back(u);  // u → v かつ v ↛ u
-  return res;
-}
-std::vector<std::size_t> PDAGwithAdjMat::directed_children(
-    std::size_t v) const {
-  std::vector<std::size_t> res;
-  for (auto u : successors(v))
-    if (!has_directed_edge(u, v)) res.push_back(u);  // v → u かつ u ↛ v
-  return res;
-}
-std::vector<std::size_t> PDAGwithAdjMat::all_neighbors(std::size_t v) const {
-  auto res = neighbors(v);
-  return res;
-}
-bool PDAGwithAdjMat::creates_unshielded_collider(std::size_t y,
-                                                 std::size_t z) const {
-  for (auto x : directed_parents(y))
-    if (!is_adjacent(x, z)) return true;
-  return false;
-}
 void PDAGwithAdjMat::apply_meeks_rules(bool apply_r4) {
   bool changed = true;
   while (changed) {
     changed = false;
 
     /* ---------- Rule 1 ---------- */
-    for (std::size_t y = 0; y < num_vars; ++y)
-      for (auto x : directed_parents(y))
-        for (auto z : undirected_neighbors(y))
-          if (!is_adjacent(x, z) && !creates_unshielded_collider(y, z) &&
-              !has_directed_path(z, y)) {
-            orient_edge(y, z);
+    // If (1) A->B, (2) B-C, and (3) A and C are non-adjacent, then orient B->C.
+    // Reason: otherwise B<-C would induce an unexpected unshielded collider
+    // A->B<-C.
+    for (std::size_t a = 0; a < num_vars; ++a) {
+      for (std::size_t b : children(a)) {
+        for (std::size_t c : undirected_neighbors_without(b, a)) {
+          if (!is_adjacent(a, c)) {
+            orient_edge(b, c);
             changed = true;
           }
+        }
+      }
+    }
 
     /* ---------- Rule 2 ---------- */
-    for (std::size_t z = 0; z < num_vars; ++z)
-      for (auto x : directed_parents(z))
-        for (auto y : directed_children(z))
-          if (has_undirected_edge(x, y)) {
-            orient_edge(x, y);
+    // If (1) A->B, (2) B->C, and (3) A-C, then orient A->C.
+    // Reason: otherwise A<-C would create a directed cycle A->B->C->A.
+    for (std::size_t a = 0; a < num_vars; ++a) {
+      for (std::size_t b : children(a)) {
+        for (std::size_t c : children(b)) {
+          if (has_undirected_edge(a, c)) {
+            orient_edge(a, c);
             changed = true;
           }
+        }
+      }
+    }
 
     /* ---------- Rule 3 ---------- */
-    for (std::size_t x = 0; x < num_vars; ++x) {
-      auto und = undirected_neighbors(x);
-      if (und.size() < 3) continue;
+    // If (1) A-{B,C,D}, (2) {B,C} -> D and (3) B and C are non-adjacent, then
+    // orient A->D. Reason: if we instead chose D->A, then to avoid cycles we
+    // would be forced to orient B->A and C->A. But since B and C are
+    // non-adjacent, this would introduce a new unshielded collider B->A<-C.
+    for (std::size_t a = 0; a < num_vars; ++a) {
+      auto bcd_candidates = undirected_neighbors(a);
+      if (bcd_candidates.size() < 3) continue;  // require at least 3 neighbors
 
-      for (auto y : und)
-        for (auto z : und)
-          if (y != z)
-            for (auto w : und)
-              if (w != y && w != z)
-                if (has_directed_edge(y, w) && !has_directed_edge(w, y) &&
-                    has_directed_edge(z, w) && !has_directed_edge(w, z)) {
-                  orient_edge(x, w);
-                  changed = true;
-                  goto NEXT_X;
-                }
-    NEXT_X:;
-    }
-
-    /* ---------- Rule 4 (optional) ---------- */
-    if (apply_r4) {
-      for (std::size_t c = 0; c < num_vars; ++c)
-        for (auto b : directed_children(c))
-          for (auto d : directed_parents(c)) {
-            if (b == d || is_adjacent(b, d)) continue;
-            std::vector<std::size_t> cand = undirected_neighbors(b);
-            auto tmp = undirected_neighbors(d);
-            cand.insert(cand.end(), tmp.begin(), tmp.end());
-            tmp = all_neighbors(c);
-            cand.insert(cand.end(), tmp.begin(), tmp.end());
-            std::sort(cand.begin(), cand.end());
-            cand.erase(std::unique(cand.begin(), cand.end()), cand.end());
-            for (auto a : cand)
-              if (has_undirected_edge(a, b)) {
-                orient_edge(a, b);
-                changed = true;
-              }
+      // For each unordered pair (b,c) of parents with b and c non-adjacent
+      for (std::size_t j = 0; j < bcd_candidates.size(); ++j) {
+        for (std::size_t k = j + 1; k < bcd_candidates.size(); ++k) {
+          std::size_t b = bcd_candidates[j];
+          std::size_t c = bcd_candidates[k];
+          if (is_adjacent(b, c)) continue;
+          for (std::size_t d : bcd_candidates) {
+            if (d == b || d == c) continue;
+            if (has_directed_edge(b, d) && has_directed_edge(c, d)) {
+              orient_edge(a, d);
+              changed = true;
+            }
           }
+        }
+      }
     }
+
+    /* ---------- Rule 4 ---------- */
+    // Out of scope
   }
 }
