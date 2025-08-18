@@ -8,7 +8,10 @@ from helpers.pgmpy_bridge import to_pgmpy, to_openbnsl
 from helpers.structural_distance import structural_errors
 
 
-@pytest.mark.parametrize("model_name", ["cancer", "asia", "child", "alarm"])
+@pytest.mark.parametrize(
+    "model_name",
+    ["asia", "cancer", "earthquake", "sachs", "survey", "alarm", "child", "insurance"],
+)
 @pytest.mark.parametrize("stable", [True, False])
 @pytest.mark.parametrize("seed", [0])
 def test_pc(model_name, stable, seed):
