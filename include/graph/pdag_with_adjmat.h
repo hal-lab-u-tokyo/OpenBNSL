@@ -1,10 +1,13 @@
 #pragma once
 
 #include <cstdint>
+#include <unordered_set>
 #include <vector>
 
 #include "graph/ipdag_convertible.h"
 #include "graph/pdag.h"
+
+using Sepset = std::vector<std::vector<std::unordered_set<size_t>>>;
 
 /**
  * @ingroup graph
@@ -33,10 +36,6 @@ struct PDAGwithAdjMat : IPDAGConvertible {
   bool _has_arc(std::size_t u, std::size_t v) const;
   void _remove_arc(std::size_t u, std::size_t v);
 
-  /* Graph-wide operations */
-  PDAG to_pdag() const;
-  void complete_graph();
-
   /* Read-only operations */
   bool has_directed_edge(std::size_t u, std::size_t v) const;  // u -> v
   bool has_undirected_edge(std::size_t u,
@@ -44,9 +43,9 @@ struct PDAGwithAdjMat : IPDAGConvertible {
   bool is_adjacent(std::size_t u, std::size_t v) const;  // u -> v or  u <- v
 
   /* Neighbor operations */
-  std::vector<std::size_t> successors(
-      std::size_t v) const;  // {u | v -> u or v <-> u}
-  std::vector<std::size_t> children(std::size_t v) const;  // {u | v -> u}
+  std::vector<std::size_t> predecessors(
+      std::size_t v) const;  // {u | v <- u or v <-> u}
+  std::vector<std::size_t> parents(std::size_t v) const;  // {u | v <- u}
   std::vector<std::size_t> undirected_neighbors(
       std::size_t v) const;  // {u | v <-> u}
   std::vector<std::size_t> undirected_neighbors_without(
@@ -57,8 +56,12 @@ struct PDAGwithAdjMat : IPDAGConvertible {
 
   /* Modification operations */
   void remove_undirected_edge(std::size_t u, std::size_t v);  // delete u <-> v
+  void remove_directed_edge(std::size_t u, std::size_t v);    // delete u -> v
   void orient_edge(std::size_t u, std::size_t v);  // (u <-> v) => (u -> v)
 
-  /* Meek's rules and helpers */
-  void apply_meeks_rules(bool apply_r4 = false);
+  /* Graph-wide operations */
+  PDAG to_pdag() const;
+  void complete_graph();
+  void orient_colliders(const Sepset &sepset);
+  void apply_meeks_rules();
 };

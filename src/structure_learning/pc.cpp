@@ -2,7 +2,6 @@
 
 #include <algorithm>
 #include <array>
-#include <unordered_set>
 #include <vector>
 
 #include "base/contingency_table.h"
@@ -10,8 +9,6 @@
 #include "citest/citest.h"
 #include "graph/pdag_with_adjmat.h"
 #include "utils/gen_comb.h"
-
-using Sepset = std::vector<std::vector<std::unordered_set<size_t>>>;
 
 static PDAGwithAdjMat build_skeleton(const DataframeWrapper& df,
                                      const CITestType& test,
@@ -52,28 +49,6 @@ static PDAGwithAdjMat build_skeleton(const DataframeWrapper& df,
   return g;
 }
 
-void orient_colliders(PDAGwithAdjMat& g, const Sepset& sepset) {
-  const size_t n = g.num_vars;
-  for (size_t y = 0; y < n; ++y) {
-    bool changed = true;
-    while (changed) {
-      changed = false;
-      auto neigh = g.undirected_neighbors(y);
-      for (size_t i = 0; i + 1 < neigh.size(); ++i) {
-        for (size_t j = i + 1; j < neigh.size(); ++j) {
-          size_t x = neigh[i], z = neigh[j];
-          if (g.is_adjacent(x, z)) continue;
-          if (sepset[x][z].count(y) == 0) {
-            g.orient_edge(x, y);
-            g.orient_edge(z, y);
-            changed = true;
-          }
-        }
-      }
-    }
-  }
-}
-
 PDAG pc(const DataframeWrapper& df,
         const CITestType& test,
         size_t max_cond_vars,
@@ -81,7 +56,7 @@ PDAG pc(const DataframeWrapper& df,
   const size_t n = df.num_of_vars;
   Sepset sepset(n, std::vector<std::unordered_set<size_t>>(n));
   PDAGwithAdjMat g = build_skeleton(df, test, max_cond_vars, stable, sepset);
-  orient_colliders(g, sepset);
-  g.apply_meeks_rules(false);
+  g.orient_colliders(sepset);
+  g.apply_meeks_rules();
   return g.to_pdag();
 }
