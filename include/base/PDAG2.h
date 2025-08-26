@@ -1,9 +1,11 @@
 #pragma once
+#include <set>
 #include <vector>
 using namespace std;
 
 struct PDAG {
   vector<vector<bool>> g;
+  vector<set<int>> successor_sets;
   // コンストラクタ
   PDAG();
   // コピーコンストラクタ
@@ -14,7 +16,7 @@ struct PDAG {
   ~PDAG() = default;
 
   // return the list of successors of node i (include undirected edge)
-  vector<int> successors(int i);
+  set<int> successors(int i);
 
   // return the list of predecessors of node i (include undirected edge)
   vector<int> predecessors(int i);
@@ -39,4 +41,6 @@ struct PDAG {
 
   // check if there is a directed path from X to Y using DFS
   bool has_directed_path(int X, int Y);
+
+  bool has_cycle();
 };

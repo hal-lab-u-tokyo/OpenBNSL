@@ -490,7 +490,7 @@ PDAG PCsearch(int n_node, int n_data, const vector<uint8_t> &data,
       G_pdag.g.at(i).at(j) = G[i * n_node + j];
     }
   }
-  orientation(G_pdag, sepsets);
+  // orientation(G_pdag, sepsets);
   return G_pdag;
 }
 

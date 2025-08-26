@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "base/PDAG2.h"
 
 /*
@@ -6,5 +8,5 @@
    Causal Explanation with Background Knowledge,Proc.Confon Uncertainty in
    Artificial Inteligence (UAl-95),p.403-410 (195)
 */
-void orientation(PDAG &G, const vector<int> &sepsets);
+void orientation(PDAG &G, const vector<int> &pairs, const vector<int> &sepsets);
 void orientation(int level, PDAG &G, const vector<int> &sepsets);
