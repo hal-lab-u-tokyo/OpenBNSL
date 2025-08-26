@@ -23,7 +23,7 @@ def main():
     model_name = sys.argv[3]
     set_size = int(sys.argv[4])
     print(gpuPC_type, citest_type, model_name, set_size)
-    for set_id in range(10):
+    for set_id in range(1):
       print("set_id: " + str(set_id))
       file_name = path + model_name + "_" + str(set_id) + "_int_s400000"
       data_int = []

@@ -389,7 +389,7 @@ __global__ void PC_level_n(int citest_type, int level, int n_node, int n_data,
               connected_to_all[idx_j] = 0;
               break;
             }
-            if (idx_j != idx_k && G[j * n_node + sepset[idx_k]] == 1) {
+            if (idx_j != idx_k && G[j * n_node + sepset[idx_k]]) {
               exist_nondeleted_edge = true;
             }
           }
@@ -436,7 +436,7 @@ __global__ void PC_level_n(int citest_type, int level, int n_node, int n_data,
         for (int idx_k = idx_j + 1; idx_k < level + 1; idx_k++) {
           int k = sepset[idx_k];
           if (threadIdx.x == 0) {
-            if (G[j * n_node + k] != 1) {
+            if (!G[j * n_node + k]) {
               *valid = 0;
             } else {
               *valid = (connected_to_all[idx_j] || connected_to_all[idx_k]);
@@ -484,16 +484,28 @@ __global__ void PC_level_n(int citest_type, int level, int n_node, int n_data,
                                  regret);
           }
           if (threadIdx.x == 0 && result) {
-            if (atomicCAS(G + j * n_node + k, 1, -1) == 1) {
-              G[k * n_node + j] = -1;
-              sepsets[(j * n_node + k) * max_level] = i;
-              int p = 1;
+            while (atomicCAS(G + j * n_node + k, 1, -2) != 1 &&
+                   atomicCAS(G + j * n_node + k, -1, -2) != -1)
+              continue;
+            G[k * n_node + j] = -1;
+            int p = sepsets[(j * n_node + k) * sepset_size] + 1;
+            if (p >= sepset_size + 1) {
+              printf("j: %d, k: %d, p: %d (>= sepset_size: %d)\n", j, k, p,
+                     sepset_size);
+            } else {
+              sepsets[(j * n_node + k) * sepset_size + p] = i;
+              p++;
               for (int l = 0; l < level + 1; l++) {
-                if (l == idx_j || l == idx_k) continue;
-                sepsets[(j * n_node + k) * max_level + p] = sepset[l];
+                if (l == idx_j || l == idx_k ||
+                    G[j * n_node + sepset[l]] != 1 ||
+                    G[k * n_node + sepset[l]] != 1)
+                  continue;
+                sepsets[(j * n_node + k) * sepset_size + p] = sepset[l];
                 p++;
               }
             }
+            sepsets[(j * n_node + k) * sepset_size] = p - 1;
+            G[j * n_node + k] = -1;
           }
         }
       }
@@ -501,7 +513,7 @@ __global__ void PC_level_n(int citest_type, int level, int n_node, int n_data,
         __syncthreads();
         int j = sepset[idx_j];
         if (threadIdx.x == 0) {
-          *valid = (G[i * n_node + j] == 1);
+          *valid = (G[i * n_node + j]);
         }
         __syncthreads();
         if (*valid == 0) continue;
@@ -541,15 +553,25 @@ __global__ void PC_level_n(int citest_type, int level, int n_node, int n_data,
         if (threadIdx.x == 0 && result) {
           int ij_min = (i < j ? i : j);
           int ij_max = (i < j ? j : i);
-          if (atomicCAS(G + ij_min * n_node + ij_max, 1, -1) == 1) {
-            G[ij_max * n_node + ij_min] = -1;
-            int p = 0;
+          while (atomicCAS(G + ij_min * n_node + ij_max, 1, -2) != 1 &&
+                 atomicCAS(G + ij_min * n_node + ij_max, -1, -2) != -1)
+            continue;
+          G[ij_max * n_node + ij_min] = -1;
+          int p = sepsets[(ij_min * n_node + ij_max) * sepset_size] + 1;
+          if (p >= sepset_size + 1) {
+            printf("ij_min: %d, ij_max: %d, p: %d (>= sepset_size: %d)\n",
+                   ij_min, ij_max, p, sepset_size);
+          } else {
             for (int k = 0; k < level + 1; k++) {
-              if (k == idx_j) continue;
-              sepsets[(ij_min * n_node + ij_max) * max_level + p] = sepset[k];
+              if (k == idx_j || G[ij_min * n_node + sepset[k]] != 1 ||
+                  G[ij_max * n_node + sepset[k]] != 1)
+                continue;
+              sepsets[(ij_min * n_node + ij_max) * sepset_size + p] = sepset[k];
               p++;
             }
           }
+          sepsets[(ij_min * n_node + ij_max) * sepset_size] = p - 1;
+          G[ij_min * n_node + ij_max] = -1;
         }
         // if (threadIdx.x == 0) {
         //   int sepset2[max_level];
@@ -585,7 +607,7 @@ PDAG PCsearch(int citest_type, int n_node, int n_data,
       if (i != j) G[i * n_node + j] = 1;
     }
   }
-  vector<int> sepsets(n_node * n_node * max_level, -1);
+  vector<int> sepsets(n_node * n_node * sepset_size, 0);
   uint8_t *data_d;
   vector<double> regret(n_data * max_dim * 2);
   vector<int> stats(sm_num * 2);
@@ -595,7 +617,7 @@ PDAG PCsearch(int citest_type, int n_node, int n_data,
   int size_data = sizeof(uint8_t) * n_data * n_node;
   int size_n_states = sizeof(int) * n_node;
   int size_working_memory = sizeof(int) * 500'000'000;
-  int size_sepsets = sizeof(int) * n_node * n_node * max_level;
+  int size_sepsets = sizeof(int) * n_node * n_node * sepset_size;
   int size_regret = sizeof(double) * n_data * max_dim * 2;
   int size_model = sizeof(int) * n_node * n_node * 2;
   int size_stats = sizeof(int) * sm_num * 2;

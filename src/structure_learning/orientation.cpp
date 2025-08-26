@@ -12,12 +12,15 @@ void orientation(PDAG &G, const vector<int> &sepsets) {
     for (int Z : G.undirected_neighbors(X)) {
       for (int Y : G.undirected_neighbors(Z)) {
         if (X == Y || G.has_edge(X, Y) || G.has_edge(Y, X)) continue;
+        int XYmin = (X < Y ? X : Y);
+        int XYmax = (X < Y ? Y : X);
         bool in_sepset = false;
-        for (int i = 0; i < max_level; i++) {
-          int XYmin = (X < Y ? X : Y);
-          int XYmax = (X < Y ? Y : X);
-          int id = sepsets[(XYmin * n_node + XYmax) * max_level + i];
-          if (id == -1) break;
+        int sep_len = sepsets[(XYmin * n_node + XYmax) * sepset_size];
+        if (sep_len > sepset_size) {
+          sep_len = sepset_size;
+        }
+        for (int i = 0; i < sep_len; i++) {
+          int id = sepsets[(XYmin * n_node + XYmax) * sepset_size + i + 1];
           if (id == Z) {
             in_sepset = true;
             break;
