@@ -130,24 +130,16 @@ __global__ void PC_level_0(int citest_type, int n_node, int n_data,
     if (citest_type == 0) {
       result = ci_test_g2_level_0(n_data, n_i, n_j, contingency_matrix,
                                   marginals_i, marginals_j);
-    } else {
+    } else if (citest_type == 1) {
       result = ci_test_sc_level_0(n_data, n_i, n_j, contingency_matrix,
                                   marginals_i, marginals_j, regret);
+    } else {
+      result = d_separated(0, n_node, i, j, nullptr, model);
     }
     if (result) {
       G[i * n_node + j] = 0;
       G[j * n_node + i] = 0;
     }
-    // bool sep_result = d_separated(0, n_node, i, j, nullptr, model);
-    // if (result && sep_result) {
-    //   atomicAdd(stats, 1);
-    // } else if (result && !sep_result) {
-    //   atomicAdd(stats + 1, 1);
-    // } else if (!result && sep_result) {
-    //   atomicAdd(stats + 2, 1);
-    // } else {
-    //   atomicAdd(stats + 3, 1);
-    // }
   }
 }
 
@@ -195,23 +187,15 @@ __global__ void PC_level_0_v(int citest_type, int n_node, int n_data,
     if (citest_type == 0) {
       result = ci_test_g2_level_0(n_data, n_i, n_j, contingency_matrix,
                                   marginals_i, marginals_j);
-    } else {
+    } else if (citest_type == 1) {
       result = ci_test_sc_level_0(n_data, n_i, n_j, contingency_matrix,
                                   marginals_i, marginals_j, regret);
+    } else {
+      result = d_separated(0, n_node, i, j, nullptr, model);
     }
     if (result) {
       sepsets[pair_idx * (n_node + 1)]++;
     }
-    // bool sep_result = d_separated(0, n_node, i, j, nullptr, model);
-    // if (result && sep_result) {
-    //   atomicAdd(stats, 1);
-    // } else if (result && !sep_result) {
-    //   atomicAdd(stats + 1, 1);
-    // } else if (!result && sep_result) {
-    //   atomicAdd(stats + 2, 1);
-    // } else {
-    //   atomicAdd(stats + 3, 1);
-    // }
   }
 }
 
@@ -542,11 +526,23 @@ __global__ void PC_level_n(int citest_type, int level, int n_node, int n_data,
             ci_test_g2_level_n_2(scratch_ptr, n_data, dim_s / n_j / n_k * n_i,
                                  dim_mul[idx_j] * n_i, dim_mul[idx_k] * n_i,
                                  n_j, n_k, N_i_j_s, N_i_s, N_j_s, N_s, &result);
-          } else {
+          } else if (citest_type == 1) {
             ci_test_sc_level_n_2(scratch_ptr, n_data, dim_s / n_j / n_k * n_i,
                                  dim_mul[idx_j] * n_i, dim_mul[idx_k] * n_i,
                                  n_j, n_k, N_i_j_s, N_i_s, N_j_s, N_s, &result,
                                  regret);
+          } else {
+            if (threadIdx.x == 0) {
+              int sepset2[max_level];
+              int p = 1;
+              sepset2[0] = i;
+              for (int l = 0; l < level + 1; l++) {
+                if (l == idx_j || l == idx_k) continue;
+                sepset2[p] = sepset[l];
+                p++;
+              }
+              result = d_separated(level, n_node, j, k, sepset2, model);
+            }
           }
           if (threadIdx.x == 0 && result) {
             if (atomicCAS(G + j * n_node + k, 1, -1) == 1) {
@@ -591,10 +587,21 @@ __global__ void PC_level_n(int citest_type, int level, int n_node, int n_data,
         if (citest_type == 0) {
           ci_test_g2_level_n(scratch_ptr, n_data, dim_s / n_j, dim_mul[idx_j],
                              n_i, n_j, N_i_j_s, N_i_s, N_j_s, N_s, &result);
-        } else {
+        } else if (citest_type == 1) {
           ci_test_sc_level_n(scratch_ptr, n_data, dim_s / n_j, dim_mul[idx_j],
                              n_i, n_j, N_i_j_s, N_i_s, N_j_s, N_s, &result,
                              regret);
+        } else {
+          if (threadIdx.x == 0) {
+            int sepset2[max_level];
+            int p = 0;
+            for (int k = 0; k < level + 1; k++) {
+              if (k == idx_j) continue;
+              sepset2[p] = sepset[k];
+              p++;
+            }
+            result = d_separated(level, n_node, i, j, sepset2, model);
+          }
         }
         if (threadIdx.x == 0 && result) {
           int ij_min = (i < j ? i : j);
@@ -603,25 +610,6 @@ __global__ void PC_level_n(int citest_type, int level, int n_node, int n_data,
             G[ij_max * n_node + ij_min] = -1;
           }
         }
-        // if (threadIdx.x == 0) {
-        //   int sepset2[max_level];
-        //   int p = 0;
-        //   for (int k = 0; k < level + 1; k++) {
-        //     if (k == idx_j) continue;
-        //     sepset2[p] = sepset[k];
-        //     p++;
-        //   }
-        //   bool sep_result = d_separated(level, n_node, i, j, sepset2, model);
-        //   if (result && sep_result) {
-        //     atomicAdd(stats, 1);
-        //   } else if (result && !sep_result) {
-        //     atomicAdd(stats + 1, 1);
-        //   } else if (!result && sep_result) {
-        //     atomicAdd(stats + 2, 1);
-        //   } else {
-        //     atomicAdd(stats + 3, 1);
-        //   }
-        // }
         __syncthreads();
       }
     }
@@ -635,10 +623,13 @@ __global__ void PC_level_n_v(int citest_type, int level, int n_node, int n_data,
                              int *model, int *stats) {
   extern __shared__ int smem[];
   for (int pair_idx = blockIdx.x; pair_idx < pair_size; pair_idx += gridDim.x) {
+    int i = pairs[pair_idx * 2];
+    int j = pairs[pair_idx * 2 + 1];
     for (int loop = 0; loop < 2; loop++) {
       __syncthreads();
-      int i = pairs[pair_idx * 2];
-      int j = pairs[pair_idx * 2 + 1];
+      int tmp = i;
+      i = j;
+      j = tmp;
       int *G_compacted = smem;
       if (threadIdx.x == 0) {
         int cnt = 0;
@@ -652,7 +643,7 @@ __global__ void PC_level_n_v(int citest_type, int level, int n_node, int n_data,
       __syncthreads();
       int n_adj = G_compacted[0];
       if (n_adj < level) {
-        break;
+        continue;
       }
       int max_dim_s = pow(static_cast<double>(max_dim), level);
       int reserved_size_per_ci_test =
@@ -669,10 +660,10 @@ __global__ void PC_level_n_v(int citest_type, int level, int n_node, int n_data,
       int *sepset = smem + n_adj + 2;
       int sepset_cnt_loop =
           (sepset_cnt + blockDim.y - 1) / blockDim.y * blockDim.y;
-      if (threadIdx.x == 0 /* && sepset_cnt_loop > 1*/) {
-        printf("level: %d, i: %d, j: %d, n_adj: %d, sepset_cnt_loop: %d\n",
-               level, i, j, n_adj, sepset_cnt_loop);
-      }
+      // if (threadIdx.x == 0 /* && sepset_cnt_loop > 1*/) {
+      //   printf("level: %d, i: %d, j: %d, n_adj: %d, sepset_cnt_loop: %d\n",
+      //          level, i, j, n_adj, sepset_cnt_loop);
+      // }
       for (int sepset_idx = threadIdx.y; sepset_idx < sepset_cnt_loop;
            sepset_idx += blockDim.y) {
         __syncthreads();
@@ -731,9 +722,13 @@ __global__ void PC_level_n_v(int citest_type, int level, int n_node, int n_data,
         if (citest_type == 0) {
           ci_test_g2_level_n(scratch_ptr, n_data, dim_s, 1, n_i, n_j, N_i_j_s,
                              N_i_s, N_j_s, N_s, &result);
-        } else {
+        } else if (citest_type == 1) {
           ci_test_sc_level_n(scratch_ptr, n_data, dim_s, 1, n_i, n_j, N_i_j_s,
                              N_i_s, N_j_s, N_s, &result, regret);
+        } else {
+          if (threadIdx.x == 0) {
+            result = d_separated(level, n_node, i, j, sepset, model);
+          }
         }
         if (threadIdx.x == 0 && result) {
           sepsets[pair_idx * (n_node + 1)]++;
@@ -743,9 +738,6 @@ __global__ void PC_level_n_v(int citest_type, int level, int n_node, int n_data,
         }
         __syncthreads();
       }
-      int tmp = i;
-      i = j;
-      j = tmp;
     }
   }
 }
@@ -984,7 +976,7 @@ PDAG PCsearch(int citest_type, int n_node, int n_data,
             stats_d);
       } else {
         int max_numblock =
-            size_working_memory / sizeof(int) / reserved_size_per_ci_test / 4;
+            size_working_memory / sizeof(int) / reserved_size_per_ci_test;
         if (numBlocks.x > max_numblock) {
           numBlocks.x = max_numblock;
         }

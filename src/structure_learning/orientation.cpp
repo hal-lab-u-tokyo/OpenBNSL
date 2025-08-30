@@ -15,8 +15,8 @@ void orientation(PDAG &G, const vector<int> &pairs,
   auto v_structure = vector<vector<bool>>(n_node, vector<bool>(n_node));
   for (size_t pair_idx = 0; pair_idx < pairs.size() / 2; pair_idx++) {
     int X = pairs[pair_idx * 2], Y = pairs[pair_idx * 2 + 1];
-    for (int Z : G.undirected_neighbors(X)) {
-      if (!G.has_undirected_edge(X, Z) || !G.has_undirected_edge(Z, Y)) {
+    for (int Z : G.neighbors(X)) {
+      if (!G.has_edge(X, Z) || !G.has_edge(Y, Z)) {
         continue;
       }
       int sep_all = sepsets[pair_idx * (n_node + 1)];
