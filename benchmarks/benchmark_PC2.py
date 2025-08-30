@@ -17,7 +17,12 @@ def get_list(line):
 def main():
     path = "/workspace/dataset/"
     gpuPC_type = sys.argv[1]
-    citest_type = 0 if sys.argv[2] == "g2" else 1
+    if sys.argv[2] == "g2":
+      citest_type = 0
+    elif sys.argv[2] == "sc":
+      citest_type = 1
+    else:
+      citest_type = 2
     # model_name = "diabetes"
     # set_size = 20000
     model_name = sys.argv[3]
