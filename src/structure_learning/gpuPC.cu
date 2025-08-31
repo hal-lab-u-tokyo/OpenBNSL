@@ -165,7 +165,6 @@ __global__ void PC_level_0_v(int citest_type, int n_node, int n_data,
     uint smid;
     asm volatile("mov.u32 %0, %smid;" : "=r"(smid));
     atomicAdd(stats + smid, 1);
-    atomicAdd(stats + smid + sm_num, 1);
   }
   __syncthreads();
   for (int k = threadIdx.x; k < n_data; k += blockDim.x) {
@@ -336,8 +335,8 @@ __global__ void PC_level_n(int citest_type, int level, int n_node, int n_data,
       for (int sepset_idx = threadIdx.y; sepset_idx < sepset_cnt_loop;
            sepset_idx += blockDim.y) {
         __syncthreads();
-        int *valid = smem + n_adj + 1 + ci_test_idx;
-        if (threadIdx.x == 0) {
+        int *valid = smem + n_adj + 1;
+        if (threadIdx.x == 0 && threadIdx.y == 0) {
           *valid = (G[i * n_node + j] == 1);
         }
         __syncthreads();
@@ -403,14 +402,7 @@ __global__ void PC_level_n(int citest_type, int level, int n_node, int n_data,
                              N_i_s, N_j_s, N_s, &result, regret);
         } else {
           if (threadIdx.x == 0) {
-            int sepset2[max_level];
-            int p = 0;
-            for (int k = 0; k < level + 1; k++) {
-              if (k == idx_j) continue;
-              sepset2[p] = sepset[k];
-              p++;
-            }
-            result = d_separated(level, n_node, i, j, sepset2, model);
+            result = d_separated(level, n_node, i, j, sepset, model);
           }
         }
         if (threadIdx.x == 0 && result) {
@@ -537,7 +529,7 @@ __global__ void PC_level_n_v(int citest_type, int level, int n_node, int n_data,
           }
         }
         if (threadIdx.x == 0 && result) {
-          int num = (loop == 0 && *adjacent_to_all ? 2 : 1);
+          int num = ((loop == 0 && *adjacent_to_all) ? 2 : 1);
           sepsets[pair_idx * (n_node + 1)] += num;
           for (int k = 0; k < level; k++) {
             sepsets[pair_idx * (n_node + 1) + sepset[k] + 1] += num;
@@ -725,7 +717,7 @@ PDAG PCsearch(int citest_type, int n_node, int n_data,
   cout << "pair size: " << pair_size << endl;
   vector<int> sepsets(pair_size * (n_node + 1), 0);
   int *pairs_d, *sepsets_d;
-  int size_pairs = sizeof(int) * 2 * pairs.size();
+  int size_pairs = sizeof(int) * 2 * pair_size;
   int size_sepsets = sizeof(int) * pair_size * (n_node + 1);
   CUDA_CHECK(cudaMalloc(&pairs_d, size_pairs));
   CUDA_CHECK(cudaMalloc(&sepsets_d, size_sepsets));

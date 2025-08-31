@@ -727,7 +727,7 @@ __global__ void PC_level_n_v(int citest_type, int level, int n_node, int n_data,
           }
         }
         if (threadIdx.x == 0 && result) {
-          int num = (loop == 0 && *adjacent_to_all ? 2 : 1);
+          int num = ((loop == 0 && *adjacent_to_all) ? 2 : 1);
           sepsets[pair_idx * (n_node + 1)] += num;
           for (int k = 0; k < level; k++) {
             sepsets[pair_idx * (n_node + 1) + sepset[k] + 1] += num;
@@ -930,7 +930,7 @@ PDAG PCsearch(int citest_type, int n_node, int n_data,
   cout << "pair size: " << pair_size << endl;
   vector<int> sepsets(pair_size * (n_node + 1), 0);
   int *pairs_d, *sepsets_d;
-  int size_pairs = sizeof(int) * 2 * pairs.size();
+  int size_pairs = sizeof(int) * 2 * pair_size;
   int size_sepsets = sizeof(int) * pair_size * (n_node + 1);
   CUDA_CHECK(cudaMalloc(&pairs_d, size_pairs));
   CUDA_CHECK(cudaMalloc(&sepsets_d, size_sepsets));
