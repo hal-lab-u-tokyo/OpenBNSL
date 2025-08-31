@@ -21,15 +21,16 @@ void orientation(PDAG &G, const vector<int> &pairs,
       }
       int sep_all = sepsets[pair_idx * (n_node + 1)];
       int sep_cnt = sepsets[pair_idx * (n_node + 1) + Z + 1];
-      cout << "X, Z, Y, sep_all, sep_cnt: " << X << ' ' << Z << ' ' << Y << ' '
-           << sep_all << ' ' << sep_cnt << endl;
+      // cout << "X, Z, Y, sep_all, sep_cnt: " << X << ' ' << Z << ' ' << Y << '
+      // '
+      //      << sep_all << ' ' << sep_cnt << endl;
       if (sep_cnt * 2 <= sep_all) {
         G.remove_edge(Z, X);
         G.remove_edge(Z, Y);
         if (G.has_cycle()) {
           G.add_edge(Z, X);
           G.add_edge(Z, Y);
-          cout << "cycle detected" << endl;
+          // cout << "cycle detected" << endl;
           assert(!G.has_cycle());
         }
       }
@@ -75,7 +76,6 @@ void orientation(PDAG &G, const vector<int> &pairs,
     //   }
     // }
   }
-  return;
   bool flag = true;
   while (flag) {
     flag = false;
@@ -88,7 +88,7 @@ void orientation(PDAG &G, const vector<int> &pairs,
             G.remove_edge(Z, Y);
             if (G.has_cycle()) {
               G.add_edge(Z, Y);
-              cout << "cycle detected" << endl;
+              // cout << "cycle detected" << endl;
               assert(!G.has_cycle());
             } else {
               // cout << "R1:" << Y << "->" << Z << endl;
@@ -105,7 +105,7 @@ void orientation(PDAG &G, const vector<int> &pairs,
           G.remove_edge(Y, X);
           if (G.has_cycle()) {
             G.add_edge(Y, X);
-            cout << "cycle detected" << endl;
+            // cout << "cycle detected" << endl;
             assert(!G.has_cycle());
           } else {
             // cout << "R2:" << X << "->" << Y << endl;
@@ -126,7 +126,7 @@ void orientation(PDAG &G, const vector<int> &pairs,
               G.remove_edge(W, Y);
               if (G.has_cycle()) {
                 G.add_edge(W, Y);
-                cout << "cycle exist" << endl;
+                // cout << "cycle detected" << endl;
                 assert(!G.has_cycle());
               } else {
                 // cout << "R3:" << Y << "->" << W << endl;
@@ -138,7 +138,6 @@ void orientation(PDAG &G, const vector<int> &pairs,
       }
     }
   }
-  return;
 }
 
 void orientation(int level, PDAG &G, const vector<int> &sepsets) {

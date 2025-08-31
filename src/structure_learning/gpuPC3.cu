@@ -655,32 +655,31 @@ __global__ void PC_level_n_v(int citest_type, int level, int n_node, int n_data,
       if (use_working_memory) {
         thread_memory = working_memory + blockIdx.x * reserved_size_per_ci_test;
       } else {
-        thread_memory = smem + n_adj + 2 + level;
+        thread_memory = smem + n_adj + 2 + level * 2;
       }
       int *sepset = smem + n_adj + 2;
-      int sepset_cnt_loop =
-          (sepset_cnt + blockDim.y - 1) / blockDim.y * blockDim.y;
-      // if (threadIdx.x == 0 /* && sepset_cnt_loop > 1*/) {
-      //   printf("level: %d, i: %d, j: %d, n_adj: %d, sepset_cnt_loop: %d\n",
-      //          level, i, j, n_adj, sepset_cnt_loop);
-      // }
-      for (int sepset_idx = threadIdx.y; sepset_idx < sepset_cnt_loop;
-           sepset_idx += blockDim.y) {
+      int *dim_mul = smem + n_adj + 2 + level;
+      for (int sepset_idx = 0; sepset_idx < sepset_cnt; sepset_idx++) {
         __syncthreads();
+        int *adjacent_to_all = smem + n_adj + 1;
         if (threadIdx.x == 0) {
           comb(n_adj, level, sepset_idx, -1, sepset);
+          *adjacent_to_all = 1;
+          dim_mul[0] = 1;
           for (int k = 0; k < level; k++) {
             sepset[k] = G_compacted[sepset[k] + 1];
+            if (k + 1 < level) {
+              dim_mul[k + 1] = dim_mul[k] * n_states[sepset[k]];
+            }
+            if (!G[j * n_node + sepset[k]]) *adjacent_to_all = 0;
           }
           uint smid;
           asm volatile("mov.u32 %0, %smid;" : "=r"(smid));
           atomicAdd(stats + smid, 1);
         }
         __syncthreads();
-        int dim_s = 1;
-        for (int k = 0; k < level; k++) {
-          dim_s *= n_states[sepset[k]];
-        }
+        if (loop == 1 && *adjacent_to_all == 1) continue;
+        int dim_s = dim_mul[level - 1] * n_states[sepset[level - 1]];
         int *N_i_j_s = thread_memory;
         int *N_i_s = N_i_j_s + dim_s * n_i * n_j;
         int *N_j_s = N_i_s + dim_s * n_i;
@@ -696,8 +695,7 @@ __global__ void PC_level_n_v(int citest_type, int level, int n_node, int n_data,
           int val_j = data[j * n_data + k];
           int sepset_idx = 0;
           for (int l = 0; l < level; l++) {
-            sepset_idx =
-                sepset_idx * n_states[sepset[l]] + data[sepset[l] * n_data + k];
+            sepset_idx += data[sepset[l] * n_data + k] * dim_mul[l];
           }
           atomicAdd(N_i_j_s + sepset_idx * n_i * n_j + val_j * n_i + val_i, 1);
         }
@@ -712,10 +710,8 @@ __global__ void PC_level_n_v(int citest_type, int level, int n_node, int n_data,
             }
           }
         }
-        int scratch_addr =
-            n_adj + 2 +
-            (level + (use_working_memory ? 0 : reserved_size_per_ci_test)) *
-                blockDim.y;
+        int scratch_addr = n_adj + 2 + level * 2 +
+                           (use_working_memory ? 0 : reserved_size_per_ci_test);
         scratch_addr = (scratch_addr + 1) / 2 * 2;
         double *scratch_ptr = reinterpret_cast<double *>(smem + scratch_addr);
         bool result;
@@ -731,9 +727,10 @@ __global__ void PC_level_n_v(int citest_type, int level, int n_node, int n_data,
           }
         }
         if (threadIdx.x == 0 && result) {
-          sepsets[pair_idx * (n_node + 1)]++;
+          int num = (loop == 0 && *adjacent_to_all ? 2 : 1);
+          sepsets[pair_idx * (n_node + 1)] += num;
           for (int k = 0; k < level; k++) {
-            sepsets[pair_idx * (n_node + 1) + sepset[k] + 1]++;
+            sepsets[pair_idx * (n_node + 1) + sepset[k] + 1] += num;
           }
         }
         __syncthreads();
@@ -990,6 +987,14 @@ PDAG PCsearch(int citest_type, int n_node, int n_data,
             model_d, stats_d);
       }
     }
+    CUDA_CHECK(
+        cudaMemcpy(stats.data(), stats_d, size_stats, cudaMemcpyDeviceToHost));
+    CUDA_CHECK(cudaEventRecord(stop));
+    CUDA_CHECK(cudaEventSynchronize(stop));
+    float milliseconds = 0;
+    CUDA_CHECK(cudaEventElapsedTime(&milliseconds, start, stop));
+    buf1.push_back(milliseconds / 1000);
+    buf2.push_back(accumulate(stats.begin(), stats.begin() + sm_num, 0));
     if (max_n_adj - 1 <= level) break;
     level++;
     max_dim_s *= max_dim;
