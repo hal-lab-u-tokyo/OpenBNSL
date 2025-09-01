@@ -266,25 +266,31 @@ __global__ void PC_level_n(int citest_type, int level, int n_node, int n_data,
         thread_memory =
             working_memory + thread_memory_index * reserved_size_per_ci_test;
       } else {
-        thread_memory = smem + n_adj + 2 + level * blockDim.y +
+        thread_memory = smem + n_adj + 2 + level * 2 * blockDim.y +
                         reserved_size_per_ci_test * ci_test_idx;
       }
       int *sepset = smem + n_adj + 2 + level * ci_test_idx;
+      int *dim_mul =
+          smem + n_adj + 2 + level * blockDim.y + level * ci_test_idx;
       int sepset_cnt_loop =
           (sepset_cnt + blockDim.y - 1) / blockDim.y * blockDim.y;
       for (int sepset_idx = threadIdx.y; sepset_idx < sepset_cnt_loop;
            sepset_idx += blockDim.y) {
         __syncthreads();
         int *valid = smem + n_adj + 1;
-        if (threadIdx.x == 0) {
+        if (threadIdx.x == 0 && threadIdx.y == 0) {
           *valid = (G[i * n_node + j] == 1);
         }
         __syncthreads();
         if (*valid == 0) break;
         if (threadIdx.x == 0) {
           comb(n_adj - 1, level, sepset_idx, idx_j, sepset);
+          dim_mul[0] = 1;
           for (int k = 0; k < level; k++) {
             sepset[k] = G_compacted[sepset[k] + 1];
+            if (k + 1 < level) {
+              dim_mul[k + 1] = dim_mul[k] * n_states[sepset[k]];
+            }
           }
           uint smid;
           asm volatile("mov.u32 %0, %smid;" : "=r"(smid));
@@ -310,8 +316,7 @@ __global__ void PC_level_n(int citest_type, int level, int n_node, int n_data,
           int val_j = data[j * n_data + k];
           int sepset_idx = 0;
           for (int l = 0; l < level; l++) {
-            sepset_idx =
-                sepset_idx * n_states[sepset[l]] + data[sepset[l] * n_data + k];
+            sepset_idx += data[sepset[l] * n_data + k] * dim_mul[l];
           }
           atomicAdd(N_i_j_s + sepset_idx * n_i * n_j + val_i * n_j + val_j, 1);
         }
@@ -328,7 +333,7 @@ __global__ void PC_level_n(int citest_type, int level, int n_node, int n_data,
         }
         int scratch_addr =
             n_adj + 2 +
-            (level + (use_working_memory ? 0 : reserved_size_per_ci_test)) *
+            (level * 2 + (use_working_memory ? 0 : reserved_size_per_ci_test)) *
                 blockDim.y;
         scratch_addr = (scratch_addr + 1) / 2 * 2;
         double *scratch_ptr =
@@ -444,8 +449,9 @@ PDAG PCsearch(int citest_type, int n_node, int n_data,
       }
       if (reserved_size_per_ci_test * 2 < 1000) {
         PC_level_n<<<numBlocks, threadsPerBlock,
-                     sizeof(int) * (max_n_adj + 2 +
-                                    (level + reserved_size_per_ci_test) * 2) +
+                     sizeof(int) *
+                             (max_n_adj + 2 +
+                              (level * 2 + reserved_size_per_ci_test) * 2) +
                          sizeof(double) * (10 + 1)>>>(
             citest_type, level, n_node, n_data, data_d, G_d, n_states_d, false,
             nullptr, sepsets_d, regret_d, model_d, stats_d);
@@ -464,7 +470,7 @@ PDAG PCsearch(int citest_type, int n_node, int n_data,
         }
         cout << "numBlocks: " << numBlocks.x << ", " << numBlocks.y << endl;
         PC_level_n<<<numBlocks, threadsPerBlock,
-                     sizeof(int) * (max_n_adj + 2 + level * 2) +
+                     sizeof(int) * (max_n_adj + 2 + (level * 2) * 2) +
                          sizeof(double) * (10 + 1)>>>(
             citest_type, level, n_node, n_data, data_d, G_d, n_states_d, true,
             working_memory_d, sepsets_d, regret_d, model_d, stats_d);
