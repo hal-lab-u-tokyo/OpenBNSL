@@ -1,0 +1,9620 @@
+gpuPC 0 link 20000
+set_id: 0
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 699, 38047
+level: 1, max_n_adj: 248
+next_node_cnt, next_edge_cnt: 366, 3079
+level: 2, max_n_adj: 44
+next_node_cnt, next_edge_cnt: 62, 663
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 650
+level: 4, max_n_adj: 16
+pair size: 1226
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1226
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.013
+0.162
+0.115
+0.063
+0.000
+0.002
+0.028
+0.175
+261726
+2323760
+586218
+52332
+1226
+8722
+22445
+70213
+622
+545
+70
+7
+7
+0
+0
+0.806
+set_id: 1
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 702, 38438
+level: 1, max_n_adj: 249
+next_node_cnt, next_edge_cnt: 379, 3187
+level: 2, max_n_adj: 46
+next_node_cnt, next_edge_cnt: 71, 665
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 27, 639
+level: 4, max_n_adj: 16
+pair size: 1200
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1200
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.174
+0.121
+0.064
+0.000
+0.002
+0.029
+0.177
+261726
+2375608
+675224
+55722
+1200
+8599
+22412
+70309
+612
+545
+59
+8
+4
+0
+4
+0.635
+set_id: 2
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 696, 37835
+level: 1, max_n_adj: 268
+next_node_cnt, next_edge_cnt: 370, 3215
+level: 2, max_n_adj: 49
+next_node_cnt, next_edge_cnt: 57, 666
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 656
+level: 4, max_n_adj: 16
+pair size: 1237
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1237
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.167
+0.120
+0.065
+0.000
+0.002
+0.031
+0.184
+261726
+2365622
+676382
+52238
+1237
+8735
+22461
+70664
+637
+545
+76
+16
+6
+5
+5
+0.635
+set_id: 3
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 693, 37973
+level: 1, max_n_adj: 244
+next_node_cnt, next_edge_cnt: 354, 3163
+level: 2, max_n_adj: 46
+next_node_cnt, next_edge_cnt: 62, 659
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 644
+level: 4, max_n_adj: 16
+pair size: 1210
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1210
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.168
+0.113
+0.066
+0.000
+0.002
+0.029
+0.178
+261726
+2332040
+695556
+55538
+1210
+8544
+22106
+69941
+615
+545
+64
+6
+6
+0
+0
+0.614
+set_id: 4
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 697, 37780
+level: 1, max_n_adj: 248
+next_node_cnt, next_edge_cnt: 376, 3210
+level: 2, max_n_adj: 46
+next_node_cnt, next_edge_cnt: 69, 669
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 27, 647
+level: 4, max_n_adj: 16
+pair size: 1214
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1214
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.165
+0.118
+0.063
+0.000
+0.003
+0.030
+0.179
+261726
+2371212
+674970
+53920
+1214
+8713
+22568
+70389
+622
+545
+67
+10
+8
+1
+1
+0.634
+set_id: 5
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 700, 38193
+level: 1, max_n_adj: 253
+next_node_cnt, next_edge_cnt: 373, 3135
+level: 2, max_n_adj: 43
+next_node_cnt, next_edge_cnt: 61, 664
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 647
+level: 4, max_n_adj: 16
+pair size: 1225
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1225
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.171
+0.113
+0.071
+0.000
+0.002
+0.028
+0.174
+261726
+2350456
+600246
+52256
+1225
+8637
+22211
+69992
+620
+545
+67
+8
+4
+2
+2
+0.646
+set_id: 6
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 695, 37710
+level: 1, max_n_adj: 252
+next_node_cnt, next_edge_cnt: 385, 3159
+level: 2, max_n_adj: 47
+next_node_cnt, next_edge_cnt: 72, 676
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 27, 657
+level: 4, max_n_adj: 16
+pair size: 1239
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1239
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.167
+0.109
+0.068
+0.000
+0.002
+0.029
+0.174
+261726
+2342254
+667118
+55534
+1239
+8884
+22896
+71027
+640
+545
+77
+18
+14
+2
+2
+0.621
+set_id: 7
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 700, 38290
+level: 1, max_n_adj: 254
+next_node_cnt, next_edge_cnt: 377, 3156
+level: 2, max_n_adj: 47
+next_node_cnt, next_edge_cnt: 63, 657
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 643
+level: 4, max_n_adj: 16
+pair size: 1210
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1210
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.172
+0.108
+0.066
+0.000
+0.002
+0.029
+0.179
+261726
+2363966
+648996
+52284
+1210
+8658
+22445
+70279
+614
+545
+63
+6
+2
+0
+4
+0.621
+set_id: 8
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 698, 39037
+level: 1, max_n_adj: 255
+next_node_cnt, next_edge_cnt: 372, 3262
+level: 2, max_n_adj: 46
+next_node_cnt, next_edge_cnt: 63, 666
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 651
+level: 4, max_n_adj: 16
+pair size: 1236
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1236
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.177
+0.126
+0.076
+0.000
+0.002
+0.030
+0.180
+261726
+2441648
+673902
+55570
+1236
+8703
+22312
+70072
+627
+545
+71
+11
+9
+1
+1
+0.654
+set_id: 9
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 687, 35774
+level: 1, max_n_adj: 236
+next_node_cnt, next_edge_cnt: 364, 3103
+level: 2, max_n_adj: 43
+next_node_cnt, next_edge_cnt: 67, 668
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 647
+level: 4, max_n_adj: 16
+pair size: 1218
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1218
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.156
+0.109
+0.069
+0.000
+0.002
+0.029
+0.177
+261726
+2173460
+606402
+52436
+1218
+8584
+22133
+69942
+634
+545
+67
+22
+12
+3
+7
+0.604
+gpuPC 0 link 40000
+set_id: 0
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 705, 41769
+level: 1, max_n_adj: 263
+next_node_cnt, next_edge_cnt: 379, 3944
+level: 2, max_n_adj: 59
+next_node_cnt, next_edge_cnt: 64, 658
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 27, 648
+level: 4, max_n_adj: 16
+pair size: 1214
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1214
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.020
+0.366
+0.320
+0.097
+0.000
+0.004
+0.048
+0.269
+261726
+3075028
+1217600
+52260
+1214
+8729
+22642
+70501
+618
+545
+68
+5
+5
+0
+0
+1.402
+set_id: 1
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 713, 42309
+level: 1, max_n_adj: 273
+next_node_cnt, next_edge_cnt: 376, 3869
+level: 2, max_n_adj: 59
+next_node_cnt, next_edge_cnt: 77, 673
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 27, 646
+level: 4, max_n_adj: 16
+pair size: 1207
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1207
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.010
+0.362
+0.298
+0.117
+0.000
+0.004
+0.049
+0.274
+261726
+3015796
+1213794
+55740
+1207
+8658
+22506
+70388
+628
+545
+66
+17
+7
+1
+9
+1.198
+set_id: 2
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 710, 43254
+level: 1, max_n_adj: 281
+next_node_cnt, next_edge_cnt: 404, 4029
+level: 2, max_n_adj: 61
+next_node_cnt, next_edge_cnt: 73, 675
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 655
+level: 4, max_n_adj: 16
+pair size: 1244
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1244
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.010
+0.390
+0.334
+0.091
+0.000
+0.004
+0.050
+0.295
+261726
+3194502
+1259030
+52408
+1244
+8829
+22674
+70849
+633
+545
+75
+13
+9
+2
+2
+1.258
+set_id: 3
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 706, 41306
+level: 1, max_n_adj: 259
+next_node_cnt, next_edge_cnt: 385, 3832
+level: 2, max_n_adj: 63
+next_node_cnt, next_edge_cnt: 66, 667
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 650
+level: 4, max_n_adj: 16
+pair size: 1219
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1219
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.010
+0.346
+0.277
+0.099
+0.000
+0.004
+0.051
+0.284
+261726
+2908754
+1143394
+52366
+1219
+8675
+22372
+70149
+624
+545
+70
+9
+7
+1
+1
+1.17
+set_id: 4
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 712, 41666
+level: 1, max_n_adj: 258
+next_node_cnt, next_edge_cnt: 389, 3819
+level: 2, max_n_adj: 54
+next_node_cnt, next_edge_cnt: 60, 652
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 27, 643
+level: 4, max_n_adj: 16
+pair size: 1214
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1214
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.010
+0.356
+0.261
+0.096
+0.000
+0.004
+0.049
+0.274
+261726
+2925616
+1119982
+52274
+1214
+8694
+22655
+71211
+626
+545
+63
+18
+12
+1
+5
+1.143
+set_id: 5
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 712, 42141
+level: 1, max_n_adj: 273
+next_node_cnt, next_edge_cnt: 392, 3871
+level: 2, max_n_adj: 57
+next_node_cnt, next_edge_cnt: 61, 661
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 648
+level: 4, max_n_adj: 16
+pair size: 1226
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1226
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.010
+0.363
+0.285
+0.092
+0.000
+0.004
+0.051
+0.280
+261726
+2995760
+1086722
+52324
+1226
+8702
+22371
+70123
+633
+545
+68
+20
+14
+1
+5
+1.184
+set_id: 6
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 709, 42092
+level: 1, max_n_adj: 265
+next_node_cnt, next_edge_cnt: 376, 3922
+level: 2, max_n_adj: 62
+next_node_cnt, next_edge_cnt: 58, 650
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 640
+level: 4, max_n_adj: 16
+pair size: 1207
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1207
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.010
+0.358
+0.329
+0.089
+0.000
+0.004
+0.049
+0.282
+261726
+3002160
+1221192
+52304
+1207
+8594
+22463
+71036
+614
+545
+60
+9
+9
+0
+0
+1.227
+set_id: 7
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 709, 42537
+level: 1, max_n_adj: 267
+next_node_cnt, next_edge_cnt: 383, 3822
+level: 2, max_n_adj: 57
+next_node_cnt, next_edge_cnt: 59, 649
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 27, 640
+level: 4, max_n_adj: 16
+pair size: 1194
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1194
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.010
+0.362
+0.276
+0.098
+0.000
+0.004
+0.048
+0.268
+261726
+3014644
+1088160
+52326
+1194
+8563
+22397
+70340
+611
+545
+60
+6
+4
+1
+1
+1.163
+set_id: 8
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 708, 41843
+level: 1, max_n_adj: 261
+next_node_cnt, next_edge_cnt: 369, 3967
+level: 2, max_n_adj: 58
+next_node_cnt, next_edge_cnt: 61, 657
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 645
+level: 4, max_n_adj: 16
+pair size: 1220
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1220
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.015
+0.365
+0.311
+0.107
+0.000
+0.004
+0.048
+0.270
+261726
+2996622
+1174838
+52322
+1220
+8618
+22254
+70080
+619
+545
+65
+9
+5
+2
+2
+1.199
+set_id: 9
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 705, 41663
+level: 1, max_n_adj: 266
+next_node_cnt, next_edge_cnt: 382, 3940
+level: 2, max_n_adj: 62
+next_node_cnt, next_edge_cnt: 62, 657
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 648
+level: 4, max_n_adj: 16
+pair size: 1206
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1206
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.015
+0.366
+0.318
+0.094
+0.000
+0.004
+0.048
+0.269
+261726
+3027228
+1290310
+52324
+1206
+8679
+22511
+70304
+621
+545
+68
+8
+8
+0
+0
+1.202
+gpuPC 0 link 100000
+set_id: 0
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 721, 46395
+level: 1, max_n_adj: 278
+next_node_cnt, next_edge_cnt: 401, 4948
+level: 2, max_n_adj: 80
+next_node_cnt, next_edge_cnt: 56, 657
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 27, 647
+level: 4, max_n_adj: 16
+pair size: 1234
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1234
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.043
+1.071
+1.329
+0.186
+0.000
+0.009
+0.112
+0.585
+261726
+3909664
+2259072
+52222
+1234
+8712
+22693
+72105
+624
+545
+67
+12
+8
+0
+4
+3.692
+set_id: 1
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 722, 46664
+level: 1, max_n_adj: 277
+next_node_cnt, next_edge_cnt: 394, 4994
+level: 2, max_n_adj: 81
+next_node_cnt, next_edge_cnt: 59, 656
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 644
+level: 4, max_n_adj: 16
+pair size: 1222
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1222
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.041
+1.100
+1.401
+0.201
+0.000
+0.008
+0.102
+0.537
+261726
+3956330
+2375490
+53932
+1222
+8645
+22432
+71115
+616
+545
+64
+7
+7
+0
+0
+3.597
+set_id: 2
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 722, 47233
+level: 1, max_n_adj: 290
+next_node_cnt, next_edge_cnt: 413, 5044
+level: 2, max_n_adj: 80
+next_node_cnt, next_edge_cnt: 70, 668
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 648
+level: 4, max_n_adj: 16
+pair size: 1236
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1236
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.041
+1.104
+1.403
+0.186
+0.000
+0.008
+0.099
+0.520
+261726
+3993670
+2372142
+52592
+1236
+8753
+22462
+70332
+624
+545
+68
+11
+11
+0
+0
+3.562
+set_id: 3
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 720, 45987
+level: 1, max_n_adj: 274
+next_node_cnt, next_edge_cnt: 403, 4973
+level: 2, max_n_adj: 81
+next_node_cnt, next_edge_cnt: 79, 679
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 27, 648
+level: 4, max_n_adj: 16
+pair size: 1232
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1232
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.041
+1.045
+1.319
+0.224
+0.000
+0.008
+0.107
+0.593
+261726
+3798366
+2307470
+57234
+1232
+8668
+22270
+70080
+627
+545
+68
+14
+14
+0
+0
+3.545
+set_id: 4
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 47008
+level: 1, max_n_adj: 275
+next_node_cnt, next_edge_cnt: 415, 4847
+level: 2, max_n_adj: 73
+next_node_cnt, next_edge_cnt: 60, 680
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 668
+level: 4, max_n_adj: 16
+pair size: 1282
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1282
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.041
+1.055
+1.172
+0.179
+0.000
+0.008
+0.106
+0.564
+261726
+3826914
+2120954
+52292
+1282
+8997
+22802
+71114
+649
+545
+88
+16
+10
+1
+5
+3.336
+set_id: 5
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 722, 47340
+level: 1, max_n_adj: 287
+next_node_cnt, next_edge_cnt: 400, 5116
+level: 2, max_n_adj: 80
+next_node_cnt, next_edge_cnt: 66, 653
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 634
+level: 4, max_n_adj: 16
+pair size: 1191
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1191
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.040
+1.115
+1.331
+0.188
+0.000
+0.008
+0.107
+0.562
+261726
+4018530
+2400090
+52368
+1191
+8489
+22155
+70039
+613
+545
+54
+14
+8
+1
+5
+3.567
+set_id: 6
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 46834
+level: 1, max_n_adj: 277
+next_node_cnt, next_edge_cnt: 409, 5025
+level: 2, max_n_adj: 85
+next_node_cnt, next_edge_cnt: 75, 674
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 28, 649
+level: 4, max_n_adj: 16
+pair size: 1222
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1222
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.040
+1.061
+1.418
+0.184
+0.000
+0.008
+0.102
+0.536
+261726
+3858378
+2298780
+52542
+1222
+8812
+22872
+70848
+625
+545
+69
+11
+7
+0
+4
+3.498
+set_id: 7
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 720, 46183
+level: 1, max_n_adj: 275
+next_node_cnt, next_edge_cnt: 385, 4961
+level: 2, max_n_adj: 84
+next_node_cnt, next_edge_cnt: 71, 662
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 644
+level: 4, max_n_adj: 16
+pair size: 1205
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1205
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.040
+1.065
+1.386
+0.225
+0.000
+0.008
+0.105
+0.553
+261726
+3860088
+2332078
+52426
+1205
+8591
+22322
+70174
+620
+545
+64
+11
+11
+0
+0
+3.601
+set_id: 8
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 717, 45949
+level: 1, max_n_adj: 279
+next_node_cnt, next_edge_cnt: 393, 5107
+level: 2, max_n_adj: 93
+next_node_cnt, next_edge_cnt: 69, 660
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 639
+level: 4, max_n_adj: 16
+pair size: 1200
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1200
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.041
+1.104
+1.536
+0.204
+0.000
+0.008
+0.102
+0.534
+261726
+3949608
+2511700
+55678
+1200
+8529
+22163
+70019
+617
+545
+59
+13
+7
+1
+5
+3.733
+set_id: 9
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 720, 46779
+level: 1, max_n_adj: 283
+next_node_cnt, next_edge_cnt: 392, 5000
+level: 2, max_n_adj: 81
+next_node_cnt, next_edge_cnt: 71, 662
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 643
+level: 4, max_n_adj: 16
+pair size: 1209
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1209
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.040
+1.073
+1.299
+0.222
+0.000
+0.008
+0.102
+0.548
+261726
+3900020
+2414856
+53770
+1209
+8644
+22402
+70210
+622
+545
+63
+14
+6
+1
+7
+3.518
+gpuPC 0 link 200000
+set_id: 0
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 48541
+level: 1, max_n_adj: 285
+next_node_cnt, next_edge_cnt: 422, 5698
+level: 2, max_n_adj: 98
+next_node_cnt, next_edge_cnt: 62, 659
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 643
+level: 4, max_n_adj: 16
+pair size: 1213
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1213
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.094
+2.674
+3.799
+0.363
+0.001
+0.016
+0.200
+1.025
+261726
+4473348
+3708976
+52416
+1213
+8609
+22403
+70931
+611
+545
+63
+3
+1
+1
+1
+8.649
+set_id: 1
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 49028
+level: 1, max_n_adj: 284
+next_node_cnt, next_edge_cnt: 428, 5807
+level: 2, max_n_adj: 97
+next_node_cnt, next_edge_cnt: 70, 668
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 27, 651
+level: 4, max_n_adj: 16
+pair size: 1232
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1232
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.094
+2.732
+3.920
+0.384
+0.001
+0.016
+0.201
+1.062
+261726
+4565628
+3721572
+54096
+1232
+8788
+22615
+70399
+628
+544
+70
+14
+9
+3
+2
+8.679
+set_id: 2
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 48837
+level: 1, max_n_adj: 282
+next_node_cnt, next_edge_cnt: 437, 5760
+level: 2, max_n_adj: 99
+next_node_cnt, next_edge_cnt: 64, 668
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 657
+level: 4, max_n_adj: 16
+pair size: 1245
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1245
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.091
+2.668
+3.912
+0.371
+0.001
+0.016
+0.187
+0.971
+261726
+4489976
+3604708
+52372
+1245
+8854
+22644
+70364
+639
+545
+77
+17
+13
+2
+2
+8.494
+set_id: 3
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 49107
+level: 1, max_n_adj: 285
+next_node_cnt, next_edge_cnt: 416, 5712
+level: 2, max_n_adj: 93
+next_node_cnt, next_edge_cnt: 69, 661
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 643
+level: 4, max_n_adj: 16
+pair size: 1213
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1213
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.091
+2.683
+3.746
+0.364
+0.001
+0.016
+0.194
+0.984
+261726
+4499704
+3621278
+53930
+1213
+8721
+22562
+70344
+623
+545
+63
+15
+11
+2
+2
+8.395
+set_id: 4
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 48652
+level: 1, max_n_adj: 285
+next_node_cnt, next_edge_cnt: 419, 5610
+level: 2, max_n_adj: 94
+next_node_cnt, next_edge_cnt: 55, 657
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 650
+level: 4, max_n_adj: 16
+pair size: 1230
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1230
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.090
+2.665
+3.786
+0.352
+0.001
+0.015
+0.187
+0.968
+261726
+4454510
+3357372
+52208
+1230
+8751
+22795
+72147
+629
+545
+70
+14
+10
+0
+4
+8.394
+set_id: 5
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 48684
+level: 1, max_n_adj: 281
+next_node_cnt, next_edge_cnt: 425, 5771
+level: 2, max_n_adj: 99
+next_node_cnt, next_edge_cnt: 73, 662
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 645
+level: 4, max_n_adj: 16
+pair size: 1218
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1218
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.091
+2.694
+4.031
+0.350
+0.001
+0.016
+0.200
+1.033
+261726
+4505470
+3655518
+52468
+1218
+8728
+22564
+70352
+622
+545
+65
+12
+8
+3
+1
+8.679
+set_id: 6
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 49143
+level: 1, max_n_adj: 290
+next_node_cnt, next_edge_cnt: 416, 5742
+level: 2, max_n_adj: 106
+next_node_cnt, next_edge_cnt: 73, 674
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 27, 648
+level: 4, max_n_adj: 16
+pair size: 1221
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1221
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.091
+2.682
+4.086
+0.373
+0.001
+0.016
+0.202
+1.097
+261726
+4489830
+3600814
+52618
+1221
+8722
+22623
+70910
+625
+545
+68
+12
+10
+1
+1
+8.832
+set_id: 7
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 48376
+level: 1, max_n_adj: 287
+next_node_cnt, next_edge_cnt: 406, 5762
+level: 2, max_n_adj: 96
+next_node_cnt, next_edge_cnt: 66, 651
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 631
+level: 4, max_n_adj: 16
+pair size: 1181
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1181
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.094
+2.704
+3.963
+0.384
+0.001
+0.016
+0.204
+1.042
+261726
+4514306
+3733840
+53840
+1181
+8458
+22152
+70050
+600
+545
+51
+4
+4
+0
+0
+8.682
+set_id: 8
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 48322
+level: 1, max_n_adj: 284
+next_node_cnt, next_edge_cnt: 414, 5721
+level: 2, max_n_adj: 98
+next_node_cnt, next_edge_cnt: 66, 661
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 27, 649
+level: 4, max_n_adj: 16
+pair size: 1215
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1215
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.090
+2.663
+3.797
+0.428
+0.001
+0.016
+0.194
+1.003
+261726
+4465808
+3659862
+55578
+1215
+8748
+22697
+70562
+630
+545
+69
+16
+10
+3
+3
+8.48
+set_id: 9
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 48740
+level: 1, max_n_adj: 287
+next_node_cnt, next_edge_cnt: 415, 5717
+level: 2, max_n_adj: 94
+next_node_cnt, next_edge_cnt: 61, 657
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 646
+level: 4, max_n_adj: 16
+pair size: 1221
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1221
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.094
+2.689
+3.674
+0.354
+0.001
+0.017
+0.207
+1.048
+261726
+4501476
+3587656
+53696
+1221
+8876
+23600
+74996
+630
+545
+66
+19
+7
+4
+8
+8.359
+gpuPC 0 link 400000
+set_id: 0
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50120
+level: 1, max_n_adj: 300
+next_node_cnt, next_edge_cnt: 445, 6200
+level: 2, max_n_adj: 108
+next_node_cnt, next_edge_cnt: 62, 661
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 645
+level: 4, max_n_adj: 16
+pair size: 1224
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1224
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.197
+7.218
+10.514
+0.628
+0.002
+0.035
+0.419
+2.059
+261726
+4936658
+5032342
+52428
+1224
+8690
+22508
+70993
+621
+545
+65
+11
+9
+1
+1
+22.021
+set_id: 1
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50055
+level: 1, max_n_adj: 294
+next_node_cnt, next_edge_cnt: 439, 6237
+level: 2, max_n_adj: 109
+next_node_cnt, next_edge_cnt: 57, 658
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 28, 646
+level: 4, max_n_adj: 16
+pair size: 1231
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1231
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.208
+7.204
+10.581
+0.707
+0.002
+0.035
+0.394
+2.006
+261726
+4930030
+5040750
+52292
+1231
+8706
+22403
+70225
+626
+545
+66
+15
+11
+2
+2
+21.914
+set_id: 2
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50260
+level: 1, max_n_adj: 307
+next_node_cnt, next_edge_cnt: 450, 6150
+level: 2, max_n_adj: 106
+next_node_cnt, next_edge_cnt: 61, 668
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 656
+level: 4, max_n_adj: 16
+pair size: 1246
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1246
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.207
+7.218
+10.298
+0.773
+0.002
+0.034
+0.385
+2.033
+261726
+4911276
+4913102
+52290
+1246
+8749
+22327
+70050
+625
+544
+75
+6
+5
+1
+0
+21.736
+set_id: 3
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50401
+level: 1, max_n_adj: 288
+next_node_cnt, next_edge_cnt: 440, 6202
+level: 2, max_n_adj: 105
+next_node_cnt, next_edge_cnt: 63, 673
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 657
+level: 4, max_n_adj: 16
+pair size: 1242
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1242
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.199
+7.245
+10.254
+0.648
+0.002
+0.036
+0.418
+2.063
+261726
+4943198
+4907800
+52420
+1242
+8824
+22554
+70247
+631
+545
+77
+9
+9
+0
+0
+21.656
+set_id: 4
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50020
+level: 1, max_n_adj: 289
+next_node_cnt, next_edge_cnt: 433, 6134
+level: 2, max_n_adj: 103
+next_node_cnt, next_edge_cnt: 65, 656
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 641
+level: 4, max_n_adj: 16
+pair size: 1204
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1204
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.216
+7.161
+9.588
+0.618
+0.002
+0.035
+0.394
+1.987
+261726
+4877056
+4660146
+52334
+1204
+8594
+22321
+70161
+617
+545
+61
+11
+9
+1
+1
+20.807
+set_id: 5
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50336
+level: 1, max_n_adj: 291
+next_node_cnt, next_edge_cnt: 433, 6151
+level: 2, max_n_adj: 104
+next_node_cnt, next_edge_cnt: 75, 668
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 27, 651
+level: 4, max_n_adj: 16
+pair size: 1222
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1222
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.205
+7.250
+10.183
+0.703
+0.002
+0.036
+0.420
+2.075
+261726
+4940556
+4780578
+54010
+1222
+8922
+23101
+70912
+630
+545
+71
+14
+8
+0
+6
+21.685
+set_id: 6
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50326
+level: 1, max_n_adj: 297
+next_node_cnt, next_edge_cnt: 429, 6189
+level: 2, max_n_adj: 107
+next_node_cnt, next_edge_cnt: 64, 671
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 27, 656
+level: 4, max_n_adj: 16
+pair size: 1248
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1248
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.200
+7.180
+10.354
+0.710
+0.002
+0.036
+0.418
+2.062
+261726
+4904264
+4822270
+55606
+1248
+8933
+23207
+72971
+642
+545
+76
+21
+15
+3
+3
+21.766
+set_id: 7
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50368
+level: 1, max_n_adj: 293
+next_node_cnt, next_edge_cnt: 417, 6142
+level: 2, max_n_adj: 105
+next_node_cnt, next_edge_cnt: 63, 648
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 633
+level: 4, max_n_adj: 16
+pair size: 1187
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1187
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.207
+7.262
+10.055
+0.705
+0.002
+0.034
+0.389
+1.942
+261726
+4943346
+4896516
+53710
+1187
+8457
+22083
+69974
+604
+545
+53
+6
+4
+1
+1
+21.365
+set_id: 8
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50281
+level: 1, max_n_adj: 298
+next_node_cnt, next_edge_cnt: 427, 6126
+level: 2, max_n_adj: 106
+next_node_cnt, next_edge_cnt: 71, 659
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 27, 642
+level: 4, max_n_adj: 16
+pair size: 1202
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1202
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.200
+7.177
+10.586
+0.709
+0.002
+0.034
+0.378
+1.876
+261726
+4905262
+4915134
+55656
+1202
+8667
+22562
+70436
+621
+545
+62
+14
+10
+3
+1
+21.744
+set_id: 9
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50272
+level: 1, max_n_adj: 295
+next_node_cnt, next_edge_cnt: 449, 6174
+level: 2, max_n_adj: 106
+next_node_cnt, next_edge_cnt: 73, 666
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 27, 650
+level: 4, max_n_adj: 16
+pair size: 1227
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1227
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.205
+7.211
+10.085
+0.738
+0.002
+0.035
+0.389
+1.986
+261726
+4934222
+4826396
+57096
+1227
+8927
+23374
+72774
+620
+545
+70
+5
+5
+0
+0
+21.433
+gpuPC 1 link 20000
+set_id: 0
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 699, 34904
+level: 1, max_n_adj: 284
+next_node_cnt, next_edge_cnt: 277, 1962
+level: 2, max_n_adj: 38
+next_node_cnt, next_edge_cnt: 55, 602
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 585
+level: 4, max_n_adj: 16
+pair size: 1086
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1086
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.013
+0.129
+0.051
+0.054
+0.000
+0.002
+0.027
+0.169
+261726
+1747880
+270074
+53100
+1086
+7996
+21641
+69711
+602
+545
+5
+52
+0
+0
+52
+0.664
+set_id: 1
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 702, 35623
+level: 1, max_n_adj: 288
+next_node_cnt, next_edge_cnt: 290, 2081
+level: 2, max_n_adj: 35
+next_node_cnt, next_edge_cnt: 45, 596
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 586
+level: 4, max_n_adj: 16
+pair size: 1085
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1085
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.133
+0.049
+0.064
+0.000
+0.002
+0.026
+0.165
+261726
+1816810
+327438
+55344
+1085
+7976
+21604
+69692
+605
+545
+6
+54
+0
+1
+53
+0.497
+set_id: 2
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 696, 34533
+level: 1, max_n_adj: 311
+next_node_cnt, next_edge_cnt: 284, 2067
+level: 2, max_n_adj: 35
+next_node_cnt, next_edge_cnt: 41, 586
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+pair size: 1077
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1077
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.130
+0.047
+0.058
+0.000
+0.002
+0.028
+0.173
+261726
+1759420
+309852
+52202
+1077
+7942
+21586
+69692
+591
+545
+2
+44
+0
+0
+44
+0.495
+set_id: 3
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 693, 33487
+level: 1, max_n_adj: 304
+next_node_cnt, next_edge_cnt: 272, 2103
+level: 2, max_n_adj: 38
+next_node_cnt, next_edge_cnt: 39, 595
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 590
+level: 4, max_n_adj: 16
+pair size: 1097
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1097
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.130
+0.054
+0.055
+0.000
+0.002
+0.026
+0.163
+261726
+1722636
+331688
+55518
+1097
+8062
+21698
+69724
+599
+545
+10
+44
+0
+0
+44
+0.488
+set_id: 4
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 697, 34806
+level: 1, max_n_adj: 287
+next_node_cnt, next_edge_cnt: 277, 2071
+level: 2, max_n_adj: 36
+next_node_cnt, next_edge_cnt: 52, 601
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 583
+level: 4, max_n_adj: 16
+pair size: 1079
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1079
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.130
+0.043
+0.066
+0.000
+0.002
+0.028
+0.173
+261726
+1780562
+308744
+56804
+1079
+7952
+21592
+69692
+596
+545
+3
+48
+0
+0
+48
+0.5
+set_id: 5
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 700, 35401
+level: 1, max_n_adj: 283
+next_node_cnt, next_edge_cnt: 288, 2002
+level: 2, max_n_adj: 32
+next_node_cnt, next_edge_cnt: 42, 590
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 586
+level: 4, max_n_adj: 16
+pair size: 1087
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1087
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.133
+0.042
+0.057
+0.000
+0.002
+0.027
+0.170
+261726
+1785494
+282056
+52092
+1087
+8000
+21640
+69708
+599
+545
+6
+48
+0
+0
+48
+0.499
+set_id: 6
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 695, 34192
+level: 1, max_n_adj: 296
+next_node_cnt, next_edge_cnt: 284, 2069
+level: 2, max_n_adj: 35
+next_node_cnt, next_edge_cnt: 39, 592
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 588
+level: 4, max_n_adj: 16
+pair size: 1091
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1091
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.128
+0.044
+0.060
+0.000
+0.002
+0.026
+0.165
+261726
+1744082
+320618
+55278
+1091
+8018
+21650
+69708
+599
+545
+8
+46
+0
+1
+45
+0.493
+set_id: 7
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 700, 35177
+level: 1, max_n_adj: 294
+next_node_cnt, next_edge_cnt: 280, 2064
+level: 2, max_n_adj: 33
+next_node_cnt, next_edge_cnt: 64, 613
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 587
+level: 4, max_n_adj: 16
+pair size: 1088
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1088
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.132
+0.045
+0.053
+0.000
+0.002
+0.027
+0.168
+261726
+1782736
+318928
+53974
+1088
+7986
+21611
+69695
+604
+545
+7
+52
+0
+0
+52
+0.483
+set_id: 8
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 698, 35915
+level: 1, max_n_adj: 319
+next_node_cnt, next_edge_cnt: 276, 2028
+level: 2, max_n_adj: 36
+next_node_cnt, next_edge_cnt: 39, 588
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 585
+level: 4, max_n_adj: 16
+pair size: 1085
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1085
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.131
+0.044
+0.061
+0.000
+0.002
+0.027
+0.169
+261726
+1788540
+292666
+55334
+1085
+7992
+21636
+69708
+596
+545
+5
+46
+0
+1
+45
+0.502
+set_id: 9
+timer start
+n_data, n_node: 20000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 687, 31848
+level: 1, max_n_adj: 296
+next_node_cnt, next_edge_cnt: 274, 1959
+level: 2, max_n_adj: 32
+next_node_cnt, next_edge_cnt: 38, 589
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 587
+level: 4, max_n_adj: 16
+pair size: 1087
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1087
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.113
+0.041
+0.054
+0.000
+0.002
+0.027
+0.170
+261726
+1536846
+261744
+52296
+1087
+7986
+21610
+69692
+598
+545
+7
+46
+0
+1
+45
+0.474
+gpuPC 1 link 40000
+set_id: 0
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 705, 37905
+level: 1, max_n_adj: 285
+next_node_cnt, next_edge_cnt: 270, 2364
+level: 2, max_n_adj: 43
+next_node_cnt, next_edge_cnt: 38, 584
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 583
+level: 4, max_n_adj: 16
+pair size: 1079
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1079
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.020
+0.304
+0.137
+0.082
+0.000
+0.004
+0.048
+0.283
+261726
+2292810
+496726
+52178
+1079
+7952
+21592
+69692
+549
+545
+3
+1
+1
+0
+0
+1.144
+set_id: 1
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 713, 38653
+level: 1, max_n_adj: 286
+next_node_cnt, next_edge_cnt: 274, 2372
+level: 2, max_n_adj: 42
+next_node_cnt, next_edge_cnt: 64, 612
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 587
+level: 4, max_n_adj: 16
+pair size: 1086
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1086
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.010
+0.295
+0.144
+0.080
+0.000
+0.004
+0.048
+0.281
+261726
+2307544
+538522
+53728
+1086
+8028
+21717
+69766
+560
+545
+7
+8
+0
+0
+8
+0.952
+set_id: 2
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 710, 39292
+level: 1, max_n_adj: 286
+next_node_cnt, next_edge_cnt: 282, 2378
+level: 2, max_n_adj: 43
+next_node_cnt, next_edge_cnt: 49, 597
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 585
+level: 4, max_n_adj: 16
+pair size: 1085
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1085
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.010
+0.305
+0.123
+0.088
+0.000
+0.004
+0.045
+0.270
+261726
+2354268
+471582
+52716
+1085
+7990
+21634
+69708
+554
+545
+5
+4
+0
+0
+4
+0.918
+set_id: 3
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 706, 37156
+level: 1, max_n_adj: 290
+next_node_cnt, next_edge_cnt: 266, 2368
+level: 2, max_n_adj: 45
+next_node_cnt, next_edge_cnt: 40, 585
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+pair size: 1077
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1077
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.010
+0.281
+0.145
+0.084
+0.000
+0.004
+0.048
+0.289
+261726
+2194152
+501462
+52056
+1077
+7944
+21588
+69692
+549
+545
+2
+2
+0
+1
+1
+0.948
+set_id: 4
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 712, 38483
+level: 1, max_n_adj: 289
+next_node_cnt, next_edge_cnt: 275, 2341
+level: 2, max_n_adj: 41
+next_node_cnt, next_edge_cnt: 46, 593
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 583
+level: 4, max_n_adj: 16
+pair size: 1081
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1081
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.015
+0.296
+0.124
+0.083
+0.000
+0.004
+0.048
+0.279
+261726
+2258184
+476212
+52252
+1081
+7974
+21626
+69708
+556
+545
+3
+8
+0
+0
+8
+0.938
+set_id: 5
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 712, 38657
+level: 1, max_n_adj: 279
+next_node_cnt, next_edge_cnt: 274, 2296
+level: 2, max_n_adj: 42
+next_node_cnt, next_edge_cnt: 57, 605
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 584
+level: 4, max_n_adj: 16
+pair size: 1081
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1081
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.015
+0.297
+0.116
+0.085
+0.000
+0.004
+0.048
+0.282
+261726
+2290774
+409714
+53090
+1081
+7958
+21594
+69692
+557
+545
+4
+8
+0
+0
+8
+0.938
+set_id: 6
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 709, 38258
+level: 1, max_n_adj: 299
+next_node_cnt, next_edge_cnt: 262, 2306
+level: 2, max_n_adj: 42
+next_node_cnt, next_edge_cnt: 51, 595
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+pair size: 1079
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1079
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.014
+0.297
+0.137
+0.088
+0.000
+0.004
+0.048
+0.283
+261726
+2267192
+480808
+52970
+1079
+7966
+21622
+69708
+551
+545
+2
+4
+0
+0
+4
+0.945
+set_id: 7
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 709, 37700
+level: 1, max_n_adj: 291
+next_node_cnt, next_edge_cnt: 279, 2353
+level: 2, max_n_adj: 44
+next_node_cnt, next_edge_cnt: 51, 594
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 581
+level: 4, max_n_adj: 16
+pair size: 1075
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1075
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.014
+0.302
+0.138
+0.093
+0.000
+0.004
+0.048
+0.284
+261726
+2266084
+464378
+52890
+1075
+7936
+21584
+69692
+552
+545
+1
+6
+0
+1
+5
+0.975
+set_id: 8
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 708, 38210
+level: 1, max_n_adj: 308
+next_node_cnt, next_edge_cnt: 270, 2306
+level: 2, max_n_adj: 42
+next_node_cnt, next_edge_cnt: 75, 621
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+pair size: 1073
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1073
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.013
+0.284
+0.134
+0.079
+0.000
+0.004
+0.048
+0.281
+261726
+2207080
+487108
+54750
+1073
+7926
+21578
+69692
+557
+545
+0
+12
+0
+0
+12
+0.922
+set_id: 9
+timer start
+n_data, n_node: 40000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 705, 38079
+level: 1, max_n_adj: 292
+next_node_cnt, next_edge_cnt: 266, 2406
+level: 2, max_n_adj: 44
+next_node_cnt, next_edge_cnt: 39, 587
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 583
+level: 4, max_n_adj: 16
+pair size: 1079
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1079
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.013
+0.304
+0.144
+0.086
+0.000
+0.004
+0.048
+0.283
+261726
+2286956
+536432
+55274
+1079
+7950
+21590
+69692
+548
+545
+3
+0
+0
+0
+0
+0.955
+gpuPC 1 link 100000
+set_id: 0
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 721, 41647
+level: 1, max_n_adj: 320
+next_node_cnt, next_edge_cnt: 273, 2805
+level: 2, max_n_adj: 52
+next_node_cnt, next_edge_cnt: 66, 611
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+pair size: 1073
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1073
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.043
+0.880
+0.490
+0.173
+0.000
+0.008
+0.108
+0.608
+261726
+2943526
+816322
+53634
+1073
+7926
+21578
+69692
+553
+545
+0
+8
+0
+0
+8
+2.666
+set_id: 1
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 722, 40944
+level: 1, max_n_adj: 289
+next_node_cnt, next_edge_cnt: 269, 2869
+level: 2, max_n_adj: 57
+next_node_cnt, next_edge_cnt: 43, 593
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 583
+level: 4, max_n_adj: 16
+pair size: 1081
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1081
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.041
+0.896
+0.567
+0.196
+0.000
+0.008
+0.107
+0.611
+261726
+2969642
+908614
+55352
+1081
+8018
+21874
+70648
+548
+545
+3
+0
+0
+0
+0
+2.624
+set_id: 2
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 722, 41449
+level: 1, max_n_adj: 287
+next_node_cnt, next_edge_cnt: 273, 2865
+level: 2, max_n_adj: 61
+next_node_cnt, next_edge_cnt: 38, 582
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+pair size: 1081
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1081
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.040
+0.892
+0.491
+0.189
+0.000
+0.008
+0.108
+0.612
+261726
+2986086
+834694
+52040
+1081
+7990
+21658
+69724
+547
+545
+2
+0
+0
+0
+0
+2.52
+set_id: 3
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 720, 40385
+level: 1, max_n_adj: 265
+next_node_cnt, next_edge_cnt: 267, 2802
+level: 2, max_n_adj: 56
+next_node_cnt, next_edge_cnt: 55, 602
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 583
+level: 4, max_n_adj: 16
+pair size: 1083
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1083
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.041
+0.850
+0.536
+0.174
+0.000
+0.008
+0.108
+0.609
+261726
+2808336
+837948
+53118
+1083
+7998
+21662
+69724
+552
+545
+3
+4
+0
+0
+4
+2.523
+set_id: 4
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 40804
+level: 1, max_n_adj: 287
+next_node_cnt, next_edge_cnt: 270, 2756
+level: 2, max_n_adj: 54
+next_node_cnt, next_edge_cnt: 46, 592
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 583
+level: 4, max_n_adj: 16
+pair size: 1078
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1078
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.041
+0.866
+0.484
+0.196
+0.000
+0.008
+0.108
+0.615
+261726
+2894896
+814354
+55202
+1078
+7972
+21640
+69718
+552
+545
+3
+4
+0
+0
+4
+2.504
+set_id: 5
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 722, 41330
+level: 1, max_n_adj: 264
+next_node_cnt, next_edge_cnt: 284, 2819
+level: 2, max_n_adj: 52
+next_node_cnt, next_edge_cnt: 69, 615
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+pair size: 1073
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1073
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.041
+0.882
+0.498
+0.174
+0.000
+0.008
+0.107
+0.607
+261726
+2931604
+798536
+54092
+1073
+7926
+21578
+69692
+553
+545
+0
+8
+0
+0
+8
+2.515
+set_id: 6
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 40882
+level: 1, max_n_adj: 256
+next_node_cnt, next_edge_cnt: 272, 2776
+level: 2, max_n_adj: 52
+next_node_cnt, next_edge_cnt: 39, 585
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+pair size: 1077
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1077
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.040
+0.863
+0.461
+0.164
+0.000
+0.008
+0.107
+0.620
+261726
+2854448
+765806
+52176
+1077
+7944
+21588
+69692
+547
+545
+2
+0
+0
+0
+0
+2.444
+set_id: 7
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 720, 40291
+level: 1, max_n_adj: 276
+next_node_cnt, next_edge_cnt: 273, 2803
+level: 2, max_n_adj: 53
+next_node_cnt, next_edge_cnt: 54, 600
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 584
+level: 4, max_n_adj: 16
+pair size: 1085
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1085
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.041
+0.861
+0.494
+0.184
+0.000
+0.008
+0.101
+0.579
+261726
+2848410
+789008
+52916
+1085
+8051
+21944
+70875
+553
+545
+4
+4
+0
+0
+4
+2.466
+set_id: 8
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 717, 41180
+level: 1, max_n_adj: 297
+next_node_cnt, next_edge_cnt: 275, 2864
+level: 2, max_n_adj: 59
+next_node_cnt, next_edge_cnt: 51, 596
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 583
+level: 4, max_n_adj: 16
+pair size: 1079
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1079
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.041
+0.888
+0.499
+0.203
+0.000
+0.008
+0.108
+0.616
+261726
+2952466
+861006
+52978
+1079
+7952
+21592
+69692
+552
+545
+3
+4
+0
+0
+4
+2.53
+set_id: 9
+timer start
+n_data, n_node: 100000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 720, 40949
+level: 1, max_n_adj: 292
+next_node_cnt, next_edge_cnt: 270, 2814
+level: 2, max_n_adj: 55
+next_node_cnt, next_edge_cnt: 52, 596
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+pair size: 1073
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1073
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.040
+0.865
+0.502
+0.160
+0.000
+0.008
+0.108
+0.609
+261726
+2893804
+818992
+52950
+1073
+7926
+21578
+69692
+549
+545
+0
+4
+0
+0
+4
+2.506
+gpuPC 1 link 200000
+set_id: 0
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 41697
+level: 1, max_n_adj: 264
+next_node_cnt, next_edge_cnt: 277, 3265
+level: 2, max_n_adj: 65
+next_node_cnt, next_edge_cnt: 53, 599
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 584
+level: 4, max_n_adj: 16
+pair size: 1087
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1087
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.094
+2.049
+1.294
+0.362
+0.001
+0.016
+0.208
+1.162
+261726
+3316670
+1117958
+52906
+1087
+8030
+21702
+69740
+557
+545
+4
+8
+0
+0
+8
+5.647
+set_id: 1
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 41029
+level: 1, max_n_adj: 271
+next_node_cnt, next_edge_cnt: 286, 3299
+level: 2, max_n_adj: 68
+next_node_cnt, next_edge_cnt: 45, 591
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+pair size: 1073
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1073
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.092
+2.065
+1.424
+0.376
+0.001
+0.016
+0.208
+1.155
+261726
+3313682
+1194150
+55232
+1073
+7926
+21578
+69692
+549
+545
+0
+4
+0
+0
+4
+5.658
+set_id: 2
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 41329
+level: 1, max_n_adj: 259
+next_node_cnt, next_edge_cnt: 272, 3314
+level: 2, max_n_adj: 69
+next_node_cnt, next_edge_cnt: 38, 582
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+pair size: 1073
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1073
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.091
+2.009
+1.332
+0.334
+0.001
+0.016
+0.209
+1.157
+261726
+3260008
+1123520
+52296
+1073
+7926
+21578
+69692
+545
+545
+0
+0
+0
+0
+0
+5.429
+set_id: 3
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 41039
+level: 1, max_n_adj: 262
+next_node_cnt, next_edge_cnt: 272, 3291
+level: 2, max_n_adj: 67
+next_node_cnt, next_edge_cnt: 38, 580
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+pair size: 1073
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1073
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.091
+2.052
+1.336
+0.360
+0.001
+0.016
+0.209
+1.158
+261726
+3313092
+1133354
+52040
+1073
+7926
+21578
+69692
+545
+545
+0
+0
+0
+0
+0
+5.505
+set_id: 4
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 40762
+level: 1, max_n_adj: 257
+next_node_cnt, next_edge_cnt: 277, 3234
+level: 2, max_n_adj: 63
+next_node_cnt, next_edge_cnt: 42, 589
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 583
+level: 4, max_n_adj: 16
+pair size: 1083
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1083
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.091
+1.981
+1.307
+0.378
+0.001
+0.016
+0.208
+1.167
+261726
+3205450
+1131832
+55300
+1083
+7998
+21662
+69724
+548
+545
+3
+0
+0
+0
+0
+5.482
+set_id: 5
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 40830
+level: 1, max_n_adj: 258
+next_node_cnt, next_edge_cnt: 293, 3267
+level: 2, max_n_adj: 68
+next_node_cnt, next_edge_cnt: 42, 587
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+pair size: 1081
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1081
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.091
+2.013
+1.315
+0.352
+0.001
+0.016
+0.208
+1.173
+261726
+3261666
+1099694
+52230
+1081
+7990
+21658
+69724
+551
+545
+2
+4
+0
+0
+4
+5.45
+set_id: 6
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 41290
+level: 1, max_n_adj: 264
+next_node_cnt, next_edge_cnt: 284, 3237
+level: 2, max_n_adj: 68
+next_node_cnt, next_edge_cnt: 56, 600
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 581
+level: 4, max_n_adj: 16
+pair size: 1075
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1075
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.091
+1.992
+1.242
+0.336
+0.001
+0.016
+0.208
+1.183
+261726
+3217384
+1080564
+52796
+1075
+7934
+21582
+69692
+554
+545
+1
+8
+0
+0
+8
+5.349
+set_id: 7
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 41542
+level: 1, max_n_adj: 282
+next_node_cnt, next_edge_cnt: 279, 3280
+level: 2, max_n_adj: 67
+next_node_cnt, next_edge_cnt: 45, 589
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+pair size: 1073
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1073
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.093
+2.025
+1.365
+0.368
+0.001
+0.016
+0.209
+1.155
+261726
+3272028
+1163146
+52128
+1073
+7926
+21578
+69692
+545
+545
+0
+0
+0
+0
+0
+5.516
+set_id: 8
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 41962
+level: 1, max_n_adj: 294
+next_node_cnt, next_edge_cnt: 272, 3275
+level: 2, max_n_adj: 66
+next_node_cnt, next_edge_cnt: 39, 586
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+pair size: 1079
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1079
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.091
+2.033
+1.344
+0.404
+0.001
+0.016
+0.208
+1.177
+261726
+3301166
+1143900
+55296
+1079
+7968
+21624
+69708
+547
+545
+2
+0
+0
+0
+0
+5.603
+set_id: 9
+timer start
+n_data, n_node: 200000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 41386
+level: 1, max_n_adj: 280
+next_node_cnt, next_edge_cnt: 271, 3264
+level: 2, max_n_adj: 65
+next_node_cnt, next_edge_cnt: 65, 615
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+pair size: 1073
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1073
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.091
+2.041
+1.384
+0.333
+0.001
+0.016
+0.209
+1.158
+261726
+3288918
+1175834
+53698
+1073
+7926
+21578
+69692
+553
+545
+0
+8
+0
+0
+8
+5.507
+gpuPC 1 link 400000
+set_id: 0
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 41547
+level: 1, max_n_adj: 270
+next_node_cnt, next_edge_cnt: 286, 3959
+level: 2, max_n_adj: 73
+next_node_cnt, next_edge_cnt: 58, 603
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 581
+level: 4, max_n_adj: 16
+pair size: 1077
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1077
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.210
+5.071
+3.351
+0.789
+0.002
+0.033
+0.409
+2.300
+261726
+3666538
+1512154
+56154
+1077
+7958
+21618
+69708
+558
+545
+1
+12
+0
+0
+12
+13.117
+set_id: 1
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 722, 41201
+level: 1, max_n_adj: 268
+next_node_cnt, next_edge_cnt: 283, 3953
+level: 2, max_n_adj: 71
+next_node_cnt, next_edge_cnt: 42, 584
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+pair size: 1073
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1073
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.199
+5.010
+3.412
+0.652
+0.002
+0.034
+0.410
+2.253
+261726
+3626814
+1539594
+52092
+1073
+7926
+21578
+69692
+549
+545
+0
+4
+0
+0
+4
+12.739
+set_id: 2
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 722, 41186
+level: 1, max_n_adj: 267
+next_node_cnt, next_edge_cnt: 288, 3987
+level: 2, max_n_adj: 74
+next_node_cnt, next_edge_cnt: 47, 595
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+pair size: 1079
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1079
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.196
+4.952
+3.409
+0.722
+0.002
+0.035
+0.409
+2.297
+261726
+3601210
+1523454
+55260
+1079
+7966
+21622
+69708
+551
+545
+2
+4
+0
+0
+4
+12.798
+set_id: 3
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 41301
+level: 1, max_n_adj: 264
+next_node_cnt, next_edge_cnt: 284, 3941
+level: 2, max_n_adj: 74
+next_node_cnt, next_edge_cnt: 38, 582
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 581
+level: 4, max_n_adj: 16
+pair size: 1077
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1077
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.202
+5.022
+3.341
+0.694
+0.002
+0.035
+0.410
+2.339
+261726
+3610074
+1508124
+52184
+1077
+7958
+21618
+69708
+546
+545
+1
+0
+0
+0
+0
+12.819
+set_id: 4
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 721, 41165
+level: 1, max_n_adj: 265
+next_node_cnt, next_edge_cnt: 284, 3893
+level: 2, max_n_adj: 72
+next_node_cnt, next_edge_cnt: 42, 585
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 581
+level: 4, max_n_adj: 16
+pair size: 1077
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1077
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.197
+4.929
+3.267
+0.676
+0.002
+0.034
+0.410
+2.261
+261726
+3560038
+1470542
+52100
+1077
+7958
+21618
+69708
+550
+545
+1
+4
+0
+0
+4
+12.561
+set_id: 5
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 41118
+level: 1, max_n_adj: 265
+next_node_cnt, next_edge_cnt: 283, 3932
+level: 2, max_n_adj: 73
+next_node_cnt, next_edge_cnt: 38, 581
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+pair size: 1073
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1073
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.197
+4.935
+3.422
+0.685
+0.002
+0.034
+0.410
+2.257
+261726
+3597336
+1466046
+52178
+1073
+7926
+21578
+69692
+545
+545
+0
+0
+0
+0
+0
+12.767
+set_id: 6
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 41608
+level: 1, max_n_adj: 268
+next_node_cnt, next_edge_cnt: 286, 3958
+level: 2, max_n_adj: 74
+next_node_cnt, next_edge_cnt: 43, 594
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 583
+level: 4, max_n_adj: 16
+pair size: 1081
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1081
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.197
+5.001
+3.346
+0.656
+0.002
+0.034
+0.409
+2.275
+261726
+3612688
+1487244
+52336
+1081
+8016
+21872
+70648
+548
+545
+3
+0
+0
+0
+0
+12.678
+set_id: 7
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 721, 41100
+level: 1, max_n_adj: 264
+next_node_cnt, next_edge_cnt: 287, 3964
+level: 2, max_n_adj: 74
+next_node_cnt, next_edge_cnt: 49, 595
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+pair size: 1081
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1081
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.202
+5.000
+3.519
+0.680
+0.002
+0.034
+0.408
+2.285
+261726
+3621382
+1554888
+53114
+1081
+7990
+21658
+69724
+551
+545
+2
+4
+0
+0
+4
+12.909
+set_id: 8
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 41286
+level: 1, max_n_adj: 268
+next_node_cnt, next_edge_cnt: 285, 3990
+level: 2, max_n_adj: 74
+next_node_cnt, next_edge_cnt: 60, 608
+level: 3, max_n_adj: 17
+numBlocks: 724, 17
+next_node_cnt, next_edge_cnt: 26, 581
+level: 4, max_n_adj: 16
+pair size: 1077
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1077
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.207
+5.019
+3.463
+0.831
+0.002
+0.035
+0.411
+2.307
+261726
+3633352
+1550310
+56248
+1077
+7958
+21618
+69708
+554
+545
+1
+8
+0
+0
+8
+13.048
+set_id: 9
+timer start
+n_data, n_node: 400000 724
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 41360
+level: 1, max_n_adj: 266
+next_node_cnt, next_edge_cnt: 285, 3948
+level: 2, max_n_adj: 73
+next_node_cnt, next_edge_cnt: 39, 585
+level: 3, max_n_adj: 16
+numBlocks: 724, 16
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+pair size: 1079
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1079
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.208
+5.002
+3.393
+0.615
+0.002
+0.035
+0.409
+2.294
+261726
+3631480
+1530418
+52186
+1079
+7964
+21620
+69708
+547
+545
+2
+0
+0
+0
+0
+12.724
+gpuPC3 0 link 20000
+set_id: 0
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 699, 38047
+level: 1, max_n_adj: 248
+next_node_cnt, next_edge_cnt: 366, 3079
+level: 2, max_n_adj: 44
+next_node_cnt, next_edge_cnt: 62, 663
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 650
+level: 4, max_n_adj: 16
+pair size: 1226
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1226
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.013
+0.162
+0.047
+0.031
+0.000
+0.002
+0.028
+0.174
+261726
+261726
+1830645
+1385147
+404580
+247781
+52152
+13048
+1226
+8722
+22445
+70213
+622
+545
+70
+7
+7
+0
+0
+0.688
+set_id: 1
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 702, 38438
+level: 1, max_n_adj: 249
+next_node_cnt, next_edge_cnt: 379, 3187
+level: 2, max_n_adj: 46
+next_node_cnt, next_edge_cnt: 71, 665
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 27, 639
+level: 4, max_n_adj: 16
+pair size: 1200
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1200
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.165
+0.059
+0.042
+0.000
+0.002
+0.029
+0.178
+261726
+261726
+1859867
+1406140
+460165
+278986
+55567
+14110
+1200
+8599
+22412
+70309
+612
+545
+59
+8
+4
+0
+4
+0.543
+set_id: 2
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 696, 37835
+level: 1, max_n_adj: 268
+next_node_cnt, next_edge_cnt: 370, 3215
+level: 2, max_n_adj: 49
+next_node_cnt, next_edge_cnt: 57, 666
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 656
+level: 4, max_n_adj: 16
+pair size: 1237
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1237
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.164
+0.056
+0.029
+0.000
+0.002
+0.031
+0.183
+261726
+261726
+1854980
+1400187
+474578
+290655
+52071
+13023
+1237
+8735
+22461
+70664
+637
+545
+76
+16
+6
+5
+5
+0.532
+set_id: 3
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 693, 37973
+level: 1, max_n_adj: 244
+next_node_cnt, next_edge_cnt: 354, 3163
+level: 2, max_n_adj: 46
+next_node_cnt, next_edge_cnt: 62, 659
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 644
+level: 4, max_n_adj: 16
+pair size: 1210
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1210
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.162
+0.055
+0.035
+0.000
+0.002
+0.029
+0.178
+261726
+261726
+1825252
+1377085
+447920
+275786
+55375
+14103
+1210
+8544
+22106
+69941
+615
+545
+64
+6
+6
+0
+0
+0.519
+set_id: 4
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 697, 37780
+level: 1, max_n_adj: 248
+next_node_cnt, next_edge_cnt: 376, 3210
+level: 2, max_n_adj: 46
+next_node_cnt, next_edge_cnt: 69, 669
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 27, 647
+level: 4, max_n_adj: 16
+pair size: 1214
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1214
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.163
+0.052
+0.040
+0.000
+0.002
+0.030
+0.179
+261726
+261726
+1850798
+1391167
+457693
+282016
+53729
+13567
+1214
+8713
+22568
+70389
+622
+545
+67
+10
+8
+1
+1
+0.53
+set_id: 5
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 700, 38193
+level: 1, max_n_adj: 253
+next_node_cnt, next_edge_cnt: 373, 3135
+level: 2, max_n_adj: 43
+next_node_cnt, next_edge_cnt: 61, 664
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 647
+level: 4, max_n_adj: 16
+pair size: 1225
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1225
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.161
+0.049
+0.039
+0.000
+0.002
+0.028
+0.173
+261726
+261726
+1838382
+1389476
+420471
+257305
+52071
+13021
+1225
+8637
+22211
+69992
+620
+545
+67
+8
+4
+2
+2
+0.551
+set_id: 6
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 695, 37710
+level: 1, max_n_adj: 252
+next_node_cnt, next_edge_cnt: 385, 3159
+level: 2, max_n_adj: 47
+next_node_cnt, next_edge_cnt: 72, 676
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 27, 657
+level: 4, max_n_adj: 16
+pair size: 1239
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1239
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.158
+0.048
+0.038
+0.000
+0.002
+0.029
+0.174
+261726
+261726
+1825973
+1383359
+441064
+263138
+55369
+14095
+1239
+8884
+22896
+71027
+640
+545
+77
+18
+14
+2
+2
+0.53
+set_id: 7
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 700, 38290
+level: 1, max_n_adj: 254
+next_node_cnt, next_edge_cnt: 377, 3156
+level: 2, max_n_adj: 47
+next_node_cnt, next_edge_cnt: 63, 657
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 643
+level: 4, max_n_adj: 16
+pair size: 1210
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1210
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.165
+0.049
+0.035
+0.000
+0.002
+0.029
+0.178
+261726
+261726
+1850153
+1396903
+452644
+271150
+52099
+13027
+1210
+8658
+22445
+70279
+614
+545
+63
+6
+2
+0
+4
+0.535
+set_id: 8
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 698, 39037
+level: 1, max_n_adj: 255
+next_node_cnt, next_edge_cnt: 372, 3262
+level: 2, max_n_adj: 46
+next_node_cnt, next_edge_cnt: 63, 666
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 651
+level: 4, max_n_adj: 16
+pair size: 1236
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1236
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.171
+0.055
+0.037
+0.000
+0.002
+0.030
+0.178
+261726
+261726
+1934703
+1458409
+495968
+299933
+55347
+14070
+1236
+8703
+22312
+70072
+627
+545
+71
+11
+9
+1
+1
+0.547
+set_id: 9
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 687, 35774
+level: 1, max_n_adj: 236
+next_node_cnt, next_edge_cnt: 364, 3103
+level: 2, max_n_adj: 43
+next_node_cnt, next_edge_cnt: 67, 668
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 647
+level: 4, max_n_adj: 16
+pair size: 1218
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1218
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.149
+0.051
+0.033
+0.000
+0.002
+0.029
+0.177
+261726
+261726
+1732517
+1298563
+444607
+269298
+52238
+13077
+1218
+8584
+22133
+69942
+634
+545
+67
+22
+12
+3
+7
+0.502
+gpuPC3 0 link 40000
+set_id: 0
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 705, 41769
+level: 1, max_n_adj: 263
+next_node_cnt, next_edge_cnt: 379, 3944
+level: 2, max_n_adj: 59
+next_node_cnt, next_edge_cnt: 64, 658
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 27, 648
+level: 4, max_n_adj: 16
+pair size: 1214
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1214
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.020
+0.311
+0.106
+0.032
+0.000
+0.004
+0.048
+0.269
+261726
+261726
+2340835
+1719576
+746263
+485551
+52046
+13012
+1214
+8729
+22642
+70501
+618
+545
+68
+5
+5
+0
+0
+1.057
+set_id: 1
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 713, 42309
+level: 1, max_n_adj: 273
+next_node_cnt, next_edge_cnt: 376, 3869
+level: 2, max_n_adj: 59
+next_node_cnt, next_edge_cnt: 77, 673
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 27, 646
+level: 4, max_n_adj: 16
+pair size: 1207
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1207
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.010
+0.312
+0.110
+0.038
+0.000
+0.004
+0.049
+0.274
+261726
+261726
+2340620
+1726955
+743747
+468489
+55507
+14104
+1207
+8658
+22506
+70388
+628
+545
+66
+17
+7
+1
+9
+0.893
+set_id: 2
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 710, 43254
+level: 1, max_n_adj: 281
+next_node_cnt, next_edge_cnt: 404, 4029
+level: 2, max_n_adj: 61
+next_node_cnt, next_edge_cnt: 73, 675
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 655
+level: 4, max_n_adj: 16
+pair size: 1244
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1244
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.015
+0.332
+0.117
+0.041
+0.000
+0.004
+0.051
+0.295
+261726
+261726
+2476695
+1833242
+804429
+518366
+52180
+13057
+1244
+8829
+22674
+70849
+633
+545
+75
+13
+9
+2
+2
+0.938
+set_id: 3
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 706, 41306
+level: 1, max_n_adj: 259
+next_node_cnt, next_edge_cnt: 385, 3832
+level: 2, max_n_adj: 63
+next_node_cnt, next_edge_cnt: 66, 667
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 650
+level: 4, max_n_adj: 16
+pair size: 1219
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1219
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.014
+0.295
+0.099
+0.032
+0.000
+0.004
+0.051
+0.286
+261726
+261726
+2284336
+1682945
+714963
+452855
+52162
+13048
+1219
+8675
+22372
+70149
+624
+545
+70
+9
+7
+1
+1
+0.863
+set_id: 4
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 712, 41666
+level: 1, max_n_adj: 258
+next_node_cnt, next_edge_cnt: 389, 3819
+level: 2, max_n_adj: 54
+next_node_cnt, next_edge_cnt: 60, 652
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 27, 643
+level: 4, max_n_adj: 16
+pair size: 1214
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1214
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.013
+0.292
+0.104
+0.044
+0.000
+0.004
+0.049
+0.274
+261726
+261726
+2265267
+1666942
+717788
+452852
+52083
+13024
+1214
+8694
+22655
+71211
+626
+545
+63
+18
+12
+1
+5
+0.858
+set_id: 5
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 712, 42141
+level: 1, max_n_adj: 273
+next_node_cnt, next_edge_cnt: 392, 3871
+level: 2, max_n_adj: 57
+next_node_cnt, next_edge_cnt: 61, 661
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 648
+level: 4, max_n_adj: 16
+pair size: 1226
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1226
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.013
+0.309
+0.108
+0.034
+0.000
+0.004
+0.051
+0.281
+261726
+261726
+2309638
+1701200
+699602
+453644
+52145
+13045
+1226
+8702
+22371
+70123
+633
+545
+68
+20
+14
+1
+5
+0.881
+set_id: 6
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 709, 42092
+level: 1, max_n_adj: 265
+next_node_cnt, next_edge_cnt: 376, 3922
+level: 2, max_n_adj: 62
+next_node_cnt, next_edge_cnt: 58, 650
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 640
+level: 4, max_n_adj: 16
+pair size: 1207
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1207
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.013
+0.312
+0.109
+0.040
+0.000
+0.004
+0.049
+0.284
+261726
+261726
+2339746
+1725619
+742666
+482845
+52128
+13040
+1207
+8594
+22463
+71036
+614
+545
+60
+9
+9
+0
+0
+0.917
+set_id: 7
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 709, 42537
+level: 1, max_n_adj: 267
+next_node_cnt, next_edge_cnt: 383, 3822
+level: 2, max_n_adj: 57
+next_node_cnt, next_edge_cnt: 59, 649
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 27, 640
+level: 4, max_n_adj: 16
+pair size: 1194
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1194
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.012
+0.302
+0.097
+0.035
+0.000
+0.004
+0.048
+0.268
+261726
+261726
+2344727
+1729060
+667087
+430899
+52147
+13045
+1194
+8563
+22397
+70340
+611
+545
+60
+6
+4
+1
+1
+0.863
+set_id: 8
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 708, 41843
+level: 1, max_n_adj: 261
+next_node_cnt, next_edge_cnt: 369, 3967
+level: 2, max_n_adj: 58
+next_node_cnt, next_edge_cnt: 61, 657
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 645
+level: 4, max_n_adj: 16
+pair size: 1220
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1220
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.013
+0.309
+0.114
+0.036
+0.000
+0.004
+0.048
+0.269
+261726
+261726
+2305403
+1692960
+780635
+507158
+52125
+13039
+1220
+8618
+22254
+70080
+619
+545
+65
+9
+5
+2
+2
+0.871
+set_id: 9
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 705, 41663
+level: 1, max_n_adj: 266
+next_node_cnt, next_edge_cnt: 382, 3940
+level: 2, max_n_adj: 62
+next_node_cnt, next_edge_cnt: 62, 657
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 648
+level: 4, max_n_adj: 16
+pair size: 1206
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1206
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.012
+0.315
+0.109
+0.042
+0.000
+0.004
+0.048
+0.268
+261726
+261726
+2360617
+1731137
+757899
+488272
+52125
+13038
+1206
+8679
+22511
+70304
+621
+545
+68
+8
+8
+0
+0
+0.882
+gpuPC3 0 link 100000
+set_id: 0
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 721, 46395
+level: 1, max_n_adj: 278
+next_node_cnt, next_edge_cnt: 401, 4948
+level: 2, max_n_adj: 80
+next_node_cnt, next_edge_cnt: 56, 657
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 27, 647
+level: 4, max_n_adj: 16
+pair size: 1234
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1234
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.043
+0.806
+0.360
+0.051
+0.000
+0.009
+0.112
+0.583
+261726
+261726
+2969247
+2127393
+1321544
+883171
+52050
+13016
+1234
+8712
+22693
+72105
+624
+545
+67
+12
+8
+0
+4
+2.316
+set_id: 1
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 722, 46664
+level: 1, max_n_adj: 277
+next_node_cnt, next_edge_cnt: 394, 4994
+level: 2, max_n_adj: 81
+next_node_cnt, next_edge_cnt: 59, 656
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 644
+level: 4, max_n_adj: 16
+pair size: 1222
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1222
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.040
+0.822
+0.371
+0.058
+0.000
+0.008
+0.102
+0.538
+261726
+261726
+3054828
+2168147
+1336625
+890652
+53779
+13587
+1222
+8645
+22432
+71115
+616
+545
+64
+7
+7
+0
+0
+2.142
+set_id: 2
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 722, 47233
+level: 1, max_n_adj: 290
+next_node_cnt, next_edge_cnt: 413, 5044
+level: 2, max_n_adj: 80
+next_node_cnt, next_edge_cnt: 70, 668
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 648
+level: 4, max_n_adj: 16
+pair size: 1236
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1236
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.041
+0.827
+0.385
+0.045
+0.000
+0.008
+0.099
+0.519
+261726
+261726
+3069240
+2200362
+1390057
+925785
+52371
+13103
+1236
+8753
+22462
+70332
+624
+545
+68
+11
+11
+0
+0
+2.116
+set_id: 3
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 720, 45987
+level: 1, max_n_adj: 274
+next_node_cnt, next_edge_cnt: 403, 4973
+level: 2, max_n_adj: 81
+next_node_cnt, next_edge_cnt: 79, 679
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 27, 648
+level: 4, max_n_adj: 16
+pair size: 1232
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1232
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.040
+0.799
+0.359
+0.055
+0.000
+0.008
+0.107
+0.595
+261726
+261726
+2937744
+2110380
+1311946
+873952
+56937
+14581
+1232
+8668
+22270
+70080
+627
+545
+68
+14
+14
+0
+0
+2.175
+set_id: 4
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 47008
+level: 1, max_n_adj: 275
+next_node_cnt, next_edge_cnt: 415, 4847
+level: 2, max_n_adj: 73
+next_node_cnt, next_edge_cnt: 60, 680
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 668
+level: 4, max_n_adj: 16
+pair size: 1282
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1282
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.040
+0.798
+0.363
+0.045
+0.000
+0.008
+0.106
+0.565
+261726
+261726
+2943043
+2116990
+1274053
+854311
+52112
+13032
+1282
+8997
+22802
+71114
+649
+545
+88
+16
+10
+1
+5
+2.121
+set_id: 5
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 722, 47340
+level: 1, max_n_adj: 287
+next_node_cnt, next_edge_cnt: 400, 5116
+level: 2, max_n_adj: 80
+next_node_cnt, next_edge_cnt: 66, 653
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 634
+level: 4, max_n_adj: 16
+pair size: 1191
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1191
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.041
+0.820
+0.396
+0.044
+0.000
+0.008
+0.107
+0.562
+261726
+261726
+3066983
+2190190
+1405328
+940691
+52153
+13044
+1191
+8489
+22155
+70039
+613
+545
+54
+14
+8
+1
+5
+2.176
+set_id: 6
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 46834
+level: 1, max_n_adj: 277
+next_node_cnt, next_edge_cnt: 409, 5025
+level: 2, max_n_adj: 85
+next_node_cnt, next_edge_cnt: 75, 674
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 28, 649
+level: 4, max_n_adj: 16
+pair size: 1222
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1222
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.041
+0.806
+0.365
+0.052
+0.000
+0.008
+0.103
+0.537
+261726
+261726
+2995076
+2145636
+1335415
+904413
+52309
+13097
+1222
+8812
+22872
+70848
+625
+545
+69
+11
+7
+0
+4
+2.079
+set_id: 7
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 720, 46183
+level: 1, max_n_adj: 275
+next_node_cnt, next_edge_cnt: 385, 4961
+level: 2, max_n_adj: 84
+next_node_cnt, next_edge_cnt: 71, 662
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 644
+level: 4, max_n_adj: 16
+pair size: 1205
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1205
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.041
+0.795
+0.369
+0.050
+0.000
+0.008
+0.105
+0.555
+261726
+261726
+2959241
+2113720
+1355174
+902433
+52208
+13067
+1205
+8591
+22322
+70174
+620
+545
+64
+11
+11
+0
+0
+2.136
+set_id: 8
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 717, 45949
+level: 1, max_n_adj: 279
+next_node_cnt, next_edge_cnt: 393, 5107
+level: 2, max_n_adj: 93
+next_node_cnt, next_edge_cnt: 69, 660
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 639
+level: 4, max_n_adj: 16
+pair size: 1200
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1200
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.040
+0.794
+0.394
+0.055
+0.000
+0.008
+0.102
+0.535
+261726
+261726
+2978501
+2109437
+1418323
+967147
+55737
+14096
+1200
+8529
+22163
+70019
+617
+545
+59
+13
+7
+1
+5
+2.072
+set_id: 9
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 720, 46779
+level: 1, max_n_adj: 283
+next_node_cnt, next_edge_cnt: 392, 5000
+level: 2, max_n_adj: 81
+next_node_cnt, next_edge_cnt: 71, 662
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 643
+level: 4, max_n_adj: 16
+pair size: 1209
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1209
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.041
+0.801
+0.391
+0.044
+0.000
+0.008
+0.102
+0.549
+261726
+261726
+2976820
+2125015
+1402547
+935831
+53528
+13502
+1209
+8644
+22402
+70210
+622
+545
+63
+14
+6
+1
+7
+2.158
+gpuPC3 0 link 200000
+set_id: 0
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 48541
+level: 1, max_n_adj: 285
+next_node_cnt, next_edge_cnt: 422, 5698
+level: 2, max_n_adj: 98
+next_node_cnt, next_edge_cnt: 62, 659
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 643
+level: 4, max_n_adj: 16
+pair size: 1213
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1213
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.093
+2.095
+1.015
+0.077
+0.001
+0.016
+0.200
+1.030
+261726
+261726
+3427783
+2394013
+2074327
+1357052
+52208
+13072
+1213
+8609
+22403
+70931
+611
+545
+63
+3
+1
+1
+1
+5.009
+set_id: 1
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 49028
+level: 1, max_n_adj: 284
+next_node_cnt, next_edge_cnt: 428, 5807
+level: 2, max_n_adj: 97
+next_node_cnt, next_edge_cnt: 70, 668
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 27, 651
+level: 4, max_n_adj: 16
+pair size: 1232
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1232
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.091
+2.125
+1.017
+0.086
+0.001
+0.016
+0.201
+1.066
+261726
+261726
+3494129
+2428127
+2042791
+1340379
+53898
+13620
+1232
+8788
+22615
+70399
+628
+544
+70
+14
+9
+3
+2
+4.865
+set_id: 2
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 48837
+level: 1, max_n_adj: 282
+next_node_cnt, next_edge_cnt: 437, 5760
+level: 2, max_n_adj: 99
+next_node_cnt, next_edge_cnt: 64, 668
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 657
+level: 4, max_n_adj: 16
+pair size: 1245
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1245
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.096
+2.093
+1.009
+0.072
+0.001
+0.016
+0.187
+0.976
+261726
+261726
+3412285
+2393155
+2038979
+1328015
+52193
+13057
+1245
+8854
+22644
+70364
+639
+545
+77
+17
+13
+2
+2
+4.728
+set_id: 3
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 49107
+level: 1, max_n_adj: 285
+next_node_cnt, next_edge_cnt: 416, 5712
+level: 2, max_n_adj: 93
+next_node_cnt, next_edge_cnt: 69, 661
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 643
+level: 4, max_n_adj: 16
+pair size: 1213
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1213
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.091
+2.124
+0.998
+0.072
+0.001
+0.016
+0.194
+0.987
+261726
+261726
+3481908
+2443038
+2003007
+1315339
+53693
+13550
+1213
+8721
+22562
+70344
+623
+545
+63
+15
+11
+2
+2
+4.764
+set_id: 4
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 48652
+level: 1, max_n_adj: 285
+next_node_cnt, next_edge_cnt: 419, 5610
+level: 2, max_n_adj: 94
+next_node_cnt, next_edge_cnt: 55, 657
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 650
+level: 4, max_n_adj: 16
+pair size: 1230
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1230
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.096
+2.082
+0.951
+0.079
+0.001
+0.015
+0.187
+0.972
+261726
+261726
+3391361
+2387949
+1863237
+1225966
+52036
+13015
+1230
+8751
+22795
+72147
+629
+545
+70
+14
+10
+0
+4
+4.721
+set_id: 5
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 48684
+level: 1, max_n_adj: 281
+next_node_cnt, next_edge_cnt: 425, 5771
+level: 2, max_n_adj: 99
+next_node_cnt, next_edge_cnt: 73, 662
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 645
+level: 4, max_n_adj: 16
+pair size: 1218
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1218
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.091
+2.093
+1.019
+0.072
+0.001
+0.016
+0.200
+1.035
+261726
+261726
+3432038
+2402199
+2014052
+1327839
+52241
+13071
+1218
+8728
+22564
+70352
+622
+545
+65
+12
+8
+3
+1
+4.796
+set_id: 6
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 49143
+level: 1, max_n_adj: 290
+next_node_cnt, next_edge_cnt: 416, 5742
+level: 2, max_n_adj: 106
+next_node_cnt, next_edge_cnt: 73, 674
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 27, 648
+level: 4, max_n_adj: 16
+pair size: 1221
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1221
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.090
+2.094
+1.019
+0.079
+0.001
+0.016
+0.202
+1.103
+261726
+261726
+3401853
+2395350
+2089238
+1359946
+52395
+13116
+1221
+8722
+22623
+70910
+625
+545
+68
+12
+10
+1
+1
+4.883
+set_id: 7
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 48376
+level: 1, max_n_adj: 287
+next_node_cnt, next_edge_cnt: 406, 5762
+level: 2, max_n_adj: 96
+next_node_cnt, next_edge_cnt: 66, 651
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 631
+level: 4, max_n_adj: 16
+pair size: 1181
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1181
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.091
+2.092
+1.004
+0.070
+0.001
+0.016
+0.204
+1.040
+261726
+261726
+3433922
+2391136
+1955978
+1307042
+53619
+13537
+1181
+8458
+22152
+70050
+600
+545
+51
+4
+4
+0
+0
+4.787
+set_id: 8
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 48322
+level: 1, max_n_adj: 284
+next_node_cnt, next_edge_cnt: 414, 5721
+level: 2, max_n_adj: 98
+next_node_cnt, next_edge_cnt: 66, 661
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 27, 649
+level: 4, max_n_adj: 16
+pair size: 1215
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1215
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.090
+2.064
+0.999
+0.085
+0.001
+0.016
+0.194
+1.008
+261726
+261726
+3398209
+2358406
+1997828
+1323038
+55349
+14065
+1215
+8748
+22697
+70562
+630
+545
+69
+16
+10
+3
+3
+4.75
+set_id: 9
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 48740
+level: 1, max_n_adj: 287
+next_node_cnt, next_edge_cnt: 415, 5717
+level: 2, max_n_adj: 94
+next_node_cnt, next_edge_cnt: 61, 657
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 646
+level: 4, max_n_adj: 16
+pair size: 1221
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1221
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.091
+2.062
+1.032
+0.076
+0.001
+0.017
+0.208
+1.055
+261726
+261726
+3382618
+2359278
+2084499
+1363386
+53505
+13494
+1221
+8876
+23600
+74996
+630
+545
+66
+19
+7
+4
+8
+4.821
+gpuPC3 0 link 400000
+set_id: 0
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50120
+level: 1, max_n_adj: 300
+next_node_cnt, next_edge_cnt: 445, 6200
+level: 2, max_n_adj: 108
+next_node_cnt, next_edge_cnt: 62, 661
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 645
+level: 4, max_n_adj: 16
+pair size: 1224
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1224
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.199
+4.406
+3.133
+0.147
+0.002
+0.035
+0.420
+2.066
+261726
+261726
+3712640
+2544481
+2783848
+1771998
+52231
+13072
+1224
+8690
+22508
+70993
+621
+545
+65
+11
+9
+1
+1
+11.376
+set_id: 1
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50055
+level: 1, max_n_adj: 294
+next_node_cnt, next_edge_cnt: 439, 6237
+level: 2, max_n_adj: 109
+next_node_cnt, next_edge_cnt: 57, 658
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 28, 646
+level: 4, max_n_adj: 16
+pair size: 1231
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1231
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.197
+4.461
+3.180
+0.137
+0.002
+0.035
+0.394
+2.016
+261726
+261726
+3727736
+2560709
+2891516
+1816193
+52124
+13039
+1231
+8706
+22403
+70225
+626
+545
+66
+15
+11
+2
+2
+11.21
+set_id: 2
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50260
+level: 1, max_n_adj: 307
+next_node_cnt, next_edge_cnt: 450, 6150
+level: 2, max_n_adj: 106
+next_node_cnt, next_edge_cnt: 61, 668
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 656
+level: 4, max_n_adj: 16
+pair size: 1246
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1246
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.199
+4.581
+3.081
+0.128
+0.002
+0.034
+0.385
+2.047
+261726
+261726
+3827843
+2637159
+2829418
+1754999
+52092
+13031
+1246
+8749
+22327
+70050
+625
+544
+75
+6
+5
+1
+0
+11.234
+set_id: 3
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50401
+level: 1, max_n_adj: 288
+next_node_cnt, next_edge_cnt: 440, 6202
+level: 2, max_n_adj: 105
+next_node_cnt, next_edge_cnt: 63, 673
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 657
+level: 4, max_n_adj: 16
+pair size: 1242
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1242
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.205
+4.553
+3.133
+0.130
+0.002
+0.036
+0.418
+2.069
+261726
+261726
+3815030
+2628992
+2839963
+1788870
+52217
+13067
+1242
+8824
+22554
+70247
+631
+545
+77
+9
+9
+0
+0
+11.323
+set_id: 4
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50020
+level: 1, max_n_adj: 289
+next_node_cnt, next_edge_cnt: 433, 6134
+level: 2, max_n_adj: 103
+next_node_cnt, next_edge_cnt: 65, 656
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 641
+level: 4, max_n_adj: 16
+pair size: 1204
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1204
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.202
+4.438
+3.034
+0.144
+0.002
+0.035
+0.393
+1.992
+261726
+261726
+3732411
+2565887
+2705489
+1724990
+52123
+13039
+1204
+8594
+22321
+70161
+617
+545
+61
+11
+9
+1
+1
+11.026
+set_id: 5
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50336
+level: 1, max_n_adj: 291
+next_node_cnt, next_edge_cnt: 433, 6151
+level: 2, max_n_adj: 104
+next_node_cnt, next_edge_cnt: 75, 668
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 27, 651
+level: 4, max_n_adj: 16
+pair size: 1222
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1222
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.201
+4.542
+3.050
+0.137
+0.002
+0.036
+0.420
+2.081
+261726
+261726
+3800603
+2615515
+2763521
+1736993
+53760
+13574
+1222
+8922
+23101
+70912
+630
+545
+71
+14
+8
+0
+6
+11.257
+set_id: 6
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50326
+level: 1, max_n_adj: 297
+next_node_cnt, next_edge_cnt: 429, 6189
+level: 2, max_n_adj: 107
+next_node_cnt, next_edge_cnt: 64, 671
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 27, 656
+level: 4, max_n_adj: 16
+pair size: 1248
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1248
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.207
+4.405
+3.142
+0.157
+0.002
+0.036
+0.418
+2.070
+261726
+261726
+3684831
+2535168
+2804568
+1772249
+55475
+14069
+1248
+8933
+23207
+72971
+642
+545
+76
+21
+15
+3
+3
+11.194
+set_id: 7
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50368
+level: 1, max_n_adj: 293
+next_node_cnt, next_edge_cnt: 417, 6142
+level: 2, max_n_adj: 105
+next_node_cnt, next_edge_cnt: 63, 648
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 633
+level: 4, max_n_adj: 16
+pair size: 1187
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1187
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.202
+4.470
+3.196
+0.142
+0.002
+0.034
+0.390
+1.950
+261726
+261726
+3746237
+2580484
+2854430
+1797658
+53485
+13496
+1187
+8457
+22083
+69974
+604
+545
+53
+6
+4
+1
+1
+11.189
+set_id: 8
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50281
+level: 1, max_n_adj: 298
+next_node_cnt, next_edge_cnt: 427, 6126
+level: 2, max_n_adj: 106
+next_node_cnt, next_edge_cnt: 71, 659
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 27, 642
+level: 4, max_n_adj: 16
+pair size: 1202
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1202
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.205
+4.502
+3.060
+0.150
+0.002
+0.034
+0.379
+1.886
+261726
+261726
+3769888
+2592340
+2784186
+1741482
+55435
+14078
+1202
+8667
+22562
+70436
+621
+545
+62
+14
+10
+3
+1
+11.006
+set_id: 9
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 50272
+level: 1, max_n_adj: 295
+next_node_cnt, next_edge_cnt: 449, 6174
+level: 2, max_n_adj: 106
+next_node_cnt, next_edge_cnt: 73, 666
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 27, 650
+level: 4, max_n_adj: 16
+pair size: 1227
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1227
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.201
+4.525
+3.091
+0.152
+0.002
+0.035
+0.390
+2.000
+261726
+261726
+3784297
+2603940
+2775277
+1744593
+56746
+14531
+1227
+8927
+23374
+72774
+620
+545
+70
+5
+5
+0
+0
+11.145
+gpuPC3 1 link 20000
+set_id: 0
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 699, 34904
+level: 1, max_n_adj: 284
+next_node_cnt, next_edge_cnt: 277, 1962
+level: 2, max_n_adj: 38
+next_node_cnt, next_edge_cnt: 55, 602
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 585
+level: 4, max_n_adj: 16
+pair size: 1086
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1086
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.013
+0.127
+0.016
+0.027
+0.000
+0.002
+0.027
+0.169
+261726
+261726
+1305000
+1013699
+166037
+82029
+52281
+13193
+1086
+7996
+21641
+69711
+602
+545
+5
+52
+0
+0
+52
+0.614
+set_id: 1
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 702, 35623
+level: 1, max_n_adj: 288
+next_node_cnt, next_edge_cnt: 290, 2081
+level: 2, max_n_adj: 35
+next_node_cnt, next_edge_cnt: 45, 596
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 586
+level: 4, max_n_adj: 16
+pair size: 1085
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1085
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.133
+0.015
+0.022
+0.000
+0.002
+0.027
+0.164
+261726
+261726
+1371529
+1062710
+199079
+103574
+55214
+14057
+1085
+7976
+21604
+69692
+605
+545
+6
+54
+0
+1
+53
+0.419
+set_id: 2
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 696, 34533
+level: 1, max_n_adj: 311
+next_node_cnt, next_edge_cnt: 284, 2067
+level: 2, max_n_adj: 35
+next_node_cnt, next_edge_cnt: 41, 586
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+pair size: 1077
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1077
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.127
+0.016
+0.031
+0.000
+0.003
+0.031
+0.177
+261726
+261726
+1309352
+1015015
+190475
+98800
+52073
+13020
+1077
+7942
+21586
+69692
+591
+545
+2
+44
+0
+0
+44
+0.44
+set_id: 3
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 693, 33487
+level: 1, max_n_adj: 304
+next_node_cnt, next_edge_cnt: 272, 2103
+level: 2, max_n_adj: 38
+next_node_cnt, next_edge_cnt: 39, 595
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 590
+level: 4, max_n_adj: 16
+pair size: 1097
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1097
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.123
+0.018
+0.025
+0.000
+0.002
+0.028
+0.164
+261726
+261726
+1285579
+985728
+203415
+107544
+55274
+14080
+1097
+8062
+21698
+69724
+599
+545
+10
+44
+0
+0
+44
+0.417
+set_id: 4
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 697, 34806
+level: 1, max_n_adj: 287
+next_node_cnt, next_edge_cnt: 277, 2071
+level: 2, max_n_adj: 36
+next_node_cnt, next_edge_cnt: 52, 601
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 583
+level: 4, max_n_adj: 16
+pair size: 1079
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1079
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.128
+0.015
+0.024
+0.000
+0.002
+0.028
+0.171
+261726
+261726
+1330795
+1025679
+194376
+99140
+55844
+14375
+1079
+7952
+21592
+69692
+596
+545
+3
+48
+0
+0
+48
+0.434
+set_id: 5
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 700, 35401
+level: 1, max_n_adj: 283
+next_node_cnt, next_edge_cnt: 288, 2002
+level: 2, max_n_adj: 32
+next_node_cnt, next_edge_cnt: 42, 590
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 586
+level: 4, max_n_adj: 16
+pair size: 1087
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1087
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.130
+0.013
+0.026
+0.000
+0.002
+0.027
+0.170
+261726
+261726
+1325122
+1031184
+164072
+85911
+51974
+12992
+1087
+8000
+21640
+69708
+599
+545
+6
+48
+0
+0
+48
+0.425
+set_id: 6
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 695, 34192
+level: 1, max_n_adj: 296
+next_node_cnt, next_edge_cnt: 284, 2069
+level: 2, max_n_adj: 35
+next_node_cnt, next_edge_cnt: 39, 592
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 588
+level: 4, max_n_adj: 16
+pair size: 1091
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1091
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.125
+0.015
+0.023
+0.000
+0.002
+0.026
+0.164
+261726
+261726
+1301754
+1006916
+187092
+96795
+55156
+14045
+1091
+8018
+21650
+69708
+599
+545
+8
+46
+0
+1
+45
+0.413
+set_id: 7
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 700, 35177
+level: 1, max_n_adj: 294
+next_node_cnt, next_edge_cnt: 280, 2064
+level: 2, max_n_adj: 33
+next_node_cnt, next_edge_cnt: 64, 613
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 587
+level: 4, max_n_adj: 16
+pair size: 1088
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1088
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.132
+0.016
+0.025
+0.000
+0.002
+0.030
+0.169
+261726
+261726
+1370602
+1067104
+192181
+103976
+52541
+13356
+1088
+7986
+21611
+69695
+604
+545
+7
+52
+0
+0
+52
+0.432
+set_id: 8
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 698, 35915
+level: 1, max_n_adj: 319
+next_node_cnt, next_edge_cnt: 276, 2028
+level: 2, max_n_adj: 36
+next_node_cnt, next_edge_cnt: 39, 588
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 585
+level: 4, max_n_adj: 16
+pair size: 1085
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1085
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.133
+0.014
+0.024
+0.000
+0.002
+0.028
+0.170
+261726
+261726
+1349733
+1050117
+184468
+93756
+55129
+14010
+1085
+7992
+21636
+69708
+596
+545
+5
+46
+0
+1
+45
+0.439
+set_id: 9
+timer start
+n_data, n_node: 20000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 687, 31848
+level: 1, max_n_adj: 296
+next_node_cnt, next_edge_cnt: 274, 1959
+level: 2, max_n_adj: 32
+next_node_cnt, next_edge_cnt: 38, 589
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 587
+level: 4, max_n_adj: 16
+pair size: 1087
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1087
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.006
+0.111
+0.013
+0.024
+0.000
+0.002
+0.027
+0.169
+261726
+261726
+1195096
+916520
+161849
+82720
+52188
+13052
+1087
+7986
+21610
+69692
+598
+545
+7
+46
+0
+1
+45
+0.415
+gpuPC3 1 link 40000
+set_id: 0
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 705, 37905
+level: 1, max_n_adj: 285
+next_node_cnt, next_edge_cnt: 270, 2364
+level: 2, max_n_adj: 43
+next_node_cnt, next_edge_cnt: 38, 584
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 583
+level: 4, max_n_adj: 16
+pair size: 1079
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1079
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.020
+0.243
+0.037
+0.026
+0.000
+0.004
+0.048
+0.282
+261726
+261726
+1651651
+1243104
+307916
+161372
+52056
+13017
+1079
+7952
+21592
+69692
+549
+545
+3
+1
+1
+0
+0
+0.927
+set_id: 1
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 713, 38653
+level: 1, max_n_adj: 286
+next_node_cnt, next_edge_cnt: 274, 2372
+level: 2, max_n_adj: 42
+next_node_cnt, next_edge_cnt: 64, 612
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 587
+level: 4, max_n_adj: 16
+pair size: 1086
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1086
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.010
+0.241
+0.033
+0.025
+0.000
+0.004
+0.048
+0.282
+261726
+261726
+1694514
+1285317
+275905
+151282
+52360
+13247
+1086
+8028
+21717
+69766
+560
+545
+7
+8
+0
+0
+8
+0.714
+set_id: 2
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 710, 39292
+level: 1, max_n_adj: 286
+next_node_cnt, next_edge_cnt: 282, 2378
+level: 2, max_n_adj: 43
+next_node_cnt, next_edge_cnt: 49, 597
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 585
+level: 4, max_n_adj: 16
+pair size: 1085
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1085
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.010
+0.247
+0.034
+0.025
+0.000
+0.004
+0.045
+0.271
+261726
+261726
+1735490
+1309989
+308822
+163592
+52119
+13107
+1085
+7990
+21634
+69708
+554
+545
+5
+4
+0
+0
+4
+0.724
+set_id: 3
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 706, 37156
+level: 1, max_n_adj: 290
+next_node_cnt, next_edge_cnt: 266, 2368
+level: 2, max_n_adj: 45
+next_node_cnt, next_edge_cnt: 40, 585
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+pair size: 1077
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1077
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.010
+0.232
+0.033
+0.031
+0.000
+0.004
+0.048
+0.289
+261726
+261726
+1622647
+1216461
+273587
+153620
+51935
+12984
+1077
+7944
+21588
+69692
+549
+545
+2
+2
+0
+1
+1
+0.735
+set_id: 4
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 712, 38483
+level: 1, max_n_adj: 289
+next_node_cnt, next_edge_cnt: 275, 2341
+level: 2, max_n_adj: 41
+next_node_cnt, next_edge_cnt: 46, 593
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 583
+level: 4, max_n_adj: 16
+pair size: 1081
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1081
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.010
+0.240
+0.031
+0.029
+0.000
+0.004
+0.047
+0.278
+261726
+261726
+1678351
+1272222
+273908
+146648
+52105
+13031
+1081
+7974
+21626
+69708
+556
+545
+3
+8
+0
+0
+8
+0.713
+set_id: 5
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 712, 38657
+level: 1, max_n_adj: 279
+next_node_cnt, next_edge_cnt: 274, 2296
+level: 2, max_n_adj: 42
+next_node_cnt, next_edge_cnt: 57, 605
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 584
+level: 4, max_n_adj: 16
+pair size: 1081
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1081
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.010
+0.243
+0.029
+0.026
+0.000
+0.004
+0.048
+0.283
+261726
+261726
+1692690
+1280781
+252246
+135567
+52339
+13184
+1081
+7958
+21594
+69692
+557
+545
+4
+8
+0
+0
+8
+0.732
+set_id: 6
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 709, 38258
+level: 1, max_n_adj: 299
+next_node_cnt, next_edge_cnt: 262, 2306
+level: 2, max_n_adj: 42
+next_node_cnt, next_edge_cnt: 51, 595
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+pair size: 1079
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1079
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.010
+0.236
+0.030
+0.025
+0.000
+0.004
+0.048
+0.283
+261726
+261726
+1687173
+1285635
+262068
+142802
+52197
+13162
+1079
+7966
+21622
+69708
+551
+545
+2
+4
+0
+0
+4
+0.711
+set_id: 7
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 709, 37700
+level: 1, max_n_adj: 291
+next_node_cnt, next_edge_cnt: 279, 2353
+level: 2, max_n_adj: 44
+next_node_cnt, next_edge_cnt: 51, 594
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 581
+level: 4, max_n_adj: 16
+pair size: 1075
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1075
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.010
+0.235
+0.031
+0.027
+0.000
+0.004
+0.048
+0.286
+261726
+261726
+1671113
+1262227
+270265
+145880
+52147
+13110
+1075
+7936
+21584
+69692
+552
+545
+1
+6
+0
+1
+5
+0.733
+set_id: 8
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 708, 38210
+level: 1, max_n_adj: 308
+next_node_cnt, next_edge_cnt: 270, 2306
+level: 2, max_n_adj: 42
+next_node_cnt, next_edge_cnt: 75, 621
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+pair size: 1073
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1073
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.015
+0.244
+0.032
+0.024
+0.000
+0.004
+0.048
+0.280
+261726
+261726
+1682430
+1275401
+262309
+143246
+52826
+13545
+1073
+7926
+21578
+69692
+557
+545
+0
+12
+0
+0
+12
+0.737
+set_id: 9
+timer start
+n_data, n_node: 40000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 705, 38079
+level: 1, max_n_adj: 292
+next_node_cnt, next_edge_cnt: 266, 2406
+level: 2, max_n_adj: 44
+next_node_cnt, next_edge_cnt: 39, 587
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 583
+level: 4, max_n_adj: 16
+pair size: 1079
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1079
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.015
+0.245
+0.037
+0.029
+0.000
+0.004
+0.047
+0.283
+261726
+261726
+1687245
+1267948
+310678
+169151
+55148
+14045
+1079
+7950
+21590
+69692
+548
+545
+3
+0
+0
+0
+0
+0.736
+gpuPC3 1 link 100000
+set_id: 0
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 721, 41647
+level: 1, max_n_adj: 320
+next_node_cnt, next_edge_cnt: 273, 2805
+level: 2, max_n_adj: 52
+next_node_cnt, next_edge_cnt: 66, 611
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+pair size: 1073
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1073
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.043
+0.603
+0.105
+0.047
+0.000
+0.008
+0.108
+0.609
+261726
+261726
+2114798
+1538546
+392707
+228839
+52484
+13300
+1073
+7926
+21578
+69692
+553
+545
+0
+8
+0
+0
+8
+1.9
+set_id: 1
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 722, 40944
+level: 1, max_n_adj: 289
+next_node_cnt, next_edge_cnt: 269, 2869
+level: 2, max_n_adj: 57
+next_node_cnt, next_edge_cnt: 43, 593
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 583
+level: 4, max_n_adj: 16
+pair size: 1081
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1081
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.041
+0.614
+0.114
+0.047
+0.000
+0.008
+0.107
+0.613
+261726
+261726
+2176666
+1567081
+394322
+245299
+55193
+14065
+1081
+8018
+21874
+70648
+548
+545
+3
+0
+0
+0
+0
+1.738
+set_id: 2
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 722, 41449
+level: 1, max_n_adj: 287
+next_node_cnt, next_edge_cnt: 273, 2865
+level: 2, max_n_adj: 61
+next_node_cnt, next_edge_cnt: 38, 582
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+pair size: 1081
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1081
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.040
+0.628
+0.117
+0.051
+0.000
+0.008
+0.108
+0.613
+261726
+261726
+2198228
+1588066
+431967
+258002
+51928
+12982
+1081
+7990
+21658
+69724
+547
+545
+2
+0
+0
+0
+0
+1.745
+set_id: 3
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 720, 40385
+level: 1, max_n_adj: 265
+next_node_cnt, next_edge_cnt: 267, 2802
+level: 2, max_n_adj: 56
+next_node_cnt, next_edge_cnt: 55, 602
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 583
+level: 4, max_n_adj: 16
+pair size: 1083
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1083
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.041
+0.597
+0.108
+0.039
+0.000
+0.008
+0.108
+0.610
+261726
+261726
+2072282
+1501949
+383124
+230807
+52298
+13192
+1083
+7998
+21662
+69724
+552
+545
+3
+4
+0
+0
+4
+1.706
+set_id: 4
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 40804
+level: 1, max_n_adj: 287
+next_node_cnt, next_edge_cnt: 270, 2756
+level: 2, max_n_adj: 54
+next_node_cnt, next_edge_cnt: 46, 592
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+pair size: 1079
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1079
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.041
+0.616
+0.100
+0.046
+0.000
+0.008
+0.108
+0.616
+261726
+261726
+2129559
+1550843
+379882
+220822
+55049
+14017
+1079
+7966
+21622
+69708
+555
+545
+2
+8
+0
+0
+8
+1.713
+set_id: 5
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 722, 41330
+level: 1, max_n_adj: 264
+next_node_cnt, next_edge_cnt: 284, 2819
+level: 2, max_n_adj: 52
+next_node_cnt, next_edge_cnt: 69, 615
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+pair size: 1073
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1073
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.041
+0.623
+0.111
+0.040
+0.000
+0.008
+0.107
+0.609
+261726
+261726
+2173396
+1564255
+399063
+237588
+52580
+13338
+1073
+7926
+21578
+69692
+553
+545
+0
+8
+0
+0
+8
+1.731
+set_id: 6
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 40882
+level: 1, max_n_adj: 256
+next_node_cnt, next_edge_cnt: 272, 2776
+level: 2, max_n_adj: 52
+next_node_cnt, next_edge_cnt: 39, 585
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+pair size: 1077
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1077
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.041
+0.614
+0.098
+0.042
+0.000
+0.008
+0.107
+0.620
+261726
+261726
+2104000
+1531675
+363522
+213840
+52061
+13018
+1077
+7944
+21588
+69692
+547
+545
+2
+0
+0
+0
+0
+1.672
+set_id: 7
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 720, 40291
+level: 1, max_n_adj: 276
+next_node_cnt, next_edge_cnt: 273, 2803
+level: 2, max_n_adj: 53
+next_node_cnt, next_edge_cnt: 54, 600
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 584
+level: 4, max_n_adj: 16
+pair size: 1085
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1085
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.040
+0.611
+0.102
+0.045
+0.000
+0.008
+0.102
+0.583
+261726
+261726
+2115623
+1525549
+396738
+227962
+52148
+13112
+1085
+8051
+21944
+70875
+553
+545
+4
+4
+0
+0
+4
+1.67
+set_id: 8
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 717, 41180
+level: 1, max_n_adj: 297
+next_node_cnt, next_edge_cnt: 275, 2864
+level: 2, max_n_adj: 59
+next_node_cnt, next_edge_cnt: 51, 596
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 583
+level: 4, max_n_adj: 16
+pair size: 1079
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1079
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.040
+0.607
+0.109
+0.043
+0.000
+0.008
+0.108
+0.617
+261726
+261726
+2131288
+1539383
+386313
+244251
+52206
+13165
+1079
+7952
+21592
+69692
+552
+545
+3
+4
+0
+0
+4
+1.732
+set_id: 9
+timer start
+n_data, n_node: 100000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 720, 40949
+level: 1, max_n_adj: 292
+next_node_cnt, next_edge_cnt: 270, 2814
+level: 2, max_n_adj: 55
+next_node_cnt, next_edge_cnt: 52, 596
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+pair size: 1073
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1073
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.041
+0.618
+0.106
+0.040
+0.000
+0.008
+0.108
+0.608
+261726
+261726
+2132795
+1546546
+381181
+235528
+52395
+13214
+1073
+7926
+21578
+69692
+549
+545
+0
+4
+0
+0
+4
+1.711
+gpuPC3 1 link 200000
+set_id: 0
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 41697
+level: 1, max_n_adj: 264
+next_node_cnt, next_edge_cnt: 277, 3265
+level: 2, max_n_adj: 65
+next_node_cnt, next_edge_cnt: 53, 599
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 584
+level: 4, max_n_adj: 16
+pair size: 1087
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1087
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.094
+1.436
+0.284
+0.069
+0.001
+0.016
+0.209
+1.164
+261726
+261726
+2404295
+1687757
+533699
+330365
+52178
+13121
+1087
+8030
+21702
+69740
+557
+545
+4
+8
+0
+0
+8
+3.737
+set_id: 1
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 41029
+level: 1, max_n_adj: 271
+next_node_cnt, next_edge_cnt: 286, 3299
+level: 2, max_n_adj: 68
+next_node_cnt, next_edge_cnt: 45, 591
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+pair size: 1073
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1073
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.090
+1.396
+0.302
+0.074
+0.001
+0.016
+0.209
+1.159
+261726
+261726
+2360971
+1646196
+542809
+335482
+55069
+14032
+1073
+7926
+21578
+69692
+549
+545
+0
+4
+0
+0
+4
+3.504
+set_id: 2
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 41329
+level: 1, max_n_adj: 259
+next_node_cnt, next_edge_cnt: 272, 3314
+level: 2, max_n_adj: 69
+next_node_cnt, next_edge_cnt: 38, 582
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+pair size: 1073
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1073
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.091
+1.395
+0.294
+0.073
+0.001
+0.016
+0.209
+1.158
+261726
+261726
+2350193
+1652703
+512336
+333918
+52171
+13052
+1073
+7926
+21578
+69692
+545
+545
+0
+0
+0
+0
+0
+3.568
+set_id: 3
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 41039
+level: 1, max_n_adj: 262
+next_node_cnt, next_edge_cnt: 272, 3291
+level: 2, max_n_adj: 67
+next_node_cnt, next_edge_cnt: 38, 580
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+pair size: 1073
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1073
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.091
+1.457
+0.293
+0.069
+0.001
+0.016
+0.209
+1.159
+261726
+261726
+2434781
+1699353
+539171
+337376
+51928
+12982
+1073
+7926
+21578
+69692
+545
+545
+0
+0
+0
+0
+0
+3.572
+set_id: 4
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 40762
+level: 1, max_n_adj: 257
+next_node_cnt, next_edge_cnt: 277, 3234
+level: 2, max_n_adj: 63
+next_node_cnt, next_edge_cnt: 42, 589
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 583
+level: 4, max_n_adj: 16
+pair size: 1083
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1083
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.091
+1.352
+0.279
+0.074
+0.001
+0.016
+0.209
+1.171
+261726
+261726
+2309304
+1619300
+507739
+324438
+55157
+14048
+1083
+7998
+21662
+69724
+548
+545
+3
+0
+0
+0
+0
+3.526
+set_id: 5
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 40830
+level: 1, max_n_adj: 258
+next_node_cnt, next_edge_cnt: 293, 3267
+level: 2, max_n_adj: 68
+next_node_cnt, next_edge_cnt: 42, 587
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+pair size: 1081
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1081
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.090
+1.395
+0.295
+0.069
+0.001
+0.016
+0.208
+1.177
+261726
+261726
+2359285
+1655093
+527374
+328864
+52079
+13027
+1081
+7990
+21658
+69724
+551
+545
+2
+4
+0
+0
+4
+3.578
+set_id: 6
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 41290
+level: 1, max_n_adj: 264
+next_node_cnt, next_edge_cnt: 284, 3237
+level: 2, max_n_adj: 68
+next_node_cnt, next_edge_cnt: 56, 600
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 581
+level: 4, max_n_adj: 16
+pair size: 1075
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1075
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.090
+1.378
+0.263
+0.074
+0.001
+0.016
+0.209
+1.184
+261726
+261726
+2343408
+1641250
+492367
+304388
+52179
+13127
+1075
+7934
+21582
+69692
+554
+545
+1
+8
+0
+0
+8
+3.491
+set_id: 7
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 41542
+level: 1, max_n_adj: 282
+next_node_cnt, next_edge_cnt: 279, 3280
+level: 2, max_n_adj: 67
+next_node_cnt, next_edge_cnt: 45, 589
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+pair size: 1073
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1073
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.091
+1.400
+0.283
+0.068
+0.001
+0.016
+0.209
+1.161
+261726
+261726
+2360524
+1650624
+518587
+327772
+51984
+13005
+1073
+7926
+21578
+69692
+545
+545
+0
+0
+0
+0
+0
+3.511
+set_id: 8
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 41962
+level: 1, max_n_adj: 294
+next_node_cnt, next_edge_cnt: 272, 3275
+level: 2, max_n_adj: 66
+next_node_cnt, next_edge_cnt: 39, 586
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+pair size: 1079
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1079
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.091
+1.407
+0.291
+0.075
+0.001
+0.016
+0.209
+1.180
+261726
+261726
+2366848
+1659720
+534318
+326352
+55149
+14045
+1079
+7968
+21624
+69708
+547
+545
+2
+0
+0
+0
+0
+3.539
+set_id: 9
+timer start
+n_data, n_node: 200000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 41386
+level: 1, max_n_adj: 280
+next_node_cnt, next_edge_cnt: 271, 3264
+level: 2, max_n_adj: 65
+next_node_cnt, next_edge_cnt: 65, 615
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+pair size: 1073
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1073
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.091
+1.394
+0.290
+0.067
+0.001
+0.016
+0.209
+1.160
+261726
+261726
+2369127
+1650220
+539195
+333561
+52646
+13334
+1073
+7926
+21578
+69692
+553
+545
+0
+8
+0
+0
+8
+3.55
+gpuPC3 1 link 400000
+set_id: 0
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 41547
+level: 1, max_n_adj: 270
+next_node_cnt, next_edge_cnt: 286, 3959
+level: 2, max_n_adj: 73
+next_node_cnt, next_edge_cnt: 58, 603
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 581
+level: 4, max_n_adj: 16
+pair size: 1077
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1077
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.207
+3.068
+0.920
+0.160
+0.002
+0.033
+0.409
+2.296
+261726
+261726
+2622821
+1756793
+708271
+477484
+55379
+14161
+1077
+7958
+21618
+69708
+558
+545
+1
+12
+0
+0
+12
+8.037
+set_id: 1
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 722, 41201
+level: 1, max_n_adj: 268
+next_node_cnt, next_edge_cnt: 283, 3953
+level: 2, max_n_adj: 71
+next_node_cnt, next_edge_cnt: 42, 584
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+pair size: 1073
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1073
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.202
+2.999
+0.945
+0.146
+0.002
+0.034
+0.410
+2.244
+261726
+261726
+2579137
+1724761
+738407
+493682
+51967
+12992
+1073
+7926
+21578
+69692
+549
+545
+0
+4
+0
+0
+4
+7.727
+set_id: 2
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 722, 41186
+level: 1, max_n_adj: 267
+next_node_cnt, next_edge_cnt: 288, 3987
+level: 2, max_n_adj: 74
+next_node_cnt, next_edge_cnt: 47, 595
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+pair size: 1079
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1079
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.201
+2.982
+0.971
+0.150
+0.002
+0.035
+0.409
+2.296
+261726
+261726
+2541575
+1707386
+778663
+513274
+55088
+14040
+1079
+7966
+21622
+69708
+551
+545
+2
+4
+0
+0
+4
+7.812
+set_id: 3
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 724, 41301
+level: 1, max_n_adj: 264
+next_node_cnt, next_edge_cnt: 284, 3941
+level: 2, max_n_adj: 74
+next_node_cnt, next_edge_cnt: 38, 582
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 581
+level: 4, max_n_adj: 16
+pair size: 1077
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1077
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.197
+3.042
+0.944
+0.125
+0.002
+0.035
+0.410
+2.336
+261726
+261726
+2607740
+1743414
+750313
+497231
+52051
+13017
+1077
+7958
+21618
+69708
+546
+545
+1
+0
+0
+0
+0
+7.867
+set_id: 4
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 721, 41165
+level: 1, max_n_adj: 265
+next_node_cnt, next_edge_cnt: 284, 3893
+level: 2, max_n_adj: 72
+next_node_cnt, next_edge_cnt: 42, 585
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 581
+level: 4, max_n_adj: 16
+pair size: 1077
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1077
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.202
+2.980
+0.913
+0.130
+0.002
+0.034
+0.409
+2.240
+261726
+261726
+2557253
+1718137
+724813
+476666
+51970
+12992
+1077
+7958
+21618
+69708
+550
+545
+1
+4
+0
+0
+4
+7.694
+set_id: 5
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 41118
+level: 1, max_n_adj: 265
+next_node_cnt, next_edge_cnt: 283, 3932
+level: 2, max_n_adj: 73
+next_node_cnt, next_edge_cnt: 38, 581
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 580
+level: 4, max_n_adj: 16
+pair size: 1073
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1073
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.195
+2.986
+0.921
+0.162
+0.002
+0.035
+0.410
+2.256
+261726
+261726
+2535558
+1707988
+709288
+470170
+52046
+13017
+1073
+7926
+21578
+69692
+545
+545
+0
+0
+0
+0
+0
+7.749
+set_id: 6
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 41608
+level: 1, max_n_adj: 268
+next_node_cnt, next_edge_cnt: 286, 3958
+level: 2, max_n_adj: 74
+next_node_cnt, next_edge_cnt: 43, 594
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 583
+level: 4, max_n_adj: 16
+pair size: 1081
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1081
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.208
+3.046
+0.950
+0.134
+0.002
+0.035
+0.410
+2.282
+261726
+261726
+2590379
+1740024
+767320
+498464
+52179
+13088
+1081
+8016
+21872
+70648
+548
+545
+3
+0
+0
+0
+0
+7.836
+set_id: 7
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 721, 41100
+level: 1, max_n_adj: 264
+next_node_cnt, next_edge_cnt: 287, 3964
+level: 2, max_n_adj: 74
+next_node_cnt, next_edge_cnt: 49, 595
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+pair size: 1081
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1081
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.200
+3.009
+0.935
+0.136
+0.002
+0.034
+0.409
+2.286
+261726
+261726
+2578995
+1725317
+736726
+486873
+52410
+13218
+1081
+7990
+21658
+69724
+551
+545
+2
+4
+0
+0
+4
+7.76
+set_id: 8
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 41286
+level: 1, max_n_adj: 268
+next_node_cnt, next_edge_cnt: 285, 3990
+level: 2, max_n_adj: 74
+next_node_cnt, next_edge_cnt: 60, 608
+level: 3, max_n_adj: 17
+numBlocks: 724, 34
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 581
+level: 4, max_n_adj: 16
+pair size: 1077
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1077
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.200
+3.044
+0.975
+0.147
+0.002
+0.035
+0.411
+2.311
+261726
+261726
+2589574
+1741557
+786454
+518132
+55449
+14210
+1077
+7958
+21618
+69708
+554
+545
+1
+8
+0
+0
+8
+7.92
+set_id: 9
+timer start
+n_data, n_node: 400000 724
+true_max_deg: 17, true_max_indeg: 3, true_max_outdeg: 14
+level: 0, max_n_adj: 723
+next_node_cnt, next_edge_cnt: 723, 41360
+level: 1, max_n_adj: 266
+next_node_cnt, next_edge_cnt: 285, 3948
+level: 2, max_n_adj: 73
+next_node_cnt, next_edge_cnt: 39, 585
+level: 3, max_n_adj: 16
+numBlocks: 724, 32
+threadsPerBlock: 64
+next_node_cnt, next_edge_cnt: 26, 582
+level: 4, max_n_adj: 16
+pair size: 1079
+level: 0, max_n_adj: 16
+level: 1, max_n_adj: 16
+level: 2, max_n_adj: 16
+level: 3, max_n_adj: 16
+numBlocks: 1079
+threadsPerBlock: 64
+level: 4, max_n_adj: 16
+0.204
+3.006
+0.936
+0.132
+0.002
+0.035
+0.409
+2.301
+261726
+261726
+2584390
+1725602
+750842
+492840
+52060
+13018
+1079
+7964
+21620
+69708
+547
+545
+2
+0
+0
+0
+0
+7.775

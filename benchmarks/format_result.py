@@ -3,9 +3,9 @@ while True:
   if len(test_cond) == 0:
     break
   if test_cond[0] == "gpuPC":
-    metrics_len = 16
+    metrics_len = 24
   else:
-    metrics_len = 20
+    metrics_len = 28
   lst = [[] for i in range(metrics_len)]
   for i in range(10):
     assert int(input().split()[1]) == i
