@@ -42,7 +42,7 @@ docker compose up
 # Build and Install
 ```bash
 pip install . # build and install the package
-python3 setup.py build_ext --inplace # build in place
+OPENBNSL_DEBUG=ON pip install . # with debug logs
 ```
 
 ---

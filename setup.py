@@ -20,6 +20,11 @@ class CMakeBuildExtension(build_ext):
             "-DCMAKE_BUILD_TYPE=Release",
         ]
 
+        debug_flag = os.environ.get("OPENBNSL_DEBUG", "OFF").upper()
+        if debug_flag not in ("ON", "OFF"):
+            debug_flag = "OFF"  # Default to OFF if invalid value
+        cmake_args.append(f"-DENABLE_DEBUG_LOG={debug_flag}")
+
         build_temp = self.build_temp
         os.makedirs(build_temp, exist_ok=True)
 
