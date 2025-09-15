@@ -17,4 +17,4 @@
 PDAG pc(const DataframeWrapper& df,
         const CITestType& ci_test_type,
         size_t max_cond_vars,
-        bool stable);
+        bool stable = true);

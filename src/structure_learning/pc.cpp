@@ -10,13 +10,12 @@
 #include "graph/pdag_with_adjmat.h"
 #include "utils/gen_comb.h"
 
-static PDAGwithAdjMat build_skeleton(const DataframeWrapper& df,
-                                     const CITestType& test,
-                                     size_t max_cond_vars,
-                                     bool stable,
-                                     Sepset& sepset) {
-  PDAGwithAdjMat g(df.num_of_vars);
-  g.complete_graph();
+void build_skeleton(PDAGwithAdjMat& g,
+                    const DataframeWrapper& df,
+                    const CITestType& test,
+                    size_t max_cond_vars,
+                    bool stable,
+                    Sepset& sepset) {
   for (size_t k = 0; k <= max_cond_vars; ++k) {
     // snapshot the current graph if stable version
     PDAGwithAdjMat snapshot = g;
@@ -46,7 +45,6 @@ static PDAGwithAdjMat build_skeleton(const DataframeWrapper& df,
       }
     }
   }
-  return g;
 }
 
 PDAG pc(const DataframeWrapper& df,
@@ -54,8 +52,10 @@ PDAG pc(const DataframeWrapper& df,
         size_t max_cond_vars,
         bool stable) {
   const size_t n = df.num_of_vars;
+  PDAGwithAdjMat g(n);
+  g.set_as_complete();
   Sepset sepset(n, std::vector<std::unordered_set<size_t>>(n));
-  PDAGwithAdjMat g = build_skeleton(df, test, max_cond_vars, stable, sepset);
+  build_skeleton(g, df, test, max_cond_vars, stable, sepset);
   g.orient_colliders(sepset);
   g.apply_meeks_rules();
   return g.to_pdag();

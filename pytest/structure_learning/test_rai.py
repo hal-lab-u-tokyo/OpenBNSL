@@ -8,7 +8,10 @@ from helpers.pgmpy_bridge import to_pgmpy, to_openbnsl
 from helpers.structural_distance import structural_errors
 
 
-@pytest.mark.parametrize("model_name", ["cancer", "asia", "child", "alarm"])
+@pytest.mark.parametrize(
+    "model_name",
+    ["asia", "cancer", "earthquake", "sachs", "survey", "alarm", "child", "insurance"],
+)
 @pytest.mark.parametrize("seed", [0])
 def test_rai(model_name, seed):
     random.seed(seed)
@@ -27,7 +30,5 @@ def test_rai(model_name, seed):
     expected_obnsl = to_pgmpy(_pdag, list(samples.columns))
     error_obnsl = structural_errors(model_original, expected_obnsl)
 
-    # TODO: Implementation
-    # msg = f"Structural errors for {model_name} (stable={stable}): {error_obnsl}"
-    # # print(msg)
-    # assert error_obnsl["SHD"] == 0, msg
+    msg = f"Structural errors for {model_name}): {error_obnsl}"
+    assert error_obnsl["SHD"] == 0, msg

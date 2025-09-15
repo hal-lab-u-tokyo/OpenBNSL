@@ -40,6 +40,5 @@ void bind_structure_learning(py::module& m) {
                 "Run RAI algorithm",
                 py::arg("df"),
                 py::arg("ci_test_type"),
-                py::arg("max_cond_vars"),
-                py::arg("apply_meek_r4") = false);
+                py::arg("max_cond_vars"));
 }

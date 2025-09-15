@@ -22,6 +22,14 @@ endif()
 ###########
 option(BUILD_TESTS "Build test executables" OFF)
 option(VERBOSE_OUTPUT "Enable verbose output" OFF)
+option(ENABLE_DEBUG_LOG "Enable debug logging macros" OFF)
+
+if (ENABLE_DEBUG_LOG)
+    add_definitions(-DENABLE_DEBUG_LOG)
+    message(STATUS "✅ Debug logging enabled")
+else()
+    message(STATUS "ℹ️ Debug logging disabled")
+endif()
 
 ##########################
 # Find required packages #
