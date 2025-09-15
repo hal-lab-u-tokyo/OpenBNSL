@@ -1,5 +1,7 @@
 #pragma once
 
+#include <optional>
+
 #include "base/dataframe_wrapper.h"
 #include "citest/citest_type.h"
 #include "graph/pdag.h"
@@ -15,5 +17,4 @@
  */
 PDAG rai(const DataframeWrapper& df,
          const CITestType& ci_test_type,
-         size_t max_cond_vars,
-         bool apply_meek_r4 = false);
+         size_t max_cond_vars);

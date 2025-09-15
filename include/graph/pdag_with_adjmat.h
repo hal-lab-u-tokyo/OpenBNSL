@@ -18,50 +18,48 @@ using Sepset = std::vector<std::vector<std::unordered_set<size_t>>>;
  * allowing for efficient storage and access patterns.
  */
 struct PDAGwithAdjMat : IPDAGConvertible {
-  /* Data members */
   std::size_t num_vars;
+  std::vector<size_t> g2l_map;  // global id -> local idx or UNASSIGNED
+  std::vector<size_t> var_ids;  // local idx -> global id
   std::vector<std::vector<uint64_t>> adj_mat;
 
-  /* Lifecycle */
-  /**
-   * @brief Construct a new PDAGwithAdjMat with a specified number of variables.
-   * @param num_vars The number of variables in the PDAG.
-   */
-  PDAGwithAdjMat(std::size_t num_vars);
-  PDAGwithAdjMat(const PDAGwithAdjMat &old);
-  PDAGwithAdjMat &operator=(const PDAGwithAdjMat &a);
-  ~PDAGwithAdjMat() = default;
+  PDAGwithAdjMat(std::size_t n);
+  static PDAGwithAdjMat induced_subgraph(const PDAGwithAdjMat& G,
+                                         const std::vector<size_t>& S);
+  void set_as_complete();
 
-  /* Private helpers */
-  bool _has_arc(std::size_t u, std::size_t v) const;
-  void _remove_arc(std::size_t u, std::size_t v);
+  bool has_arc(std::size_t u, std::size_t v) const;
+  void set_arc(std::size_t u, std::size_t v);
+  void clr_arc(std::size_t u, std::size_t v);
 
-  /* Read-only operations */
-  bool has_directed_edge(std::size_t u, std::size_t v) const;  // u -> v
-  bool has_undirected_edge(std::size_t u,
-                           std::size_t v) const;         // u -> v and u <- v
-  bool is_adjacent(std::size_t u, std::size_t v) const;  // u -> v or  u <- v
+  bool has_directed_edge(std::size_t u, std::size_t v) const {
+    return has_arc(u, v) && !has_arc(v, u);
+  }
+  bool has_undirected_edge(std::size_t u, std::size_t v) const {
+    return has_arc(u, v) && has_arc(v, u);
+  }
+  bool is_adjacent(std::size_t u, std::size_t v) const {
+    return has_arc(u, v) || has_arc(v, u);
+  }
+  void remove_undirected_edge(std::size_t u, std::size_t v) {
+    if (!has_undirected_edge(u, v)) return;  // TODO: error?
+    clr_arc(u, v);
+    clr_arc(v, u);
+  }
+  void orient_edge(std::size_t u, std::size_t v) {
+    if (has_directed_edge(u, v)) return;  // already oriented
+    clr_arc(v, u);
+  }
 
-  /* Neighbor operations */
-  std::vector<std::size_t> predecessors(
-      std::size_t v) const;  // {u | v <- u or v <-> u}
-  std::vector<std::size_t> parents(std::size_t v) const;  // {u | v <- u}
-  std::vector<std::size_t> undirected_neighbors(
-      std::size_t v) const;  // {u | v <-> u}
-  std::vector<std::size_t> undirected_neighbors_without(
-      std::size_t v,
-      std::size_t excl) const;  // {u | v <-> u and u != excl}
+  std::vector<std::size_t> predecessors(std::size_t v) const;
+  std::vector<std::size_t> parents(std::size_t v) const;
+  std::vector<std::size_t> undirected_neighbors(std::size_t v) const;
+  std::vector<std::size_t> undirected_neighbors_without(std::size_t v,
+                                                        std::size_t excl) const;
 
-  /* Reachability operations */
-
-  /* Modification operations */
-  void remove_undirected_edge(std::size_t u, std::size_t v);  // delete u <-> v
-  void remove_directed_edge(std::size_t u, std::size_t v);    // delete u -> v
-  void orient_edge(std::size_t u, std::size_t v);  // (u <-> v) => (u -> v)
-
-  /* Graph-wide operations */
-  PDAG to_pdag() const;
-  void complete_graph();
-  void orient_colliders(const Sepset &sepset);
+  void orient_colliders(const Sepset& sepset);
   void apply_meeks_rules();
+
+  std::vector<size_t> childless_nodes() const;
+  PDAG to_pdag() const override;
 };
