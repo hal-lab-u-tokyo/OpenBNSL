@@ -47,5 +47,22 @@ void bind_base(py::module& m) {
       .def_readonly("num_vars", &PDAG::num_vars)
       .def("has_edge", &PDAG::has_edge, py::arg("from"), py::arg("to"))
       .def("add_edge", &PDAG::add_edge, py::arg("from"), py::arg("to"))
-      .def("remove_edge", &PDAG::remove_edge, py::arg("from"), py::arg("to"));
+      .def("remove_edge", &PDAG::remove_edge, py::arg("from"), py::arg("to"))
+      .def("score", &PDAG::score, py::arg("df"), py::arg("score_type"))
+      .def("__repr__", [](const PDAG& g) {
+        std::string repr = "PDAG(\n";
+        repr += "  num_vars: " + std::to_string(g.num_vars) + ",\n";
+        repr += "  edges: [";
+        bool first = true;
+        for (size_t v = 0; v < g.num_vars; ++v) {
+          for (auto u : g.parents[v]) {
+            if (!first) repr += ", ";
+            repr += std::to_string(u) + " -> " + std::to_string(v);
+            first = false;
+          }
+        }
+        repr += "]\n";
+        repr += ")";
+        return repr;
+      });
 }

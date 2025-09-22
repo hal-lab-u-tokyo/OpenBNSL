@@ -33,8 +33,7 @@ void bind_structure_learning(py::module& m) {
                 "Run PC algorithm",
                 py::arg("df"),
                 py::arg("ci_test_type"),
-                py::arg("max_cond_vars"),
-                py::arg("stable") = true);
+                py::arg("max_cond_vars"));
   submodule.def("rai",
                 &rai,
                 "Run RAI algorithm",

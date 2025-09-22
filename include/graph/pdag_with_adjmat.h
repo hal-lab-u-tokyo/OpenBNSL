@@ -27,39 +27,40 @@ struct PDAGwithAdjMat : IPDAGConvertible {
   static PDAGwithAdjMat induced_subgraph(const PDAGwithAdjMat& G,
                                          const std::vector<size_t>& S);
   void set_as_complete();
+  PDAG to_pdag() const override;
 
-  bool has_arc(std::size_t u, std::size_t v) const;
-  void set_arc(std::size_t u, std::size_t v);
-  void clr_arc(std::size_t u, std::size_t v);
+  bool _has_arc(std::size_t uL, std::size_t vL) const;
+  void _set_arc(std::size_t uL, std::size_t vL);
+  void _clr_arc(std::size_t uL, std::size_t vL);
 
-  bool has_directed_edge(std::size_t u, std::size_t v) const {
-    return has_arc(u, v) && !has_arc(v, u);
+  bool has_directed_edgeL(std::size_t uL, std::size_t vL) const {
+    return _has_arc(uL, vL) && !_has_arc(vL, uL);
   }
-  bool has_undirected_edge(std::size_t u, std::size_t v) const {
-    return has_arc(u, v) && has_arc(v, u);
+  bool has_undirected_edgeL(std::size_t uL, std::size_t vL) const {
+    return _has_arc(uL, vL) && _has_arc(vL, uL);
   }
-  bool is_adjacent(std::size_t u, std::size_t v) const {
-    return has_arc(u, v) || has_arc(v, u);
+  bool is_adjacentL(std::size_t uL, std::size_t vL) const {
+    return _has_arc(uL, vL) || _has_arc(vL, uL);
   }
-  void remove_undirected_edge(std::size_t u, std::size_t v) {
-    if (!has_undirected_edge(u, v)) return;  // TODO: error?
-    clr_arc(u, v);
-    clr_arc(v, u);
+  void remove_undirected_edgeL(std::size_t uL, std::size_t vL) {
+    if (!has_undirected_edgeL(uL, vL)) return;  // TODO: error?
+    _clr_arc(uL, vL);
+    _clr_arc(vL, uL);
   }
-  void orient_edge(std::size_t u, std::size_t v) {
-    if (has_directed_edge(u, v)) return;  // already oriented
-    clr_arc(v, u);
+  void orient_edgeL(std::size_t uL, std::size_t vL) {
+    if (has_directed_edgeL(uL, vL)) return;  // already oriented
+    _clr_arc(vL, uL);
   }
 
-  std::vector<std::size_t> predecessors(std::size_t v) const;
-  std::vector<std::size_t> parents(std::size_t v) const;
-  std::vector<std::size_t> undirected_neighbors(std::size_t v) const;
-  std::vector<std::size_t> undirected_neighbors_without(std::size_t v,
+  std::vector<std::size_t> predecessorsL(std::size_t vL) const;
+  std::vector<std::size_t> parentsL(std::size_t vL) const;
+  std::vector<std::size_t> undirected_neighborsL(std::size_t vL) const;
+  std::vector<std::size_t> undirected_neighbors_withoutL(std::size_t vL,
                                                         std::size_t excl) const;
+
+  std::pair<std::vector<size_t>, std::vector<std::vector<size_t>>> decompose(
+      const PDAGwithAdjMat& g_all) const;
 
   void orient_colliders(const Sepset& sepset);
   void apply_meeks_rules();
-
-  std::vector<size_t> childless_nodes() const;
-  PDAG to_pdag() const override;
 };

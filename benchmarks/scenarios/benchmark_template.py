@@ -1,4 +1,3 @@
-# benchmarks/scenarios/benchmark_template.py
 import pytest
 import random
 import csv
@@ -11,7 +10,7 @@ from helpers.omp import OpenMP
 from helpers.pgmpy_bridge import to_pgmpy
 from helpers.structural_distance import structural_errors
 
-RESULTS_PATH = os.path.join("benchmarks", "results")
+RESULTS_PATH = os.path.join("benchmarks", "results", "template")
 SCENARIO_NAME = os.path.splitext(os.path.basename(__file__))[0]
 RESULTS_FILE = os.path.join(RESULTS_PATH, f"{SCENARIO_NAME}.csv")
 SUMMARY_FILE = os.path.join(RESULTS_PATH, f"{SCENARIO_NAME}_summary.csv")
@@ -29,9 +28,31 @@ def initialize():
         )
 
 
+def summarize():
+    df = pd.read_csv(RESULTS_FILE)
+    summary = (
+        df.groupby(["model_name", "num_threads"])
+        .agg(
+            count=("shd", "count"),
+            shd_mean=("shd", "mean"),
+            shd_std=("shd", "std"),
+            shd_min=("shd", "min"),
+            shd_max=("shd", "max"),
+            time_mean_s=("elapsed_sec", "mean"),
+            time_std_s=("elapsed_sec", "std"),
+            time_min_s=("elapsed_sec", "min"),
+            time_max_s=("elapsed_sec", "max"),
+        )
+        .reset_index()
+    )
+    print(f"\n--- Summary for {SCENARIO_NAME} ---")
+    print(summary.to_string(index=False))
+    summary.to_csv(SUMMARY_FILE, index=False)
+
+
 @pytest.mark.parametrize("model_name", ["cancer", "asia", "child", "alarm"])
 @pytest.mark.parametrize("num_threads", [1, 2, 4, 8])
-@pytest.mark.parametrize("seed", [0, 1, 2, 3])
+@pytest.mark.parametrize("seed", [0, 1, 2, 3, 4])
 def benchmark_template(model_name, num_threads, seed):
     """
     One benchmark trial.
@@ -65,24 +86,3 @@ def benchmark_template(model_name, num_threads, seed):
         csv.writer(f).writerow([model_name, num_threads, seed, shd, elapsed])
 
     assert True
-
-
-def summarize():
-    df = pd.read_csv(RESULTS_FILE)
-    summary = (
-        df.groupby(["model_name", "num_threads"])
-        .agg(
-            count=("shd", "count"),
-            shd_mean=("shd", "mean"),
-            shd_std=("shd", "std"),
-            time_mean_s=("elapsed_sec", "mean"),
-            time_std_s=("elapsed_sec", "std"),
-            time_min_s=("elapsed_sec", "min"),
-            time_max_s=("elapsed_sec", "max"),
-        )
-        .reset_index()
-    )
-    print(f"\n--- Summary for {SCENARIO_NAME} ---")
-    print(summary.to_string(index=False))
-
-    summary.to_csv(SUMMARY_FILE, index=False)

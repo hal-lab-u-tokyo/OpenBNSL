@@ -4,7 +4,6 @@
 #include <array>
 #include <iterator>
 #include <numeric>
-#include <queue>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -52,22 +51,23 @@ static bool try_remove_and_apply(size_t x,
                                  PDAGwithAdjMat& g_all,
                                  PDAGwithAdjMat* g_sub,
                                  Sepset& sepset) {
-  if (cand_conds.size() < order_n) return false;
-  if (!g_all.is_adjacent(x, y))
-    throw std::logic_error("try_remove_and_apply for non-adjacent nodes");
-
+  std::vector<size_t> vars = cand_conds;
+  vars.push_back(x);
+  vars.push_back(y);
+  std::sort(vars.begin(), vars.end());
+  ContingencyTable<false> ct(vars, df);
   for (auto& Z : gen_combs(cand_conds, order_n)) {
-    std::vector<size_t> vars = Z;
-    vars.push_back(x);
-    vars.push_back(y);
-    std::sort(vars.begin(), vars.end());
-    ContingencyTable<true> ct(vars, df);
-    if (citest<true>(x, y, Z, ct, test)) {
-      g_all.remove_undirected_edge(x, y);
+    // std::vector<size_t> vars = Z;
+    // vars.push_back(x);
+    // vars.push_back(y);
+    // std::sort(vars.begin(), vars.end());
+    // ContingencyTable<false> ct(vars, df);
+    if (citest<false>(x, y, Z, ct, test)) {
+      g_all.remove_undirected_edgeL(x, y);
       if (g_sub) {
         int lx = g_sub->g2l_map[x], ly = g_sub->g2l_map[y];
         if (lx >= 0 && ly >= 0)
-          g_sub->remove_undirected_edge((size_t)lx, (size_t)ly);
+          g_sub->remove_undirected_edgeL((size_t)lx, (size_t)ly);
       }
       sepset[x][y].insert(Z.begin(), Z.end());
       sepset[y][x] = sepset[x][y];
@@ -77,10 +77,30 @@ static bool try_remove_and_apply(size_t x,
   return false;
 }
 
+static std::vector<size_t> extract_parents_from_exo(
+    size_t v,
+    const PDAGwithAdjMat& g,
+    const std::vector<char>& in_exo) {
+  std::vector<size_t> pa_exo;
+  for (auto u : g.undirected_neighborsL(v))
+    if (in_exo[u]) pa_exo.push_back(u);
+  return pa_exo;
+}
+
+static std::vector<size_t> extract_potential_parents_from_sub(
+    size_t v,
+    const PDAGwithAdjMat& g_sub) {
+  std::vector<size_t> pap_sub;
+  for (auto uL : g_sub.predecessorsL(g_sub.g2l_map[v]))
+    pap_sub.push_back(g_sub.var_ids[uL]);
+  return pap_sub;
+}
+
 struct Subproblem {
   size_t order_n;
   std::vector<size_t> sub_nodes;
   std::vector<size_t> exo_nodes;
+  PDAGwithAdjMat g_prev;
 };
 
 struct RAIContext {
@@ -93,40 +113,39 @@ static void rai_recursive(const Subproblem& curr,
                           PDAGwithAdjMat& g_all,
                           Sepset& sepset,
                           const RAIContext& ctx) {
-  if (curr.order_n > ctx.max_cond_vars) return;
-  // TODO: check exit condition
+  const PDAGwithAdjMat& g_prev = curr.g_prev;
 
   PDAGwithAdjMat g_sub =
       PDAGwithAdjMat::induced_subgraph(g_all, curr.sub_nodes);
   auto in_exo = as_membership(curr.exo_nodes, g_all.num_vars);
 
+  /* Exit condition */
+  if (curr.order_n > ctx.max_cond_vars) return;
+  bool has_sepset_candidates = false;
+  for (auto y : curr.sub_nodes) {
+    std::vector<size_t> pa_exo = extract_parents_from_exo(y, g_all, in_exo);
+    std::vector<size_t> pap_sub = extract_potential_parents_from_sub(y, g_sub);
+    auto base = merge_vectors(pa_exo, pap_sub);
+    if (base.size() >= curr.order_n + 1) {
+      has_sepset_candidates = true;
+      break;
+    }
+  }
+  if (!has_sepset_candidates) return;
+
   /* Stage A*/
   for (auto y : curr.sub_nodes) {
-    std::vector<size_t> pa_exo;
-    for (auto u : g_all.undirected_neighbors(y))
-      if (in_exo[u]) pa_exo.push_back(u);
-    // for (auto u : g_sub.undirected_neighbors(g_sub.g2l_map[y]))
-    //   if (in_exo[g_sub.var_ids[u]]) pa_exo.push_back(g_sub.var_ids[u]);
-
-    std::vector<size_t> pap_sub;
-    for (auto uL : g_sub.predecessors(g_sub.g2l_map[y]))
-      pap_sub.push_back(g_sub.var_ids[uL]);
-
+    std::vector<size_t> pa_exo = extract_parents_from_exo(y, g_all, in_exo);
+    std::vector<size_t> pap_sub = extract_potential_parents_from_sub(y, g_sub);
     auto base = merge_vectors(pa_exo, pap_sub);
+
     for (auto x : pa_exo) {
       std::vector<size_t> cand;
       cand.reserve(base.size());
       for (auto v : base)
         if (v != x) cand.push_back(v);
-      try_remove_and_apply(x,
-                           y,
-                           cand,
-                           curr.order_n,
-                           ctx.df,
-                           ctx.test,
-                           g_all,
-                           /*g_sub=*/nullptr,
-                           sepset);
+      try_remove_and_apply(
+          x, y, cand, curr.order_n, ctx.df, ctx.test, g_all, nullptr, sepset);
     }
   }
   g_sub.orient_colliders(sepset);
@@ -134,14 +153,8 @@ static void rai_recursive(const Subproblem& curr,
 
   /* Stage B */
   for (auto y : curr.sub_nodes) {
-    std::vector<size_t> pa_exo;
-    for (auto u : g_all.undirected_neighbors(y))
-      if (in_exo[u]) pa_exo.push_back(u);
-
-    std::vector<size_t> pap_sub;
-    for (auto uL : g_sub.predecessors(g_sub.g2l_map[y]))
-      pap_sub.push_back(g_sub.var_ids[uL]);
-
+    std::vector<size_t> pa_exo = extract_parents_from_exo(y, g_all, in_exo);
+    std::vector<size_t> pap_sub = extract_potential_parents_from_sub(y, g_sub);
     auto base = merge_vectors(pa_exo, pap_sub);
     for (auto x : pap_sub) {
       std::vector<size_t> cand;
@@ -157,36 +170,23 @@ static void rai_recursive(const Subproblem& curr,
   g_sub.apply_meeks_rules();
 
   /* Decomposition */
-  std::vector<size_t> desc_nodes = g_sub.childless_nodes();
-  std::vector<char> in_desc_nodes = as_membership(desc_nodes, g_all.num_vars);
-  std::vector<size_t> remaining_nodes;
-  for (auto v : curr.sub_nodes)
-    if (!in_desc_nodes[v]) remaining_nodes.push_back(v);
+  auto [desc_nodes, asc_nodes_list] = g_sub.decompose(g_all);
 
-  std::vector<std::vector<size_t>> asc_nodes_list;
-  if (!remaining_nodes.empty()) {
-    std::vector<char> seen(g_all.num_vars, 0);
-    for (auto s : remaining_nodes) {
-      if (seen[s]) continue;
-      std::vector<size_t> comp;
-      std::queue<size_t> q;
-      q.push(s);
-      seen[s] = 1;
-      while (!q.empty()) {
-        auto u = q.front();
-        q.pop();
-        comp.push_back(u);
-        for (auto v : remaining_nodes) {
-          if (!seen[v] && g_all.is_adjacent(u, v)) {
-            seen[v] = 1;
-            q.push(v);
-          }
-        }
-      }
-      asc_nodes_list.push_back(std::move(comp));
-    }
+  /* Summary of current subproblem */
+  // DEBUG("RAI order_n=" << curr.order_n << ", sub_nodes:{"
+  //                      << fmt_vec(curr.sub_nodes) << "}"
+  //                      << ", exo_nodes:{" << fmt_vec(curr.exo_nodes) << "}");
+  // for (auto& asc_nodes : asc_nodes_list)
+  //   DEBUG("  ├─ asc_nodes={" << fmt_vec(asc_nodes) << "}");
+  // DEBUG("  └─ desc_nodes={" << fmt_vec(desc_nodes) << "}");
+
+  /* Stage C */
+  for (auto& asc_nodes : asc_nodes_list) {
+    Subproblem next{curr.order_n + 1, asc_nodes, curr.exo_nodes, g_sub};
+    rai_recursive(next, g_all, sepset, ctx);
   }
 
+  /* Stage D */
   std::vector<size_t> exo_nodes_for_desc = curr.exo_nodes;
   for (auto& asc_nodes : asc_nodes_list) {
     for (auto v : asc_nodes) {
@@ -194,27 +194,8 @@ static void rai_recursive(const Subproblem& curr,
     }
   }
   std::sort(exo_nodes_for_desc.begin(), exo_nodes_for_desc.end());
-  exo_nodes_for_desc.erase(
-      std::unique(exo_nodes_for_desc.begin(), exo_nodes_for_desc.end()),
-      exo_nodes_for_desc.end());
-
-  /* Summary of current subproblem */
-  DEBUG("RAI order_n=" << curr.order_n << ", sub_nodes:{"
-                       << fmt_vec(curr.sub_nodes) << "}"
-                       << ", exo_nodes:{" << fmt_vec(curr.exo_nodes) << "}");
-  for (auto& asc_nodes : asc_nodes_list)
-    DEBUG("  ├─ asc_nodes={" << fmt_vec(asc_nodes) << "}");
-  DEBUG("  └─ desc_nodes={" << fmt_vec(desc_nodes) << "}");
-
-  /* Stage C */
-  for (auto& asc_nodes : asc_nodes_list) {
-    Subproblem sb_next{curr.order_n + 1, asc_nodes, curr.exo_nodes};
-    rai_recursive(sb_next, g_all, sepset, ctx);
-  }
-
-  /* Stage D */
-  Subproblem sb_next{curr.order_n + 1, desc_nodes, exo_nodes_for_desc};
-  rai_recursive(sb_next, g_all, sepset, ctx);
+  Subproblem next{curr.order_n + 1, desc_nodes, exo_nodes_for_desc, g_sub};
+  rai_recursive(next, g_all, sepset, ctx);
 }
 
 PDAG rai(const DataframeWrapper& df,
@@ -227,12 +208,12 @@ PDAG rai(const DataframeWrapper& df,
   g_all.set_as_complete();
   Sepset sepset(n, std::vector<std::unordered_set<size_t>>(n));
 
-  std::vector<size_t> all(n);
-  for (size_t i = 0; i < n; ++i) all[i] = i;
-  Subproblem sp_init{0, all, {}};
+  std::vector<size_t> all_nodes(n);
+  for (size_t i = 0; i < n; ++i) all_nodes[i] = i;
+  Subproblem init{0, all_nodes, {}, g_all};
 
   // GO!
-  rai_recursive(sp_init, g_all, sepset, ctx);
+  rai_recursive(init, g_all, sepset, ctx);
 
   g_all.orient_colliders(sepset);
   g_all.apply_meeks_rules();
