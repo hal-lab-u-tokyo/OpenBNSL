@@ -8,8 +8,8 @@ void bind_base(py::module& m) {
   auto submodule = m.def_submodule("base", "Base submodule");
 
   py::class_<DataframeWrapper>(submodule, "DataframeWrapper")
-      .def_readonly("num_of_vars", &DataframeWrapper::num_of_vars)
-      .def_readonly("num_of_datapoints", &DataframeWrapper::num_of_datapoints)
+      .def_readonly("num_vars", &DataframeWrapper::num_vars)
+      .def_readonly("num_datapoints", &DataframeWrapper::num_datapoints)
       .def_readonly("col_idx2str", &DataframeWrapper::col_idx2str)
       .def_readonly("col_str2idx", &DataframeWrapper::col_str2idx)
       .def_readonly("val_idx2str", &DataframeWrapper::val_idx2str)
@@ -20,9 +20,9 @@ void bind_base(py::module& m) {
       .def(py::init<const py::object&>())
       .def("__repr__", [](const DataframeWrapper& df) {
         std::string repr = "DataframeWrapper(\n";
-        repr += "  num_of_datapoints: " + std::to_string(df.num_of_datapoints) +
-                ",\n";
-        repr += "  num_of_vars: " + std::to_string(df.num_of_vars) + ",\n";
+        repr +=
+            "  num_datapoints: " + std::to_string(df.num_datapoints) + ",\n";
+        repr += "  num_vars: " + std::to_string(df.num_vars) + ",\n";
         repr += "  columns: [";
         for (size_t i = 0; i < df.col_idx2str.size(); ++i) {
           repr += df.col_idx2str[i];
@@ -37,6 +37,9 @@ void bind_base(py::module& m) {
       .def(py::init<const std::vector<size_t>&, const DataframeWrapper&>(),
            py::arg("var_ids"),
            py::arg("df"))
+      .def("marginalize_to",
+           &ContingencyTable::marginalize_to,
+           py::arg("var_ids_tgt"))
       .def_readonly("var_ids", &ContingencyTable::var_ids)
       .def_readonly("cardinalities", &ContingencyTable::cardinalities)
       .def_readonly("counts", &ContingencyTable::counts);

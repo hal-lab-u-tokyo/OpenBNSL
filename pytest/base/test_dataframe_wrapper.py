@@ -19,12 +19,12 @@ def test_dataframe_wrapper_basic(model_name, sample_size, seed):
     df_wrapper = openbnsllib.base.DataframeWrapper(samples)
 
     # Check that the number of variables and datapoints match the DataFrame.
-    assert df_wrapper.num_of_vars == len(
+    assert df_wrapper.num_vars == len(
         samples.columns
-    ), f"Expected {len(samples.columns)} variables, got {df_wrapper.num_of_vars}"
+    ), f"Expected {len(samples.columns)} variables, got {df_wrapper.num_vars}"
     assert (
-        df_wrapper.num_of_datapoints == samples.shape[0]
-    ), f"Expected {samples.shape[0]} datapoints, got {df_wrapper.num_of_datapoints}"
+        df_wrapper.num_datapoints == samples.shape[0]
+    ), f"Expected {samples.shape[0]} datapoints, got {df_wrapper.num_datapoints}"
 
     # Check that column names are stored in lexicographical order.
     sorted_cols = sorted(samples.columns)

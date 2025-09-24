@@ -1,13 +1,13 @@
 #include "base/all_dims_cache.h"
 
 AllDimsCache::AllDimsCache(const DataframeWrapper& df, int max_depth) : df(df) {
-  if (max_depth < 0 || max_depth > (int)df.num_of_vars)
-    throw std::invalid_argument("max_depth must be in [0, num_of_vars]");
+  if (max_depth < 0 || max_depth > (int)df.num_vars)
+    throw std::invalid_argument("max_depth must be in [0, num_vars]");
   this->max_depth = max_depth;
 
   root_node = std::make_unique<Node>();
-  std::vector<int> freq_tbl = {(int)df.num_of_datapoints};
-  std::vector<int> indices(df.num_of_datapoints);     // indices of datapoints
+  std::vector<int> freq_tbl = {(int)df.num_datapoints};
+  std::vector<int> indices(df.num_datapoints);        // indices of datapoints
   std::iota(indices.begin(), indices.end(), 0);       // 0, 1, 2, ..., N - 1
   branch(root_node.get(), 0, -1, freq_tbl, indices);  // recursive
 }
@@ -20,7 +20,7 @@ void AllDimsCache::branch(Node* node,
   node->freq_tbl = freq_tbl;
   if (curr_depth >= max_depth) return;
 
-  int num_of_branches = df.num_of_vars - rightmost_var - 1;
+  int num_of_branches = df.num_vars - rightmost_var - 1;
   node->children.resize(num_of_branches);
 #pragma omp parallel for schedule(dynamic)
   for (int branch_idx = 0; branch_idx < num_of_branches; ++branch_idx) {

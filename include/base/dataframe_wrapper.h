@@ -30,8 +30,8 @@ struct DataframeWrapper {
    * the data in both column-major and row-major formats.
    */
   DataframeWrapper(const py::object& dataframe);
-  size_t num_of_vars;
-  size_t num_of_datapoints;
+  size_t num_vars;
+  size_t num_datapoints;
 
   std::vector<std::string> col_idx2str;
   std::map<std::string, size_t> col_str2idx;

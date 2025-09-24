@@ -13,12 +13,12 @@
 PDAG exhaustive_search(const DataframeWrapper& df,
                        const ScoreType& score_type,
                        size_t max_parents) {
-  if (max_parents < 0 || max_parents > df.num_of_vars - 1)
-    throw std::invalid_argument("max_parents must be in [0, num_of_vars-1]");
+  if (max_parents < 0 || max_parents > df.num_vars - 1)
+    throw std::invalid_argument("max_parents must be in [0, num_vars-1]");
   size_t max_varset_size = max_parents + 1;
-  size_t n = df.num_of_vars;
+  size_t n = df.num_vars;
   if (n < 0 || n > 64)
-    throw std::invalid_argument("num_of_vars must be in [0, 64]");
+    throw std::invalid_argument("num_vars must be in [0, 64]");
 
   std::vector<varset_t> bit_masks(n);
   for (size_t i = 0; i < n; ++i) {

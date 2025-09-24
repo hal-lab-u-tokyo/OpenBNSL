@@ -27,7 +27,7 @@ def test_citest(
     samples = samples[sorted(samples.columns)]
 
     df_wrapper = openbnsllib.base.DataframeWrapper(samples)
-    n = df_wrapper.num_of_vars
+    n = df_wrapper.num_vars
 
     remaining_indices = list(range(n))
     x_idx = random.choice(remaining_indices)

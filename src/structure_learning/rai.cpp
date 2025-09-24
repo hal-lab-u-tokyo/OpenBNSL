@@ -177,7 +177,7 @@ static void rai_recursive(const Subproblem& curr,
 PDAG rai(const DataframeWrapper& df,
          const CITestType& test,
          size_t max_cond_vars) {
-  const size_t n = df.num_of_vars;
+  const size_t n = df.num_vars;
   RAIContext ctx{df, test, max_cond_vars};
 
   PDAGwithAdjMat g_all(n);

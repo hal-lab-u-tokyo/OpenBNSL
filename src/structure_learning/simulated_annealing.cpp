@@ -21,7 +21,7 @@ static void run_single_chain(const DataframeWrapper& df,
                              uint64_t seed,
                              double& best_score_out,
                              PDAGwithAdjList& best_graph_out) {
-  const size_t n = df.num_of_vars;
+  const size_t n = df.num_vars;
   PDAGwithAdjList g(n);
   std::vector<double> ls(n, 0.0);
   for (size_t v = 0; v < n; ++v) {
@@ -104,7 +104,7 @@ PDAG simulated_annealing(const DataframeWrapper& df,
                          double cooling_rate,
                          uint64_t seed,
                          size_t num_chains) {
-  if (max_parents < 0 || max_parents >= df.num_of_vars) {
+  if (max_parents < 0 || max_parents >= df.num_vars) {
     throw std::invalid_argument("max_parents out of range");
   }
 
@@ -113,10 +113,9 @@ PDAG simulated_annealing(const DataframeWrapper& df,
   }
 
   std::vector<double> scores(num_chains, -1e100);
-  PDAG result(df.num_of_vars);
+  PDAG result(df.num_vars);
 
-  std::vector<PDAGwithAdjList> graphs(num_chains,
-                                      PDAGwithAdjList(df.num_of_vars));
+  std::vector<PDAGwithAdjList> graphs(num_chains, PDAGwithAdjList(df.num_vars));
 #pragma omp parallel for
   for (size_t c = 0; c < num_chains; ++c) {
     run_single_chain(df,

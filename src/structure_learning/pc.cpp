@@ -77,7 +77,7 @@ void build_skeleton(PDAGwithAdjMat& g,
 PDAG pc(const DataframeWrapper& df,
         const CITestType& test,
         size_t max_cond_vars) {
-  const size_t n = df.num_of_vars;
+  const size_t n = df.num_vars;
   PDAGwithAdjMat g(n);
   g.set_as_complete();
   Sepset sepset(n, std::vector<std::unordered_set<size_t>>(n));
