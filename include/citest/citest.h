@@ -15,7 +15,6 @@
  * if the expected frequency is non‑zero.  We therefore generate those cells
  * on‑the‑fly: for each Z‑slice we iterate over the Cartesian product of the
  * actually observed X–states and Y–states and fill in obs = 0 where necessary.
- * @tparam Deterministic Whether the contingency table is deterministic or not
  * @param x The first variable
  * @param y The second variable
  * @param sepset_candidate The candidate separator set
@@ -24,9 +23,8 @@
  * @return True if the conditional independence test passes (p_value >= alpha),
  *         false otherwise.
  */
-template <bool Deterministic>
 bool citest(std::size_t x,
             std::size_t y,
             const std::vector<std::size_t>& sepset_candidate,
-            const ContingencyTable<Deterministic>& ct,
+            const ContingencyTable& ct,
             const CITestType& ci_test_type);

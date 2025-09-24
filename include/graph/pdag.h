@@ -48,9 +48,8 @@ struct PDAG {
       std::vector<size_t> vars = parents_vec;
       vars.push_back(v);
       std::sort(vars.begin(), vars.end());
-      ContingencyTable<false> ct(vars, df);
-      res +=
-          calculate_local_score<double, false>(v, parents_vec, ct, score_type);
+      ContingencyTable ct(vars, df);
+      res += calculate_local_score(v, parents_vec, ct, score_type);
     }
     return res;
   }

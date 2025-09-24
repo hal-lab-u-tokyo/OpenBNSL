@@ -25,7 +25,7 @@ void bind_citest(py::module& m) {
       .def("__repr__", [](const OracleGraph&) { return "<OracleGraph>"; });
 
   submodule.def("citest",
-                &citest<true>,
+                &citest,
                 py::arg("x"),
                 py::arg("y"),
                 py::arg("sepset_candidate"),

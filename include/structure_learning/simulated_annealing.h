@@ -14,7 +14,6 @@
  * @param cooling_rate Cooling rate for the temperature
  * @param seed Random seed for reproducibility
  * @param num_chains Number of parallel chains to run (0 for auto-detect)
- * @param is_deterministic Whether to use deterministic or non-deterministic
  * @return Best DAG found during the annealing process
  */
 PDAG simulated_annealing(const DataframeWrapper& df,
@@ -23,6 +22,5 @@ PDAG simulated_annealing(const DataframeWrapper& df,
                          size_t max_iters = 100000,
                          double init_temp = 1.0,
                          double cooling_rate = 0.9995,
-                         bool is_deterministic = false,
                          uint64_t seed = 0,
                          size_t num_chains = 0);

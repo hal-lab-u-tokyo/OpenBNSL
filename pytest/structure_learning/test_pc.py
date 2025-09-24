@@ -44,9 +44,7 @@ def test_pc(model_name, seed):
     )
     t1 = time.perf_counter()
     elapsed = t1 - t0
-    print(
-        f"[OpenBNSL] model={model_name}, seed={seed}, time={elapsed:.2f}s"
-    )
+    print(f"[OpenBNSL] model={model_name}, seed={seed}, time={elapsed:.2f}s")
 
     expected_obnsl = to_pgmpy(_pdag, list(samples.columns))
     error_obnsl = structural_errors(model_original, expected_obnsl)

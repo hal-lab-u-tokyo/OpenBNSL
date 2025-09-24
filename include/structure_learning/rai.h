@@ -1,7 +1,5 @@
 #pragma once
 
-#include <optional>
-
 #include "base/dataframe_wrapper.h"
 #include "citest/citest_type.h"
 #include "graph/pdag.h"

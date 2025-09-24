@@ -4,11 +4,10 @@
 #include <cmath>
 #include <stdexcept>
 
-template <typename ScoreScalar, bool Deterministic>
-ScoreScalar calculate_local_score(size_t child_var,
-                                  const std::vector<size_t>& /*parent_set*/,
-                                  const ContingencyTable<Deterministic>& ct,
-                                  const ScoreType& score_type) {
+double calculate_local_score(size_t child_var,
+                             const std::vector<size_t>& /*parent_set*/,
+                             const ContingencyTable& ct,
+                             const ScoreType& score_type) {
   auto itr = std::find(ct.var_ids.begin(), ct.var_ids.end(), child_var);
   if (itr == ct.var_ids.end()) {
     throw std::invalid_argument("child_var not present in contingency table");
@@ -20,19 +19,19 @@ ScoreScalar calculate_local_score(size_t child_var,
     total_size *= card;
   }
 
-  ScoreScalar a_ijk;
+  double a_ijk;
   if (is_type<BDeu>(score_type)) {
     const auto& bdeu = get_type<BDeu>(score_type);
-    a_ijk = (ScoreScalar)bdeu.ess / total_size;
+    a_ijk = (double)bdeu.ess / total_size;
   } else {
     throw std::invalid_argument("Unsupported score type.");
   }
-  ScoreScalar a_ij = a_ijk * child_card;
-  ScoreScalar lgamma_a_ijk = std::lgamma(a_ijk);
-  ScoreScalar lgamma_a_ij = std::lgamma(a_ij);
+  double a_ij = a_ijk * child_card;
+  double lgamma_a_ijk = std::lgamma(a_ijk);
+  double lgamma_a_ij = std::lgamma(a_ij);
 
-  ScoreScalar ls = 0;
-  CountsMap<Deterministic> marged_counts;
+  double ls = 0;
+  std::unordered_map<size_t, size_t> marged_counts;
   for (const auto& [key, N_ijk] : ct.counts) {
     if (N_ijk == 0) continue;
     ls += std::lgamma(N_ijk + a_ijk) - lgamma_a_ijk;
@@ -45,26 +44,3 @@ ScoreScalar calculate_local_score(size_t child_var,
   }
   return ls;
 }
-
-template double calculate_local_score<double, true>(
-    size_t,
-    const std::vector<size_t>&,
-    const ContingencyTable<true>&,
-    const ScoreType&);
-
-template double calculate_local_score<double, false>(
-    size_t,
-    const std::vector<size_t>&,
-    const ContingencyTable<false>&,
-    const ScoreType&);
-
-template float calculate_local_score<float, true>(size_t,
-                                                  const std::vector<size_t>&,
-                                                  const ContingencyTable<true>&,
-                                                  const ScoreType&);
-
-template float calculate_local_score<float, false>(
-    size_t,
-    const std::vector<size_t>&,
-    const ContingencyTable<false>&,
-    const ScoreType&);

@@ -7,10 +7,7 @@
 #include "graph/ipdag_convertible.h"
 #include "graph/pdag.h"
 
-template <bool Deterministic>
-using ParentSet = std::conditional_t<Deterministic,
-                                     std::set<std::size_t>,
-                                     std::unordered_set<std::size_t>>;
+using ParentSet = std::unordered_set<std::size_t>;
 
 /**
  * @ingroup graph
@@ -20,12 +17,11 @@ using ParentSet = std::conditional_t<Deterministic,
  * This structure uses an adjacency list to represent the PDAG, allowing for
  * efficient storage and access patterns.
  */
-template <bool Deterministic>
 struct PDAGwithAdjList : IPDAGConvertible {
-  using ParentSetType = ParentSet<Deterministic>;
+  using ParentSetType = ParentSet;
 
   std::size_t num_vars;
-  std::vector<ParentSet<Deterministic>> parents;
+  std::vector<ParentSet> parents;
 
   explicit PDAGwithAdjList(std::size_t num_vars);
   bool has_edge(std::size_t from, std::size_t to) const;

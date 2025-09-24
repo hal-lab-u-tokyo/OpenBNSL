@@ -18,11 +18,10 @@ double pchisq(double x, std::size_t dof) {
   return 1.0 - boost::math::cdf(dist, x);
 }
 
-template <bool Deterministic>
 bool citest(std::size_t x,
             std::size_t y,
             const std::vector<std::size_t>& sepset_candidate,
-            const ContingencyTable<Deterministic>& ct,
+            const ContingencyTable& ct,
             const CITestType& ci_test_type) {
   if (x == y) throw std::invalid_argument("x and y must differ");
   if (x >= y) std::swap(x, y);
@@ -141,14 +140,3 @@ bool citest(std::size_t x,
 
   return p_value >= alpha;
 }
-
-template bool citest<true>(std::size_t,
-                           std::size_t,
-                           const std::vector<std::size_t>&,
-                           const ContingencyTable<true>&,
-                           const CITestType&);
-template bool citest<false>(std::size_t,
-                            std::size_t,
-                            const std::vector<std::size_t>&,
-                            const ContingencyTable<false>&,
-                            const CITestType&);

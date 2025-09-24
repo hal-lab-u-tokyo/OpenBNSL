@@ -1,28 +1,23 @@
 #include "graph/pdag_with_adjlist.h"
+
 #include <queue>
 
-template <bool Deterministic>
-PDAGwithAdjList<Deterministic>::PDAGwithAdjList(std::size_t n)
-    : num_vars(n), parents(n) {}
+PDAGwithAdjList::PDAGwithAdjList(std::size_t n) : num_vars(n), parents(n) {}
 
-template <bool Deterministic>
-bool PDAGwithAdjList<Deterministic>::has_edge(std::size_t from, std::size_t to) const {
+bool PDAGwithAdjList::has_edge(std::size_t from, std::size_t to) const {
   const auto& ps = parents[to];
   return ps.find(from) != ps.end();
 }
 
-template <bool Deterministic>
-void PDAGwithAdjList<Deterministic>::add_edge(std::size_t from, std::size_t to) {
+void PDAGwithAdjList::add_edge(std::size_t from, std::size_t to) {
   parents[to].insert(from);
 }
 
-template <bool Deterministic>
-void PDAGwithAdjList<Deterministic>::remove_edge(std::size_t from, std::size_t to) {
+void PDAGwithAdjList::remove_edge(std::size_t from, std::size_t to) {
   parents[to].erase(from);
 }
 
-template <bool Deterministic>
-bool PDAGwithAdjList<Deterministic>::has_path(std::size_t src, std::size_t dst) const {
+bool PDAGwithAdjList::has_path(std::size_t src, std::size_t dst) const {
   if (src == dst) return true;
 
   std::vector<bool> visited(num_vars, false);
@@ -43,13 +38,12 @@ bool PDAGwithAdjList<Deterministic>::has_path(std::size_t src, std::size_t dst) 
   return false;
 }
 
-template <bool Deterministic>
-void PDAGwithAdjList<Deterministic>::set_parents(std::size_t v, const ParentSetType& new_parents) {
+void PDAGwithAdjList::set_parents(std::size_t v,
+                                  const ParentSetType& new_parents) {
   parents[v] = new_parents;
 }
 
-template <bool Deterministic>
-PDAG PDAGwithAdjList<Deterministic>::to_pdag() const {
+PDAG PDAGwithAdjList::to_pdag() const {
   PDAG pdag(num_vars);
   for (std::size_t v = 0; v < num_vars; ++v) {
     for (auto p : parents[v]) {
@@ -58,6 +52,3 @@ PDAG PDAGwithAdjList<Deterministic>::to_pdag() const {
   }
   return pdag;
 }
-
-template struct PDAGwithAdjList<true>;
-template struct PDAGwithAdjList<false>;
