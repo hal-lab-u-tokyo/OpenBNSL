@@ -15,13 +15,13 @@ def test_contingency_table(model_name, sample_size, seed):
 
     ct1 = openbnsllib.base.ContingencyTable([0], df_wrapper)
 
-    n_unique = df_wrapper.num_of_values[0]
+    n_unique = df_wrapper.num_values[0]
     assert len(ct1.counts) <= n_unique
     assert sum(ct1.counts.values()) == df_wrapper.num_datapoints
 
     if df_wrapper.num_vars >= 2:
         ct2 = openbnsllib.base.ContingencyTable([0, 1], df_wrapper)
 
-        n_cells = df_wrapper.num_of_values[0] * df_wrapper.num_of_values[1]
+        n_cells = df_wrapper.num_values[0] * df_wrapper.num_values[1]
         assert len(ct2.counts) <= n_cells
         assert sum(ct2.counts.values()) == df_wrapper.num_datapoints

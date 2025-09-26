@@ -3,7 +3,14 @@
 #include <set>
 
 DataframeWrapper::DataframeWrapper(const py::object& dataframe) {
-  // get the column names and assign indices in lexicographical order
+  // a helper function to normalize a cell value to string
+  auto normalize = [&](const py::object& obj) -> std::string {
+    if (obj.is_none()) return "<NA>";
+    // future: handle other types
+    return obj.cast<std::string>();
+  };
+
+  // get the column names
   if (!py::hasattr(dataframe, "columns"))
     throw std::invalid_argument("Input must be a pandas dataframe");
   auto columns = dataframe.attr("columns");
@@ -21,16 +28,14 @@ DataframeWrapper::DataframeWrapper(const py::object& dataframe) {
   // get the numpy array
   if (!py::hasattr(dataframe, "values"))
     throw std::invalid_argument("Input must be a pandas dataframe");
-  py::array numpy_array = dataframe.attr("values");
-  auto dataset_buf = numpy_array.request();
-  if (dataset_buf.ndim != 2)
-    throw std::invalid_argument("Input must be a 2D array");
-  num_vars = dataset_buf.shape[1];
-  num_datapoints = dataset_buf.shape[0];
-  const py::object* dataset_ptr = static_cast<py::object*>(dataset_buf.ptr);
+  py::array arr = dataframe.attr("values");
+  auto buf = arr.request();
+  if (buf.ndim != 2) throw std::invalid_argument("Input must be a 2D array");
+  num_vars = static_cast<size_t>(buf.shape[1]);
+  num_datapoints = static_cast<size_t>(buf.shape[0]);
+  const py::object* ptr = static_cast<py::object*>(buf.ptr);
 
-  // get the unique values for each column and assign indices in lexicographical
-  // order
+  // get the unique values for each column
   val_str2idx.resize(num_vars);
   val_idx2str.resize(num_vars);
 #pragma omp parallel for
@@ -39,7 +44,7 @@ DataframeWrapper::DataframeWrapper(const py::object& dataframe) {
     for (size_t j = 0; j < num_datapoints; j++) {
       std::string value_str;
       try {
-        value_str = dataset_ptr[i * num_datapoints + j].cast<std::string>();
+        value_str = normalize(ptr[i * num_datapoints + j]);
       } catch (const std::exception& e) {
         throw std::invalid_argument("Failed to cast value to string");
       }
@@ -51,11 +56,10 @@ DataframeWrapper::DataframeWrapper(const py::object& dataframe) {
     }
   }
 
-  // manage the num_of_values
-  num_of_values.resize(num_vars);
-#pragma omp parallel for
+  // manage the num_values
+  num_values.resize(num_vars);
   for (size_t i = 0; i < num_vars; i++) {
-    num_of_values[i] = val_idx2str[i].size();
+    num_values[i] = val_idx2str[i].size();
   }
 
   // manage the data_column_major
@@ -64,8 +68,8 @@ DataframeWrapper::DataframeWrapper(const py::object& dataframe) {
   for (size_t i = 0; i < num_vars; i++) {
     data_column_major[i].resize(num_datapoints);
     for (size_t j = 0; j < num_datapoints; j++) {
-      auto value = dataset_ptr[i * num_datapoints + j].cast<std::string>();
-      data_column_major[i][j] = val_str2idx[i][value];
+      auto value_str = normalize(ptr[i * num_datapoints + j]);
+      data_column_major[i][j] = val_str2idx[i][value_str];
     }
   }
 

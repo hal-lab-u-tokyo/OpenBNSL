@@ -14,7 +14,7 @@ void bind_base(py::module& m) {
       .def_readonly("col_str2idx", &DataframeWrapper::col_str2idx)
       .def_readonly("val_idx2str", &DataframeWrapper::val_idx2str)
       .def_readonly("val_str2idx", &DataframeWrapper::val_str2idx)
-      .def_readonly("num_of_values", &DataframeWrapper::num_of_values)
+      .def_readonly("num_values", &DataframeWrapper::num_values)
       .def_readonly("data_column_major", &DataframeWrapper::data_column_major)
       .def_readonly("data_row_major", &DataframeWrapper::data_row_major)
       .def(py::init<const py::object&>())

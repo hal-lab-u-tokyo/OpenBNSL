@@ -47,9 +47,9 @@ def test_dataframe_wrapper_basic(model_name, sample_size, seed):
             df_wrapper.val_idx2str[i] == unique_vals
         ), f"For column {col}: expected unique values {unique_vals}, got {df_wrapper.val_idx2str[i]}"
         # Also, number of unique values must match.
-        assert df_wrapper.num_of_values[i] == len(
+        assert df_wrapper.num_values[i] == len(
             unique_vals
-        ), f"For column {col}: expected num_of_values {len(unique_vals)}, got {df_wrapper.num_of_values[i]}"
+        ), f"For column {col}: expected num_values {len(unique_vals)}, got {df_wrapper.num_values[i]}"
 
     # Too Slow to check in Python for loop
     # Check that the row-major representation is the transpose of the column-major one.

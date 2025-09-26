@@ -25,14 +25,14 @@ void AllDimsCache::branch(Node* node,
 #pragma omp parallel for schedule(dynamic)
   for (int branch_idx = 0; branch_idx < num_of_branches; ++branch_idx) {
     const int tgt_var = rightmost_var + branch_idx + 1;
-    const int num_of_values = df.val_idx2str[tgt_var].size();
+    const int num_values = df.val_idx2str[tgt_var].size();
     const std::vector<uint8_t>& tgt_dataref = df.data_column_major[tgt_var];
 
     std::vector<int> new_freq_tbl;
     std::vector<int> new_indices(indices.size());
 
     int left = 0, right = 0, idx_idx = 0;
-    std::vector<std::vector<int>> buckets(num_of_values);
+    std::vector<std::vector<int>> buckets(num_values);
     for (const int bucket_size : freq_tbl) {
       for (auto& bucket : buckets) bucket.clear();
       left = right;

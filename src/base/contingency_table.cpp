@@ -16,7 +16,7 @@ ContingencyTable::ContingencyTable(const std::vector<size_t>& var_ids,
   // 1) Fill cardinalities in-place (no reverse needed).
   for (size_t i = 0; i < k; ++i) {
     const size_t v = this->var_ids[i];
-    cardinalities[i] = df.num_of_values[v];
+    cardinalities[i] = df.num_values[v];
   }
 
   // 2) Build suffix prods for radix_weights: weight of the last var is 1.
