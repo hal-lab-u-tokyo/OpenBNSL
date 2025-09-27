@@ -2,9 +2,7 @@
 
 #include "structure_learning/exhaustive_search.h"
 #include "structure_learning/pc.h"
-#include "structure_learning/pc2.h"
 #include "structure_learning/rai.h"
-#include "structure_learning/rai2.h"
 #include "structure_learning/simulated_annealing.h"
 
 void bind_structure_learning(py::module& m) {
@@ -34,21 +32,9 @@ void bind_structure_learning(py::module& m) {
                 py::arg("df"),
                 py::arg("ci_test_type"),
                 py::arg("max_cond_vars"));
-  submodule.def("pc2",
-                &pc2,
-                "Run PC2 algorithm",
-                py::arg("df"),
-                py::arg("ci_test_type"),
-                py::arg("max_cond_vars"));
   submodule.def("rai",
                 &rai,
                 "Run RAI algorithm",
-                py::arg("df"),
-                py::arg("ci_test_type"),
-                py::arg("max_cond_vars"));
-  submodule.def("rai2",
-                &rai2,
-                "Run RAI2 algorithm",
                 py::arg("df"),
                 py::arg("ci_test_type"),
                 py::arg("max_cond_vars"));
