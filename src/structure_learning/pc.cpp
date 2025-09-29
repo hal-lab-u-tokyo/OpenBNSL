@@ -1,16 +1,12 @@
 #include "structure_learning/pc.h"
 
-#include <algorithm>
-#include <array>
-#include <vector>
-
 #include "base/contingency_table.h"
 #include "base/dataframe_wrapper.h"
 #include "citest/citest.h"
-#include "graph/pdag_with_adjmat.h"
+#include "graph/pdag_with_parset.h"
 #include "utils/gen_comb.h"
 
-void build_skeleton(PDAGwithAdjMat& g,
+void build_skeleton(PDAGwithParSet& g,
                     const DataframeWrapper& df,
                     const CITestType& test,
                     size_t max_cond_vars,
@@ -18,7 +14,7 @@ void build_skeleton(PDAGwithAdjMat& g,
   const size_t n = g.num_global_vars;
 
   for (size_t k = 0; k <= max_cond_vars; ++k) {
-    const PDAGwithAdjMat snapshot = g;
+    const PDAGwithParSet snapshot = g;
     struct Update {
       size_t x, y;
       std::vector<size_t> Z;
@@ -34,8 +30,10 @@ void build_skeleton(PDAGwithAdjMat& g,
           if (!snapshot.has_undirected_edge(x, y)) continue;
 
           for (auto [u, v] : std::array{std::pair{x, y}, std::pair{y, x}}) {
-            auto neigh = snapshot.undirected_neighbors_without(u, v);
-            if (neigh.size() < k) continue;
+            const auto neigh_set = snapshot.undirected_neighbors_without(u, v);
+            if (neigh_set.size() < k) continue;
+            std::vector<size_t> neigh(neigh_set.begin(), neigh_set.end());
+            std::sort(neigh.begin(), neigh.end());
 
             // B: Create contingency table for {u,v} U neigh(u) once
             // std::vector<size_t> vars = neigh;
@@ -78,7 +76,7 @@ PDAG pc(const DataframeWrapper& df,
         const CITestType& test,
         size_t max_cond_vars) {
   const size_t n = df.num_vars;
-  PDAGwithAdjMat g(n);
+  PDAGwithParSet g(n);
   g.set_as_complete();
   Sepset sepset(n, std::vector<std::unordered_set<size_t>>(n));
 
