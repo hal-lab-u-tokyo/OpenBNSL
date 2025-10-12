@@ -1,5 +1,7 @@
 #pragma once
 #include <vector>
+#include <algorithm>
+#include <stdexcept>
 
 template <typename T>
 void enum_comb_rec(const std::vector<T>& items,
@@ -27,6 +29,8 @@ void enum_comb_rec(const std::vector<T>& items,
  */
 template <typename T>
 std::vector<std::vector<T>> gen_combs(const std::vector<T>& items, size_t k) {
+  if (!std::is_sorted(items.begin(), items.end()))
+    throw std::invalid_argument("items must be sorted in ascending order");
   std::vector<std::vector<T>> res;
   if (k == 0) {
     res.push_back({});

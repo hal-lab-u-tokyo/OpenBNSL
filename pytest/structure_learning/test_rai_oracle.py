@@ -17,11 +17,11 @@ from helpers.structural_distance import structural_errors
         "sachs",
         "survey",  # Small networks
         "alarm",
-        "barley",
+        # "barley",
         "child",
-        "insurance",
+        # "insurance",
         "mildew",
-        "water",  # Medium networks
+        # "water",  # Medium networks
         # "hailfinder", "hepar2", "win95pts", # Large networks
         # "andes", "diabetes", "link", "munin1", "pathfinder", "pigs", # Extra large networks
         # "munin", "munin2", "munin3", "munin4", # Very extra large networks

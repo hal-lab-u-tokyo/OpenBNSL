@@ -7,8 +7,7 @@
 
 #include "graph/ipdag_convertible.h"
 #include "graph/pdag.h"
-
-constexpr size_t UNASSIGNED = std::numeric_limits<size_t>::max();
+#include "utils/logging.h"
 
 using Sepset = std::vector<std::vector<std::unordered_set<size_t>>>;
 
@@ -21,80 +20,82 @@ using Sepset = std::vector<std::vector<std::unordered_set<size_t>>>;
  * allowing for efficient storage and access patterns.
  */
 struct PDAGwithAdjMat : IPDAGConvertible {
-  std::size_t num_local_vars;
-  std::size_t num_global_vars;
-  std::vector<size_t> gid2lid;  // global id -> local idx or UNASSIGNED
-  std::vector<size_t> lid2gid;  // local idx -> global id
-
-  std::vector<std::vector<uint64_t>> in_arc_bits;
-
-  explicit PDAGwithAdjMat(std::size_t n);
-  static PDAGwithAdjMat induced_subgraph(const PDAGwithAdjMat& src,
-                                         const std::vector<size_t>& S);
-
+  std::size_t num_vars; // < 1000
+  std::vector<std::vector<uint64_t>> potential_parent_bits;
+  
+  PDAGwithAdjMat(std::size_t n);
   void set_as_complete();
-  bool contains(size_t gid) const {
-    return gid < gid2lid.size() && gid2lid[gid] != UNASSIGNED;
-  }
 
-  bool has_directed_edge(std::size_t uG, std::size_t vG) const;
-  bool has_undirected_edge(std::size_t uG, std::size_t vG) const;
-  bool is_adjacent(std::size_t uG, std::size_t vG) const;
-
-  void remove_undirected_edge(std::size_t uG, std::size_t vG);
-  void orient_edge(std::size_t uG, std::size_t vG);
-
-  std::vector<std::size_t> predecessors(
-      std::size_t vG) const;  // {uG | u->v or u<->v}
-  std::vector<std::size_t> parents(std::size_t vG) const;  // {uG | u->v}
-  std::vector<std::size_t> undirected_neighbors(
-      std::size_t vG) const;  // {uG | u-v}
-  std::vector<std::size_t> undirected_neighbors_without(
-      std::size_t vG,
-      std::size_t exclG) const;
-
-  std::pair<std::vector<size_t>, std::vector<std::vector<size_t>>> decompose(
-      const PDAGwithAdjMat& g_all) const;
-
+  PDAG to_pdag() const override;
   void orient_colliders(const Sepset& sepset);
   void apply_meeks_rules();
 
-  PDAG to_pdag() const override;
-
- private:
-  static inline void _bounds(std::size_t i, std::size_t n);
-
-  inline std::size_t _to_local(std::size_t g) const {
-    return (g < gid2lid.size()) ? gid2lid[g] : UNASSIGNED;
+  bool has_directed_edge(std::size_t u, std::size_t v) const {
+    return _has_arc(u, v) && !_has_arc(v, u);
+  }
+  bool has_undirected_edge(std::size_t u, std::size_t v) const {
+    return _has_arc(u, v) && _has_arc(v, u);
+  }
+  bool is_adjacent(std::size_t u, std::size_t v) const {
+    return _has_arc(u, v) || _has_arc(v, u);
+  }
+  void orient_edge(std::size_t u, std::size_t v) {
+    if (!is_adjacent(u, v)) throw std::invalid_argument("No edge exists");
+    if (has_directed_edge(v, u)) 
+      // throw std::invalid_argument("Edge already oriented the other way");
+      INFO("[PDAG] edge already oriented the other way");
+    _set_arc(u, v);
+    _clr_arc(v, u);
+  }
+  void remove_edge(std::size_t u, std::size_t v) {
+    _clr_arc(u, v);
+    _clr_arc(v, u);
   }
 
-  bool _has_arcL(std::size_t uL, std::size_t vL) const;
-  void _set_arcL(std::size_t uL, std::size_t vL);
-  void _clr_arcL(std::size_t uL, std::size_t vL);
+  /*
+   * potential_parents(v) = {u | u->v or u-v}
+   * parents(v) = {u | u->v}
+   * undirected_neighbors(v) = {u | u-v}
+   */
+  std::vector<std::size_t> potential_parents(std::size_t v) const;
+  std::vector<std::size_t> parents(std::size_t v) const;
+  std::vector<std::size_t> undirected_neighbors(std::size_t v) const;
+  std::vector<std::size_t> potential_parents_in(
+    std::size_t v, const std::vector<uint64_t>& mask) const;
+  std::vector<std::size_t> parents_in(
+    std::size_t v, const std::vector<uint64_t>& mask) const;
+  std::vector<std::size_t> undirected_neighbors_in(
+    std::size_t v, const std::vector<uint64_t>& mask) const;
 
-  bool has_directed_edgeL(std::size_t uL, std::size_t vL) const {
-    return _has_arcL(uL, vL) && !_has_arcL(vL, uL);
+  inline bool _has_arc(std::size_t u, std::size_t v) const {
+    const std::size_t b = u / 64, s = u % 64;
+    return (potential_parent_bits[v][b] & (1ULL << s)) != 0ULL;
   }
-  bool has_undirected_edgeL(std::size_t uL, std::size_t vL) const {
-    return _has_arcL(uL, vL) && _has_arcL(vL, uL);
+  inline void _set_arc(std::size_t u, std::size_t v) {
+    const std::size_t b = u / 64, s = u % 64;
+    potential_parent_bits[v][b] |= (1ULL << s);
   }
-  bool is_adjacentL(std::size_t uL, std::size_t vL) const {
-    return _has_arcL(uL, vL) || _has_arcL(vL, uL);
+  inline void _clr_arc(std::size_t u, std::size_t v) {
+    const std::size_t b = u / 64, s = u % 64;
+    potential_parent_bits[v][b] &= ~(1ULL << s);
   }
-  void remove_undirected_edgeL(std::size_t uL, std::size_t vL) {
-    if (!has_undirected_edgeL(uL, vL)) return;
-    _clr_arcL(uL, vL);
-    _clr_arcL(vL, uL);
+  inline std::vector<size_t>
+  _extract_indices_from_bits(const std::vector<uint64_t>& bits) const {
+    std::vector<size_t> out;
+    const std::size_t blocks = (num_vars + 63) / 64;
+    for (std::size_t b = 0; b < blocks; ++b) {
+      uint64_t x = bits[b];
+      while (x) {
+  #if defined(__GNUC__) || defined(__clang__)
+        std::size_t s = __builtin_ctzll(x);
+  #else
+        unsigned long s; _BitScanForward64(&s, x);
+  #endif
+        const std::size_t id = b * 64 + s;
+        if (id < num_vars) out.push_back(id);
+        x &= x - 1;
+      }
+    }
+    return out;
   }
-  void orient_edgeL(std::size_t uL, std::size_t vL) {  // u -> v にする
-    if (has_directed_edgeL(uL, vL)) return;
-    _clr_arcL(vL, uL);
-  }
-
-  std::vector<std::size_t> predecessorsL(std::size_t vL) const;
-  std::vector<std::size_t> parentsL(std::size_t vL) const;
-  std::vector<std::size_t> undirected_neighborsL(std::size_t vL) const;
-  std::vector<std::size_t> undirected_neighbors_withoutL(
-      std::size_t vL,
-      std::size_t excl) const;
 };
