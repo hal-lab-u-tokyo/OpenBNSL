@@ -1,7 +1,6 @@
 #include "structure_learning/exhaustive_search.h"
 
 #include <iostream>
-#include <optional>
 #include <stdexcept>
 
 #include "base/contingency_table.h"
@@ -13,14 +12,13 @@
 
 PDAG exhaustive_search(const DataframeWrapper& df,
                        const ScoreType& score_type,
-                       size_t max_parents,
-                       bool is_deterministic) {
-  if (max_parents < 0 || max_parents > df.num_of_vars - 1)
-    throw std::invalid_argument("max_parents must be in [0, num_of_vars-1]");
+                       size_t max_parents) {
+  if (max_parents < 0 || max_parents > df.num_vars - 1)
+    throw std::invalid_argument("max_parents must be in [0, num_vars-1]");
   size_t max_varset_size = max_parents + 1;
-  size_t n = df.num_of_vars;
+  size_t n = df.num_vars;
   if (n < 0 || n > 64)
-    throw std::invalid_argument("num_of_vars must be in [0, 64]");
+    throw std::invalid_argument("num_vars must be in [0, 64]");
 
   std::vector<varset_t> bit_masks(n);
   for (size_t i = 0; i < n; ++i) {
@@ -52,7 +50,7 @@ PDAG exhaustive_search(const DataframeWrapper& df,
     do {
       std::vector<size_t> varset_vec = combmask2vec(varset_int);
 
-      std::optional<ContingencyTable<true>>
+      std::optional<ContingencyTable>
           ct;  // optional to avoid unnecessary computation
       if (calc_ls) ct.emplace(varset_vec, df);
 
@@ -68,8 +66,7 @@ PDAG exhaustive_search(const DataframeWrapper& df,
           for (auto v : varset_vec) {
             if (v != child_var) parent_set.push_back(v);
           }
-          ls = calculate_local_score<double>(
-              child_var, parent_set, *ct, score_type);
+          ls = calculate_local_score(child_var, parent_set, *ct, score_type);
         }
 
         double best_ls = ls;

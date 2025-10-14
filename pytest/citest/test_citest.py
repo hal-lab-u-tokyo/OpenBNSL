@@ -12,7 +12,7 @@ import openbnsllib
 @pytest.mark.parametrize("sample_size", [int(1e5)])
 @pytest.mark.parametrize("citest_type_str", ["chi_square", "g_sq"])
 @pytest.mark.parametrize("level", [0.01])
-@pytest.mark.parametrize("seed", [0])
+@pytest.mark.parametrize("seed", [0, 1, 2, 3])
 def test_citest(
     model_name: Literal["asia"],
     citest_type_str: Literal["chi_square"] | Literal["g_sq"],
@@ -27,14 +27,16 @@ def test_citest(
     samples = samples[sorted(samples.columns)]
 
     df_wrapper = openbnsllib.base.DataframeWrapper(samples)
-    n = df_wrapper.num_of_vars
+    n = df_wrapper.num_vars
 
     remaining_indices = list(range(n))
     x_idx = random.choice(remaining_indices)
     remaining_indices.remove(x_idx)
     y_idx = random.choice(remaining_indices)
     remaining_indices.remove(y_idx)
-    num_sepset_candidates = random.randint(0, min(5, len(remaining_indices)))
+    extra_idx = random.choice(remaining_indices)
+    remaining_indices.remove(extra_idx)
+    num_sepset_candidates = random.randint(0, min(8, len(remaining_indices)))
     selected_sepset_indices = random.sample(remaining_indices, num_sepset_candidates)
     sorted_sepset_indices = sorted(selected_sepset_indices)
 
@@ -75,7 +77,8 @@ def test_citest(
         citest_type = openbnsllib.citest.GSquare(level)
     else:
         raise ValueError(f"Unsupported citest_type_str: {citest_type_str}")
-    var_indices = sorted(sorted_sepset_indices + [x_idx, y_idx])
+    # var_indices = sorted(sorted_sepset_indices + [x_idx, y_idx])
+    var_indices = sorted(sorted_sepset_indices + [x_idx, y_idx, extra_idx])
     ct = openbnsllib.base.ContingencyTable(var_indices, df_wrapper)
     computed_result = openbnsllib.citest.citest(
         x_idx, y_idx, sorted_sepset_indices, ct, citest_type

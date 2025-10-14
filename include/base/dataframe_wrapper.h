@@ -2,8 +2,8 @@
 #include <pybind11/numpy.h>
 #include <pybind11/pybind11.h>
 
-#include <map>
 #include <string>
+#include <unordered_map>
 #include <vector>
 namespace py = pybind11;
 
@@ -30,15 +30,15 @@ struct DataframeWrapper {
    * the data in both column-major and row-major formats.
    */
   DataframeWrapper(const py::object& dataframe);
-  size_t num_of_vars;
-  size_t num_of_datapoints;
+  size_t num_vars;
+  size_t num_datapoints;
 
   std::vector<std::string> col_idx2str;
-  std::map<std::string, size_t> col_str2idx;
+  std::unordered_map<std::string, size_t> col_str2idx;
   std::vector<std::vector<std::string>> val_idx2str;
-  std::vector<std::map<std::string, dtype>> val_str2idx;
+  std::vector<std::unordered_map<std::string, dtype>> val_str2idx;
 
-  std::vector<size_t> num_of_values;
+  std::vector<size_t> num_values;
   std::vector<std::vector<dtype>>
       data_column_major;  // [num_of_column][num_of_datapoint]
   std::vector<std::vector<dtype>>

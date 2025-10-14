@@ -24,7 +24,7 @@ def test_local_score(
     samples = samples[sorted(samples.columns)]
 
     df_wrapper = openbnsllib.base.DataframeWrapper(samples)
-    n = df_wrapper.num_of_vars
+    n = df_wrapper.num_vars
 
     child_idx = random.randint(0, n - 1)
     candidate_parent_indices = [i for i in range(n) if i != child_idx]

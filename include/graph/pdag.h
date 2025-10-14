@@ -3,6 +3,11 @@
 #include <set>
 #include <vector>
 
+#include "base/contingency_table.h"
+#include "base/dataframe_wrapper.h"
+#include "score/local_score.h"
+#include "score/score_type.h"
+
 /**
  * @ingroup graph
  * @struct PDAG
@@ -33,5 +38,19 @@ struct PDAG {
 
   void remove_edge(std::size_t from, std::size_t to) {
     parents[to].erase(from);
+  }
+
+  double score(const DataframeWrapper& df, const ScoreType& score_type) const {
+    double res = 0.0;
+    for (std::size_t v = 0; v < num_vars; ++v) {
+      std::vector<size_t> parents_vec;
+      for (auto pa : parents[v]) parents_vec.push_back(pa);
+      std::vector<size_t> vars = parents_vec;
+      vars.push_back(v);
+      std::sort(vars.begin(), vars.end());
+      ContingencyTable ct(vars, df);
+      res += calculate_local_score(v, parents_vec, ct, score_type);
+    }
+    return res;
   }
 };

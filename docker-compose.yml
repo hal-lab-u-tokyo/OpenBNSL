@@ -9,18 +9,7 @@ services:
     container_name: openbnsl-container
     ports:
       - "8888:8888" # expose jupyter notebook port host:container
-    shm_size: "4g" # shared memory size
-    deploy:
-      resources:
-        limits:
-          memory: "8g"   # memory limit
-        reservations:
-          devices:
-            - driver: "nvidia"
-              count: 1
-              capabilities: ["gpu"]
-              options:
-                "device": "0"
+    shm_size: "64g" # shared memory size
     volumes:
       - .:/workspace # mount current directory to /workspace
     environment:

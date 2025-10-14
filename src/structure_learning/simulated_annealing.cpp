@@ -12,7 +12,6 @@
 #include "graph/pdag_with_adjlist.h"
 #include "score/local_score.h"
 
-template <typename GraphT>
 static void run_single_chain(const DataframeWrapper& df,
                              const ScoreType& score_type,
                              size_t max_parents,
@@ -21,13 +20,12 @@ static void run_single_chain(const DataframeWrapper& df,
                              double cooling_rate,
                              uint64_t seed,
                              double& best_score_out,
-                             GraphT& best_graph_out) {
-  const size_t n = df.num_of_vars;
-  GraphT g(n);
+                             PDAGwithAdjList& best_graph_out) {
+  const size_t n = df.num_vars;
+  PDAGwithAdjList g(n);
   std::vector<double> ls(n, 0.0);
   for (size_t v = 0; v < n; ++v) {
-    ls[v] = calculate_local_score<double>(
-        v, {}, ContingencyTable<true>({v}, df), score_type);
+    ls[v] = calculate_local_score(v, {}, ContingencyTable({v}, df), score_type);
   }
 
   double curr_score = std::accumulate(ls.begin(), ls.end(), 0.0);
@@ -77,13 +75,14 @@ static void run_single_chain(const DataframeWrapper& df,
     std::vector<size_t> vars = new_pa;
     vars.push_back(child);
     std::sort(vars.begin(), vars.end());
-    double new_ls = calculate_local_score<double>(
-        child, new_pa, ContingencyTable<true>(vars, df), score_type);
+    double new_ls = calculate_local_score(
+        child, new_pa, ContingencyTable(vars, df), score_type);
     double delta = new_ls - ls[child];
 
     if (delta >= 0.0 || std::exp(delta / T) > uni(rng)) {
-      g.set_parents(
-          child, typename GraphT::ParentSetType(new_pa.begin(), new_pa.end()));
+      g.set_parents(child,
+                    typename PDAGwithAdjList::ParentSetType(new_pa.begin(),
+                                                            new_pa.end()));
       ls[child] = new_ls;
       curr_score += delta;
       if (curr_score > best_score) {
@@ -103,10 +102,9 @@ PDAG simulated_annealing(const DataframeWrapper& df,
                          size_t max_iters,
                          double init_temp,
                          double cooling_rate,
-                         bool is_deterministic,
                          uint64_t seed,
                          size_t num_chains) {
-  if (max_parents < 0 || max_parents >= df.num_of_vars) {
+  if (max_parents < 0 || max_parents >= df.num_vars) {
     throw std::invalid_argument("max_parents out of range");
   }
 
@@ -115,45 +113,24 @@ PDAG simulated_annealing(const DataframeWrapper& df,
   }
 
   std::vector<double> scores(num_chains, -1e100);
-  PDAG result(df.num_of_vars);
+  PDAG result(df.num_vars);
 
-  if (is_deterministic) {
-    using GraphT = PDAGwithAdjList<true>;
-    std::vector<GraphT> graphs(num_chains, GraphT(df.num_of_vars));
+  std::vector<PDAGwithAdjList> graphs(num_chains, PDAGwithAdjList(df.num_vars));
 #pragma omp parallel for
-    for (size_t c = 0; c < num_chains; ++c) {
-      run_single_chain<GraphT>(df,
-                               score_type,
-                               max_parents,
-                               max_iters,
-                               init_temp,
-                               cooling_rate,
-                               seed + c * 1234567ULL,
-                               scores[c],
-                               graphs[c]);
-    }
-    int best_idx = std::distance(
-        scores.begin(), std::max_element(scores.begin(), scores.end()));
-    result = graphs[best_idx].to_pdag();
-  } else {
-    using GraphT = PDAGwithAdjList<false>;
-    std::vector<GraphT> graphs(num_chains, GraphT(df.num_of_vars));
-#pragma omp parallel for
-    for (size_t c = 0; c < num_chains; ++c) {
-      run_single_chain<GraphT>(df,
-                               score_type,
-                               max_parents,
-                               max_iters,
-                               init_temp,
-                               cooling_rate,
-                               seed + c * 1234567ULL,
-                               scores[c],
-                               graphs[c]);
-    }
-    int best_idx = std::distance(
-        scores.begin(), std::max_element(scores.begin(), scores.end()));
-    result = graphs[best_idx].to_pdag();
+  for (size_t c = 0; c < num_chains; ++c) {
+    run_single_chain(df,
+                     score_type,
+                     max_parents,
+                     max_iters,
+                     init_temp,
+                     cooling_rate,
+                     seed + c * 1234567ULL,
+                     scores[c],
+                     graphs[c]);
   }
+  int best_idx = std::distance(scores.begin(),
+                               std::max_element(scores.begin(), scores.end()));
+  result = graphs[best_idx].to_pdag();
 
   return result;
 }

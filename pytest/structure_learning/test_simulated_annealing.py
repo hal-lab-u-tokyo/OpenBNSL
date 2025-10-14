@@ -26,7 +26,6 @@ def test_simulated_annealing(model_name, score_type, sample_size, seed):
         max_iters=1000,
         init_temp=1.0,
         cooling_rate=0.9995,
-        is_deterministic=True,
         seed=seed,
         num_chains=1,
     )

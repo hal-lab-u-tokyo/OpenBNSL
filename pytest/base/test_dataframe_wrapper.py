@@ -19,12 +19,12 @@ def test_dataframe_wrapper_basic(model_name, sample_size, seed):
     df_wrapper = openbnsllib.base.DataframeWrapper(samples)
 
     # Check that the number of variables and datapoints match the DataFrame.
-    assert df_wrapper.num_of_vars == len(
+    assert df_wrapper.num_vars == len(
         samples.columns
-    ), f"Expected {len(samples.columns)} variables, got {df_wrapper.num_of_vars}"
+    ), f"Expected {len(samples.columns)} variables, got {df_wrapper.num_vars}"
     assert (
-        df_wrapper.num_of_datapoints == samples.shape[0]
-    ), f"Expected {samples.shape[0]} datapoints, got {df_wrapper.num_of_datapoints}"
+        df_wrapper.num_datapoints == samples.shape[0]
+    ), f"Expected {samples.shape[0]} datapoints, got {df_wrapper.num_datapoints}"
 
     # Check that column names are stored in lexicographical order.
     sorted_cols = sorted(samples.columns)
@@ -47,9 +47,9 @@ def test_dataframe_wrapper_basic(model_name, sample_size, seed):
             df_wrapper.val_idx2str[i] == unique_vals
         ), f"For column {col}: expected unique values {unique_vals}, got {df_wrapper.val_idx2str[i]}"
         # Also, number of unique values must match.
-        assert df_wrapper.num_of_values[i] == len(
+        assert df_wrapper.num_values[i] == len(
             unique_vals
-        ), f"For column {col}: expected num_of_values {len(unique_vals)}, got {df_wrapper.num_of_values[i]}"
+        ), f"For column {col}: expected num_values {len(unique_vals)}, got {df_wrapper.num_values[i]}"
 
     # Too Slow to check in Python for loop
     # Check that the row-major representation is the transpose of the column-major one.
