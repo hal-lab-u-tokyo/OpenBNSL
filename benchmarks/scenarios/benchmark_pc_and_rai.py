@@ -15,7 +15,9 @@ from helpers.data_cache import get_samples_head
 from helpers.pgmpy_bridge import to_pgmpy, to_openbnsl
 from helpers.structural_distance import structural_errors
 
-RESULTS_PATH = os.path.join("benchmarks", "results", "pc_and_rai")
+RESULTS_PATH = os.path.join(
+    "benchmarks", "results", "pc_and_rai", time.strftime("%Y%m%d-%H%M%S")
+)
 SCENARIO_NAME = os.path.splitext(os.path.basename(__file__))[0]
 RESULTS_FILE = os.path.join(RESULTS_PATH, f"{SCENARIO_NAME}.csv")
 SUMMARY_FILE = os.path.join(RESULTS_PATH, f"{SCENARIO_NAME}_summary.csv")
@@ -28,9 +30,11 @@ def initialize():
         csv.writer(f).writerow(
             [
                 "model_name",
+                "num_vars",
+                "num_samples",
+                "citest",
                 "algo",
                 "num_threads",
-                "num_samples",
                 "seed",
                 "shd",
                 "original_score",
@@ -44,7 +48,9 @@ def initialize():
 def summarize():
     df = pd.read_csv(RESULTS_FILE)
     summary = (
-        df.groupby(["model_name", "algo", "num_threads", "num_samples"])
+        df.groupby(
+            ["model_name", "num_vars", "num_samples", "citest", "algo", "num_threads"]
+        )
         .agg(
             count=("shd", "count"),
             shd_mean=("shd", "mean"),
@@ -61,7 +67,9 @@ def summarize():
             # time_max_s=("elapsed_sec", "max"),
         )
         .reset_index()
-        # .sort_values(["model_name", "algo", "num_threads"])
+        .sort_values(
+            ["model_name", "num_vars", "num_samples", "citest", "algo", "num_threads"]
+        )
     )
     with pd.option_context("display.float_format", "{:.2f}".format):
         print(f"\n--- Summary for {SCENARIO_NAME} ---")
@@ -70,32 +78,46 @@ def summarize():
 
 
 ALGORITHMS = {
-    "pc": lambda dfw, ci, cols: openbnsllib.structure_learning.pc(
-        dfw, ci, max_cond_vars=len(cols)
+    "pc_edge_parallel": lambda dfw, ci, cols, timeout_sec: openbnsllib.structure_learning.pc_edge_parallel(
+        dfw, ci, max_cond_vars=len(cols), timeout_sec=timeout_sec
     ),
-    "rai": lambda dfw, ci, cols: openbnsllib.structure_learning.rai(
-        dfw, ci, max_cond_vars=len(cols)
+    "rai_edge_parallel": lambda dfw, ci, cols, timeout_sec: openbnsllib.structure_learning.rai_edge_parallel(
+        dfw, ci, max_cond_vars=len(cols), timeout_sec=timeout_sec
     ),
+}
+CITESTS = {
+    "chi2": openbnsllib.citest.ChiSquare,
+    # "g2": openbnsllib.citest.GSquare,
 }
 
 
 @pytest.mark.parametrize(
     "model_name",
     [
-        "alarm",  # test
-        # "asia", "cancer", "earthquake", "sachs", "survey",  # Small networks
-        # "alarm", "barley", "child", "insurance", "mildew", "water",  # Medium networks
-        # "hailfinder", "hepar2", "win95pts", # Large networks
-        # "andes", "diabetes", "link", "munin1", "pathfinder", "pigs", # Extra large networks
-        # "munin", "munin2", "munin3", "munin4", # Very extra large networks
+        "asia",
+        "cancer",
+        "earthquake",
+        "sachs",
+        "survey",
+        "alarm",
+        # "child", "insurance", "water", "hailfinder", "win95pts",
+        # "barley", "mildew", "hepar2", "andes", "munin1", "diabetes",
+        # "link", "munin", "munin2", "munin3", "munin4",
+        # "pathfinder", "pigs",
     ],
 )
+@pytest.mark.parametrize("citest", list(CITESTS.keys()))
 @pytest.mark.parametrize("algo", list(ALGORITHMS.keys()))
-@pytest.mark.parametrize("num_threads", [1, 16])
-# @pytest.mark.parametrize("num_samples", [int(1e4), int(2e5), int(2e6)])
+# @pytest.mark.parametrize("num_threads", [1, 16, 128])
+@pytest.mark.parametrize("num_threads", [128])
+# @pytest.mark.parametrize("num_samples", [int(1e4), int(1e5)])
 @pytest.mark.parametrize("num_samples", [int(1e4)])
+@pytest.mark.parametrize("timeout_sec", [3600])
+# @pytest.mark.parametrize("seed", [0,1,2,3,4])
 @pytest.mark.parametrize("seed", [0])
-def benchmark_compare_algos(model_name, algo, num_threads, num_samples, seed):
+def benchmark_compare_algos(
+    model_name, citest, algo, num_threads, num_samples, timeout_sec, seed
+):
 
     # Setup
     random.seed(seed)
@@ -116,15 +138,24 @@ def benchmark_compare_algos(model_name, algo, num_threads, num_samples, seed):
 
     cols = list(samples.columns)
     df_wrapper = openbnsllib.base.DataframeWrapper(samples)
-    citest_type = openbnsllib.citest.ChiSquare(level=0.01)
+    num_vars = df_wrapper.num_vars
+    # oracle_graph = to_openbnsl(original_pdag_pgmpy, df_wrapper.col_str2idx)
+    # citest_type = openbnsllib.citest.OracleGraph(oracle_graph)
+    citest_type = CITESTS[citest](0.05)
     original_pdag_obnsl = to_openbnsl(original_pdag_pgmpy, df_wrapper.col_str2idx)
 
     # Trial
+    print(
+        f"model={model_name}, num_vars={num_vars}, num_samples={num_samples}, algo={algo.upper()}, citest={citest.upper()}, num_threads={num_threads}, seed={seed} ..."
+    )
     start = time.perf_counter()
-    learned_pdag_obnsl = ALGORITHMS[algo](df_wrapper, citest_type, cols)
+    learned_pdag_obnsl = ALGORITHMS[algo](
+        df_wrapper, citest_type, cols, timeout_sec=timeout_sec
+    )
     elapsed = time.perf_counter() - start
 
     # Measurement
+    print("Evaluating ...")
     learned_pdag_pgmpy = to_pgmpy(learned_pdag_obnsl, cols)
     error_dict = structural_errors(original_pdag_pgmpy, learned_pdag_pgmpy)
     shd = error_dict["SHD"]
@@ -135,10 +166,12 @@ def benchmark_compare_algos(model_name, algo, num_threads, num_samples, seed):
         learned_score / original_score if original_score != 0 else float("inf")
     )
 
+    print(error_dict)
+
     print(
-        f"[{algo.upper()}] model={model_name}, num_threads={num_threads}, "
-        f"num_samples={num_samples}, seed={seed}, "
-        f"shd={shd}, original_score={original_score:.2f}, "
+        f"model={model_name}, num_vars={num_vars}, num_samples={num_samples}, citest={citest.upper()}, algo={algo.upper()}, num_threads={num_threads}, seed={seed}, "
+        f"shd={shd}/{num_vars * (num_vars - 1) // 2} (worst case), "
+        f"original_score={original_score:.2f}, "
         f"learned_score={learned_score:.2f}, "
         f"score_ratio={score_ratio:.2f}, elapsed={elapsed:.2f}s"
     )
@@ -147,9 +180,11 @@ def benchmark_compare_algos(model_name, algo, num_threads, num_samples, seed):
         csv.writer(f).writerow(
             [
                 model_name,
+                num_vars,
+                num_samples,
+                citest,
                 algo,
                 num_threads,
-                num_samples,
                 seed,
                 shd,
                 original_score,

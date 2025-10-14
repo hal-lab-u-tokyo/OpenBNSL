@@ -1,7 +1,7 @@
 #pragma once
-#include <vector>
 #include <algorithm>
 #include <stdexcept>
+#include <vector>
 
 template <typename T>
 void enum_comb_rec(const std::vector<T>& items,

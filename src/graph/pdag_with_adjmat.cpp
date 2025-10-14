@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <queue>
 #include <stdexcept>
+
 #include "utils/logging.h"
 
 PDAGwithAdjMat::PDAGwithAdjMat(std::size_t num_vars) : num_vars(num_vars) {
@@ -15,8 +16,7 @@ void PDAGwithAdjMat::set_as_complete() {
   for (std::size_t i = 0; i < num_vars; ++i) {
     for (std::size_t b = 0; b < blocks; ++b) {
       const bool tail = (b == blocks - 1) && (num_vars % 64);
-      const uint64_t mask =
-          tail ? ((1ULL << (num_vars % 64)) - 1) : ~0ULL;
+      const uint64_t mask = tail ? ((1ULL << (num_vars % 64)) - 1) : ~0ULL;
       potential_parent_bits[i][b] = mask;
     }
     _clr_arc(i, i);  // no self-loop
@@ -35,7 +35,8 @@ PDAG PDAGwithAdjMat::to_pdag() const {
   return p;
 }
 
-std::vector<std::size_t> PDAGwithAdjMat::potential_parents(std::size_t v) const {
+std::vector<std::size_t> PDAGwithAdjMat::potential_parents(
+    std::size_t v) const {
   return _extract_indices_from_bits(potential_parent_bits[v]);
 }
 
@@ -47,7 +48,8 @@ std::vector<std::size_t> PDAGwithAdjMat::parents(std::size_t v) const {
   return res;
 }
 
-std::vector<std::size_t> PDAGwithAdjMat::undirected_neighbors(std::size_t v) const {
+std::vector<std::size_t> PDAGwithAdjMat::undirected_neighbors(
+    std::size_t v) const {
   std::vector<std::size_t> res, src = potential_parents(v);
   for (auto u : src) {
     if (_has_arc(v, u)) res.push_back(u);
@@ -56,7 +58,8 @@ std::vector<std::size_t> PDAGwithAdjMat::undirected_neighbors(std::size_t v) con
 }
 
 std::vector<std::size_t> PDAGwithAdjMat::potential_parents_in(
-    std::size_t v, const std::vector<uint64_t>& mask) const {
+    std::size_t v,
+    const std::vector<uint64_t>& mask) const {
   const std::size_t blocks = (num_vars + 63) / 64;
   std::vector<uint64_t> bits(blocks);
   for (std::size_t b = 0; b < blocks; ++b) {
@@ -66,7 +69,8 @@ std::vector<std::size_t> PDAGwithAdjMat::potential_parents_in(
 }
 
 std::vector<std::size_t> PDAGwithAdjMat::parents_in(
-    std::size_t v, const std::vector<uint64_t>& mask) const {
+    std::size_t v,
+    const std::vector<uint64_t>& mask) const {
   std::vector<std::size_t> res;
   const auto src = potential_parents_in(v, mask);
   for (auto u : src) {
@@ -76,7 +80,8 @@ std::vector<std::size_t> PDAGwithAdjMat::parents_in(
 }
 
 std::vector<std::size_t> PDAGwithAdjMat::undirected_neighbors_in(
-    std::size_t v, const std::vector<uint64_t>& mask) const {
+    std::size_t v,
+    const std::vector<uint64_t>& mask) const {
   std::vector<std::size_t> res;
   const auto src = potential_parents_in(v, mask);
   for (auto u : src) {
@@ -85,7 +90,6 @@ std::vector<std::size_t> PDAGwithAdjMat::undirected_neighbors_in(
   return res;
 }
 
-
 /* ---------- Rule V ----------
  * If (1) y-{x,z}, (2) x and z are non-adjacent, and
  * (3) y is not in the sepset of x and z, then orient x->y<-z.
@@ -93,14 +97,16 @@ std::vector<std::size_t> PDAGwithAdjMat::undirected_neighbors_in(
 void PDAGwithAdjMat::orient_colliders(const Sepset& sepset) {
   std::unordered_set<uint64_t> orient_pairs;
   for (std::size_t y = 0; y < num_vars; ++y) {
-    const auto p_pars = potential_parents(y); // {x | x->y or x-y}
+    const auto p_pars = potential_parents(y);  // {x | x->y or x-y}
     for (std::size_t i = 0; i + 1 < p_pars.size(); ++i) {
       for (std::size_t j = i + 1; j < p_pars.size(); ++j) {
         const auto x = p_pars[i], z = p_pars[j];
         if (is_adjacent(x, z)) continue;  // shielded
         if (sepset[x][z].count(y) == 0) {
-          uint64_t pair1 = (static_cast<uint64_t>(x) << 32) | (static_cast<uint64_t>(y));
-          uint64_t pair2 = (static_cast<uint64_t>(z) << 32) | (static_cast<uint64_t>(y));
+          uint64_t pair1 =
+              (static_cast<uint64_t>(x) << 32) | (static_cast<uint64_t>(y));
+          uint64_t pair2 =
+              (static_cast<uint64_t>(z) << 32) | (static_cast<uint64_t>(y));
           orient_pairs.insert(pair1);
           orient_pairs.insert(pair2);
         }
@@ -112,21 +118,21 @@ void PDAGwithAdjMat::orient_colliders(const Sepset& sepset) {
     auto c = static_cast<std::size_t>(pair & 0xFFFFFFFF);
     orient_edge(p, c);
   }
-  INFO("[PDAG] oriented " << orient_pairs.size() << " colliders");
+  // INFO("[PDAG] oriented " << orient_pairs.size() << " colliders");
 }
 
 void PDAGwithAdjMat::apply_meeks_rules() {
 restart:
   /* ---------- Rule 1 ----------
-    * If (1) x->y, (2) y-z, and (3) x and z are non-adjacent, then orient y->z.
-    */
+   * If (1) x->y, (2) y-z, and (3) x and z are non-adjacent, then orient y->z.
+   */
   for (std::size_t y = 0; y < num_vars; ++y) {
     const auto x_candidates = parents(y);
     const auto z_candidates = undirected_neighbors(y);
     for (auto x : x_candidates) {
       for (auto z : z_candidates) {
         if (!is_adjacent(x, z)) {
-          orient_edge(y, z); // y->z
+          orient_edge(y, z);  // y->z
           goto restart;
         }
       }
@@ -134,8 +140,8 @@ restart:
   }
 
   /* ---------- Rule 2 ----------
-    * If (1) x->y, (2) y->z, and (3) x-z, then orient x->z.
-    */
+   * If (1) x->y, (2) y->z, and (3) x-z, then orient x->z.
+   */
   for (std::size_t z = 0; z < num_vars; ++z) {
     const auto x_candidates = undirected_neighbors(z);
     const auto y_candidates = parents(z);
@@ -150,9 +156,9 @@ restart:
   }
 
   /* ---------- Rule 3 ----------
-    * If (1) x-{y,z,w}, (2) {y,z} -> w, and (3) y and z are non-adjacent,
-    * then orient x->w.
-    */
+   * If (1) x-{y,z,w}, (2) {y,z} -> w, and (3) y and z are non-adjacent,
+   * then orient x->w.
+   */
   for (std::size_t w = 0; w < num_vars; ++w) {
     const auto x_candidates = undirected_neighbors(w);
     const auto yz_candidates = parents(w);

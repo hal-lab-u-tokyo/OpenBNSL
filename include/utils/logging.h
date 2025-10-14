@@ -16,11 +16,11 @@ inline std::string current_time_str() {
   return oss.str();
 }
 
-#define LOG_PRINT(level, stream_expr)                                          \
-  do {                                                                         \
-    std::cerr << "[" << level << "][" << current_time_str() << "] " << __FILE__ \
-              << ":" << __LINE__ << " (" << __func__ << ") " << stream_expr    \
-              << std::endl;                                                    \
+#define LOG_PRINT(level, stream_expr)                                    \
+  do {                                                                   \
+    std::cerr << "[" << level << "][" << current_time_str() << "] "      \
+              << __FILE__ << ":" << __LINE__ << " (" << __func__ << ") " \
+              << stream_expr << std::endl;                               \
   } while (0)
 
 #ifdef ENABLE_DEBUG_LOG

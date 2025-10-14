@@ -39,7 +39,7 @@ def test_pc(model_name, seed):
     t0 = time.perf_counter()
     df_wrapper = openbnsllib.base.DataframeWrapper(samples)
     citest_type = openbnsllib.citest.ChiSquare(level=0.01)
-    _pdag = openbnsllib.structure_learning.pc(
+    _pdag = openbnsllib.structure_learning.pc_edge_parallel(
         df_wrapper, citest_type, max_cond_vars=len(samples.columns)
     )
     t1 = time.perf_counter()

@@ -40,7 +40,7 @@ def test_rai(model_name, seed):
     citest_type = openbnsllib.citest.ChiSquare(level=0.01)
 
     t0 = time.perf_counter()
-    _pdag = openbnsllib.structure_learning.rai(
+    _pdag = openbnsllib.structure_learning.rai_edge_parallel(
         df_wrapper, citest_type, max_cond_vars=len(samples.columns)
     )
     t1 = time.perf_counter()
