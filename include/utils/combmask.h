@@ -1,6 +1,8 @@
 #pragma once
-#include <boost/multiprecision/cpp_int.hpp>
-namespace mp = boost::multiprecision;
+#include <vector>
+#include <concepts> 
+
+namespace utils {
 
 /**
  * @brief Generates the next combination of t nodes from n nodes.
@@ -33,11 +35,8 @@ namespace mp = boost::multiprecision;
  * @endcode
  *
  */
-template <typename T>
+template <std::integral T>
 bool next_combmask(T& comb, int n) {
-  static_assert(
-      std::is_integral<T>::value || std::is_same<T, mp::cpp_int>::value,
-      "T must be an integral type or cpp_int");
   if (comb == 0) return false;
   T one = 1;
   T x = comb & -comb;                   // get the rightmost bit
@@ -45,3 +44,27 @@ bool next_combmask(T& comb, int n) {
   comb = (((comb & ~y) / x) >> 1) | y;  // set right bits
   return comb < (one << n);             // return false if we have done all
 }
+
+/**
+ * @brief Convert a combination to a vector
+ * @tparam T An integral type
+ * @param combmask A combination mask represented as an integral type
+ * @return A vector of indices
+ */
+  template <std::integral T>
+std::vector<size_t> combmask2vec(T combmask) {
+  std::vector<size_t> vec;
+  while (combmask) {
+    T x = combmask & -combmask;  // get the rightmost bit
+    if constexpr (sizeof(T) <= sizeof(int))
+      vec.push_back(static_cast<size_t>(__builtin_ctz(x)));
+    else if constexpr (sizeof(T) <= sizeof(long long))
+      vec.push_back(static_cast<size_t>(__builtin_ctzll(x)));
+    else
+      static_assert(sizeof(T) <= sizeof(int), "T is too large");
+    combmask &= combmask - 1;  // clear the rightmost bit
+  }
+  return vec;
+}
+
+}  // namespace utils

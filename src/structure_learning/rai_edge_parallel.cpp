@@ -6,7 +6,7 @@
 #include "base/dataframe_wrapper.h"
 #include "citest/citest.h"
 #include "graph/pdag_with_adjmat.h"
-#include "utils/gen_comb.h"
+#include "utils/combvec.h"
 #include "utils/logging.h"
 #include "utils/timeout_guard.h"
 
@@ -202,7 +202,7 @@ static void rai_recursive(const size_t k,
         if (v != x) pap_of_y_without_x.push_back(v);
       std::sort(pap_of_y_without_x.begin(), pap_of_y_without_x.end());
 
-      for (const auto& Z : gen_combs(pap_of_y_without_x, k)) {
+      for (const auto& Z : utils::gen_combvecs(pap_of_y_without_x, k)) {
         std::vector<size_t> vars = Z;
         vars.push_back(x);
         vars.push_back(y);
@@ -287,7 +287,7 @@ static void rai_recursive(const size_t k,
           if (w != v) pap_of_u_without_v.push_back(w);
         std::sort(pap_of_u_without_v.begin(), pap_of_u_without_v.end());
 
-        for (const auto& Z : gen_combs(pap_of_u_without_v, k)) {
+        for (const auto& Z : utils::gen_combvecs(pap_of_u_without_v, k)) {
           std::vector<size_t> vars = Z;
           vars.push_back(u);
           vars.push_back(v);

@@ -42,7 +42,7 @@ bool citest(std::size_t x,
   std::size_t idx_y = ct.var_ids.size();
   std::size_t itr = 0;
   std::vector<std::size_t> idx_extras;
-  for (auto [idx, var_id] : enumerate(ct.var_ids)) {
+  for (auto [idx, var_id] : utils::enumerate(ct.var_ids)) {
     if (var_id == x)
       idx_x = idx;
     else if (var_id == y)

@@ -3,16 +3,22 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "base/contingency_table.h"
-#include "score/local_score.h"
-#include "utils/combmask2vec.h"
-#include "utils/next_combmask.h"
+#include "score/score_type.h"
+#include "score/parent_set_evaluator.h"
+#include "utils/combmask.h"
+#include "utils/logging.h"
+#include "utils/timeout_guard.h"
 
 #define varset_t uint64_t  // number of variables <= 64
 
 PDAG exhaustive_search(const DataframeWrapper& df,
                        const ScoreType& score_type,
-                       size_t max_parents) {
+                       size_t max_parents,
+                       double timeout_sec) {
+  double MINUS_INF = -std::numeric_limits<double>::infinity();
+  TimeoutGuard tg(timeout_sec);
+  ParentSetEvaluator pse(df, score_type, max_parents, tg);
+
   if (max_parents < 0 || max_parents > df.num_vars - 1)
     throw std::invalid_argument("max_parents must be in [0, num_vars-1]");
   size_t max_varset_size = max_parents + 1;
@@ -48,11 +54,7 @@ PDAG exhaustive_search(const DataframeWrapper& df,
     // explore all possible variable combinations in the current subset size
     varset_t varset_int = (varset_t(1) << subset_size) - 1;
     do {
-      std::vector<size_t> varset_vec = combmask2vec(varset_int);
-
-      std::optional<ContingencyTable>
-          ct;  // optional to avoid unnecessary computation
-      if (calc_ls) ct.emplace(varset_vec, df);
+      std::vector<size_t> varset_vec = utils::combmask2vec(varset_int);
 
       double best_gs = 0;
       int best_ch = -1;
@@ -60,13 +62,12 @@ PDAG exhaustive_search(const DataframeWrapper& df,
         auto child_var = varset_vec[child_idx];
         auto parents_varset_int = varset_int - bit_masks[child_var];
 
-        double ls = -std::numeric_limits<double>::infinity();
+        double ls;
         if (calc_ls) {
-          std::vector<size_t> parent_set;
-          for (auto v : varset_vec) {
-            if (v != child_var) parent_set.push_back(v);
-          }
-          ls = calculate_local_score(child_var, parent_set, *ct, score_type);
+          auto parent_varset_vec = utils::combmask2vec(parents_varset_int);
+          ls = pse.at(child_var, subset_size - 1, parent_varset_vec);
+        } else {
+          ls = MINUS_INF;
         }
 
         double best_ls = ls;
@@ -123,7 +124,7 @@ PDAG exhaustive_search(const DataframeWrapper& df,
       //           << std::endl;
       // /* debug print end */
 
-    } while (next_combmask(varset_int, n));
+    } while (utils::next_combmask(varset_int, n));
   }
 
   // reconstruct the best graph

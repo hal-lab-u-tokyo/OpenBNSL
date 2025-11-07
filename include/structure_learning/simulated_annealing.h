@@ -23,4 +23,5 @@ PDAG simulated_annealing(const DataframeWrapper& df,
                          double init_temp = 1.0,
                          double cooling_rate = 0.9995,
                          uint64_t seed = 0,
-                         size_t num_chains = 0);
+                         size_t num_chains = 0,
+                         double timeout_sec = 300.0);

@@ -5,7 +5,7 @@ from pgmpy.utils import get_example_model
 
 import openbnsllib
 
-from helpers.pgmpy_bridge import to_pgmpy, to_openbnsl
+from helpers.pgmpy_bridge import to_pgmpy
 from helpers.structural_distance import structural_errors
 
 

@@ -4,7 +4,7 @@
 #include "base/dataframe_wrapper.h"
 #include "citest/citest.h"
 #include "graph/pdag_with_adjmat.h"
-#include "utils/gen_comb.h"
+#include "utils/combvec.h"
 #include "utils/logging.h"
 #include "utils/timeout_guard.h"
 
@@ -76,7 +76,7 @@ void build_skeleton(PDAGwithAdjMat& g,
             if (w != v) neigh_of_u_without_v.push_back(w);
           std::sort(neigh_of_u_without_v.begin(), neigh_of_u_without_v.end());
 
-          for (const auto& Z : gen_combs(neigh_of_u_without_v, k)) {
+          for (const auto& Z : utils::gen_combvecs(neigh_of_u_without_v, k)) {
             local_num_citests++;
             std::vector<size_t> vars = Z;
             vars.push_back(u);
