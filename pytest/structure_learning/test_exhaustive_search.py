@@ -1,7 +1,5 @@
-import sys
 import pytest
-import numpy as np
-from pgmpy.base import PDAG
+import time
 from pgmpy.utils import get_example_model
 
 import openbnsllib
@@ -9,21 +7,27 @@ from helpers.pgmpy_bridge import to_pgmpy
 from helpers.structural_distance import structural_errors
 
 
-# @pytest.mark.parametrize("model_name", ["cancer", "asia", "child", "alarm"])
 @pytest.mark.parametrize("model_name", ["cancer", "asia", "child"])
 @pytest.mark.parametrize("score_type", [openbnsllib.score.BDeu(1.0)])
 @pytest.mark.parametrize("sample_size", [int(1e5)])
 @pytest.mark.parametrize("seed", [0])
 def test_exhaustive_search(model_name, score_type, sample_size, seed):
-    model_original = get_example_model(model_name)
-    samples = model_original.simulate(sample_size, seed=seed)
+
+    original_pdag_pgmpy = get_example_model(model_name)
+    samples = original_pdag_pgmpy.simulate(sample_size, seed=seed)
     samples = samples[sorted(samples.columns)]
+
     df_wrapper = openbnsllib.base.DataframeWrapper(samples)
-    _pdag = openbnsllib.structure_learning.exhaustive_search(
+
+    start = time.perf_counter()
+    learned_pdag_obnsl = openbnsllib.structure_learning.exhaustive_search(
         df_wrapper, score_type, max_parents=3
     )
-    model_estimated = to_pgmpy(_pdag, list(samples.columns))
-    errors = structural_errors(model_original, model_estimated)
+    elapsed = time.perf_counter() - start
+    print(f"[OpenBNSL] model={model_name}, seed={seed}, time={elapsed:.2f}s")
+
+    learned_pdag_pgmpy = to_pgmpy(learned_pdag_obnsl, list(samples.columns))
+    errors = structural_errors(original_pdag_pgmpy, learned_pdag_pgmpy)
 
     if errors["SHD"] > 0:
         print(f"Model: {model_name}, [SHD, ME, EE, DE, ED, MD, RD]: {errors}")

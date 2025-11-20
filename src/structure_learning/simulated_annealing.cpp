@@ -8,94 +8,10 @@
 #include <random>
 #include <vector>
 
-#include "base/contingency_table.h"
-#include "graph/pdag_with_adjlist.h"
-#include "score/local_score.h"
-
-template <typename GraphT>
-static void run_single_chain(const DataframeWrapper& df,
-                             const ScoreType& score_type,
-                             size_t max_parents,
-                             size_t max_iters,
-                             double init_temp,
-                             double cooling_rate,
-                             uint64_t seed,
-                             double& best_score_out,
-                             GraphT& best_graph_out) {
-  const size_t n = df.num_of_vars;
-  GraphT g(n);
-  std::vector<double> ls(n, 0.0);
-  for (size_t v = 0; v < n; ++v) {
-    ls[v] = calculate_local_score<double>(
-        v, {}, ContingencyTable<true>({v}, df), score_type);
-  }
-
-  double curr_score = std::accumulate(ls.begin(), ls.end(), 0.0);
-  double best_score = curr_score;
-  auto best_g = g;
-
-  std::mt19937_64 rng(seed);
-  std::uniform_real_distribution<double> uni(0.0, 1.0);
-  std::uniform_int_distribution<size_t> pick_node(0, n - 1);
-
-  double T = init_temp;
-  for (size_t it = 0; it < max_iters; ++it, T *= cooling_rate) {
-    size_t child = pick_node(rng);
-    const auto& pa = g.parents[child];
-    enum { ADD, REMOVE } op;
-
-    if (pa.empty())
-      op = ADD;
-    else if (pa.size() == static_cast<size_t>(max_parents))
-      op = REMOVE;
-    else
-      op = (uni(rng) < 0.5 ? ADD : REMOVE);
-
-    std::vector<size_t> new_pa(pa.begin(), pa.end());
-
-    if (op == ADD) {
-      std::vector<size_t> cand(n);
-      std::iota(cand.begin(), cand.end(), 0);
-      cand.erase(std::remove(cand.begin(), cand.end(), child), cand.end());
-      std::shuffle(cand.begin(), cand.end(), rng);
-
-      bool done = false;
-      for (auto p : cand) {
-        if (pa.count(p)) continue;
-        if (g.has_path(p, child)) continue;
-        new_pa.push_back(p);
-        std::sort(new_pa.begin(), new_pa.end());
-        done = true;
-        break;
-      }
-      if (!done) continue;
-    } else {
-      std::uniform_int_distribution<size_t> pick_par(0, new_pa.size() - 1);
-      new_pa.erase(new_pa.begin() + pick_par(rng));
-    }
-
-    std::vector<size_t> vars = new_pa;
-    vars.push_back(child);
-    std::sort(vars.begin(), vars.end());
-    double new_ls = calculate_local_score<double>(
-        child, new_pa, ContingencyTable<true>(vars, df), score_type);
-    double delta = new_ls - ls[child];
-
-    if (delta >= 0.0 || std::exp(delta / T) > uni(rng)) {
-      g.set_parents(
-          child, typename GraphT::ParentSetType(new_pa.begin(), new_pa.end()));
-      ls[child] = new_ls;
-      curr_score += delta;
-      if (curr_score > best_score) {
-        best_score = curr_score;
-        best_g = g;
-      }
-    }
-  }
-
-  best_score_out = best_score;
-  best_graph_out = std::move(best_g);
-}
+#include "score/parent_set_evaluator.h"
+#include "score/score_type.h"
+#include "utils/logging.h"
+#include "utils/timeout_guard.h"
 
 PDAG simulated_annealing(const DataframeWrapper& df,
                          const ScoreType& score_type,
@@ -103,57 +19,116 @@ PDAG simulated_annealing(const DataframeWrapper& df,
                          size_t max_iters,
                          double init_temp,
                          double cooling_rate,
-                         bool is_deterministic,
                          uint64_t seed,
-                         size_t num_chains) {
-  if (max_parents < 0 || max_parents >= df.num_of_vars) {
-    throw std::invalid_argument("max_parents out of range");
-  }
+                         size_t num_chains,
+                         double timeout_sec) {
+  double MINUS_INF = -std::numeric_limits<double>::infinity();
+  TimeoutGuard tg(timeout_sec);
+  ParentSetEvaluator pse(df, score_type, max_parents, tg);
 
-  if (num_chains <= 0) {
-    num_chains = omp_get_max_threads();
-  }
+  if (num_chains == 0) num_chains = omp_get_max_threads();
+  INFO("[SA] running " << num_chains << " chains in parallel ...");
 
-  std::vector<double> scores(num_chains, -1e100);
-  PDAG result(df.num_of_vars);
+  const size_t n = df.num_vars;
+  std::vector<double> best_score_of_chain(num_chains, MINUS_INF);
+  std::vector<std::vector<std::vector<size_t>>> best_parents_of_chain(
+      num_chains);
 
-  if (is_deterministic) {
-    using GraphT = PDAGwithAdjList<true>;
-    std::vector<GraphT> graphs(num_chains, GraphT(df.num_of_vars));
-#pragma omp parallel for
-    for (size_t c = 0; c < num_chains; ++c) {
-      run_single_chain<GraphT>(df,
-                               score_type,
-                               max_parents,
-                               max_iters,
-                               init_temp,
-                               cooling_rate,
-                               seed + c * 1234567ULL,
-                               scores[c],
-                               graphs[c]);
+#pragma omp parallel for schedule(dynamic)
+  for (size_t chain_id = 0; chain_id < num_chains; ++chain_id) {
+    std::mt19937_64 rng(seed + chain_id);
+    std::uniform_real_distribution<double> unif(0.0, 1.0);
+
+    double global_score = 0.0;
+    std::vector<double> local_scores(n, 0.0);
+    std::vector<std::vector<size_t>> parents(n);
+
+    // Initialize a DAG without edges, i.e., no cycles
+    for (size_t child = 0; child < n; ++child) {
+      const auto& parent_set_cands = pse.p_pars[child];
+      for (const auto& [ls, pars] : parent_set_cands) {
+        if (pars.size() == 0) {
+          global_score += ls;
+          local_scores[child] = ls;
+          parents[child] = pars;
+          break;
+        }
+      }
     }
-    int best_idx = std::distance(
-        scores.begin(), std::max_element(scores.begin(), scores.end()));
-    result = graphs[best_idx].to_pdag();
-  } else {
-    using GraphT = PDAGwithAdjList<false>;
-    std::vector<GraphT> graphs(num_chains, GraphT(df.num_of_vars));
-#pragma omp parallel for
-    for (size_t c = 0; c < num_chains; ++c) {
-      run_single_chain<GraphT>(df,
-                               score_type,
-                               max_parents,
-                               max_iters,
-                               init_temp,
-                               cooling_rate,
-                               seed + c * 1234567ULL,
-                               scores[c],
-                               graphs[c]);
+
+    double best_global_score = global_score;
+    auto best_local_scores = local_scores;
+    auto best_parents = parents;
+    double T = init_temp;
+    for (size_t it = 0; it < max_iters; ++it) {  // for each chain
+
+      T *= cooling_rate;
+      if (T < 1e-12) T = 1e-12;
+
+      // Propose a new state by changing the parent set of a randomly chosen
+      // node
+      size_t child = rng() % n;
+      const auto& parent_set_cands = pse.p_pars[child];
+      size_t new_pars_idx = rng() % parent_set_cands.size();
+      const auto& [new_score, new_pars] = parent_set_cands[new_pars_idx];
+
+      // check acyclicity
+      bool creates_cycle = false;
+      std::vector<bool> visited(n, false);
+      std::vector<size_t> stack;
+      for (const auto& p : new_pars) {
+        visited[p] = true;
+        stack.push_back(p);
+      }
+      while (!stack.empty() && !creates_cycle) {
+        size_t node = stack.back();
+        stack.pop_back();
+        for (const auto& parent : parents[node]) {
+          if (parent == child) {
+            creates_cycle = true;
+            break;
+          }
+          if (!visited[parent]) {
+            visited[parent] = true;
+            stack.push_back(parent);
+          }
+        }
+      }
+      if (creates_cycle) continue;
+
+      // delta score
+      double delta = new_score - local_scores[child];
+      bool accept = (delta >= 0.0) || (unif(rng) < std::exp(delta / T));
+      if (accept) {
+        global_score += delta;
+        local_scores[child] = new_score;
+        parents[child] = new_pars;
+        if (global_score > best_global_score) {
+          best_global_score = global_score;
+          best_local_scores = local_scores;
+          best_parents = parents;
+        }
+      }
+
+      if (it % 10000 == 0) {
+        if (tg.is_timeout() || tg.expired()) break;  // check timeout
+      }
     }
-    int best_idx = std::distance(
-        scores.begin(), std::max_element(scores.begin(), scores.end()));
-    result = graphs[best_idx].to_pdag();
+
+    best_score_of_chain[chain_id] = best_global_score;
+    best_parents_of_chain[chain_id] = best_parents;
   }
 
-  return result;
+  size_t best_idx = 0;
+  for (size_t c = 1; c < best_score_of_chain.size(); ++c) {
+    if (best_score_of_chain[c] > best_score_of_chain[best_idx]) best_idx = c;
+  }
+
+  PDAG best_dag(df.num_vars);
+  for (size_t child = 0; child < df.num_vars; ++child) {
+    for (const auto& parent : best_parents_of_chain[best_idx][child]) {
+      best_dag.add_edge(parent, child);
+    }
+  }
+  return best_dag;
 }

@@ -17,4 +17,4 @@ namespace py = pybind11;
 PDAG exhaustive_search(const DataframeWrapper& df,
                        const ScoreType& score_type,
                        size_t max_parents,
-                       bool is_deterministic);
+                       double timeout_sec = 300.0);

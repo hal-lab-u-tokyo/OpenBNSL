@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.22)
 message(STATUS "CMake version: ${CMAKE_VERSION}")
 
 project(openbnsl_lib LANGUAGES CXX)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # https://pybind11.readthedocs.io/en/stable/faq.html#someclass-declared-with-greater-visibility-than-the-type-of-its-field-someclass-member-wattributes
@@ -22,6 +22,14 @@ endif()
 ###########
 option(BUILD_TESTS "Build test executables" OFF)
 option(VERBOSE_OUTPUT "Enable verbose output" OFF)
+option(ENABLE_DEBUG_LOG "Enable debug logging macros" OFF)
+
+if (ENABLE_DEBUG_LOG)
+    add_definitions(-DENABLE_DEBUG_LOG)
+    message(STATUS "✅ Debug logging enabled")
+else()
+    message(STATUS "ℹ️ Debug logging disabled")
+endif()
 
 ##########################
 # Find required packages #

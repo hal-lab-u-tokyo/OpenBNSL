@@ -126,4 +126,4 @@ def structural_errors(ground_truth_pdag: PDAG, predicted_graph: PDAG) -> dict:
     DE = ED + MD + RD
     SHD = ME + EE + DE
 
-    return {"SHD": SHD, "ME": ME, "EE": EE, "DE": DE, "ED": ED, "MD": MD, "RD": RD}
+    return {"EE": EE, "ME": ME, "ED": ED, "MD": MD, "RD": RD, "SHD": SHD}

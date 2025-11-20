@@ -1,27 +1,28 @@
 We are happy to accept contributions to the project in the form of pull requests.
 
 # Issues
-Please feel free to create a new issue for any bugs, questions etc. 
-It is very helpful if you gives us enough information to reproduce the problem. 
-Github's guide on [about issues](https://guides.github.com/features/issues/) is also useful.
+Please feel free to create a new issue for any bugs, questions etc.
+
+---
+# Scripts
+```bash
+pytest # run pytest to check all tests
+./build_gtest.sh # build gtest (not used now)
+./run_gtest.sh # run gtest (not used now)
+./format.sh # format the code
+./gen_docs.sh # build the documentation locally
+```
 
 --- 
 # Pull Requests
 1. Fork the repository
 2. Create a new branch from the `develop` branch
 3. Make your changes
-4. Push your changes to your fork
-5. Create a pull request
-
----
-# Scripts
-```bash
-pytest # run pytest
-./build_gtest.sh # build gtest
-./run_gtest.sh # run gtest
-./format.sh # format the code before submitting a pull request
-./gen_docs.sh # if you want to check the documentation locally
-```
+4. Make sure all tests pass by running `pytest`
+5. Format your code using the provided script: `./scripts/format.sh`
+6. Check the documentation by running `./scripts/gen_docs.sh`
+7. Push your changes to your fork
+8. Create a pull request
 
 ---
 # Branches
@@ -47,50 +48,25 @@ Before submitting a pull request, please run the following command to format you
 | **Constant** | UPPERCASE_SNAKE_CASE | `MY_CONSTANT` |
 | **Namespace** | snake_case | `my_namespace` | `my_namespace::my_function()` |
 
----
-# Data exchange between Python/R and C/C++
-
-| C++                           | Python (pybind11)             | R (Rcpp)                      |
-|-------------------------------|-------------------------------|-------------------------------|
-| bool                          | bool                          | ????                          |
-| int                           | int                           | ????                          |
-| unsigned int                  | int                           | ????                          |
-| long                          | int                           | ????                          |
-| unsigned long                 | int                           | ????                          |
-| float                         | float                         | ????                          |
-| double                        | float                         | ????                          |
-| std::string                   | str                           | ????                          |
-| std::pair<T1, T2>             | tuple                         | ????                          |
-| std::tuple<T...>              | tuple                         | ????                          |
-| std::vector<T>                | list                          | ????                          |
-| std::array<T, N>              | list                          | ????                          |
-| std::map<K, V>                | dict                          | ????                          |
-| std::unordered_map<K, V>      | dict                          | ????                          |
-| std::set<T>                   | set                           | ????                          |
-| std::function<T1, T2>         | Python callable               | ????                          |
-
 
 ---
 # Interface of BNSL algorithm
 
-<!-- ![Interface Diagram](images/interface.png) -->
-
 The BNSL algorithm requires a `DataframeWrapper` class object as its first argument.  
 The `DataframeWrapper` class provides the following interface:
 ``` C++
-class DataframeWrapper {
+struct DataframeWrapper {
   DataframeWrapper(const py::object& dataframe); // Constructor from a Python dataframe
-  // TODO: Constructor from an base R dataframe 
-  // Other member functions...
+  ...
 };
 ```
 
 The output of the BNSL algorithm is a `PDAG` class object, which has the following interface:
 ``` C++
-class PDAG {
-    std::vector<int> nodes;
-    std::vector<std::pair<int, int>> edges;
-    // Other member functions...
+struct PDAG {
+  std::size_t num_vars;
+  std::vector<std::set<size_t>> parents; // parents[i]: parent set of node i
+  ...
 };
 ```
 
@@ -98,22 +74,15 @@ With this design, the learned PDAG can be easily converted to a pgmpy `PDAG` obj
 
 ``` Python
 import pandas as pd
-from pgmpy.base import PDAG
+from helpers.pgmpy_bridge import to_pgmpy
 
 # Read a dataframe
 dataframe = pd.read_csv("data.csv")
 df_wrapper = openbnsl.base.DataframeWrapper(dataframe)
 
 # Run the BNSL algorithm
-pdag = openbnsl.structure_learning.hoge(df_wrapper, options)
+learned_pdag_obnsl = openbnsl.structure_learning.hoge(df_wrapper, options)
 
-# Create a pgmpy PDAG object
-pgmpy_pdag = PDAG()
-pgmpy_pdag.add_nodes_from(pdag.nodes)
-pgmpy_pdag.add_edges_from(pdag.edges)
+# Convert to pgmpy PDAG
+learned_pdag_pgmpy = to_pgmpy(learned_pdag_obnsl)
 ```
-
-
-
----
-## Discussion

@@ -14,7 +14,7 @@
  *
  *
  */
-PDAG pc(const DataframeWrapper& df,
-        const CITestType& ci_test_type,
-        size_t max_cond_vars,
-        bool stable);
+PDAG pc_edge_parallel(const DataframeWrapper& df,
+                      const CITestType& ci_test_type,
+                      size_t max_cond_vars,
+                      double timeout_sec);
