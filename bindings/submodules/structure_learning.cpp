@@ -14,7 +14,8 @@ void bind_structure_learning(py::module& m) {
                 "Run exhaustive search algorithm",
                 py::arg("df"),
                 py::arg("score_type"),
-                py::arg("max_parents"));
+                py::arg("max_parents"),
+                py::arg("timeout_sec") = 1800.0);
   submodule.def("simulated_annealing",
                 &simulated_annealing,
                 "Run simulated annealing algorithm",
@@ -25,7 +26,8 @@ void bind_structure_learning(py::module& m) {
                 py::arg("init_temp") = 1.0,
                 py::arg("cooling_rate") = 0.9995,
                 py::arg("seed") = 0,
-                py::arg("num_chains") = 0);
+                py::arg("num_chains") = 0,
+                py::arg("timeout_sec") = 1800.0);
   submodule.def("pc_edge_parallel",
                 &pc_edge_parallel,
                 "Run PC algorithm",

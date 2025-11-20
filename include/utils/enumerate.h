@@ -3,6 +3,8 @@
 #include <iterator>
 #include <utility>
 
+namespace utils {
+
 template <typename T>
 auto enumerate(T&& iterable) {
   struct iterator {
@@ -25,3 +27,5 @@ auto enumerate(T&& iterable) {
 
   return wrapper{iterable};
 }
+
+}  // namespace utils
