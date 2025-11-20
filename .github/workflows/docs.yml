@@ -37,7 +37,7 @@ jobs:
         run: chmod +x ./scripts/gen_docs.sh
 
       - name: Generate Documentation
-        run: docker run --rm -v "$(pwd):/workspace" ${IMAGE_NAME}:${IMAGE_TAG} ./scripts/gen_docs.sh
+        run: docker run --rm -v "$(pwd):/workspace" ${IMAGE_NAME}:${IMAGE_TAG} bash -lc "uv pip install. && ./scripts/gen_docs.sh"
 
       - name: Upload artifact for Pages
         uses: actions/upload-pages-artifact@v3

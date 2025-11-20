@@ -26,19 +26,20 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     cmake \
     ccache \
-    wget \
-    git \
     curl \
     ca-certificates \
     clang-format \
     doxygen \
+    file \
+    git \
     graphviz \
     libgraphviz-dev \
-    python3 \
-    python3-dev \
     libomp-dev \
     libboost-all-dev \
     libgtest-dev \
+    python3 \
+    python3-dev \
+    wget \
     && rm -rf /var/lib/apt/lists/*
 
 # Install uv
