@@ -2,13 +2,11 @@
 #include <pybind11/numpy.h>
 #include <pybind11/pybind11.h>
 
-#include <boost/multiprecision/cpp_int.hpp>
 #include <memory>
 #include <vector>
 
 #include "base/dataframe_wrapper.h"
 namespace py = pybind11;
-namespace mp = boost::multiprecision;
 
 struct Node {
  public:
