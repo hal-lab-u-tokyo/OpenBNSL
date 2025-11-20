@@ -5,6 +5,7 @@ from pgmpy.utils import get_example_model
 import openbnsllib
 from helpers.pgmpy_bridge import to_openbnsl
 
+
 @pytest.mark.parametrize("model_name", ["cancer", "asia", "child", "alarm"])
 @pytest.mark.parametrize("score_type", [openbnsllib.score.BDeu(1.0)])
 @pytest.mark.parametrize("sample_size", [int(1e5)])
@@ -14,7 +15,7 @@ def test_simulated_annealing(model_name, score_type, sample_size, seed):
     original_pdag_pgmpy = get_example_model(model_name)
     samples = original_pdag_pgmpy.simulate(sample_size, seed=seed)
     samples = samples[sorted(samples.columns)]
-    
+
     df_wrapper = openbnsllib.base.DataframeWrapper(samples)
     original_pdag_obnsl = to_openbnsl(original_pdag_pgmpy, df_wrapper.col_str2idx)
 

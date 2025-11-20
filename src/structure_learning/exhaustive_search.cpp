@@ -3,8 +3,8 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "score/score_type.h"
 #include "score/parent_set_evaluator.h"
+#include "score/score_type.h"
 #include "utils/combmask.h"
 #include "utils/logging.h"
 #include "utils/timeout_guard.h"

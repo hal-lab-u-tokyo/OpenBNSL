@@ -48,7 +48,7 @@ except FileNotFoundError:
 
 setup(
     name="openbnsllib",
-    version="0.1.0",
+    version="1.1.0",
     description=description,
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -63,7 +63,6 @@ setup(
     python_requires=">=3.7",
     license = "MIT",
     classifiers=[
-        "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
         "Intended Audience :: Education",
         "Intended Audience :: Science/Research",

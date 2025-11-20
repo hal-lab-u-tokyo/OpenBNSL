@@ -7,10 +7,10 @@ namespace utils {
 
 template <typename T>
 void enum_combvec_rec(const std::vector<T>& items,
-                   size_t k,
-                   size_t idx,
-                   std::vector<T>& cur,
-                   std::vector<std::vector<T>>& out) {
+                      size_t k,
+                      size_t idx,
+                      std::vector<T>& cur,
+                      std::vector<std::vector<T>>& out) {
   if (cur.size() == k) {
     out.push_back(cur);
     return;
@@ -37,7 +37,8 @@ void enum_combvec_rec(const std::vector<T>& items,
  * @endcode
  */
 template <typename T>
-std::vector<std::vector<T>> gen_combvecs(const std::vector<T>& items, size_t k) {
+std::vector<std::vector<T>> gen_combvecs(const std::vector<T>& items,
+                                         size_t k) {
   if (!std::is_sorted(items.begin(), items.end()))
     throw std::invalid_argument("items must be sorted in ascending order");
   std::vector<std::vector<T>> res;
@@ -58,14 +59,13 @@ std::vector<std::vector<T>> gen_combvecs(const std::vector<T>& items, size_t k) 
  * @return Lexicographic rank of S
  */
 template <std::integral T>
-size_t combvec_rank(
-  const std::vector<T>& S,
-  const std::vector<std::vector<size_t>>& nCk_tbl) {
+size_t combvec_rank(const std::vector<T>& S,
+                    const std::vector<std::vector<size_t>>& nCk_tbl) {
   size_t rank = 0;
   for (size_t i = 0; i < S.size(); ++i) {
     rank += nCk_tbl[S[i]][i + 1];
   }
-  return rank; 
+  return rank;
 }
 
 }  // namespace utils

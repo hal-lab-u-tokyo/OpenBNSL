@@ -30,7 +30,7 @@ git clone --recurse-submodules git@github.com:hal-lab-u-tokyo/OpenBNSL.git # for
 cd OpenBNSL
 
 docker compose build \
-  [--build-arg BASE_IMAGE=nvidia/cuda:12.6.2-devel-ubuntu22.04] \  # optional: Nvidia GPU support
+  [--build-arg BASE_IMAGE=nvidia/cuda:13.0.2-devel-ubuntu24.04] \  # optional: Nvidia GPU support
 
 docker compose up
 ```
@@ -53,8 +53,8 @@ docker compose up
 
 ```bash
 # Inside the Docker container
-pip install . # builds the C++ core + installs Python bindings
-OPENBNSL_DEBUG=ON pip install . # enable debug logs
+uv pip install . # builds the C++ core + installs Python bindings
+OPENBNSL_DEBUG=ON uv pip install . # enable debug logs
 ```
 
 # Example Notebooks

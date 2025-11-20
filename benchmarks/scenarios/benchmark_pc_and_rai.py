@@ -106,7 +106,7 @@ CITESTS = {
         "mildew",
         "water",  # Medium networks
         # "child", "insurance", "water", "hailfinder", "win95pts",
-        # "barley", "mildew", "hepar2", "andes", "munin1", 
+        # "barley", "mildew", "hepar2", "andes", "munin1",
         # "diabetes",
         # "link", "munin", "munin2", "munin3", "munin4",
         # "pathfinder", "pigs",

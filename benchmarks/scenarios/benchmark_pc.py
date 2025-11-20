@@ -83,6 +83,7 @@ PGMPY_CITEST_MAP = {
     "chi2": "chi_square",
 }
 
+
 @pytest.mark.parametrize(
     "model_name",
     [
@@ -99,7 +100,7 @@ PGMPY_CITEST_MAP = {
 @pytest.mark.parametrize("num_threads", [128])
 @pytest.mark.parametrize("num_samples", [int(2e5)])
 @pytest.mark.parametrize("timeout_sec", [3600])
-@pytest.mark.parametrize("seed", [0,1,2,3,4,5,6,7,8,9])
+@pytest.mark.parametrize("seed", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
 def benchmark_compare_algos(
     model_name, citest, algo, num_threads, num_samples, timeout_sec, seed
 ):
@@ -170,12 +171,8 @@ def benchmark_compare_algos(
     error_dict = structural_errors(original_pdag_pgmpy, learned_pdag_pgmpy)
     shd = error_dict["SHD"]
 
-    original_score = original_pdag_obnsl.score(
-        df_wrapper, openbnsllib.score.BDeu(1.0)
-    )
-    learned_score = learned_pdag_obnsl.score(
-        df_wrapper, openbnsllib.score.BDeu(1.0)
-    )
+    original_score = original_pdag_obnsl.score(df_wrapper, openbnsllib.score.BDeu(1.0))
+    learned_score = learned_pdag_obnsl.score(df_wrapper, openbnsllib.score.BDeu(1.0))
 
     score_ratio = (
         learned_score / original_score if original_score != 0 else float("inf")

@@ -1,6 +1,6 @@
 #pragma once
+#include <concepts>
 #include <vector>
-#include <concepts> 
 
 namespace utils {
 
@@ -51,7 +51,7 @@ bool next_combmask(T& comb, int n) {
  * @param combmask A combination mask represented as an integral type
  * @return A vector of indices
  */
-  template <std::integral T>
+template <std::integral T>
 std::vector<size_t> combmask2vec(T combmask) {
   std::vector<size_t> vec;
   while (combmask) {

@@ -8,8 +8,8 @@
 #include <random>
 #include <vector>
 
-#include "score/score_type.h"
 #include "score/parent_set_evaluator.h"
+#include "score/score_type.h"
 #include "utils/logging.h"
 #include "utils/timeout_guard.h"
 
@@ -31,13 +31,14 @@ PDAG simulated_annealing(const DataframeWrapper& df,
 
   const size_t n = df.num_vars;
   std::vector<double> best_score_of_chain(num_chains, MINUS_INF);
-  std::vector<std::vector<std::vector<size_t>>> best_parents_of_chain(num_chains);
+  std::vector<std::vector<std::vector<size_t>>> best_parents_of_chain(
+      num_chains);
 
 #pragma omp parallel for schedule(dynamic)
   for (size_t chain_id = 0; chain_id < num_chains; ++chain_id) {
     std::mt19937_64 rng(seed + chain_id);
     std::uniform_real_distribution<double> unif(0.0, 1.0);
-    
+
     double global_score = 0.0;
     std::vector<double> local_scores(n, 0.0);
     std::vector<std::vector<size_t>> parents(n);
@@ -59,12 +60,13 @@ PDAG simulated_annealing(const DataframeWrapper& df,
     auto best_local_scores = local_scores;
     auto best_parents = parents;
     double T = init_temp;
-    for (size_t it = 0; it < max_iters; ++it) { // for each chain
+    for (size_t it = 0; it < max_iters; ++it) {  // for each chain
 
       T *= cooling_rate;
       if (T < 1e-12) T = 1e-12;
 
-      // Propose a new state by changing the parent set of a randomly chosen node
+      // Propose a new state by changing the parent set of a randomly chosen
+      // node
       size_t child = rng() % n;
       const auto& parent_set_cands = pse.p_pars[child];
       size_t new_pars_idx = rng() % parent_set_cands.size();

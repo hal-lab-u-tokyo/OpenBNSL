@@ -178,14 +178,14 @@ static void rai_recursive(const size_t k,
   size_t stageA_num_citests = 0;
   std::vector<Update> stageA_updates;
 
-#pragma omp parallel default(none) shared(k,                  \
-                                          df,                 \
-                                          test,               \
-                                          stageA_pairs,       \
-                                          stageA_num_citests, \
-                                          stageA_updates,     \
-                                          pap_all,            \
-                                          tg)
+#pragma omp parallel default(none) shared(k,                      \
+                                              df,                 \
+                                              test,               \
+                                              stageA_pairs,       \
+                                              stageA_num_citests, \
+                                              stageA_updates,     \
+                                              pap_all,            \
+                                              tg)
   {
     size_t local_num_citests = 0;
     std::vector<Update> local_updates;
@@ -261,14 +261,14 @@ static void rai_recursive(const size_t k,
 
   size_t stageB_num_citests = 0;
   std::vector<Update> stageB_updates;
-#pragma omp parallel default(none) shared(k,                  \
-                                          df,                 \
-                                          test,               \
-                                          stageB_pairs,       \
-                                          stageB_num_citests, \
-                                          stageB_updates,     \
-                                          pap_all,            \
-                                          tg)
+#pragma omp parallel default(none) shared(k,                      \
+                                              df,                 \
+                                              test,               \
+                                              stageB_pairs,       \
+                                              stageB_num_citests, \
+                                              stageB_updates,     \
+                                              pap_all,            \
+                                              tg)
   {
     size_t local_num_citests = 0;
     std::vector<Update> local_updates;
