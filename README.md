@@ -1,4 +1,4 @@
-**Note: This repository is currently under active development.**
+# OpenBNSL
 
 OpenBNSL is an open framework designed to enable fair and highly reproducible comparisons of Bayesian Network Structure Learning (BNSL) algorithms. This framework provides an environment for systematically and fairly comparing various BNSL techniques, supporting the further advancement of Bayesian Network research.
 
@@ -11,9 +11,7 @@ OpenBNSL is an open framework designed to enable fair and highly reproducible co
 <!-- ![OpenBNSL Architecture](images/architecture.png) -->
 
 
-1. [Set Up](#set-up)
-    1. [Using Docker](#using-docker)
-    2. [Using Bare Metal](#using-bare-metal)
+1. [Setup](#setup)
 2. [Build and Install](#build-and-install)
 3. [Features](#features)
 4. [Contributing](#contributing)
@@ -22,9 +20,10 @@ OpenBNSL is an open framework designed to enable fair and highly reproducible co
 
 
 ---
-# Set Up
+# Setup
 
-## Using Docker
+This repository requires the Docker environment.
+
 ```bash
 git clone --recurse-submodules git@github.com:hal-lab-u-tokyo/OpenBNSL.git # for pybind11 submodule
 cd OpenBNSL
@@ -34,9 +33,6 @@ docker compose build \
   [--build-arg INSTALL_GUROBI=true]                                # Gurobi (requires license)
 docker compose up
 ```
-
-## Using Bare Metal
-⚠️ Under construction ⚠️
 
 ---
 # Build and Install
@@ -87,4 +83,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 This work was supported by
 JSPS KAKENHI, Grant Number 24KJ0578,
 JST CREST, Grant Number JPMJCR21D2, and
+
 JST SPRING, Grant Number JPMJSP2108.
