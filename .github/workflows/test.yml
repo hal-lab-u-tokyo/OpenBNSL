@@ -42,4 +42,4 @@ jobs:
 
       - name: Run Pytest
         run: |
-          docker run --rm -v "$(pwd):/workspace" ${IMAGE_NAME}:${IMAGE_TAG} bash -lc "pip install . && pytest"
+          docker run --rm -v "$(pwd):/workspace" ${IMAGE_NAME}:${IMAGE_TAG} bash -lc "uv pip install . && pytest"
