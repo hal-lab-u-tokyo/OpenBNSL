@@ -2,6 +2,9 @@
 
 OpenBNSL is a unified framework for fair, reproducible, and transparent comparison of Bayesian Network Structure Learning (BNSL) algorithms.
 
+**Note:**  
+> OpenBNSL supports **categorical (discrete)** variables only.  
+
 | Component                  | Description                                               |
 |----------------------------|-----------------------------------------------------------|
 | **Core Library**           | BNSL algorithms in C/C++ with OpenMP and CUDA             |
@@ -92,8 +95,8 @@ model_name  num_vars  num_samples citest             algo  num_threads  count  s
 # Key Features
 - Core Library (C/C++ with OpenMP & optional CUDA)
     - Score-based Structure Learning
-        - [x] Exhaustive Search with Dynamic Programming
-        - [x] Simulated Annealing on Parent-Set Space
+        - [x] Dynamic Programming on subset lattice
+        - [x] Simulated Annealing on Parent-Set Space 
     - Constraint-based Structure Learning
         - [x] Peter-Clark (PC) with edge-parallel CI tests 
         - [x] Recursive Autonomy Identification (RAI) with edge-parallel CI tests
