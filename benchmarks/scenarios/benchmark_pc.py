@@ -99,7 +99,7 @@ PGMPY_CITEST_MAP = {
 @pytest.mark.parametrize("num_threads", [128])
 @pytest.mark.parametrize("num_samples", [int(2e5)])
 @pytest.mark.parametrize("timeout_sec", [3600])
-@pytest.mark.parametrize("seed", [42])
+@pytest.mark.parametrize("seed", [0,1,2,3,4,5,6,7,8,9])
 def benchmark_compare_algos(
     model_name, citest, algo, num_threads, num_samples, timeout_sec, seed
 ):
